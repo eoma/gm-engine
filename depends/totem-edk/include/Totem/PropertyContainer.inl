@@ -1,6 +1,6 @@
 
 template<class PropertyType>
-std::shared_ptr<Totem::Property<PropertyType>> PropertyFactory::createProperty(const CL_String &name)
+std::shared_ptr<Totem::Property<PropertyType>> PropertyFactory::createProperty(const std::string &name)
 {
 	return std::make_shared<Totem::Property<PropertyType>>(name);
 }
@@ -18,7 +18,7 @@ PropertyContainer<UserData>::~PropertyContainer()
 
 template<class UserData>
 template<class T>
-inline Property<T> PropertyContainer<UserData>::add(const CL_String& name, const T &defaultValue)
+inline Property<T> PropertyContainer<UserData>::add(const std::string& name, const T &defaultValue)
 {
 	auto it = properties.find(name);
 	if(it != properties.end())
@@ -27,7 +27,7 @@ inline Property<T> PropertyContainer<UserData>::add(const CL_String& name, const
 #ifdef _DEBUG
 		property = std::dynamic_pointer_cast< Property<T> >(it->second);
 		if(!property)
-			throw CL_Exception(("Property " + name + " already exists, but with another type!").c_str());
+			throw clan::Exception(("Property " + name + " already exists, but with another type!").c_str());
 #else
 		property = std::static_pointer_cast< Property<T> >(it->second);
 #endif
@@ -44,7 +44,7 @@ inline Property<T> PropertyContainer<UserData>::add(const CL_String& name, const
 
 template<class UserData>
 template<class T>
-inline Property<T> PropertyContainer<UserData>::add(const CL_String& name, const T &defaultValue, const UserData &userData)
+inline Property<T> PropertyContainer<UserData>::add(const std::string& name, const T &defaultValue, const UserData &userData)
 {
 	auto it = properties.find(name);
 	if(it != properties.end())
@@ -53,7 +53,7 @@ inline Property<T> PropertyContainer<UserData>::add(const CL_String& name, const
 #ifdef _DEBUG
 		property = std::dynamic_pointer_cast< Property<T> >(it->second);
 		if(!property)
-			throw CL_Exception(("Property " + name + " already exists, but with another type!").c_str());
+			throw clan::Exception(("Property " + name + " already exists, but with another type!").c_str());
 #else
 		property = std::static_pointer_cast< Property<T> >(it->second);
 #endif
@@ -70,7 +70,7 @@ inline Property<T> PropertyContainer<UserData>::add(const CL_String& name, const
 
 template<class UserData>
 template<class T>
-inline Property<T> PropertyContainer<UserData>::get(const CL_String& name)
+inline Property<T> PropertyContainer<UserData>::get(const std::string& name)
 {
 	auto it = properties.find(name);
 	if(it != properties.end())
@@ -79,18 +79,18 @@ inline Property<T> PropertyContainer<UserData>::get(const CL_String& name)
 #ifdef _DEBUG
 		property = std::dynamic_pointer_cast< Property<T> >(it->second);
 		if(!property)
-			throw CL_Exception(("Tried to get shared property " + name + ", but the type was wrong!").c_str());
+			throw clan::Exception(("Tried to get shared property " + name + ", but the type was wrong!").c_str());
 #else
 		property = std::static_pointer_cast< Property<T> >(it->second);
 #endif
 		return *property.get();
 	}
 	else
-		throw CL_Exception(("Unable to get property " + name).c_str());
+		throw clan::Exception(("Unable to get property " + name).c_str());
 }
 
 template<class UserData>
-inline std::unordered_map<CL_String, std::shared_ptr<IProperty>> &PropertyContainer<UserData>::getProperties() 
+inline std::unordered_map<std::string, std::shared_ptr<IProperty>> &PropertyContainer<UserData>::getProperties() 
 { 
 	return properties; 
 }
@@ -101,35 +101,35 @@ inline PropertyContainer<UserData> &PropertyContainer<UserData>::operator= (cons
 	if(this == &rhs)
 		return *this;
 
-	throw CL_Exception("Assignment operation between PropertyContainer are not supported!");
+	throw clan::Exception("Assignment operation between PropertyContainer are not supported!");
 }
 
 template<class UserData>
-inline CL_Signal_v<std::shared_ptr<IProperty>> &PropertyContainer<UserData>::propertyAdded() 
+inline clan::Signal<std::shared_ptr<IProperty>> &PropertyContainer<UserData>::propertyAdded() 
 { 
 	return sign_PropertyAdded; 
 }
 
 template<class UserData>
-inline CL_Signal_v<std::shared_ptr<IProperty>, const UserData&> &PropertyContainer<UserData>::propertyWithUserDataAdded() 
+inline clan::Signal<std::shared_ptr<IProperty>, const UserData&> &PropertyContainer<UserData>::propertyWithUserDataAdded() 
 { 
 	return sign_PropertyWithUserDataAdded; 
 }
 
 template<class UserData>
-inline CL_Signal_v<std::shared_ptr<IProperty>> &PropertyContainer<UserData>::propertyRemoved() 
+inline clan::Signal<std::shared_ptr<IProperty>> &PropertyContainer<UserData>::propertyRemoved() 
 { 
 	return sign_PropertyRemoved; 
 }
 
 template<class UserData>
-inline CL_Signal_v<std::shared_ptr<IProperty>, const UserData&> &PropertyContainer<UserData>::propertyWithUserDataRemoved()
+inline clan::Signal<std::shared_ptr<IProperty>, const UserData&> &PropertyContainer<UserData>::propertyWithUserDataRemoved()
 {
 	return sign_PropertyWithUserDataRemoved;
 }
 
 template<class UserData>
-inline bool PropertyContainer<UserData>::hasProperty(const CL_String& name)
+inline bool PropertyContainer<UserData>::hasProperty(const std::string& name)
 {
 if(properties.empty())
 	return false;
@@ -150,7 +150,7 @@ if(it == properties.end())
 }
 
 template<class UserData>
-inline void PropertyContainer<UserData>::removeProperty(const CL_String& name, bool postponeDelete)
+inline void PropertyContainer<UserData>::removeProperty(const std::string& name, bool postponeDelete)
 {
 auto it = properties.find(name);
 if(it != properties.end())
@@ -165,7 +165,7 @@ if(it != properties.end())
 }
 
 template<class UserData>
-inline void PropertyContainer<UserData>::removeProperty(const CL_String& name, const UserData &userData, bool postponeDelete)
+inline void PropertyContainer<UserData>::removeProperty(const std::string& name, const UserData &userData, bool postponeDelete)
 {
 auto it = properties.find(name);
 if(it != properties.end())

@@ -10,7 +10,7 @@ namespace Totem
 class IPropertyList
 {
 public:
-	virtual const CL_String &getName() const = 0;
+	virtual const std::string &getName() const = 0;
 	virtual bool isNull() const = 0;
 	virtual bool isDirty() const = 0;
 	virtual void clearDirty() = 0;

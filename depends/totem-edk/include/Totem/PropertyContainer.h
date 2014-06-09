@@ -14,7 +14,7 @@ namespace Totem
 class PropertyFactory
 {
 public:
-	template<class PropertyType> static std::shared_ptr<Totem::Property<PropertyType>> createProperty(const CL_String &name);
+	template<class PropertyType> static std::shared_ptr<Totem::Property<PropertyType>> createProperty(const std::string &name);
 };
 
 template<class UserData = void*>
@@ -24,17 +24,17 @@ public:
 	PropertyContainer();
 	virtual ~PropertyContainer();
 
-	bool hasProperty(const CL_String& name);
+	bool hasProperty(const std::string& name);
 
-	template<class T> Property<T> add(const CL_String& name, const T &defaultValue);
-	template<class T> Property<T> add(const CL_String& name, const T &defaultValue, const UserData &userData);
+	template<class T> Property<T> add(const std::string& name, const T &defaultValue);
+	template<class T> Property<T> add(const std::string& name, const T &defaultValue, const UserData &userData);
 	void add(std::shared_ptr<IProperty> property);
 
-	template<class T> Property<T> get(const CL_String& name);
-	std::unordered_map<CL_String, std::shared_ptr<IProperty>> &getProperties();
+	template<class T> Property<T> get(const std::string& name);
+	std::unordered_map<std::string, std::shared_ptr<IProperty>> &getProperties();
 
-	void removeProperty(const CL_String& name, bool postponeDelete = false);
-	void removeProperty(const CL_String& name, const UserData &userData, bool postponeDelete = false);
+	void removeProperty(const std::string& name, bool postponeDelete = false);
+	void removeProperty(const std::string& name, const UserData &userData, bool postponeDelete = false);
 	void removeAllProperties();
 	void removeAllProperties(const UserData &userData);
 
@@ -45,19 +45,19 @@ public:
 
 	PropertyContainer &operator= (const PropertyContainer &rhs);
 
-	CL_Signal_v<std::shared_ptr<IProperty>> &propertyAdded();
-	CL_Signal_v<std::shared_ptr<IProperty>, const UserData&> &propertyWithUserDataAdded();
-	CL_Signal_v<std::shared_ptr<IProperty>> &propertyRemoved();
-	CL_Signal_v<std::shared_ptr<IProperty>, const UserData&> &propertyWithUserDataRemoved();
+	clan::Signal<std::shared_ptr<IProperty>> &propertyAdded();
+	clan::Signal<std::shared_ptr<IProperty>, const UserData&> &propertyWithUserDataAdded();
+	clan::Signal<std::shared_ptr<IProperty>> &propertyRemoved();
+	clan::Signal<std::shared_ptr<IProperty>, const UserData&> &propertyWithUserDataRemoved();
 
 protected:
-	std::unordered_map<CL_String, std::shared_ptr<IProperty>> properties;
+	std::unordered_map<std::string, std::shared_ptr<IProperty>> properties;
 	std::vector<std::shared_ptr<IProperty>> deletedProperties;
 
-	CL_Signal_v<std::shared_ptr<IProperty>> sign_PropertyAdded;
-	CL_Signal_v<std::shared_ptr<IProperty>, const UserData&> sign_PropertyWithUserDataAdded;
-	CL_Signal_v<std::shared_ptr<IProperty>> sign_PropertyRemoved;
-	CL_Signal_v<std::shared_ptr<IProperty>, const UserData&> sign_PropertyWithUserDataRemoved;
+	clan::Signal<std::shared_ptr<IProperty>> sign_PropertyAdded;
+	clan::Signal<std::shared_ptr<IProperty>, const UserData&> sign_PropertyWithUserDataAdded;
+	clan::Signal<std::shared_ptr<IProperty>> sign_PropertyRemoved;
+	clan::Signal<std::shared_ptr<IProperty>, const UserData&> sign_PropertyWithUserDataRemoved;
 };
 
 #include "PropertyContainer.inl"

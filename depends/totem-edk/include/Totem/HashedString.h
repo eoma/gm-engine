@@ -42,11 +42,11 @@ public:
 	}
 
 	FORCE_INLINE unsigned int getId() const { return hashId; }
-	FORCE_INLINE const CL_String &getStr() const { return str; }
+	FORCE_INLINE const std::string &getStr() const { return str; }
 
 private:
 	unsigned int hashId;
-	CL_String str;
+	std::string str;
 };
 
 }

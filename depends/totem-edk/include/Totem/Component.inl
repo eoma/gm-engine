@@ -1,6 +1,6 @@
 
 template<class ComponentType, class UserData>
-Component<ComponentType, UserData>::Component(const CL_String &name) 
+Component<ComponentType, UserData>::Component(const std::string &name) 
 	: name(name)
 {
 }
@@ -17,7 +17,7 @@ unsigned int Component<ComponentType, UserData>::getRuntimeTypeId() const
 }
 
 template<class ComponentType, class UserData>
-const CL_String &Component<ComponentType, UserData>::getName() const
+const std::string &Component<ComponentType, UserData>::getName() const
 { 
 	return name; 
 }
@@ -28,5 +28,5 @@ Component<ComponentType, UserData> &Component<ComponentType, UserData>::operator
 	if(this == &rhs)
 		return *this;
 
-	throw CL_Exception("Assignment operation between ComponentTypes are not supported!");
+	throw clan::Exception("Assignment operation between ComponentTypes are not supported!");
 }

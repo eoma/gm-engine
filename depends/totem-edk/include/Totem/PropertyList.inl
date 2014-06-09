@@ -38,7 +38,7 @@ PropertyListIndexValue<PropertyType> &PropertyListIndexValue<PropertyType>::oper
 {
 	if(this == &rhs)
 		return *this;
-	throw CL_Exception("Operation not supported!");
+	throw clan::Exception("Operation not supported!");
 }
 
 template<class PropertyType>
@@ -121,7 +121,7 @@ PropertyList<PropertyType>::PropertyList(const PropertyList<PropertyType> &copy)
 }
 
 template<class PropertyType>
-PropertyList<PropertyType>::PropertyList(const CL_String &name)
+PropertyList<PropertyType>::PropertyList(const std::string &name)
 	: data(std::make_shared<PropertyListData<PropertyType>>())
 {
 	data->name = name;
@@ -188,7 +188,7 @@ template<class PropertyType>
 PropertyListIndexValue<PropertyType> PropertyList<PropertyType>::at(unsigned int index)
 {
 	if(index >= data->value.size())
-		throw CL_Exception("Index was out of bounds for shared property list");
+		throw clan::Exception("Index was out of bounds for shared property list");
 
 	return PropertyListIndexValue<PropertyType>(data, index);
 }
@@ -212,7 +212,7 @@ std::vector<PropertyType> &PropertyList<PropertyType>::get()
 }
 
 template<class PropertyType>
-const CL_String &PropertyList<PropertyType>::getName() const 
+const std::string &PropertyList<PropertyType>::getName() const 
 {
 	return data->name;
 }
@@ -236,31 +236,31 @@ void PropertyList<PropertyType>::clearDirty()
 }
 
 template<class PropertyType>
-CL_Signal_v<unsigned int, const PropertyType &, const PropertyType &> &PropertyList<PropertyType>::valueChanged() 
+clan::Signal<unsigned int, const PropertyType &, const PropertyType &> &PropertyList<PropertyType>::valueChanged() 
 { 
 	return data->valueChanged; 
 }
 
 template<class PropertyType>
-CL_Signal_v<unsigned int, const PropertyType &> &PropertyList<PropertyType>::valueAdded() 
+clan::Signal<unsigned int, const PropertyType &> &PropertyList<PropertyType>::valueAdded() 
 {
 	return data->valueAdded;
 }
 
 template<class PropertyType>
-CL_Signal_v<unsigned int, const PropertyType &> &PropertyList<PropertyType>::valueErased() 
+clan::Signal<unsigned int, const PropertyType &> &PropertyList<PropertyType>::valueErased() 
 { 
 	return data->valueErased;
 }
 
 template<class PropertyType>
-CL_Signal_v<> &PropertyList<PropertyType>::valuesCleared() 
+clan::Signal<> &PropertyList<PropertyType>::valuesCleared() 
 { 
 	return data->valuesCleared; 
 }
 
 template<class PropertyType>
-CL_Signal_v<unsigned int, unsigned int> &PropertyList<PropertyType>::listResized()
+clan::Signal<unsigned int, unsigned int> &PropertyList<PropertyType>::listResized()
 {
 	return data->listResized; 
 }

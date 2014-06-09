@@ -18,16 +18,16 @@ template<class ComponentType, class UserData = void*>
 class Component : public IComponent<UserData> 
 {
 public:
-	Component(const CL_String &name);
+	Component(const std::string &name);
 	virtual ~Component();
 
 	unsigned int getRuntimeTypeId() const override;
-	const CL_String &getName() const override;
+	const std::string &getName() const override;
 
 	Component &operator= (const Component &rhs);
 	
 protected:
-	CL_String name;
+	std::string name;
 };
 
 #include "Component.inl"

@@ -16,9 +16,9 @@ class PropertyData
 {
 public:
 	PropertyType value;
-	CL_String name;
+	std::string name;
 	bool dirty;
-	CL_Signal_v<const PropertyType &, const PropertyType &> valueChanged;
+	clan::Signal<const PropertyType &, const PropertyType &> valueChanged;
 };
 
 template<class PropertyType>
@@ -27,18 +27,18 @@ class Property : public IProperty
 public:
 	Property();
 	Property(const Property &copy);
-	Property(const CL_String &name);
+	Property(const std::string &name);
 
 	void set(const PropertyType& value, bool invokeValueChanged = true);
 	const PropertyType &get() const;
 	PropertyType &get();
-	const CL_String &getName() const override;
+	const std::string &getName() const override;
 	bool isNull() const override;
 	bool isDirty() const override;
 	void clearDirty() override;
 	unsigned int getRuntimeTypeId() const override;
 
-	CL_Signal_v<const PropertyType &, const PropertyType &> &valueChanged();
+	clan::Signal<const PropertyType &, const PropertyType &> &valueChanged();
 
 	Property<PropertyType> operator= (const Property<PropertyType>& rhs);
 	Property<PropertyType> operator= (const PropertyType& rhs);
