@@ -1,7 +1,8 @@
 #pragma once
+#include <ClanLib/core.h>
 
-#include <memory>
-#include <string>
+ 
+ 
 
 namespace Totem
 {
@@ -9,7 +10,7 @@ namespace Totem
 class IPropertyList
 {
 public:
-	virtual const std::string &getName() const = 0;
+	virtual const CL_String &getName() const = 0;
 	virtual bool isNull() const = 0;
 	virtual bool isDirty() const = 0;
 	virtual void clearDirty() = 0;

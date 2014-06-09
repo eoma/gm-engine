@@ -29,7 +29,7 @@ std::shared_ptr<ComponentType> ComponentContainer<UserData>::addComponent(std::s
 
 template<class UserData>
 template<class ComponentType>
-bool ComponentContainer<UserData>::hasComponent(const std::string &name)
+bool ComponentContainer<UserData>::hasComponent(const CL_String &name)
 {
 	for(unsigned int i = 0; i < components.size(); i++)
 	{
@@ -51,7 +51,7 @@ bool ComponentContainer<UserData>::hasComponent(const std::string &name)
 
 template<class UserData>
 template<class ComponentType>
-std::shared_ptr<ComponentType> ComponentContainer<UserData>::getComponent(const std::string &name)
+std::shared_ptr<ComponentType> ComponentContainer<UserData>::getComponent(const CL_String &name)
 {
 	for(unsigned int i = 0; i < components.size(); i++)
 	{
@@ -68,7 +68,7 @@ std::shared_ptr<ComponentType> ComponentContainer<UserData>::getComponent(const 
 			}
 		}
 	}
-	throw std::runtime_error(("Couldn't find component with name " + name).c_str());
+	throw CL_Exception(("Couldn't find component with name " + name).c_str());
 }
 
 template<class UserData>
@@ -86,7 +86,7 @@ void ComponentContainer<UserData>::updateComponents(float elapsedTime)
 
 template<class UserData>
 template<class ComponentType>
-void ComponentContainer<UserData>::removeComponent(const std::string &name, bool upholdOrderInList)
+void ComponentContainer<UserData>::removeComponent(const CL_String &name, bool upholdOrderInList)
 {
 	for(unsigned int i = 0; i < components.size(); i++)
 	{
@@ -125,36 +125,36 @@ void ComponentContainer<UserData>::removeComponent(const std::string &name, bool
 			}
 		}
 	}
-	throw std::runtime_error(("Couldn't find component with name " + name).c_str());
+	throw CL_Exception(("Couldn't find component with name " + name).c_str());
 }
 
 template<class UserData>
-sigslot::signal<std::shared_ptr<IComponent<UserData>>> &ComponentContainer<UserData>::componentAdded() 
+CL_Signal_v<std::shared_ptr<IComponent<UserData>>> &ComponentContainer<UserData>::componentAdded() 
 { 
 	return sign_ComponentAdded; 
 }
 
 template<class UserData>
-sigslot::signal<std::shared_ptr<IComponent<UserData>>> &ComponentContainer<UserData>::componentRemoved() 
+CL_Signal_v<std::shared_ptr<IComponent<UserData>>> &ComponentContainer<UserData>::componentRemoved() 
 { 
 	return sign_ComponentRemoved; 
 }
 
 template<class UserData>
-void ComponentContainer<UserData>::checkDuplicationAndAdd(unsigned int typeId, const std::string &name)
+void ComponentContainer<UserData>::checkDuplicationAndAdd(unsigned int typeId, const CL_String &name)
 {
 	auto it = namesForComponentTypes.find(typeId);
 	if(it != namesForComponentTypes.end())
 	{
-		const std::vector<std::string> &names = it->second;
+		const std::vector<CL_String> &names = it->second;
 		for(unsigned int i = 0; i < names.size(); i++)
 			if(names[i] == name)
-				throw std::runtime_error("Found duplicate component name: " + name);
+				throw CL_Exception("Found duplicate component name: " + name);
 		it->second.push_back(name);
 	}
 	else
 	{
-		std::vector<std::string> new_list;
+		std::vector<CL_String> new_list;
 		new_list.push_back(name);
 		namesForComponentTypes[typeId] = new_list;
 	}

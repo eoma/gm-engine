@@ -9,7 +9,7 @@ Property<PropertyType>::Property(const Property &copy)
 }
 
 template<class PropertyType>
-Property<PropertyType>::Property(const std::string &name)
+Property<PropertyType>::Property(const CL_String &name)
 	: data(std::make_shared<PropertyData<PropertyType>>())
 {
 	data->name = name;
@@ -40,7 +40,7 @@ template<class PropertyType>
 inline PropertyType &Property<PropertyType>::get() { return data->value; }
 
 template<class PropertyType>
-inline const std::string &Property<PropertyType>::getName() const { return data->name; }
+inline const CL_String &Property<PropertyType>::getName() const { return data->name; }
 
 template<class PropertyType>
 inline bool Property<PropertyType>::isNull() const { return data == nullptr; }
@@ -52,7 +52,7 @@ template<class PropertyType>
 inline void Property<PropertyType>::clearDirty() { data->dirty = false; }
 
 template<class PropertyType>
-inline sigslot::signal<const PropertyType &, const PropertyType &> &Property<PropertyType>::valueChanged() { return data->valueChanged; }
+inline CL_Signal_v<const PropertyType &, const PropertyType &> &Property<PropertyType>::valueChanged() { return data->valueChanged; }
 
 /// Instead of property.get() this operator exist for convenience.
 template<class PropertyType>

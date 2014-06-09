@@ -1,32 +1,33 @@
 /////////////////////////////////////////////////////
 //
 #pragma once
+#include <ClanLib/core.h>
 #pragma warning(push)
 #pragma warning(disable : 4481)
 
 #include "IComponent.h"
 
-#include <sigslot.h>
-#include <string>
-#include <memory>
+ 
+ 
+ 
 
 namespace Totem
 {
 
 template<class ComponentType, class UserData = void*>
-class Component : public IComponent<UserData>, public sigslot::has_slots<>
+class Component : public IComponent<UserData> 
 {
 public:
-	Component(const std::string &name);
+	Component(const CL_String &name);
 	virtual ~Component();
 
 	unsigned int getRuntimeTypeId() const override;
-	const std::string &getName() const override;
+	const CL_String &getName() const override;
 
 	Component &operator= (const Component &rhs);
 	
 protected:
-	std::string name;
+	CL_String name;
 };
 
 #include "Component.inl"

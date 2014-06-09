@@ -1,11 +1,12 @@
 #pragma once
+#include <ClanLib/core.h>
 #pragma warning(push)
 #pragma warning(disable : 4481)
 
 #include "IPropertyList.h"
 
-#include <sigslot.h>
-#include <memory>
+ 
+ 
 #include <vector>
 
 namespace Totem
@@ -16,13 +17,13 @@ class PropertyListData
 {
 public:
 	std::vector<PropertyType> value;
-	std::string name;
+	CL_String name;
 	bool dirty;
-	sigslot::signal<unsigned int, const PropertyType &, const PropertyType &> valueChanged;
-	sigslot::signal<unsigned int, const PropertyType &> valueAdded;
-	sigslot::signal<unsigned int, const PropertyType &> valueErased;
-	sigslot::signal<> valuesCleared;
-	sigslot::signal<unsigned int, unsigned int> listResized;
+	CL_Signal_v<unsigned int, const PropertyType &, const PropertyType &> valueChanged;
+	CL_Signal_v<unsigned int, const PropertyType &> valueAdded;
+	CL_Signal_v<unsigned int, const PropertyType &> valueErased;
+	CL_Signal_v<> valuesCleared;
+	CL_Signal_v<unsigned int, unsigned int> listResized;
 };
 
 template<class PropertyType>
@@ -58,7 +59,7 @@ class PropertyList : public IPropertyList
 public:
 	PropertyList();
 	PropertyList(const PropertyList &copy);
-	PropertyList(const std::string &name);
+	PropertyList(const CL_String &name);
 
 	void push_back(const PropertyType& value, bool invokeValueAdded = true);
 	void erase(unsigned int index, bool invokeValueErased = true);
@@ -73,16 +74,16 @@ public:
 
 	const std::vector<PropertyType> &get() const;
 	std::vector<PropertyType> &get();
-	const std::string &getName() const override;
+	const CL_String &getName() const override;
 	bool isNull() const override;
 	bool isDirty() const override;
 	void clearDirty() override;
 
-	sigslot::signal<unsigned int, const PropertyType &, const PropertyType &> &valueChanged();
-	sigslot::signal<unsigned int, const PropertyType &> &valueAdded();
-	sigslot::signal<unsigned int, const PropertyType &> &valueErased();
-	sigslot::signal<> &valuesCleared();
-	sigslot::signal<unsigned int, unsigned int> &listResized();
+	CL_Signal_v<unsigned int, const PropertyType &, const PropertyType &> &valueChanged();
+	CL_Signal_v<unsigned int, const PropertyType &> &valueAdded();
+	CL_Signal_v<unsigned int, const PropertyType &> &valueErased();
+	CL_Signal_v<> &valuesCleared();
+	CL_Signal_v<unsigned int, unsigned int> &listResized();
 
 	PropertyList<PropertyType> operator= (const PropertyList<PropertyType>& rhs);
 	PropertyListIndexValue<PropertyType> operator[] (const unsigned int& index);

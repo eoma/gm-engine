@@ -1,4 +1,5 @@
 #pragma once
+#include <ClanLib/core.h>
  
 #include <functional>
 
@@ -41,11 +42,11 @@ public:
 	}
 
 	FORCE_INLINE unsigned int getId() const { return hashId; }
-	FORCE_INLINE const std::string &getStr() const { return str; }
+	FORCE_INLINE const CL_String &getStr() const { return str; }
 
 private:
 	unsigned int hashId;
-	std::string str;
+	CL_String str;
 };
 
 }

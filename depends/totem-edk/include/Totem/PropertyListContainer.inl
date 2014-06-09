@@ -1,6 +1,6 @@
 
 template<class PropertyType>
-std::shared_ptr<Totem::PropertyList<PropertyType>> PropertyListFactory::createPropertyList(const std::string &name)
+std::shared_ptr<Totem::PropertyList<PropertyType>> PropertyListFactory::createPropertyList(const CL_String &name)
 {
 	return std::make_shared<Totem::PropertyList<PropertyType>>(name);
 }
@@ -18,7 +18,7 @@ PropertyListContainer<UserData>::~PropertyListContainer()
 
 template<class UserData>
 template<class T>
-PropertyList<T> PropertyListContainer<UserData>::addList(const std::string& name)
+PropertyList<T> PropertyListContainer<UserData>::addList(const CL_String& name)
 {
 	auto it = propertyLists.find(name);
 	if(it != propertyLists.end())
@@ -27,7 +27,7 @@ PropertyList<T> PropertyListContainer<UserData>::addList(const std::string& name
 #ifdef _DEBUG
 		property = std::dynamic_pointer_cast< PropertyList<T> >(it->second);
 		if(!property)
-			throw std::runtime_error(("PropertyList " + name + " already exists, but with another type!").c_str());
+			throw CL_Exception(("PropertyList " + name + " already exists, but with another type!").c_str());
 #else
 		property = std::static_pointer_cast< PropertyList<T> >(it->second);
 #endif
@@ -45,7 +45,7 @@ PropertyList<T> PropertyListContainer<UserData>::addList(const std::string& name
 
 template<class UserData>
 template<class T>
-PropertyList<T> PropertyListContainer<UserData>::addList(const std::string& name, const UserData &userData)
+PropertyList<T> PropertyListContainer<UserData>::addList(const CL_String& name, const UserData &userData)
 {
 	auto it = propertyLists.find(name);
 	if(it != propertyLists.end())
@@ -54,7 +54,7 @@ PropertyList<T> PropertyListContainer<UserData>::addList(const std::string& name
 #ifdef _DEBUG
 		property = std::dynamic_pointer_cast< PropertyList<T> >(it->second);
 		if(!property)
-			throw std::runtime_error(("PropertyList " + name + " already exists, but with another type!").c_str());
+			throw CL_Exception(("PropertyList " + name + " already exists, but with another type!").c_str());
 #else
 		property = std::static_pointer_cast< Property<T> >(it->second);
 #endif
@@ -72,7 +72,7 @@ PropertyList<T> PropertyListContainer<UserData>::addList(const std::string& name
 
 template<class UserData>
 template<class T>
-PropertyList<T> PropertyListContainer<UserData>::getList(const std::string& name)
+PropertyList<T> PropertyListContainer<UserData>::getList(const CL_String& name)
 {
 	auto it = propertyLists.find(name);
 	if(it != propertyLists.end())
@@ -81,18 +81,18 @@ PropertyList<T> PropertyListContainer<UserData>::getList(const std::string& name
 #ifdef _DEBUG
 		property = std::dynamic_pointer_cast< PropertyList<T> >(it->second);
 		if(!property)
-			throw std::runtime_error(("Tried to get shared property list " + name + ", but the type was wrong!").c_str());
+			throw CL_Exception(("Tried to get shared property list " + name + ", but the type was wrong!").c_str());
 #else
 		property = std::static_pointer_cast< PropertyList<T> >(it->second);
 #endif
 		return *property.get();
 	}
 	else
-		throw std::runtime_error(("Unable to get shared property list " + name).c_str());
+		throw CL_Exception(("Unable to get shared property list " + name).c_str());
 }
 
 template<class UserData>
-std::unordered_map<std::string, std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::getPropertyLists()
+std::unordered_map<CL_String, std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::getPropertyLists()
 {
 	return propertyLists; 
 }
@@ -103,35 +103,35 @@ PropertyListContainer<UserData> &PropertyListContainer<UserData>::operator= (con
 	if(this == &rhs)
 		return *this;
 
-	throw std::runtime_error("Assignment operation between PropertyListContainer are not supported!");
+	throw CL_Exception("Assignment operation between PropertyListContainer are not supported!");
 }
 
 template<class UserData>
-sigslot::signal<std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::propertyListAdded() 
+CL_Signal_v<std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::propertyListAdded() 
 {
 	return sign_PropertyListAdded;
 }
 
 template<class UserData>
-sigslot::signal<std::shared_ptr<IPropertyList>, const UserData&> &PropertyListContainer<UserData>::propertyListWithUserDataAdded() 
+CL_Signal_v<std::shared_ptr<IPropertyList>, const UserData&> &PropertyListContainer<UserData>::propertyListWithUserDataAdded() 
 {
 	return sign_PropertyListWithUserDataAdded; 
 }
 
 template<class UserData>
-sigslot::signal<std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::propertyListRemoved()
+CL_Signal_v<std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::propertyListRemoved()
 {
 	return sign_PropertyListRemoved;
 }
 
 template<class UserData>
-sigslot::signal<std::shared_ptr<IPropertyList>, const UserData&> &PropertyListContainer<UserData>::propertyListWithUserDataRemoved()
+CL_Signal_v<std::shared_ptr<IPropertyList>, const UserData&> &PropertyListContainer<UserData>::propertyListWithUserDataRemoved()
 {
 	return sign_PropertyListWithUserDataRemoved;
 }
 
 template<class UserData>
-inline bool PropertyListContainer<UserData>::hasPropertyList(const std::string& name)
+inline bool PropertyListContainer<UserData>::hasPropertyList(const CL_String& name)
 {
 	if(propertyLists.empty())
 		return false;
@@ -152,17 +152,17 @@ inline void PropertyListContainer<UserData>::addList(std::shared_ptr<IPropertyLi
 }
 
 template<class UserData>
-inline std::shared_ptr<IPropertyList> PropertyListContainer<UserData>::getListInterface(const std::string& name)
+inline std::shared_ptr<IPropertyList> PropertyListContainer<UserData>::getListInterface(const CL_String& name)
 {
 	auto it = propertyLists.find(name);
 	if(it != propertyLists.end())
 		return it->second;
 	else
-		throw std::runtime_error(("Unable to get shared property list " + name).c_str());
+		throw CL_Exception(("Unable to get shared property list " + name).c_str());
 }
 
 template<class UserData>
-inline void PropertyListContainer<UserData>::removePropertyList(const std::string& name, bool postponeDelete)
+inline void PropertyListContainer<UserData>::removePropertyList(const CL_String& name, bool postponeDelete)
 {
 	auto it = propertyLists.find(name);
 	if(it != propertyLists.end())
@@ -177,7 +177,7 @@ inline void PropertyListContainer<UserData>::removePropertyList(const std::strin
 }
 
 template<class UserData>
-inline void PropertyListContainer<UserData>::removePropertyList(const std::string& name, const UserData &userData, bool postponeDelete)
+inline void PropertyListContainer<UserData>::removePropertyList(const CL_String& name, const UserData &userData, bool postponeDelete)
 {
 	auto it = propertyLists.find(name);
 	if(it != propertyLists.end())

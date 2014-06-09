@@ -1,4 +1,5 @@
 #pragma once
+#include <ClanLib/core.h>
 
 #include "Component.h"
 #include "ComponentContainer.h"
