@@ -19,3 +19,12 @@
 *.exe
 *.out
 *.app
+
+# Editor temporaries
+*~
+.*.swp
+
+# Folders
+/build/*
+/lib/*
+/bin/*
