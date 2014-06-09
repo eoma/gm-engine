@@ -13,8 +13,6 @@ set(TOTEM_EDK_INCLUDE_PATH ${TOTEM_EDK_HOME_PATH}/include)
 file(GLOB_RECURSE TOTEM_EDK_HEADERS
     ${TOTEM_EDK_HOME_PATH}/include/Totem/*.h
     ${TOTEM_EDK_HOME_PATH}/include/Totem/*.inl
-	${TOTEM_EDK_HOME_PATH}/include/Totem/Extensions/*.h
-    ${TOTEM_EDK_HOME_PATH}/include/Totem/Extensions/*.inl
     ${TOTEM_EDK_HOME_PATH}/depends/Standard/sigslot.h)
 
 #foreach(h ${TOTEM_EDK_HEADERS})
