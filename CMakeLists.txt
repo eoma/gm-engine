@@ -10,9 +10,12 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 set(STATIC_STD_LIBS TRUE CACHE BOOL "TRUE to statically link to the standard libraries, FALSE to use them as DLLs")
 
 #define an option for choosing between uniform and multi-byte character sets
-set(UNIFORM_CHARACTER_SET FALSE CACHE BOOL "TRUE to build project with uniform character set, FALSE to build project with multi-byte character set.")
+set(UNIFORM_CHARACTER_SET TRUE CACHE BOOL "TRUE to build project with uniform character set, FALSE to build project with multi-byte character set.")
 
+# Set postfixes for libraries
+set(CMAKE_DEBUG_POSTFIX "-debug")
 
+# Compiler specific properties
 if(MSVC)
   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -38,7 +41,7 @@ if(MSVC)
   endif()
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
   # Update if necessary
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic -std=c++11")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -std=c++11")
 endif()
 
 # Framework requirements
