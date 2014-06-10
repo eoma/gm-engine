@@ -41,7 +41,10 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPI
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic -std=c++11")
 endif()
 
+# Framework requirements
 find_package(TotemEDK REQUIRED)
+
+ADD_SUBDIRECTORY(depends/ClanLib)
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/include
