@@ -23,46 +23,63 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Marcel Hellwig
 */
 
 #pragma once
 
-
-#include "../api_core.h"
+#include <algorithm>
 #include <memory>
 #include <vector>
+#include "callback.h"
 
 namespace clan
 {
+/// \addtogroup clanCore_Signals clanCore Signals
+/// \{
 
-/// (Internal ClanLib Class)
-class CL_API_CORE SlotCallback
+/// \brief Signal
+template<class... Params>
+class Signal
 {
 public:
-	SlotCallback() : valid(true), enabled(true) { return; }
+    /// \name Construction
+    /// \{
+    Signal()
+    : impl(new std::vector<Callback<void(Params...)>>()) { return; }
 
-	virtual ~SlotCallback() { return; }
+    Signal(const Signal &copy)
+    : impl(copy.impl) { return; }
 
-	bool valid;
+    /// \}
+    /// \name Operations
+    /// \{
 
-	bool enabled;
-};
+    void connect(const Callback<void(Params...)> &callback)
+    {
+        impl->push_back(callback);
+    }
 
-/// (Internal ClanLib Class)
-class CL_API_CORE Slot_Impl
-{
-public:
-	~Slot_Impl() { if (callback) callback->valid = false; }
+    void disconnect(const Callback<void(Params...)> &callback)
+    {
+        impl->erase(std::remove(impl->begin(), impl->end(), callback), impl->end());
+    }
 
-	std::shared_ptr<SlotCallback> callback;
-};
+    void invoke(const Params & ... params) const
+    {
+        for(auto &cb : std::vector<Callback<void(Params...)>>(*impl))
+            if(!cb.is_null())
+                cb.invoke(params...);
+    }
 
-/// (Internal ClanLib Class)
-class CL_API_CORE Signal_Impl
-{
-public:
-	std::vector< std::shared_ptr<SlotCallback> > connected_slots;
+    /// \}
+    /// \name Implementation
+    /// \{
+
+private:
+    std::shared_ptr<std::vector<Callback<void(Params...)>>> impl;
+/// \}
 };
 
 }
+/// \}
