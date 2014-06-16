@@ -24,5 +24,8 @@
 *~
 .*.swp
 
+# Other
+.clang_complete
+
 # Folders
 /build/*
