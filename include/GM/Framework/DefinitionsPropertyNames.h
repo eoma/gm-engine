@@ -1,6 +1,6 @@
 #pragma once
 
 // Transform
-#define TRANSFORM_POSITION			"Position"		// vec3
-#define TRANSFORM_SCALE 			"Scale"			// vec3
-#define TRANSFORM_ORIENTATION		"Orientation"	// quat
+#define PROPERTY_POSITION			"Position"		// glm::vec3
+#define PROPERTY_SCALE 				"Scale"			// glm::vec3
+#define PROPERTY_ORIENTATION		"Orientation"	// glm::quat

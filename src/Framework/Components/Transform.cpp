@@ -12,7 +12,7 @@ Transform::Transform(const EntityPtr &owner, const std::string &name)
 : Component(name)
 , owner(owner)
 {
-	position_property = owner->add(TRANSFORM_POSITION, glm::vec3());
-	scale_property = owner->add(TRANSFORM_SCALE, glm::vec3());
-	orientation_property = owner->add(TRANSFORM_ORIENTATION, glm::quat());
+	position_property = owner->add(PROPERTY_POSITION, glm::vec3());
+	scale_property = owner->add(PROPERTY_SCALE, glm::vec3());
+	orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat());
 }
