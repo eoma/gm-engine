@@ -1,5 +1,4 @@
-#include "GM/Framework/Transform.h"
-
+#include "GM/Framework/Components/Transform.h"
 
 #include <glm/ext.hpp>
 
