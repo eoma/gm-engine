@@ -3,13 +3,11 @@ cmake_minimum_required(VERSION 2.8)
 set(NAME Framework)
 project(${NAME})
 
-file(GLOB_RECURSE Headers ${CMAKE_SOURCE_DIR}/include/GM/Framework *.h)
-file(GLOB_RECURSE Sources ${CMAKE_SOURCE_DIR}/src/Framework *.cpp)
+file(GLOB_RECURSE Headers ${CMAKE_SOURCE_DIR}/include/GM/Framework/*.h)
+file(GLOB_RECURSE Sources ${CMAKE_SOURCE_DIR}/src/Framework/*.cpp)
 
 source_group("Header Files\\" FILES ${Headers})
 source_group("Source Files\\" FILES ${Sources})
-message(STATUS "Path to Framwork's include files: ${Headers}")
-message(STATUS "Path to Framwork's source files: ${Sources}")
 
 add_library(${NAME} STATIC ${Headers} ${Sources})
 
