@@ -6,6 +6,9 @@ project(${NAME})
 file(GLOB_RECURSE Headers ${CMAKE_SOURCE_DIR}/include/GM/Framework *.h)
 file(GLOB_RECURSE Sources ${CMAKE_SOURCE_DIR}/src/Framework *.cpp)
 
+source_group("Header Files\\GM\\${NAME}" FILES ${Headers})
+source_group("Source Files\\GM\\${NAME}" FILES ${Sources})
+
 add_library(${NAME} STATIC ${Headers} ${Sources})
 
 set_target_properties(${NAME} PROPERTIES FOLDER "GM")
