@@ -69,9 +69,10 @@ void SceneManager::remove(const TransformPtr &transform) {
 void SceneManager::remove(const TransformPtr &transform, const TransformPtr &parent) {
 	if (transform == nullptr) {
 		return;
-	} else if (parent == nullptr) {
+	}
+	else if (parent == nullptr) {
 		remove(transform);
-	} else {
+	} else {
 		remove(transform, parent, Transform::remove_callback);
 	}
 }
@@ -80,9 +81,9 @@ void SceneManager::remove(const TransformPtr &transform, const TransformPtr &par
 	std::function<void(const TransformPtr &child, const TransformPtr &parent)> remove_callback) {
 	if (transform == nullptr) {
 		return;
-	} else if (parent == nullptr) {
+	} else if (parent == nullptr) {
 		remove(transform);
-	} else {
+	} else {
 		if (remove_callback) {
 			remove_callback(transform, parent);
 		}
