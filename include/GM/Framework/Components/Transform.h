@@ -43,7 +43,7 @@ public:
 
 	void translate(const glm::vec3 &position) { position_property += position; }
 	void scale(const glm::vec3 &scale) { scale_property += scale; }
-	void rotate(const glm::quat &orientation) { orientation_property += orientation; }
+	void rotate(const glm::quat &orientation) { orientation_property *= orientation; }
 
 public:
 	static void add_callback(const TransformPtr &child, const TransformPtr &parent);
