@@ -31,7 +31,7 @@ public:
 
 	template<class... Ts> void sendEvent(HashedString type, Ts... args, bool requireReceiver = true);
 
-	template<class... Ts> sigslot::signal<Ts...> &registerToEvent(HashedString type);
+	template<class... Ts> clan::Signal<Ts...> &registerToEvent(HashedString type);
 
 	bool hasEvent(const HashedString &id, int num_params = -1);
 

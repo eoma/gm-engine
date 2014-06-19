@@ -40,7 +40,7 @@ inline void EventSystem<EventFactory>::sendEvent(HashedString type, Ts... args, 
 
 template<class EventFactory>
 template<class... Ts>
-inline sigslot::signal<Ts...> &EventSystem<EventFactory>::registerToEvent(HashedString type)
+inline clan::Signal<Ts...> &EventSystem<EventFactory>::registerToEvent(HashedString type)
 {
 	auto eventsIt = eventSizeMap.find(sizeof...(Ts));
 	if (eventsIt == eventSizeMap.end()) {
