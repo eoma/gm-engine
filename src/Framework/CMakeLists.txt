@@ -34,5 +34,6 @@ foreach(folder ${PROJECT_FOLDERS})
 endforeach()
 
 add_library(${NAME} STATIC ${Headers} ${Sources})
+target_link_libraries(${NAME} clanCore)
 
 set_target_properties(${NAME} PROPERTIES FOLDER "GM")
