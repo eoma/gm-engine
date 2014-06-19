@@ -33,7 +33,9 @@ void SceneManager::add(const TransformPtr &transform, const TransformPtr &parent
 		add(transform, parent, Transform::add_callback, Transform::remove_callback);
 }
 
-void SceneManager::add(const TransformPtr &transform, const TransformPtr &parent, std::function<void(TransformPtr child, TransformPtr parent)> add_callback, std::function<void(TransformPtr child, TransformPtr parent)> remove_callback) {
+void SceneManager::add(const TransformPtr &transform, const TransformPtr &parent, 
+	std::function<void(const TransformPtr &child, const TransformPtr &parent)> add_callback, 
+	std::function<void(const TransformPtr &child, const TransformPtr &parent)> remove_callback) {
 	if (transform == nullptr)
 		return;
 	else if (parent == nullptr)
@@ -68,7 +70,8 @@ void SceneManager::remove(const TransformPtr &transform, const TransformPtr &par
 		remove(transform, parent, Transform::remove_callback);
 }
 
-void SceneManager::remove(const TransformPtr &transform, const TransformPtr &parent, std::function<void(TransformPtr child, TransformPtr parent)> remove_callback) {
+void SceneManager::remove(const TransformPtr &transform, const TransformPtr &parent, 
+	std::function<void(const TransformPtr &child, const TransformPtr &parent)> remove_callback) {
 	if (transform == nullptr)
 		return;
 	else if (parent == nullptr)
