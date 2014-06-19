@@ -69,8 +69,7 @@ void SceneManager::remove(const TransformPtr &transform) {
 void SceneManager::remove(const TransformPtr &transform, const TransformPtr &parent) {
 	if (transform == nullptr) {
 		return;
-	}
-	else if (parent == nullptr) {
+	} else if (parent == nullptr) {
 		remove(transform);
 	} else {
 		remove(transform, parent, Transform::remove_callback);
