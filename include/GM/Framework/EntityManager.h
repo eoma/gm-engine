@@ -26,5 +26,7 @@ private:
 	std::vector<EntityPtr> pending_deletion;
 };
 
+typedef std::shared_ptr<EntityManager> EntityManagerPtr;
+
 } // namespace Framework
 } // namespace GM
