@@ -33,6 +33,18 @@ public:
 	bool has_parent() const;
 	bool has_children() const;
 
+	const glm::vec3 &get_position() const { return position_property; }
+	const glm::vec3 &get_scale() const { return scale_property; }
+	const glm::quat &get_orientation() const { return orientation_property; }
+
+	void set_position(const glm::vec3 &position) { position_property = position; }
+	void set_scale(const glm::vec3 &scale) { scale_property = scale; }
+	void set_orientation(const glm::quat &orientation) { orientation_property = orientation; }
+
+	void translate(const glm::vec3 &position) { position_property += position; }
+	void scale(const glm::vec3 &scale) { scale_property += scale; }
+	void rotate(const glm::quat &orientation) { orientation_property += orientation; }
+
 public:
 	static void add_callback(const TransformPtr &child, const TransformPtr &parent);
 	static void remove_callback(const TransformPtr &child, const TransformPtr &parent);
