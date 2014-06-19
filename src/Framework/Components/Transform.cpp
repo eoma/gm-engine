@@ -64,6 +64,8 @@ void Transform::add_callback(const TransformPtr &child, const TransformPtr &pare
 
 	parent->children.push_back(child);
 	child->parent = parent;
+
+	parent->child_added_sig.invoke(parent, child);
 }
 
 void Transform::remove_callback(const TransformPtr &child, const TransformPtr &parent) {
@@ -79,5 +81,7 @@ void Transform::remove_callback(const TransformPtr &child, const TransformPtr &p
 
 		//The child has now become a parentless transform
 		parent->scene_manager->add(child);
+
+		parent->child_removed_sig.invoke(parent, child);
 	}
 }

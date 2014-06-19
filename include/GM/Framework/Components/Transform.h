@@ -3,6 +3,9 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+// ClanLib
+#include <ClanLib/core.h>
+
 // Totem
 #include <Totem/Component.h>
 
@@ -27,6 +30,11 @@ public:
 	void add_child(const TransformPtr &child);
 	void remove_child(const TransformPtr &child);
 
+	// These signals are invoked when a child is added or removed from this transform.
+	// Ther order of parameters: parent, then child
+	clan::Signal<const TransformPtr&, const TransformPtr&> get_child_added_signal() const { return child_added_sig; };
+	clan::Signal<const TransformPtr&, const TransformPtr&> get_child_removed_signal() const { return child_removed_sig; };
+
 	TransformWeakPtr get_parent() const;
 	const std::vector<TransformPtr>& get_children() const;
 
@@ -46,7 +54,11 @@ public:
 	void rotate(const glm::quat &orientation) { orientation_property *= orientation; }
 
 public:
+
+	// Called when a child is to be added to a parent
 	static void add_callback(const TransformPtr &child, const TransformPtr &parent);
+
+	// Called when a child is to be removed from a parent
 	static void remove_callback(const TransformPtr &child, const TransformPtr &parent);
 
 private:
@@ -55,6 +67,11 @@ private:
 
 	TransformWeakPtr parent;
 	std::vector<TransformPtr> children;
+
+	// Signal is invoked when a new child is added to or removed from the transform
+	// First argument is parent, second is child.
+	clan::Signal<const TransformPtr&, const TransformPtr&> child_added_sig;
+	clan::Signal<const TransformPtr&, const TransformPtr&> child_removed_sig;
 
 	// TODO: Proper defs. of variables
 	Totem::Property<glm::vec3> position_property;
