@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 // Totem
 #include <Totem/Component.h>
@@ -20,7 +21,7 @@ class Transform; typedef std::shared_ptr<Transform> TransformPtr; typedef std::w
 class Transform : public Totem::Component<Transform>, public std::enable_shared_from_this<Transform>
 {
 public:
-	Transform(const EntityPtr &owner, SceneManagerPtr &scene_manager, const std::string &name = std::string());
+	Transform(const EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name = std::string());
 	~Transform();
 
 	void add_child(const TransformPtr &child);
@@ -29,9 +30,16 @@ public:
 	TransformWeakPtr get_parent() const;
 	const std::vector<TransformPtr>& get_children() const;
 
+	bool has_parent() const;
+	bool has_children() const;
+
+public:
+	static void add_callback(const TransformPtr &child, const TransformPtr &parent);
+	static void remove_callback(const TransformPtr &child, const TransformPtr &parent);
+
 private:
 	EntityPtr owner;
-	SceneManagerWeakPtr scene_manager_weak;
+	SceneManagerPtr scene_manager;
 
 	TransformWeakPtr parent;
 	std::vector<TransformPtr> children;

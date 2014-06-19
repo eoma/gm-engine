@@ -12,10 +12,10 @@
 using namespace GM::Framework;
 using namespace Totem;
 
-Transform::Transform(const EntityPtr &owner, SceneManagerPtr &scene_manager, const std::string &name)
+Transform::Transform(const EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name)
 : Component(name)
 , owner(owner)
-, scene_manager_weak(scene_manager)
+, scene_manager(scene_manager)
 {
 	position_property = owner->add(PROPERTY_POSITION, glm::vec3());
 	scale_property = owner->add(PROPERTY_SCALE, glm::vec3());
@@ -31,48 +31,15 @@ Transform::~Transform() {
 		current_parent->remove_child(shared_from_this());
 	}
 
-	// This will probably give you bad performance
-	auto scene_manager = scene_manager_weak.lock();
-
-	if (scene_manager != nullptr) {
-		scene_manager->remove(shared_from_this());
-	}
+	scene_manager->remove(shared_from_this());
 }
 
 void Transform::add_child(const TransformPtr &child) {
-
-	{
-		// Remove previous parent and remove it from scene managers vector of parent less nodes
-		auto current_parent = child->parent.lock();
-		if (current_parent != nullptr) {
-			std::cerr << "Child already has parent when getting new parent, please remove child before adding!";
-			current_parent->remove_child(child);
-		}
-		
-		auto scene_manager = scene_manager_weak.lock();
-		if (scene_manager != nullptr) {
-			scene_manager->remove(child);
-		}
-	}
-
-	children.push_back(child);
-
-	child->parent = shared_from_this();
+	scene_manager->add(child, shared_from_this(), add_callback, remove_callback);
 }
 
-void Transform::remove_child(const TransformPtr &child) {	
-	auto iter = std::find(children.begin(), children.end(), child);
-
-	if (iter != children.end()) {
-		children.erase(iter);
-
-		child->parent.reset();
-
-		auto scene_manager = scene_manager_weak.lock();
-		if (scene_manager != nullptr) {
-			scene_manager->add(child);
-		}
-	}
+void Transform::remove_child(const TransformPtr &child) {
+	scene_manager->remove(child, shared_from_this(), remove_callback);
 }
 
 TransformWeakPtr Transform::get_parent() const {
@@ -81,4 +48,34 @@ TransformWeakPtr Transform::get_parent() const {
 
 const std::vector<TransformPtr>& Transform::get_children() const {
 	return children;
+}
+
+bool Transform::has_parent() const {
+	return parent.lock() != nullptr;
+}
+bool Transform::has_children() const {
+	return !children.empty();
+}
+
+void Transform::add_callback(const TransformPtr &child, const TransformPtr &parent) {
+	if (parent == nullptr || child == nullptr)
+		return;
+
+	parent->children.push_back(child);
+	child->parent = parent;
+}
+
+void Transform::remove_callback(const TransformPtr &child, const TransformPtr &parent) {
+	if (parent == nullptr || child == nullptr)
+		return;
+
+	auto iter = std::find(parent->children.begin(), parent->children.end(), child);
+
+	if (iter != parent->children.end()) {
+		parent->children.erase(iter);
+		child->parent.reset();
+
+		//The child has now become a parentless transform
+		parent->scene_manager->add(child);
+	}
 }
