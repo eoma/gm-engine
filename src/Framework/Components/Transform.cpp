@@ -58,16 +58,18 @@ bool Transform::has_children() const {
 }
 
 void Transform::add_callback(const TransformPtr &child, const TransformPtr &parent) {
-	if (parent == nullptr || child == nullptr)
+	if (parent == nullptr || child == nullptr) {
 		return;
+	}
 
 	parent->children.push_back(child);
 	child->parent = parent;
 }
 
 void Transform::remove_callback(const TransformPtr &child, const TransformPtr &parent) {
-	if (parent == nullptr || child == nullptr)
+	if (parent == nullptr || child == nullptr) {
 		return;
+	}
 
 	auto iter = std::find(parent->children.begin(), parent->children.end(), child);
 

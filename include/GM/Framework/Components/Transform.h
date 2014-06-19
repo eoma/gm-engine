@@ -22,7 +22,7 @@ class Transform : public Totem::Component<Transform>, public std::enable_shared_
 {
 public:
 	Transform(const EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name = std::string());
-	~Transform();
+	virtual ~Transform();
 
 	void add_child(const TransformPtr &child);
 	void remove_child(const TransformPtr &child);
