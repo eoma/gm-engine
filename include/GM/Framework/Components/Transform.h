@@ -24,7 +24,7 @@ class Transform; typedef std::shared_ptr<Transform> TransformPtr; typedef std::w
 class Transform : public Totem::Component<Transform>, public std::enable_shared_from_this<Transform>
 {
 public:
-	Transform(const EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name = std::string());
+	Transform(EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name = std::string());
 	virtual ~Transform();
 
 	void add_child(const TransformPtr &child);
@@ -62,7 +62,7 @@ public:
 	static void remove_callback(const TransformPtr &child, const TransformPtr &parent);
 
 private:
-	EntityWeakPtr owner;
+	Entity* owner;
 	SceneManagerPtr scene_manager;
 
 	TransformWeakPtr parent;

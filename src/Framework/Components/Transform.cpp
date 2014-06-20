@@ -12,9 +12,9 @@
 using namespace GM::Framework;
 using namespace Totem;
 
-Transform::Transform(const EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name)
+Transform::Transform(EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name)
 : Component(name)
-, owner(owner)
+, owner(owner.get())
 , scene_manager(scene_manager)
 {
 	position_property = owner->add(PROPERTY_POSITION, glm::vec3());

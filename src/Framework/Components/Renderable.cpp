@@ -7,7 +7,7 @@ using namespace Totem;
 
 Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_system, const std::string &name)
 : Component(name)
-, owner(owner)
+, owner(owner.get())
 , render_system(render_system)
 {
 	render_system->add_renderable(this);

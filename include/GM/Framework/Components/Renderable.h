@@ -16,11 +16,11 @@ class RenderSystem; typedef std::shared_ptr<RenderSystem> RenderSystemPtr;
 
 class Renderable : public IRenderable, public Totem::Component<Renderable> {
 public:
-	Renderable(const EntityPtr &owner, const RenderSystemPtr &render_system, const std::string &name);
+	Renderable(const EntityPtr &owner, const RenderSystemPtr &render_system, const std::string &name = std::string());
 	virtual ~Renderable();
 
 private:
-	EntityWeakPtr owner;
+	Entity* owner;
 	RenderSystemPtr render_system;
 };
 
