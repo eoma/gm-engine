@@ -53,6 +53,9 @@ public:
 	void scale(const glm::vec3 &scale) { scale_property += scale; }
 	void rotate(const glm::quat &orientation) { orientation_property *= orientation; }
 
+	const glm::mat4 &get_world_matrix() const { return world_matrix_property; };
+	const glm::mat4 &get_object_matrix() const { return object_matrix_property; };
+
 public:
 
 	// Called when a child is to be added to a parent
@@ -77,6 +80,9 @@ private:
 	Totem::Property<glm::vec3> position_property;
 	Totem::Property<glm::vec3> scale_property;
 	Totem::Property<glm::quat> orientation_property;
+
+	Totem::Property<glm::mat4> object_matrix_property;
+	Totem::Property<glm::mat4> world_matrix_property;
 };
 
 } // namespace Framework

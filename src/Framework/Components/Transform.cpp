@@ -21,6 +21,9 @@ Transform::Transform(EntityPtr &owner, const SceneManagerPtr &scene_manager, con
 	scale_property = owner->add(PROPERTY_SCALE, glm::vec3());
 	orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat());
 
+	object_matrix_property = owner->add(PROPERTY_OBJECT_MATRIX, glm::mat4());
+	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4());
+
 	scene_manager->add(this);
 }
 
