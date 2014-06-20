@@ -18,7 +18,7 @@ namespace GM {
 namespace Framework {
 
 class SceneManager; typedef std::shared_ptr<SceneManager> SceneManagerPtr; typedef std::weak_ptr<SceneManager> SceneManagerWeakPtr;
-class Entity; typedef std::shared_ptr<Entity> EntityPtr;
+class Entity; typedef std::shared_ptr<Entity> EntityPtr; typedef std::weak_ptr<Entity> EntityWeakPtr;
 class Transform; typedef std::shared_ptr<Transform> TransformPtr; typedef std::weak_ptr<Transform> TransformWeakPtr;
 
 class Transform : public Totem::Component<Transform>, public std::enable_shared_from_this<Transform>
@@ -62,7 +62,7 @@ public:
 	static void remove_callback(const TransformPtr &child, const TransformPtr &parent);
 
 private:
-	EntityPtr owner;
+	EntityWeakPtr owner;
 	SceneManagerPtr scene_manager;
 
 	TransformWeakPtr parent;
