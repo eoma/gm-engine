@@ -4,16 +4,18 @@
 #include <GM/Framework/Systems/SceneManager.h>
 #include <GM/Framework/Components/Transform.h>
 
+#include <memory>
+
 bool mainTest() {
 
-	auto entity_manager = GM::Framework::EntityManagerPtr(new GM::Framework::EntityManager());
-	auto scene_manager = GM::Framework::SceneManagerPtr(new GM::Framework::SceneManager());
+	auto entity_manager = std::make_shared<GM::Framework::EntityManager>();
+	auto scene_manager = std::make_shared<GM::Framework::SceneManager>();
 
 	auto root_entity = entity_manager->create_entity("Root");
-	auto root_transform = root_entity->addComponent<GM::Framework::Transform>(GM::Framework::TransformPtr(new GM::Framework::Transform(root_entity, scene_manager)));
+	auto root_transform = root_entity->addComponent<GM::Framework::Transform>(std::make_shared<GM::Framework::Transform>(root_entity, scene_manager));
 
 	auto child_entity = entity_manager->create_entity("Child");
-	auto child_transform = child_entity->addComponent<GM::Framework::Transform>(GM::Framework::TransformPtr(new GM::Framework::Transform(child_entity, scene_manager)));
+	auto child_transform = child_entity->addComponent<GM::Framework::Transform>(std::make_shared<GM::Framework::Transform>(child_entity, scene_manager));
 
 	root_transform->add_child(child_transform);
 
