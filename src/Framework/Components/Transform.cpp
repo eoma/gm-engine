@@ -21,7 +21,7 @@ Transform::Transform(const EntityPtr &owner, const SceneManagerPtr &scene_manage
 	scale_property = owner->add(PROPERTY_SCALE, glm::vec3());
 	orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat());
 
-	scene_manager->add(shared_from_this());
+	scene_manager->add(this);
 }
 
 Transform::~Transform() {
@@ -31,7 +31,8 @@ Transform::~Transform() {
 		current_parent->remove_child(shared_from_this());
 	}
 
-	scene_manager->remove(shared_from_this());
+	// Nodes are always added to the scene manager's parentLess transforms when removed from a parent
+	scene_manager->remove(this);
 }
 
 void Transform::add_child(const TransformPtr &child) {
@@ -80,7 +81,7 @@ void Transform::remove_callback(const TransformPtr &child, const TransformPtr &p
 		child->parent.reset();
 
 		//The child has now become a parentless transform
-		parent->scene_manager->add(child);
+		parent->scene_manager->add(child.get());
 
 		parent->child_removed_sig.invoke(parent, child);
 	}

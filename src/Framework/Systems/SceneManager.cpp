@@ -13,7 +13,7 @@ SceneManager::~SceneManager() {
 
 }
 
-void SceneManager::add(const TransformPtr &transform) {
+void SceneManager::add(Transform *transform) {
 	if (transform == nullptr) {
 		return;
 	}
@@ -29,7 +29,7 @@ void SceneManager::add(const TransformPtr &transform, const TransformPtr &parent
 	if (transform == nullptr) {
 		return;
 	} else if (parent == nullptr) {
-		add(transform);
+		add(transform.get());
 	} else {
 		add(transform, parent, Transform::add_callback, Transform::remove_callback);
 	}
@@ -41,7 +41,7 @@ void SceneManager::add(const TransformPtr &transform, const TransformPtr &parent
 	if (transform == nullptr) {
 		return;
 	} else if (parent == nullptr) {
-		add(transform);
+		add(transform.get());
 	} else {
 		//First remove from parentless list or remove from previous parent before we set the new one.
 		remove(transform, transform->get_parent().lock(), remove_callback);
@@ -54,7 +54,7 @@ void SceneManager::add(const TransformPtr &transform, const TransformPtr &parent
 	}
 }
 
-void SceneManager::remove(const TransformPtr &transform) {
+void SceneManager::remove(Transform *transform) {
 	if (transform == nullptr) {
 		return;
 	}
@@ -70,7 +70,7 @@ void SceneManager::remove(const TransformPtr &transform, const TransformPtr &par
 	if (transform == nullptr) {
 		return;
 	} else if (parent == nullptr) {
-		remove(transform);
+		remove(transform.get());
 	} else {
 		remove(transform, parent, Transform::remove_callback);
 	}
@@ -81,7 +81,7 @@ void SceneManager::remove(const TransformPtr &transform, const TransformPtr &par
 	if (transform == nullptr) {
 		return;
 	} else if (parent == nullptr) {
-		remove(transform);
+		remove(transform.get());
 	} else {
 		if (remove_callback) {
 			remove_callback(transform, parent);
@@ -89,6 +89,6 @@ void SceneManager::remove(const TransformPtr &transform, const TransformPtr &par
 	}
 }
 
-const std::vector<TransformPtr> &SceneManager::get_transforms() const {
+const std::vector<Transform*> &SceneManager::get_transforms() const {
 	return parentlessTransforms;
 }
