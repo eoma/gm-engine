@@ -33,6 +33,8 @@ Transform::~Transform() {
 
 	// Nodes are always added to the scene manager's parentLess transforms when removed from a parent
 	scene_manager->remove(this);
+
+	//std::cout << "Transform destroyed" << std::endl;
 }
 
 void Transform::add_child(const TransformPtr &child) {

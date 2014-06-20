@@ -7,6 +7,16 @@
 
 using namespace GM::Framework;
 
+EntityManager::EntityManager()
+{
+
+}
+
+EntityManager::~EntityManager()
+{
+	//std::cout << "EntityManager destroyed" << std::endl;
+}
+
 void EntityManager::update()
 {
 	for(auto entity : pending_deletion)

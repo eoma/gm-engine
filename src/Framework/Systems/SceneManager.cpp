@@ -2,6 +2,7 @@
 #include "GM/Framework/Components/Transform.h"
 
 #include <algorithm>
+#include <iostream>
 
 using namespace GM::Framework;
 
@@ -10,7 +11,7 @@ SceneManager::SceneManager() {
 }
 
 SceneManager::~SceneManager() {
-
+	//std::cout << "SceneManager destroyed" << std::endl;
 }
 
 void SceneManager::add(Transform *transform) {

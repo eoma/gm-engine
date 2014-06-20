@@ -10,6 +10,9 @@ class Entity; typedef std::shared_ptr<Entity> EntityPtr;
 
 class EntityManager {
 public:
+	EntityManager();
+	~EntityManager();
+
 	EntityPtr get_entity(const std::string &name) const;
 	const std::vector<EntityPtr> &get_entities() const;
 

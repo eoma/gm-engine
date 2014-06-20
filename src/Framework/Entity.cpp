@@ -1,5 +1,8 @@
 #include "GM/Framework/Entity.h"
 #include "GM/Framework/Components/Transform.h"
+
+#include <iostream>
+
 using namespace GM::Framework;
 
 Entity::Entity(const std::string &name) : name(name) {
@@ -7,7 +10,7 @@ Entity::Entity(const std::string &name) : name(name) {
 }
 
 Entity::~Entity() {
-
+	//std::cout << "Entity destroyed" << std::endl;
 }
 
 void Entity::on_component_added(std::shared_ptr<Totem::IComponent<>> component) {
