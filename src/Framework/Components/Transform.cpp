@@ -91,3 +91,40 @@ void Transform::remove_callback(const TransformPtr &child, const TransformPtr &p
 		parent->child_removed_sig.invoke(parent, child);
 	}
 }
+
+void Transform::update_object_matrix() {
+	if (position_property.isDirty() || orientation_property.isDirty() || scale_property.isDirty()) {
+		object_matrix_property = make_object_matrix();
+
+		position_property.clearDirty();
+		orientation_property.clearDirty();
+		scale_property.clearDirty();
+	}
+}
+
+glm::mat4 Transform::make_object_matrix() const {
+	glm::mat4 translation;
+	translation[3] = glm::vec4(position_property.get(), 1);
+
+	glm::mat4 rotation = glm::toMat4(orientation_property.get());
+
+	glm::mat4 scale = glm::diagonal4x4(glm::vec4(scale_property.get(), 1));
+
+	return translation * rotation * scale;
+}
+
+void Transform::update_world_matrix() {
+	update_object_matrix();
+
+	world_matrix_property = make_world_matrix();
+}
+
+glm::mat4 Transform::make_world_matrix() const {
+	glm::mat4 thisWorld = get_object_matrix();
+
+	if (auto parentLock = parent.lock()) {
+		thisWorld = parentLock->get_world_matrix() * thisWorld;
+	}
+
+	return thisWorld;
+}

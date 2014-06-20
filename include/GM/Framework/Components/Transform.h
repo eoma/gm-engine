@@ -54,7 +54,16 @@ public:
 	void rotate(const glm::quat &orientation) { orientation_property *= orientation; }
 
 	const glm::mat4 &get_world_matrix() const { return world_matrix_property; };
+
+	// Essentially goes world_matrix_property = make_world_matrix();
+	// You need only call this to update, world and object
+	void update_world_matrix();
+
 	const glm::mat4 &get_object_matrix() const { return object_matrix_property; };
+
+	// Essentially goes object_matrix_property = make_object_matrix() if
+	// dependent properties (position, orientation, scale) has changed.
+	void update_object_matrix();
 
 public:
 
@@ -63,6 +72,10 @@ public:
 
 	// Called when a child is to be removed from a parent
 	static void remove_callback(const TransformPtr &child, const TransformPtr &parent);
+
+protected:
+	glm::mat4 make_object_matrix() const;
+	glm::mat4 make_world_matrix() const;
 
 private:
 	Entity* owner;
