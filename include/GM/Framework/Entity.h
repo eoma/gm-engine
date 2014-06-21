@@ -20,6 +20,7 @@ public:
 
 private:
 	void on_component_added(std::shared_ptr<Totem::IComponent<>> component);
+	void on_component_removed(std::shared_ptr<Totem::IComponent<>> component);
 
 private:
 	std::string name;

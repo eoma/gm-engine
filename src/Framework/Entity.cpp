@@ -7,6 +7,7 @@ using namespace GM::Framework;
 
 Entity::Entity(const std::string &name) : name(name) {
 	componentAdded().connect(clan::Callback<void(std::shared_ptr<Totem::IComponent<>>)>(this, &Entity::on_component_added));
+	componentRemoved().connect(clan::Callback<void(std::shared_ptr<Totem::IComponent<>>)>(this, &Entity::on_component_removed));
 }
 
 Entity::~Entity() {
@@ -16,6 +17,12 @@ Entity::~Entity() {
 void Entity::on_component_added(std::shared_ptr<Totem::IComponent<>> component) {
 	if (Totem::IComponent<>::isType<Transform>(component)) {
 		transform = std::static_pointer_cast<Transform>(component);
+	}
+}
+
+void Entity::on_component_removed(std::shared_ptr<Totem::IComponent<>> component) {
+	if (Totem::IComponent<>::isType<Transform>(component)) {
+		transform.reset();
 	}
 }
 
