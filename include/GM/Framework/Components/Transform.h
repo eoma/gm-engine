@@ -1,5 +1,8 @@
 #pragma once
 
+#include "../DefinitionsComponentNames.h"
+
+// GLM
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
@@ -26,6 +29,9 @@ class Transform : public Totem::Component<Transform>, public std::enable_shared_
 public:
 	Transform(EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name = std::string());
 	virtual ~Transform();
+
+	const Entity *get_owner() const { return owner; }
+	std::string get_type() const { return get_static_type(); }
 
 	void add_child(const TransformPtr &child);
 	void remove_child(const TransformPtr &child);
@@ -66,6 +72,7 @@ public:
 	void update_object_matrix();
 
 public:
+	static std::string get_static_type() { return COMPONENT_TRANSFORM; }
 
 	// Called when a child is to be added to a parent
 	static void add_callback(const TransformPtr &child, const TransformPtr &parent);

@@ -6,7 +6,7 @@ using namespace GM::Framework;
 using namespace Totem;
 
 Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_system, const std::string &name)
-: Component(name)
+: Component<Renderable>(name)
 , owner(owner.get())
 , render_system(render_system)
 {

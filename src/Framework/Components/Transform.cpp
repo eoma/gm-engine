@@ -13,7 +13,7 @@ using namespace GM::Framework;
 using namespace Totem;
 
 Transform::Transform(EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name)
-: Component(name)
+: Component<Transform>(name)
 , owner(owner.get())
 , scene_manager(scene_manager)
 {

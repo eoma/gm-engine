@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IRenderable.h"
+#include "../DefinitionsComponentNames.h"
 
 #include <Totem/Component.h>
 
@@ -18,6 +19,12 @@ class Renderable : public IRenderable, public Totem::Component<Renderable> {
 public:
 	Renderable(const EntityPtr &owner, const RenderSystemPtr &render_system, const std::string &name = std::string());
 	virtual ~Renderable();
+
+	const Entity *get_owner() const { return owner; }
+	std::string get_type() const { return get_static_type(); }
+
+public:
+	static std::string get_static_type() { return COMPONENT_RENDERABLE; }
 
 private:
 	Entity* owner;
