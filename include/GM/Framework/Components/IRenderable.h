@@ -11,7 +11,7 @@ class IRenderable; typedef std::shared_ptr<IRenderable> IRenderablePtr;
 
 class IRenderable {
 public:
-	virtual ~IRenderable() = 0;
+	virtual ~IRenderable() {};
 
 	virtual glm::mat4 get_world_matrix() = 0;
 	virtual glm::mat4 get_object_matrix() = 0;
