@@ -16,6 +16,7 @@ Transform::Transform(EntityPtr &owner, const SceneManagerPtr &scene_manager, con
 : Component<Transform>(name)
 , owner(owner.get())
 , scene_manager(scene_manager)
+, parent(nullptr)
 {
 	position_property = owner->add(PROPERTY_POSITION, glm::vec3());
 	scale_property = owner->add(PROPERTY_SCALE, glm::vec3());
@@ -28,42 +29,51 @@ Transform::Transform(EntityPtr &owner, const SceneManagerPtr &scene_manager, con
 }
 
 Transform::~Transform() {
-	auto current_parent = parent.lock();
+	//std::cout << "Transform destructor started" << std::endl;
 
-	if (current_parent != nullptr) {
-		current_parent->remove_child(shared_from_this());
+
+	if (parent != nullptr) {
+		parent->remove_child(this);
 	}
 
 	// Nodes are always added to the scene manager's parentLess transforms when removed from a parent
 	scene_manager->remove(this);
 
+	// Add all of the children to the scene manager.
+	for (Transform * child : children) {
+		child->parent = nullptr;
+		scene_manager->add(child);
+	}
+
+	children.clear();
+
 	//std::cout << "Transform destroyed" << std::endl;
 }
 
-void Transform::add_child(const TransformPtr &child) {
-	scene_manager->add(child, shared_from_this(), add_callback, remove_callback);
+void Transform::add_child(Transform * const child) {
+	scene_manager->add(child, this, add_callback, remove_callback);
 }
 
-void Transform::remove_child(const TransformPtr &child) {
-	scene_manager->remove(child, shared_from_this(), remove_callback);
+void Transform::remove_child(Transform * const child) {
+	scene_manager->remove(child, this, remove_callback);
 }
 
-TransformWeakPtr Transform::get_parent() const {
+Transform* Transform::get_parent() const {
 	return parent;
 }
 
-const std::vector<TransformPtr>& Transform::get_children() const {
+const std::vector<Transform *>& Transform::get_children() const {
 	return children;
 }
 
 bool Transform::has_parent() const {
-	return parent.lock() != nullptr;
+	return parent != nullptr;
 }
 bool Transform::has_children() const {
 	return !children.empty();
 }
 
-void Transform::add_callback(const TransformPtr &child, const TransformPtr &parent) {
+void Transform::add_callback(Transform * const child, Transform * const parent) {
 	if (parent == nullptr || child == nullptr) {
 		return;
 	}
@@ -74,7 +84,7 @@ void Transform::add_callback(const TransformPtr &child, const TransformPtr &pare
 	parent->child_added_sig.invoke(parent, child);
 }
 
-void Transform::remove_callback(const TransformPtr &child, const TransformPtr &parent) {
+void Transform::remove_callback(Transform * const child, Transform * const parent) {
 	if (parent == nullptr || child == nullptr) {
 		return;
 	}
@@ -83,10 +93,10 @@ void Transform::remove_callback(const TransformPtr &child, const TransformPtr &p
 
 	if (iter != parent->children.end()) {
 		parent->children.erase(iter);
-		child->parent.reset();
+		child->parent = nullptr;
 
 		//The child has now become a parentless transform
-		parent->scene_manager->add(child.get());
+		parent->scene_manager->add(child);
 
 		parent->child_removed_sig.invoke(parent, child);
 	}
@@ -122,8 +132,8 @@ void Transform::update_world_matrix() {
 glm::mat4 Transform::make_world_matrix() const {
 	glm::mat4 thisWorld = get_object_matrix();
 
-	if (auto parentLock = parent.lock()) {
-		thisWorld = parentLock->get_world_matrix() * thisWorld;
+	if (parent != nullptr) {
+		thisWorld = parent->get_world_matrix() * thisWorld;
 	}
 
 	return thisWorld;

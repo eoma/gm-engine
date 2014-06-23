@@ -33,16 +33,20 @@ public:
 	const Entity *get_owner() const { return owner; }
 	std::string get_type() const { return get_static_type(); }
 
-	void add_child(const TransformPtr &child);
-	void remove_child(const TransformPtr &child);
+	void add_child(const TransformPtr &child) { add_child( child.get() ); };
+	void add_child(Transform * const child);
+
+	void remove_child(const TransformPtr &child) { remove_child( child.get() ); };
+	void remove_child(Transform * const child);
+
 
 	// These signals are invoked when a child is added or removed from this transform.
 	// Ther order of parameters: parent, then child
-	clan::Signal<const TransformPtr&, const TransformPtr&> get_child_added_signal() const { return child_added_sig; };
-	clan::Signal<const TransformPtr&, const TransformPtr&> get_child_removed_signal() const { return child_removed_sig; };
+	clan::Signal<const Transform* const, const Transform* const> get_child_added_signal() const { return child_added_sig; };
+	clan::Signal<const Transform* const, const Transform* const> get_child_removed_signal() const { return child_removed_sig; };
 
-	TransformWeakPtr get_parent() const;
-	const std::vector<TransformPtr>& get_children() const;
+	Transform* get_parent() const;
+	const std::vector<Transform*>& get_children() const;
 
 	bool has_parent() const;
 	bool has_children() const;
@@ -75,10 +79,10 @@ public:
 	static std::string get_static_type() { return COMPONENT_TRANSFORM; }
 
 	// Called when a child is to be added to a parent
-	static void add_callback(const TransformPtr &child, const TransformPtr &parent);
+	static void add_callback(Transform * const child, Transform * const parent);
 
 	// Called when a child is to be removed from a parent
-	static void remove_callback(const TransformPtr &child, const TransformPtr &parent);
+	static void remove_callback(Transform * const child, Transform * const parent);
 
 protected:
 	glm::mat4 make_object_matrix() const;
@@ -88,13 +92,13 @@ private:
 	Entity* owner;
 	SceneManagerPtr scene_manager;
 
-	TransformWeakPtr parent;
-	std::vector<TransformPtr> children;
+	Transform * parent;
+	std::vector<Transform *> children;
 
 	// Signal is invoked when a new child is added to or removed from the transform
 	// First argument is parent, second is child.
-	clan::Signal<const TransformPtr&, const TransformPtr&> child_added_sig;
-	clan::Signal<const TransformPtr&, const TransformPtr&> child_removed_sig;
+	clan::Signal<const Transform* const, const Transform* const> child_added_sig;
+	clan::Signal<const Transform* const, const Transform* const> child_removed_sig;
 
 	// TODO: Proper defs. of variables
 	Totem::Property<glm::vec3> position_property;

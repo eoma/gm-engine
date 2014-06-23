@@ -14,7 +14,7 @@ SceneManager::~SceneManager() {
 	//std::cout << "SceneManager destroyed" << std::endl;
 }
 
-void SceneManager::add(Transform *transform) {
+void SceneManager::add(Transform * const transform) {
 	if (transform == nullptr) {
 		return;
 	}
@@ -26,26 +26,26 @@ void SceneManager::add(Transform *transform) {
 	}
 }
 
-void SceneManager::add(const TransformPtr &transform, const TransformPtr &parent) {
+void SceneManager::add(Transform * const transform, Transform * const parent) {
 	if (transform == nullptr) {
 		return;
 	} else if (parent == nullptr) {
-		add(transform.get());
+		add(transform);
 	} else {
 		add(transform, parent, Transform::add_callback, Transform::remove_callback);
 	}
 }
 
-void SceneManager::add(const TransformPtr &transform, const TransformPtr &parent, 
-	std::function<void(const TransformPtr &child, const TransformPtr &parent)> add_callback, 
-	std::function<void(const TransformPtr &child, const TransformPtr &parent)> remove_callback) {
+void SceneManager::add(Transform * const transform, Transform * const parent,
+	std::function<void(Transform * const child, Transform * const parent)> add_callback,
+	std::function<void(Transform * const child, Transform * const parent)> remove_callback) {
 	if (transform == nullptr) {
 		return;
 	} else if (parent == nullptr) {
-		add(transform.get());
+		add(transform);
 	} else {
 		//First remove from parentless list or remove from previous parent before we set the new one.
-		remove(transform, transform->get_parent().lock(), remove_callback);
+		remove(transform, transform->get_parent(), remove_callback);
 
 		//Then define new parent for transform
 		//parent->add_child(transform);
@@ -55,7 +55,7 @@ void SceneManager::add(const TransformPtr &transform, const TransformPtr &parent
 	}
 }
 
-void SceneManager::remove(Transform *transform) {
+void SceneManager::remove(Transform * const transform) {
 	if (transform == nullptr) {
 		return;
 	}
@@ -67,22 +67,22 @@ void SceneManager::remove(Transform *transform) {
 	}
 }
 
-void SceneManager::remove(const TransformPtr &transform, const TransformPtr &parent) {
+void SceneManager::remove(Transform * const transform, Transform * const parent) {
 	if (transform == nullptr) {
 		return;
 	} else if (parent == nullptr) {
-		remove(transform.get());
+		remove(transform);
 	} else {
 		remove(transform, parent, Transform::remove_callback);
 	}
 }
 
-void SceneManager::remove(const TransformPtr &transform, const TransformPtr &parent, 
-	std::function<void(const TransformPtr &child, const TransformPtr &parent)> remove_callback) {
+void SceneManager::remove(Transform * const transform, Transform * const parent,
+	std::function<void(Transform * const child, Transform * const parent)> remove_callback) {
 	if (transform == nullptr) {
 		return;
 	} else if (parent == nullptr) {
-		remove(transform.get());
+		remove(transform);
 	} else {
 		if (remove_callback) {
 			remove_callback(transform, parent);
