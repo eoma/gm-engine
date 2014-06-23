@@ -79,7 +79,9 @@ foreach(module ${CLANLIB_MODULES})
 
 	set_target_properties(clan${module} 
 		PROPERTIES
-		FOLDER "Dependencies")
+		FOLDER "Dependencies"
+		POSTFIX "-static-mt"
+		DEBUG_POSTFIX "-static-mt-debug")
 
 	# Uncomment these and other similar to enable building of a mega library
 	#list(APPEND CLANLIB_ALLMODS_HEADERS ${CLANLIB_${MODULE}_HEADERS})
@@ -91,5 +93,6 @@ endforeach()
 #add_library(clanAllMods STATIC ${CLANLIB_ALLMODS_HEADERS} ${CLANLIB_ALLMODS_SOURCES})
 
 ###########################################
+
 
 
