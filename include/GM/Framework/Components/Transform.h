@@ -65,7 +65,7 @@ public:
 
 	// Called by SceneManager
 	bool is_dirty() const;
-	bool clear_dirty() const;
+	void clear_dirty();
 
 	const glm::mat4 &get_world_matrix() const { return world_matrix_property; };
 
