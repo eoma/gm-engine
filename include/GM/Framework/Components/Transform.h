@@ -29,7 +29,7 @@ public:
 	Transform(const EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name = std::string());
 	virtual ~Transform();
 
-	std::string get_type() const { return get_static_type(); }
+	std::string get_type() const override { return get_static_type(); }
 
 	void add_child(const TransformPtr &child) { add_child( child.get() ); };
 	void add_child(Transform * const child);

@@ -19,7 +19,7 @@ public:
 	Renderable(const EntityPtr &owner, const RenderSystemPtr &render_system, const std::string &name = std::string());
 	virtual ~Renderable();
 
-	std::string get_type() const { return get_static_type(); }
+	std::string get_type() const override { return get_static_type(); }
 
 public:
 	static std::string get_static_type() { return COMPONENT_RENDERABLE; }
