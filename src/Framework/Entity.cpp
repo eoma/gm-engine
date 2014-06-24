@@ -7,16 +7,16 @@ using namespace GM::Framework;
 
 Entity::Entity(const std::string &name)
 : name(name)
-, callback_holder_component_added(this, &Entity::on_component_removed)
+, component_removed_slot(this, &Entity::on_component_removed)
 {
 	componentAdded().connect(clan::Callback<void(std::shared_ptr<Totem::IComponent<>>)>(this, &Entity::on_component_added));
-	componentRemoved().connect(callback_holder_component_added);
+	componentRemoved().connect(component_removed_slot);
 }
 
 Entity::~Entity() {
 	// Since Entity inherits Totem::ComponentContainer we must avoid letting
 	// it call methods on objects that are no longer valid (like ours)
-	componentRemoved().disconnect(callback_holder_component_added);
+	componentRemoved().disconnect(component_removed_slot);
 
 	//std::cout << "Entity destroyed" << std::endl;
 }
