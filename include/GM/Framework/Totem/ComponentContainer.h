@@ -33,6 +33,7 @@ public:
 
 protected:
 	void check_duplication_and_add(unsigned int type_id, const std::string &name);
+	void pre_destruction();
 
 	std::unordered_map<unsigned int, std::vector<std::string>> names_for_component_types;
 	std::vector<std::shared_ptr<IComponent<UserData>>> components;

@@ -17,6 +17,9 @@ Entity::~Entity() {
 	// Since Entity inherits Totem::ComponentContainer we must avoid letting
 	// it call methods on objects that are no longer valid (like ours)
 	component_removed().disconnect(component_removed_slot);
+	
+	//Need to call this here so that Entity isn't destroyed when ComponentContainer invoke it's ComponentRemoved signals.
+	pre_destruction();
 
 	//std::cout << "Entity destroyed" << std::endl;
 }

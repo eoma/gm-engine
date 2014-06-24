@@ -19,7 +19,7 @@ source_group("Source Files\\" FILES ${Sources})
 
 # Set up rest of folders
 foreach(folder ${PROJECT_FOLDERS})
-	file(GLOB folder_headers ${PROJECT_HEADER_ROOT}/${folder}/*.h)
+	file(GLOB folder_headers ${PROJECT_HEADER_ROOT}/${folder}/*.h ${PROJECT_HEADER_ROOT}/${folder}/*.inl)
 	file(GLOB folder_sources ${PROJECT_SOURCE_ROOT}/${folder}/*.cpp)
 
 	# append found files to relevant list
@@ -29,7 +29,7 @@ foreach(folder ${PROJECT_FOLDERS})
 	string(REPLACE "/" "\\" folderForSourceGroup ${folder})
 
 	# Set up relevant source group
-	source_group("Header Files\\${folderForSourceGroup}" FILES ${folder_headers})
+	source_group("Header Files\\${folderForSourceGroup}" FILES ${folder_headers} ${folder_headers_inl})
 	source_group("Source Files\\${folderForSourceGroup}" FILES ${folder_sources})
 endforeach()
 

@@ -159,3 +159,12 @@ void ComponentContainer<UserData>::check_duplication_and_add(unsigned int type_i
 		names_for_component_types[type_id] = new_list;
 	}
 }
+
+template<class UserData>
+void ComponentContainer<UserData>::pre_destruction()
+{
+	for (unsigned int i = 0; i < components.size(); i++)
+		sign_ComponentRemoved.invoke(components[i]);
+
+	components.clear();
+}
