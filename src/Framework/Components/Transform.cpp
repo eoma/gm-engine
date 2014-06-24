@@ -11,9 +11,8 @@
 
 using namespace GM::Framework;
 
-Transform::Transform(EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name)
-: Component<Transform>(name)
-, owner(owner.get())
+Transform::Transform(const EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name)
+: Component<Transform>(owner, name)
 , scene_manager(scene_manager)
 , parent(nullptr)
 {

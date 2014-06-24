@@ -11,29 +11,11 @@ using namespace GM;
 using namespace Framework;
 
 void on_component_added(std::shared_ptr<IComponent<>> component) {
-	std::string owner_name = "Unknown";
-	if (IComponent<>::is_type<Transform>(component)) {
-		auto transform = std::static_pointer_cast<Transform>(component);
-		owner_name = transform->get_owner()->get_name();
-	}
-	else if (IComponent<>::is_type<Renderable>(component)) {
-		auto renderable = std::static_pointer_cast<Renderable>(component);
-		owner_name = renderable->get_owner()->get_name();
-	}
-	std::cout << "Component " << component->get_name() << " was added to " << owner_name << "!" << std::endl;
+	std::cout << "Component " << component->get_name() << " was added to " << component->get_owner()->get_name() << "!" << std::endl;
 }
 
 void on_component_removed(std::shared_ptr<IComponent<>> component) {
-	std::string owner_name = "Unknown";
-	if (IComponent<>::is_type<Transform>(component)) {
-		auto transform = std::static_pointer_cast<Transform>(component);
-		owner_name = transform->get_owner()->get_name();
-	}
-	else if (IComponent<>::is_type<Renderable>(component)) {
-		auto renderable = std::static_pointer_cast<Renderable>(component);
-		owner_name = renderable->get_owner()->get_name();
-	}
-	std::cout << "Component " << component->get_name() << " was removed from " << owner_name << "!" << std::endl;
+	std::cout << "Component " << component->get_name() << " was removed from " << component->get_owner()->get_name() << "!" << std::endl;
 }
 
 void on_transform_child_added(const Transform * const parent, const Transform * const child) {

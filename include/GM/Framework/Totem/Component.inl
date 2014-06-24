@@ -1,7 +1,7 @@
 
 template<class ComponentType, class UserData>
-Component<ComponentType, UserData>::Component(const std::string &name) 
-	: name(name)
+Component<ComponentType, UserData>::Component(const EntityPtr &owner, const std::string &name)
+	: owner(owner.get()), name(name)
 {
 }
 
@@ -20,6 +20,12 @@ template<class ComponentType, class UserData>
 const std::string &Component<ComponentType, UserData>::get_name() const
 { 
 	return name; 
+}
+
+template<class ComponentType, class UserData>
+const Entity *Component<ComponentType, UserData>::get_owner() const
+{
+	return owner;
 }
 
 template<class ComponentType, class UserData>

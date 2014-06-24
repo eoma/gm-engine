@@ -21,16 +21,14 @@ namespace GM {
 namespace Framework {
 
 class SceneManager; typedef std::shared_ptr<SceneManager> SceneManagerPtr; typedef std::weak_ptr<SceneManager> SceneManagerWeakPtr;
-class Entity; typedef std::shared_ptr<Entity> EntityPtr; typedef std::weak_ptr<Entity> EntityWeakPtr;
 class Transform; typedef std::shared_ptr<Transform> TransformPtr; typedef std::weak_ptr<Transform> TransformWeakPtr;
 
 class Transform : public Component<Transform>, public std::enable_shared_from_this<Transform>
 {
 public:
-	Transform(EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name = std::string());
+	Transform(const EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name = std::string());
 	virtual ~Transform();
 
-	const Entity *get_owner() const { return owner; }
 	std::string get_type() const { return get_static_type(); }
 
 	void add_child(const TransformPtr &child) { add_child( child.get() ); };
@@ -93,7 +91,6 @@ protected:
 	glm::mat4 make_world_matrix() const;
 
 private:
-	Entity* owner;
 	SceneManagerPtr scene_manager;
 
 	Transform * parent;

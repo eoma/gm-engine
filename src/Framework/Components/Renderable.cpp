@@ -5,8 +5,7 @@
 using namespace GM::Framework;
 
 Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_system, const std::string &name)
-: Component<Renderable>(name)
-, owner(owner.get())
+: Component<Renderable>(owner, name)
 , render_system(render_system)
 {
 	render_system->add_renderable(this);

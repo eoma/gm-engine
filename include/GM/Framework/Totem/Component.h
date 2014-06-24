@@ -14,19 +14,23 @@
 namespace GM {
 namespace Framework {
 
+class Entity; typedef std::shared_ptr<Entity> EntityPtr;
+
 template<class ComponentType, class UserData = void*>
 class Component : public IComponent<UserData> 
 {
 public:
-	Component(const std::string &name);
+	Component(const EntityPtr &owner, const std::string &name);
 	virtual ~Component();
 
 	unsigned int get_runtime_type_id() const override;
 	const std::string &get_name() const override;
+	virtual const Entity *get_owner() const override;
 
 	Component &operator= (const Component &rhs);
 	
 protected:
+	Entity *owner;
 	std::string name;
 };
 
