@@ -25,6 +25,9 @@ private:
 private:
 	std::string name;
 
+	// It's needed to save connected callbacks in order to disconnect them
+	clan::Callback<void(std::shared_ptr<Totem::IComponent<>>)> callback_holder_component_added;
+
 	TransformPtr transform;
 };
 
