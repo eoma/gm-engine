@@ -11,8 +11,8 @@
  
  
 
-namespace Totem
-{
+namespace GM {
+namespace Framework {
 
 template<class ComponentType, class UserData = void*>
 class Component : public IComponent<UserData> 
@@ -21,8 +21,8 @@ public:
 	Component(const std::string &name);
 	virtual ~Component();
 
-	unsigned int getRuntimeTypeId() const override;
-	const std::string &getName() const override;
+	unsigned int get_runtime_type_id() const override;
+	const std::string &get_name() const override;
 
 	Component &operator= (const Component &rhs);
 	
@@ -32,7 +32,8 @@ protected:
 
 #include "Component.inl"
 
-} // namespace Totem
+} // namespace Framework
+} // namespace GM
 
 #pragma warning(pop)
 

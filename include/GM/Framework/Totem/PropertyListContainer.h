@@ -8,13 +8,13 @@
 #include <vector>
  
 
-namespace Totem
-{
+namespace GM {
+namespace Framework {
 
 class PropertyListFactory
 {
 public:
-	template<class PropertyType> static std::shared_ptr<Totem::PropertyList<PropertyType>> createPropertyList(const std::string &name);
+	template<class PropertyType> static std::shared_ptr<GM::Framework::PropertyList<PropertyType>> create_property_list(const std::string &name);
 };
 
 template<class UserData = void*>
@@ -24,35 +24,35 @@ public:
 	PropertyListContainer();
 	virtual ~PropertyListContainer();
 
-	bool hasPropertyList(const std::string& name);
+	bool has_property_list(const std::string& name);
 
-	template<class T> PropertyList<T> addList(const std::string& name);
-	template<class T> PropertyList<T> addList(const std::string& name, const UserData &userData);
-	void addList(std::shared_ptr<IPropertyList> property);
+	template<class T> PropertyList<T> add_list(const std::string& name);
+	template<class T> PropertyList<T> add_list(const std::string& name, const UserData &user_data);
+	void add_list(std::shared_ptr<IPropertyList> property);
 
-	template<class T> PropertyList<T> getList(const std::string& name);
-	std::shared_ptr<IPropertyList> getListInterface(const std::string& name);
-	std::unordered_map<std::string, std::shared_ptr<IPropertyList>> &getPropertyLists();
+	template<class T> PropertyList<T> get_list(const std::string& name);
+	std::shared_ptr<IPropertyList> get_list_interface(const std::string& name);
+	std::unordered_map<std::string, std::shared_ptr<IPropertyList>> &get_property_lists();
 
-	void removePropertyList(const std::string& name, bool postponeDelete = false);
-	void removePropertyList(const std::string& name, const UserData &userData, bool postponeDelete = false);
-	void removeAllPropertyLists();
+	void remove_property_list(const std::string& name, bool postpone_delete = false);
+	void remove_property_list(const std::string& name, const UserData &user_data, bool postpone_delete = false);
+	void remove_all_property_lists();
 
-	void clearDeletedPropertyLists();
-	void clearDirtyPropertyLists();
+	void clear_deleted_property_lists();
+	void clear_dirty_property_lists();
 
-	void updatePropertyLists();
+	void update_property_lists();
 
 	PropertyListContainer &operator= (const PropertyListContainer &rhs);
 
-	clan::Signal<std::shared_ptr<IPropertyList>> &propertyListAdded();
-	clan::Signal<std::shared_ptr<IPropertyList>, const UserData&> &propertyListWithUserDataAdded();
-	clan::Signal<std::shared_ptr<IPropertyList>> &propertyListRemoved();
-	clan::Signal<std::shared_ptr<IPropertyList>, const UserData&> &propertyListWithUserDataRemoved();
+	clan::Signal<std::shared_ptr<IPropertyList>> &property_list_added();
+	clan::Signal<std::shared_ptr<IPropertyList>, const UserData&> &property_list_with_user_data_added();
+	clan::Signal<std::shared_ptr<IPropertyList>> &property_list_removed();
+	clan::Signal<std::shared_ptr<IPropertyList>, const UserData&> &property_list_with_user_data_removed();
 
 protected:
-	std::unordered_map<std::string, std::shared_ptr<IPropertyList>> propertyLists;
-	std::vector<std::shared_ptr<IPropertyList>> deletedPropertyLists;
+	std::unordered_map<std::string, std::shared_ptr<IPropertyList>> property_lists;
+	std::vector<std::shared_ptr<IPropertyList>> deleted_property_lists;
 
 	clan::Signal<std::shared_ptr<IPropertyList>> sign_PropertyListAdded;
 	clan::Signal<std::shared_ptr<IPropertyList>, const UserData&> sign_PropertyListWithUserDataAdded;
@@ -62,4 +62,5 @@ protected:
 
 #include "PropertyListContainer.inl"
 
-} //namespace Totem 
+} // namespace Framework
+} // namespace GM

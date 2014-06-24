@@ -7,8 +7,8 @@
 #include <unordered_map>
  
 
-namespace Totem 
-{
+namespace GM {
+namespace Framework {
 template<class ComponentType, class UserData> class Component;
 
 class IEventSignal { public IEventSignal() {} virtual ~IEventSignal() {} 
@@ -20,7 +20,7 @@ class EventSignal : public IEventSignal { public: clan::Signal<Ts...> signal; };
 class DefaultEventFactory
 {
 public:
-	template<class... Ts> static std::shared_ptr<EventSignal<Ts...>> createEvent();
+	template<class... Ts> static std::shared_ptr<EventSignal<Ts...>> create_event();
 };
 
 template<class EventFactory = DefaultEventFactory>
@@ -29,19 +29,20 @@ class EventSystem
 public:
 	virtual ~EventSystem() {}
 
-	template<class... Ts> void sendEvent(HashedString type, Ts... args, bool requireReceiver = true);
+	template<class... Ts> void send_event(HashedString type, Ts... args, bool require_receiver = true);
 
-	template<class... Ts> clan::Signal<Ts...> &registerToEvent(HashedString type);
+	template<class... Ts> clan::Signal<Ts...> &register_to_event(HashedString type);
 
-	bool hasEvent(const HashedString &id, int num_params = -1);
+	bool has_event(const HashedString &id, int num_params = -1);
 
 protected:
 
-	typedef std::unordered_map<unsigned int, std::shared_ptr<IEventSignal>> eventMap;
+	typedef std::unordered_map<unsigned int, std::shared_ptr<IEventSignal>> event_map;
 
-	std::unordered_map<unsigned int, std::shared_ptr<eventMap>> eventSizeMap;
+	std::unordered_map<unsigned int, std::shared_ptr<event_map>> event_size_map;
 };
 
 #include "EventSystem.inl"
 
-} //namespace Totem
+} //namespace GM
+} //namespace GM

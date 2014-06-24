@@ -11,8 +11,8 @@
 #define FORCE_INLINE inline
 #endif
 
-namespace Totem
-{
+namespace GM {
+namespace Framework {
 
 template <unsigned int N, unsigned int I>
 struct HashFNV1a
@@ -37,16 +37,17 @@ class HashedString
 public:
 	template<unsigned int N>
 	FORCE_INLINE HashedString(const char (&value)[N])
-		: hashId(HashFNV1a<N,N>::hash(value)), str(value)
+		: hash_id(HashFNV1a<N,N>::hash(value)), str(value)
 	{
 	}
 
-	FORCE_INLINE unsigned int getId() const { return hashId; }
-	FORCE_INLINE const std::string &getStr() const { return str; }
+	FORCE_INLINE unsigned int get_id() const { return hash_id; }
+	FORCE_INLINE const std::string &get_str() const { return str; }
 
 private:
-	unsigned int hashId;
+	unsigned int hash_id;
 	std::string str;
 };
 
-}
+} // namespace Framework
+} // namespace GM

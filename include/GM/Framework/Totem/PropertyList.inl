@@ -18,13 +18,13 @@ PropertyType &PropertyListIndexValue<PropertyType>::get()
 }
 
 template<class PropertyType>
-void PropertyListIndexValue<PropertyType>::set(const PropertyType &rhs, bool invokeValueChanged)
+void PropertyListIndexValue<PropertyType>::set(const PropertyType &rhs, bool invoke_value_changed)
 {
-	PropertyType oldValue = data->value[index];
+	PropertyType old_value = data->value[index];
 	data->value[index] = rhs;
 	data->dirty = true; 
-	if(invokeValueChanged)
-		data->valueChanged.invoke(index, oldValue, rhs);
+	if(invoke_value_changed)
+		data->value_changed.invoke(index, old_value, rhs);
 }
 
 template<class PropertyType>
@@ -129,29 +129,29 @@ PropertyList<PropertyType>::PropertyList(const std::string &name)
 }
 
 template<class PropertyType>
-void PropertyList<PropertyType>::push_back(const PropertyType& value, bool invokeValueAdded) 
+void PropertyList<PropertyType>::push_back(const PropertyType& value, bool invoke_value_added) 
 { 
 	data->value.push_back(value); 
 
-	if(invokeValueAdded)
-		data->valueAdded.invoke(data->value.size()-1, value);
+	if(invoke_value_added)
+		data->value_added.invoke(data->value.size()-1, value);
 }
 
 template<class PropertyType>
-void PropertyList<PropertyType>::erase(unsigned int index, bool invokeValueErased)
+void PropertyList<PropertyType>::erase(unsigned int index, bool invoke_value_erased)
 {
 	PropertyType value = data->value[index];
 	data->value.erase(data->value.begin()+index);
-	if(invokeValueErased)
-		data->valueErased.invoke(index, value);
+	if(invoke_value_erased)
+		data->value_erased.invoke(index, value);
 }
 
 template<class PropertyType>
-void PropertyList<PropertyType>::clear(bool invokeValuesCleared)
+void PropertyList<PropertyType>::clear(bool invoke_values_cleared)
 {
 	data->value.clear();
-	if(invokeValuesCleared)
-		data->valuesCleared.invoke();
+	if(invoke_values_cleared)
+		data->values_cleared.invoke();
 }
 
 template<class PropertyType>
@@ -167,21 +167,21 @@ bool PropertyList<PropertyType>::empty() const
 }
 
 template<class PropertyType>
-void PropertyList<PropertyType>::resize(unsigned int size, bool invokeListResized)
+void PropertyList<PropertyType>::resize(unsigned int size, bool invoke_list_resized)
 {
-	unsigned int oldSize = data->value.size();
+	unsigned int old_size = data->value.size();
 	data->value.resize(size);
-	if(invokeListResized)
-		data->listResized(oldSize, size);
+	if(invoke_list_resized)
+		data->list_resized(old_size, size);
 }
 
 template<class PropertyType>
-void PropertyList<PropertyType>::resize(unsigned int size, const PropertyType &value, bool invokeListResized)
+void PropertyList<PropertyType>::resize(unsigned int size, const PropertyType &value, bool invoke_list_resized)
 {
-	unsigned int oldSize = data->value.size();
+	unsigned int old_size = data->value.size();
 	data->value.resize(size, value);
-	if(invokeListResized)
-		data->listResized(oldSize, size);
+	if(invoke_list_resized)
+		data->list_resized(old_size, size);
 }
 
 template<class PropertyType>
@@ -194,9 +194,9 @@ PropertyListIndexValue<PropertyType> PropertyList<PropertyType>::at(unsigned int
 }
 
 template<class PropertyType>
-unsigned int PropertyList<PropertyType>::getRuntimeTypeId() const 
+unsigned int PropertyList<PropertyType>::get_runtime_type_id() const 
 { 
-	return IPropertyList::getRuntimeTypeId<PropertyType>(); 
+	return IPropertyList::get_runtime_type_id<PropertyType>(); 
 }
 
 template<class PropertyType>
@@ -212,57 +212,57 @@ std::vector<PropertyType> &PropertyList<PropertyType>::get()
 }
 
 template<class PropertyType>
-const std::string &PropertyList<PropertyType>::getName() const 
+const std::string &PropertyList<PropertyType>::get_name() const 
 {
 	return data->name;
 }
 
 template<class PropertyType>
-bool PropertyList<PropertyType>::isNull() const 
+bool PropertyList<PropertyType>::is_null() const 
 {
 	return data == nullptr; 
 }
 
 template<class PropertyType>
-bool PropertyList<PropertyType>::isDirty() const 
+bool PropertyList<PropertyType>::is_dirty() const 
 {
 	return data->dirty; 
 }
 
 template<class PropertyType>
-void PropertyList<PropertyType>::clearDirty() 
+void PropertyList<PropertyType>::clear_dirty() 
 { 
 	data->dirty = false; 
 }
 
 template<class PropertyType>
-clan::Signal<unsigned int, const PropertyType &, const PropertyType &> &PropertyList<PropertyType>::valueChanged() 
+clan::Signal<unsigned int, const PropertyType &, const PropertyType &> &PropertyList<PropertyType>::value_changed() 
 { 
-	return data->valueChanged; 
+	return data->value_changed; 
 }
 
 template<class PropertyType>
-clan::Signal<unsigned int, const PropertyType &> &PropertyList<PropertyType>::valueAdded() 
+clan::Signal<unsigned int, const PropertyType &> &PropertyList<PropertyType>::value_added() 
 {
-	return data->valueAdded;
+	return data->value_added;
 }
 
 template<class PropertyType>
-clan::Signal<unsigned int, const PropertyType &> &PropertyList<PropertyType>::valueErased() 
+clan::Signal<unsigned int, const PropertyType &> &PropertyList<PropertyType>::value_erased() 
 { 
-	return data->valueErased;
+	return data->value_erased;
 }
 
 template<class PropertyType>
-clan::Signal<> &PropertyList<PropertyType>::valuesCleared() 
+clan::Signal<> &PropertyList<PropertyType>::values_cleared() 
 { 
-	return data->valuesCleared; 
+	return data->values_cleared; 
 }
 
 template<class PropertyType>
-clan::Signal<unsigned int, unsigned int> &PropertyList<PropertyType>::listResized()
+clan::Signal<unsigned int, unsigned int> &PropertyList<PropertyType>::list_resized()
 {
-	return data->listResized; 
+	return data->list_resized; 
 }
 
 template<class PropertyType>

@@ -17,21 +17,21 @@ Property<PropertyType>::Property(const std::string &name)
 }
 
 template<class PropertyType>
-inline void Property<PropertyType>::set(const PropertyType& value, bool invokeValueChanged) 
+inline void Property<PropertyType>::set(const PropertyType& value, bool invoke_value_changed) 
 { 
 	if(data->value != value)
 	{
-		PropertyType oldValue = data->value;
+		PropertyType old_value = data->value;
 		data->value = value; 
 		data->dirty = true; 
 
-		if(invokeValueChanged)
-			data->valueChanged.invoke(oldValue, value);
+		if(invoke_value_changed)
+			data->value_changed.invoke(old_value, value);
 	}
 }
 
 template<class PropertyType>
-inline unsigned int Property<PropertyType>::getRuntimeTypeId() const { return IProperty::getRuntimeTypeId<PropertyType>(); }
+inline unsigned int Property<PropertyType>::get_runtime_type_id() const { return IProperty::get_runtime_type_id<PropertyType>(); }
 
 template<class PropertyType>
 inline const PropertyType &Property<PropertyType>::get() const { return data->value; }
@@ -40,19 +40,19 @@ template<class PropertyType>
 inline PropertyType &Property<PropertyType>::get() { return data->value; }
 
 template<class PropertyType>
-inline const std::string &Property<PropertyType>::getName() const { return data->name; }
+inline const std::string &Property<PropertyType>::get_name() const { return data->name; }
 
 template<class PropertyType>
-inline bool Property<PropertyType>::isNull() const { return data == nullptr; }
+inline bool Property<PropertyType>::is_null() const { return data == nullptr; }
 
 template<class PropertyType>
-inline bool Property<PropertyType>::isDirty() const { return data->dirty; }
+inline bool Property<PropertyType>::is_dirty() const { return data->dirty; }
 
 template<class PropertyType>
-inline void Property<PropertyType>::clearDirty() { data->dirty = false; }
+inline void Property<PropertyType>::clear_dirty() { data->dirty = false; }
 
 template<class PropertyType>
-inline clan::Signal<const PropertyType &, const PropertyType &> &Property<PropertyType>::valueChanged() { return data->valueChanged; }
+inline clan::Signal<const PropertyType &, const PropertyType &> &Property<PropertyType>::value_changed() { return data->value_changed; }
 
 /// Instead of property.get() this operator exist for convenience.
 template<class PropertyType>

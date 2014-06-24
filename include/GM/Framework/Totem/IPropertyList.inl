@@ -1,20 +1,20 @@
 
 template<typename PropertyType>
-bool IPropertyList::isType(const std::shared_ptr<IPropertyList> &property)
+bool IPropertyList::is_type(const std::shared_ptr<IPropertyList> &property)
 {
-	return (property->getRuntimeTypeId() == getRuntimeTypeId<PropertyType>());
+	return (property->get_runtime_type_id() == get_runtime_type_id<PropertyType>());
 }
 
 template<typename PropertyType>
-bool IPropertyList::isType(const IPropertyList &property)
+bool IPropertyList::is_type(const IPropertyList &property)
 {
-	return (property.getRuntimeTypeId() == getRuntimeTypeId<PropertyType>());
+	return (property.get_runtime_type_id() == get_runtime_type_id<PropertyType>());
 }
 
 template<typename PropertyType>
-unsigned int IPropertyList::getRuntimeTypeId()
+unsigned int IPropertyList::get_runtime_type_id()
 {
-	static unsigned int typeId(typeid(PropertyType).hash_code());
-	return typeId;
+	static unsigned int type_id(typeid(PropertyType).hash_code());
+	return type_id;
 }
 

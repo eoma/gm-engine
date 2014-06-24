@@ -6,8 +6,8 @@
  
  
 
-namespace Totem
-{
+namespace GM {
+namespace Framework {
 
 template<class UserData = void*>
 class IComponent : public PropertyContainer<UserData>
@@ -15,16 +15,17 @@ class IComponent : public PropertyContainer<UserData>
 public:
 	IComponent() {}
 	virtual ~IComponent() {}
-	virtual const std::string &getName() const = 0;
-	virtual void update(float /*elapsedTime*/) {}
+	virtual const std::string &get_name() const = 0;
+	virtual void update(float /*elapsed_time*/) {}
 
-	template<typename ComponentType> static bool isType(const std::shared_ptr<IComponent> &component);
-	template<typename ComponentType> static bool isType(const IComponent &component);
-	virtual unsigned int getRuntimeTypeId() const = 0;
-	template<typename ComponentType> static unsigned int getRuntimeTypeId();
+	template<typename ComponentType> static bool is_type(const std::shared_ptr<IComponent> &component);
+	template<typename ComponentType> static bool is_type(const IComponent &component);
+	virtual unsigned int get_runtime_type_id() const = 0;
+	template<typename ComponentType> static unsigned int get_runtime_type_id();
 };
 
 #include "IComponent.inl"
 
-} //namespace Totem
+} // namespace Framework
+} // namespace GM
 

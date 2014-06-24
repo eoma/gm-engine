@@ -11,8 +11,8 @@
 #include <vector>
 #include <unordered_map>
 
-namespace Totem
-{
+namespace GM {
+namespace Framework {
 
 template<class UserData = void*>
 class ComponentContainer
@@ -20,21 +20,21 @@ class ComponentContainer
 public:
 	virtual ~ComponentContainer();
 
-	std::shared_ptr<IComponent<UserData>> addComponent(std::shared_ptr<IComponent<UserData>> component);
-	template<class ComponentType> std::shared_ptr<ComponentType> addComponent(std::shared_ptr<ComponentType> component);
-	template<class ComponentType> bool hasComponent(const std::string &name = std::string());
-	template<class ComponentType> std::shared_ptr<ComponentType> getComponent(const std::string &name = std::string());
-	std::vector<std::shared_ptr<IComponent<UserData>>> &getComponents();
-	void updateComponents(float elapsedTime);
-	template<class ComponentType> void removeComponent(const std::string &name = std::string(), bool upholdOrderInList = false);
+	std::shared_ptr<IComponent<UserData>> add_component(std::shared_ptr<IComponent<UserData>> component);
+	template<class ComponentType> std::shared_ptr<ComponentType> add_component(std::shared_ptr<ComponentType> component);
+	template<class ComponentType> bool has_component(const std::string &name = std::string());
+	template<class ComponentType> std::shared_ptr<ComponentType> get_component(const std::string &name = std::string());
+	std::vector<std::shared_ptr<IComponent<UserData>>> &get_components();
+	void update_components(float elapsed_time);
+	template<class ComponentType> void remove_component(const std::string &name = std::string(), bool uphold_order_in_list = false);
 
-	clan::Signal<std::shared_ptr<IComponent<UserData>>> &componentAdded();
-	clan::Signal<std::shared_ptr<IComponent<UserData>>> &componentRemoved();
+	clan::Signal<std::shared_ptr<IComponent<UserData>>> &component_added();
+	clan::Signal<std::shared_ptr<IComponent<UserData>>> &component_removed();
 
 protected:
-	void checkDuplicationAndAdd(unsigned int typeId, const std::string &name);
+	void check_duplication_and_add(unsigned int type_id, const std::string &name);
 
-	std::unordered_map<unsigned int, std::vector<std::string>> namesForComponentTypes;
+	std::unordered_map<unsigned int, std::vector<std::string>> names_for_component_types;
 	std::vector<std::shared_ptr<IComponent<UserData>>> components;
 
 	clan::Signal<std::shared_ptr<IComponent<UserData>>> sign_ComponentAdded;
@@ -43,7 +43,8 @@ protected:
 
 #include "ComponentContainer.inl"
 
-} //namespace Totem
+} // namespace Framework
+} // namespace GM
 
 //
 /////////////////////////////////////////////////////////

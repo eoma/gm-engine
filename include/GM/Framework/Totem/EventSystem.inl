@@ -1,5 +1,5 @@
 template<class... Ts>
-inline std::shared_ptr<EventSignal<Ts...>> DefaultEventFactory::createEvent()
+inline std::shared_ptr<EventSignal<Ts...>> DefaultEventFactory::create_event()
 {
 	return std::make_shared<EventSignal<Ts...>>();
 }
@@ -7,20 +7,20 @@ inline std::shared_ptr<EventSignal<Ts...>> DefaultEventFactory::createEvent()
 
 template<class EventFactory>
 template<class... Ts>
-inline void EventSystem<EventFactory>::sendEvent(HashedString type, Ts... args, bool requireReceiver)
+inline void EventSystem<EventFactory>::send_event(HashedString type, Ts... args, bool require_receiver)
 {
-	auto eventsIt = eventSizeMap.find(sizeof...(args));
-	if (eventsIt == eventSizeMap.end()) {
-		eventsIt = eventSizeMap.insert(std::make_pair(sizeof...(args), std::make_shared<eventMap>())).first;
+	auto events_it = event_size_map.find(sizeof...(args));
+	if (events_it == event_size_map.end()) {
+		events_it = event_size_map.insert(std::make_pair(sizeof...(args), std::make_shared<event_map>())).first;
 	}
 
-	auto events = eventsIt->second;
+	auto events = events_it->second;
 
-	auto it = events->find(type.getId());
+	auto it = events->find(type.get_id());
 	if (it == events->end())
 	{
-		if (requireReceiver)
-			throw clan::Exception(("Couldn't find event type " + type.getStr() + " in events registry!").c_str());
+		if (require_receiver)
+			throw clan::Exception(("Couldn't find event type " + type.get_str() + " in events registry!").c_str());
 		else
 			return;
 	}
@@ -28,7 +28,7 @@ inline void EventSystem<EventFactory>::sendEvent(HashedString type, Ts... args, 
 #ifdef _DEBUG
 	auto signal = std::dynamic_pointer_cast<EventSignal<Ts...>>(it->second);
 	if (signal == nullptr)
-		throw clan::Exception(("Tried to invoke event " + type.getStr() + ", but one or both of the argument types didn't match the registered types!").c_str());
+		throw clan::Exception(("Tried to invoke event " + type.get_str() + ", but one or both of the argument types didn't match the registered types!").c_str());
 	signal->signal.invoke(args...);
 #else
 	std::static_pointer_cast<EventSignal<Ts...>>(it->second)->signal.invoke(args...);
@@ -40,21 +40,21 @@ inline void EventSystem<EventFactory>::sendEvent(HashedString type, Ts... args, 
 
 template<class EventFactory>
 template<class... Ts>
-inline clan::Signal<Ts...> &EventSystem<EventFactory>::registerToEvent(HashedString type)
+inline clan::Signal<Ts...> &EventSystem<EventFactory>::register_to_event(HashedString type)
 {
-	auto eventsIt = eventSizeMap.find(sizeof...(Ts));
-	if (eventsIt == eventSizeMap.end()) {
-		eventsIt = eventSizeMap.insert(
-			std::make_pair(sizeof...(Ts), std::make_shared<eventMap>())).first;
+	auto events_it = event_size_map.find(sizeof...(Ts));
+	if (events_it == event_size_map.end()) {
+		events_it = event_size_map.insert(
+			std::make_pair(sizeof...(Ts), std::make_shared<event_map>())).first;
 	}
 
-	auto events = eventsIt->second;
+	auto events = events_it->second;
 
-	auto it = events->find(type.getId());
+	auto it = events->find(type.get_id());
 	if (it == events->end())
 	{
-		auto signal = EventFactory::template createEvent<Ts...>();
-		events->operator[](type.getId()) = signal;
+		auto signal = EventFactory::template create_event<Ts...>();
+		events->operator[](type.get_id()) = signal;
 		return signal->signal;
 	}
 	else
@@ -62,7 +62,7 @@ inline clan::Signal<Ts...> &EventSystem<EventFactory>::registerToEvent(HashedStr
 #ifdef _DEBUG
 		auto signal = std::dynamic_pointer_cast<EventSignal<Ts...>>(it->second);
 		if (signal == nullptr)
-			throw clan::Exception(("Tried toreturn the event signal " + type.getStr() + ", but one or both of the argument types didn't match the registered types!").c_str());
+			throw clan::Exception(("Tried toreturn the event signal " + type.get_str() + ", but one or both of the argument types didn't match the registered types!").c_str());
 #else
 		auto signal = std::static_pointer_cast<EventSignal<Ts...>>(it->second);
 #endif
@@ -73,20 +73,20 @@ inline clan::Signal<Ts...> &EventSystem<EventFactory>::registerToEvent(HashedStr
 //---------------------------------------------------------------------------------------
 
 template<class EventFactory>
-bool EventSystem<EventFactory>::hasEvent(const HashedString &id, int num_params)
+bool EventSystem<EventFactory>::has_event(const HashedString &id, int num_params)
 {
 
 
 	if (num_params >= 0)
 	{
-		auto eventsIt = eventSizeMap.find(num_params);
-		if (eventsIt == eventSizeMap.end()) {
-			eventsIt = eventSizeMap.insert(std::make_pair(num_params, std::make_shared<eventMap>())).first;
+		auto events_it = event_size_map.find(num_params);
+		if (events_it == event_size_map.end()) {
+			events_it = event_size_map.insert(std::make_pair(num_params, std::make_shared<event_map>())).first;
 		}
 
-		auto events = eventsIt->second;
+		auto events = events_it->second;
 
-		auto it = events->find(id.getId());
+		auto it = events->find(id.get_id());
 
 		if (it != events->end()) {
 			return true;
@@ -96,9 +96,9 @@ bool EventSystem<EventFactory>::hasEvent(const HashedString &id, int num_params)
 	else
 	{
 
-		for (auto eventsIt = eventSizeMap.begin(); eventsIt != eventSizeMap.end(); ++eventsIt) {
-			auto it = eventsIt->second->find(id.getId());
-			if (it != eventsIt->second->end()) {
+		for (auto events_it = event_size_map.begin(); events_it != event_size_map.end(); ++events_it) {
+			auto it = events_it->second->find(id.get_id());
+			if (it != events_it->second->end()) {
 				return true;
 			}
 		}

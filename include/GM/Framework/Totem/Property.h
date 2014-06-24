@@ -8,8 +8,8 @@
  
  
 
-namespace Totem
-{
+namespace GM {
+namespace Framework {
 
 template<class PropertyType>
 class PropertyData
@@ -18,7 +18,7 @@ public:
 	PropertyType value;
 	std::string name;
 	bool dirty;
-	clan::Signal<const PropertyType &, const PropertyType &> valueChanged;
+	clan::Signal<const PropertyType &, const PropertyType &> value_changed;
 };
 
 template<class PropertyType>
@@ -29,16 +29,16 @@ public:
 	Property(const Property &copy);
 	Property(const std::string &name);
 
-	void set(const PropertyType& value, bool invokeValueChanged = true);
+	void set(const PropertyType& value, bool invoke_value_changed = true);
 	const PropertyType &get() const;
 	PropertyType &get();
-	const std::string &getName() const override;
-	bool isNull() const override;
-	bool isDirty() const override;
-	void clearDirty() override;
-	unsigned int getRuntimeTypeId() const override;
+	const std::string &get_name() const override;
+	bool is_null() const override;
+	bool is_dirty() const override;
+	void clear_dirty() override;
+	unsigned int get_runtime_type_id() const override;
 
-	clan::Signal<const PropertyType &, const PropertyType &> &valueChanged();
+	clan::Signal<const PropertyType &, const PropertyType &> &value_changed();
 
 	Property<PropertyType> operator= (const Property<PropertyType>& rhs);
 	Property<PropertyType> operator= (const PropertyType& rhs);
@@ -65,6 +65,7 @@ private:
 
 #include "Property.inl"
 
-} //namespace Totem
+} // namespace Framework
+} // namespace Gm
 
 #pragma warning(pop)

@@ -1,8 +1,8 @@
 
 template<class PropertyType>
-std::shared_ptr<Totem::Property<PropertyType>> PropertyFactory::createProperty(const std::string &name)
+std::shared_ptr<GM::Framework::Property<PropertyType>> PropertyFactory::create_property(const std::string &name)
 {
-	return std::make_shared<Totem::Property<PropertyType>>(name);
+	return std::make_shared<GM::Framework::Property<PropertyType>>(name);
 }
 
 template<class UserData>
@@ -13,12 +13,12 @@ PropertyContainer<UserData>::PropertyContainer()
 template<class UserData>
 PropertyContainer<UserData>::~PropertyContainer()
 {
-	removeAllProperties();
+	remove_all_properties();
 }
 
 template<class UserData>
 template<class T>
-inline Property<T> PropertyContainer<UserData>::add(const std::string& name, const T &defaultValue)
+inline Property<T> PropertyContainer<UserData>::add(const std::string& name, const T &default_value)
 {
 	auto it = properties.find(name);
 	if(it != properties.end())
@@ -34,9 +34,9 @@ inline Property<T> PropertyContainer<UserData>::add(const std::string& name, con
 		return *property.get();
 	}
 
-	auto property = PropertyFactory::createProperty<T>(name);
-	property->set(defaultValue, true);
-	properties[property->getName()] = property;
+	auto property = PropertyFactory::create_property<T>(name);
+	property->set(default_value, true);
+	properties[property->get_name()] = property;
 
 	sign_PropertyAdded.invoke(std::static_pointer_cast<IProperty>(property));
 	return *property.get();
@@ -44,7 +44,7 @@ inline Property<T> PropertyContainer<UserData>::add(const std::string& name, con
 
 template<class UserData>
 template<class T>
-inline Property<T> PropertyContainer<UserData>::add(const std::string& name, const T &defaultValue, const UserData &userData)
+inline Property<T> PropertyContainer<UserData>::add(const std::string& name, const T &default_value, const UserData &user_data)
 {
 	auto it = properties.find(name);
 	if(it != properties.end())
@@ -60,11 +60,11 @@ inline Property<T> PropertyContainer<UserData>::add(const std::string& name, con
 		return *property.get();
 	}
 
-	auto property = PropertyFactory::createProperty<T>(name);
-	property->set(defaultValue, true);
-	properties[property->getName()] = property;
+	auto property = PropertyFactory::create_property<T>(name);
+	property->set(default_value, true);
+	properties[property->get_name()] = property;
 
-	sign_PropertyWithUserDataAdded.invoke(std::static_pointer_cast<IProperty>(property), userData);
+	sign_PropertyWithUserDataAdded.invoke(std::static_pointer_cast<IProperty>(property), user_data);
 	return *property.get();
 }
 
@@ -90,7 +90,7 @@ inline Property<T> PropertyContainer<UserData>::get(const std::string& name)
 }
 
 template<class UserData>
-inline std::unordered_map<std::string, std::shared_ptr<IProperty>> &PropertyContainer<UserData>::getProperties() 
+inline std::unordered_map<std::string, std::shared_ptr<IProperty>> &PropertyContainer<UserData>::get_properties() 
 { 
 	return properties; 
 }
@@ -105,31 +105,31 @@ inline PropertyContainer<UserData> &PropertyContainer<UserData>::operator= (cons
 }
 
 template<class UserData>
-inline clan::Signal<std::shared_ptr<IProperty>> &PropertyContainer<UserData>::propertyAdded() 
+inline clan::Signal<std::shared_ptr<IProperty>> &PropertyContainer<UserData>::property_added() 
 { 
 	return sign_PropertyAdded; 
 }
 
 template<class UserData>
-inline clan::Signal<std::shared_ptr<IProperty>, const UserData&> &PropertyContainer<UserData>::propertyWithUserDataAdded() 
+inline clan::Signal<std::shared_ptr<IProperty>, const UserData&> &PropertyContainer<UserData>::property_with_user_data_added() 
 { 
 	return sign_PropertyWithUserDataAdded; 
 }
 
 template<class UserData>
-inline clan::Signal<std::shared_ptr<IProperty>> &PropertyContainer<UserData>::propertyRemoved() 
+inline clan::Signal<std::shared_ptr<IProperty>> &PropertyContainer<UserData>::property_removed() 
 { 
 	return sign_PropertyRemoved; 
 }
 
 template<class UserData>
-inline clan::Signal<std::shared_ptr<IProperty>, const UserData&> &PropertyContainer<UserData>::propertyWithUserDataRemoved()
+inline clan::Signal<std::shared_ptr<IProperty>, const UserData&> &PropertyContainer<UserData>::property_with_user_data_removed()
 {
 	return sign_PropertyWithUserDataRemoved;
 }
 
 template<class UserData>
-inline bool PropertyContainer<UserData>::hasProperty(const std::string& name)
+inline bool PropertyContainer<UserData>::has_property(const std::string& name)
 {
 if(properties.empty())
 	return false;
@@ -144,20 +144,20 @@ else
 template<class UserData>
 inline void PropertyContainer<UserData>::add(std::shared_ptr<IProperty> property)
 {
-auto it = properties.find(property->getName());
+auto it = properties.find(property->get_name());
 if(it == properties.end())
-	properties[property->getName()] = property;
+	properties[property->get_name()] = property;
 }
 
 template<class UserData>
-inline void PropertyContainer<UserData>::removeProperty(const std::string& name, bool postponeDelete)
+inline void PropertyContainer<UserData>::remove_property(const std::string& name, bool postpone_delete)
 {
 auto it = properties.find(name);
 if(it != properties.end())
 {
 	std::shared_ptr<IProperty> property = (*it).second;
-	if(postponeDelete)
-		deletedProperties.push_back(property);
+	if(postpone_delete)
+		deleted_properties.push_back(property);
 	properties.erase(it);
 
 	sign_PropertyRemoved.invoke(property);
@@ -165,55 +165,55 @@ if(it != properties.end())
 }
 
 template<class UserData>
-inline void PropertyContainer<UserData>::removeProperty(const std::string& name, const UserData &userData, bool postponeDelete)
+inline void PropertyContainer<UserData>::remove_property(const std::string& name, const UserData &user_data, bool postpone_delete)
 {
 auto it = properties.find(name);
 if(it != properties.end())
 {
 	std::shared_ptr<IProperty> property = (*it).second;
-	if(postponeDelete)
-		deletedProperties.push_back(property);
+	if(postpone_delete)
+		deleted_properties.push_back(property);
 	properties.erase(it);
 
-	sign_PropertyWithUserDataRemoved.invoke(property, userData);
+	sign_PropertyWithUserDataRemoved.invoke(property, user_data);
 }
 }
 
 template<class UserData>
-inline void PropertyContainer<UserData>::removeAllProperties()
+inline void PropertyContainer<UserData>::remove_all_properties()
 {
 for(auto it = properties.begin(); it != properties.end(); ++it)
 	sign_PropertyRemoved.invoke(it->second);
 
-properties.clear();
-clearDeletedProperties();
+	properties.clear();
+	clear_deleted_properties();
 }
 
 template<class UserData>
-inline void PropertyContainer<UserData>::removeAllProperties(const UserData &userData)
+inline void PropertyContainer<UserData>::remove_all_properties(const UserData &user_data)
 {
 for(auto it = properties.begin(); it != properties.end(); ++it)
-	sign_PropertyWithUserDataRemoved.invoke(it->second, userData);
+	sign_PropertyWithUserDataRemoved.invoke(it->second, user_data);
 
-properties.clear();
-clearDeletedProperties();
+	properties.clear();
+	clear_deleted_properties();
 }
 
 template<class UserData>
-inline void PropertyContainer<UserData>::updateProperties()
+inline void PropertyContainer<UserData>::update_properties()
 {
-clearDeletedProperties();
+	clear_deleted_properties();
 }
 
 template<class UserData>
-inline void PropertyContainer<UserData>::clearDeletedProperties()
+inline void PropertyContainer<UserData>::clear_deleted_properties()
 {
-deletedProperties.clear();
+	deleted_properties.clear();
 }
 
 template<class UserData>
-inline void PropertyContainer<UserData>::clearDirtyProperties()
+inline void PropertyContainer<UserData>::clear_dirty_properties()
 {
 for(auto it = properties.begin(); it != properties.end(); ++it)
-	it->second->clearDirty();
+	it->second->clear_dirty();
 }

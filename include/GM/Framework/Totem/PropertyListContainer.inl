@@ -1,8 +1,8 @@
 
 template<class PropertyType>
-std::shared_ptr<Totem::PropertyList<PropertyType>> PropertyListFactory::createPropertyList(const std::string &name)
+std::shared_ptr<GM::Framework::PropertyList<PropertyType>> PropertyListFactory::create_property_list(const std::string &name)
 {
-	return std::make_shared<Totem::PropertyList<PropertyType>>(name);
+	return std::make_shared<GM::Framework::PropertyList<PropertyType>>(name);
 }
 
 template<class UserData>
@@ -13,15 +13,15 @@ PropertyListContainer<UserData>::PropertyListContainer()
 template<class UserData>
 PropertyListContainer<UserData>::~PropertyListContainer()
 {
-	removeAllPropertyLists();
+	remove_all_property_lists();
 }
 
 template<class UserData>
 template<class T>
-PropertyList<T> PropertyListContainer<UserData>::addList(const std::string& name)
+PropertyList<T> PropertyListContainer<UserData>::add_list(const std::string& name)
 {
-	auto it = propertyLists.find(name);
-	if(it != propertyLists.end())
+	auto it = property_lists.find(name);
+	if(it != property_lists.end())
 	{
 		std::shared_ptr<PropertyList<T>> property;
 #ifdef _DEBUG
@@ -34,21 +34,21 @@ PropertyList<T> PropertyListContainer<UserData>::addList(const std::string& name
 		return *property.get();
 	}
 
-	auto property = PropertyListFactory::createPropertyList<T>(name);
-	propertyLists[property->getName()] = property;
+	auto property = PropertyListFactory::create_property_list<T>(name);
+	property_lists[property->get_name()] = property;
 
 	//return *property;
 	sign_PropertyListAdded.invoke(std::static_pointer_cast<IPropertyList>(property));
-	//return getProperty<T>(name);
+	//return get_property<T>(name);
 	return *property.get();
 }
 
 template<class UserData>
 template<class T>
-PropertyList<T> PropertyListContainer<UserData>::addList(const std::string& name, const UserData &userData)
+PropertyList<T> PropertyListContainer<UserData>::add_list(const std::string& name, const UserData &user_data)
 {
-	auto it = propertyLists.find(name);
-	if(it != propertyLists.end())
+	auto it = property_lists.find(name);
+	if(it != property_lists.end())
 	{
 		std::shared_ptr<PropertyList<T>> property;
 #ifdef _DEBUG
@@ -61,21 +61,21 @@ PropertyList<T> PropertyListContainer<UserData>::addList(const std::string& name
 		return *property.get();
 	}
 
-	auto property = PropertyListFactory::createPropertyList<T>(name);
-	propertyLists[property->getName()] = property;
+	auto property = PropertyListFactory::create_property_list<T>(name);
+	property_lists[property->get_name()] = property;
 
 	//return *property;
-	sign_PropertyListWithUserDataAdded.invoke(std::static_pointer_cast<IPropertyList>(property), userData);
-	//return getProperty<T>(name);
+	sign_PropertyListWithUserDataAdded.invoke(std::static_pointer_cast<IPropertyList>(property), user_data);
+	//return get_property<T>(name);
 	return *property.get();
 }
 
 template<class UserData>
 template<class T>
-PropertyList<T> PropertyListContainer<UserData>::getList(const std::string& name)
+PropertyList<T> PropertyListContainer<UserData>::get_list(const std::string& name)
 {
-	auto it = propertyLists.find(name);
-	if(it != propertyLists.end())
+	auto it = property_lists.find(name);
+	if(it != property_lists.end())
 	{
 		std::shared_ptr<PropertyList<T>> property;
 #ifdef _DEBUG
@@ -92,9 +92,9 @@ PropertyList<T> PropertyListContainer<UserData>::getList(const std::string& name
 }
 
 template<class UserData>
-std::unordered_map<std::string, std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::getPropertyLists()
+std::unordered_map<std::string, std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::get_property_lists()
 {
-	return propertyLists; 
+	return property_lists; 
 }
 
 template<class UserData>
@@ -107,112 +107,112 @@ PropertyListContainer<UserData> &PropertyListContainer<UserData>::operator= (con
 }
 
 template<class UserData>
-clan::Signal<std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::propertyListAdded() 
+clan::Signal<std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::property_list_added() 
 {
 	return sign_PropertyListAdded;
 }
 
 template<class UserData>
-clan::Signal<std::shared_ptr<IPropertyList>, const UserData&> &PropertyListContainer<UserData>::propertyListWithUserDataAdded() 
+clan::Signal<std::shared_ptr<IPropertyList>, const UserData&> &PropertyListContainer<UserData>::property_list_with_user_data_added() 
 {
 	return sign_PropertyListWithUserDataAdded; 
 }
 
 template<class UserData>
-clan::Signal<std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::propertyListRemoved()
+clan::Signal<std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::property_list_removed()
 {
 	return sign_PropertyListRemoved;
 }
 
 template<class UserData>
-clan::Signal<std::shared_ptr<IPropertyList>, const UserData&> &PropertyListContainer<UserData>::propertyListWithUserDataRemoved()
+clan::Signal<std::shared_ptr<IPropertyList>, const UserData&> &PropertyListContainer<UserData>::property_list_with_user_data_removed()
 {
 	return sign_PropertyListWithUserDataRemoved;
 }
 
 template<class UserData>
-inline bool PropertyListContainer<UserData>::hasPropertyList(const std::string& name)
+inline bool PropertyListContainer<UserData>::has_property_list(const std::string& name)
 {
-	if(propertyLists.empty())
+	if(property_lists.empty())
 		return false;
 
-	auto it = propertyLists.find(name);
-	if(it != propertyLists.end())
+	auto it = property_lists.find(name);
+	if(it != property_lists.end())
 		return true;
 	else
 		return false;
 }
 
 template<class UserData>
-inline void PropertyListContainer<UserData>::addList(std::shared_ptr<IPropertyList> property)
+inline void PropertyListContainer<UserData>::add_list(std::shared_ptr<IPropertyList> property)
 {
-	auto it = propertyLists.find(property->getName());
-	if(it == propertyLists.end())
-		propertyLists[property->getName()] = property;
+	auto it = property_lists.find(property->get_name());
+	if(it == property_lists.end())
+		property_lists[property->get_name()] = property;
 }
 
 template<class UserData>
-inline std::shared_ptr<IPropertyList> PropertyListContainer<UserData>::getListInterface(const std::string& name)
+inline std::shared_ptr<IPropertyList> PropertyListContainer<UserData>::get_list_interface(const std::string& name)
 {
-	auto it = propertyLists.find(name);
-	if(it != propertyLists.end())
+	auto it = property_lists.find(name);
+	if(it != property_lists.end())
 		return it->second;
 	else
 		throw clan::Exception(("Unable to get shared property list " + name).c_str());
 }
 
 template<class UserData>
-inline void PropertyListContainer<UserData>::removePropertyList(const std::string& name, bool postponeDelete)
+inline void PropertyListContainer<UserData>::remove_property_list(const std::string& name, bool postpone_delete)
 {
-	auto it = propertyLists.find(name);
-	if(it != propertyLists.end())
+	auto it = property_lists.find(name);
+	if(it != property_lists.end())
 	{
 		std::shared_ptr<IPropertyList> property = (*it).second;
-		if(postponeDelete)
-			deletedPropertyLists.push_back(property);
-		propertyLists.erase(it);
+		if(postpone_delete)
+			deleted_property_lists.push_back(property);
+		property_lists.erase(it);
 
 		sign_PropertyListRemoved.invoke(property);
 	}
 }
 
 template<class UserData>
-inline void PropertyListContainer<UserData>::removePropertyList(const std::string& name, const UserData &userData, bool postponeDelete)
+inline void PropertyListContainer<UserData>::remove_property_list(const std::string& name, const UserData &user_data, bool postpone_delete)
 {
-	auto it = propertyLists.find(name);
-	if(it != propertyLists.end())
+	auto it = property_lists.find(name);
+	if(it != property_lists.end())
 	{
 		std::shared_ptr<IPropertyList> property = (*it).second;
-		if(postponeDelete)
-			deletedPropertyLists.push_back(property);
-		propertyLists.erase(it);
+		if(postpone_delete)
+			deleted_property_lists.push_back(property);
+		property_lists.erase(it);
 
-		sign_PropertyListWithUserDataRemoved.invoke(property, userData);
+		sign_PropertyListWithUserDataRemoved.invoke(property, user_data);
 	}
 }
 
 template<class UserData>
-inline void PropertyListContainer<UserData>::removeAllPropertyLists()
+inline void PropertyListContainer<UserData>::remove_all_property_lists()
 {
-	propertyLists.clear();
-	clearDeletedPropertyLists();
+	property_lists.clear();
+	clear_deleted_property_lists();
 }
 
 template<class UserData>
-inline void PropertyListContainer<UserData>::updatePropertyLists()
+inline void PropertyListContainer<UserData>::update_property_lists()
 {
-	clearDeletedPropertyLists();
+	clear_deleted_property_lists();
 }
 
 template<class UserData>
-inline void PropertyListContainer<UserData>::clearDeletedPropertyLists()
+inline void PropertyListContainer<UserData>::clear_deleted_property_lists()
 {
-	deletedPropertyLists.clear();
+	deleted_property_lists.clear();
 }
 
 template<class UserData>
-inline void PropertyListContainer<UserData>::clearDirtyPropertyLists()
+inline void PropertyListContainer<UserData>::clear_dirty_property_lists()
 {
-	for(auto it = propertyLists.begin(); it != propertyLists.end(); ++it)
-		it->second->clearDirty();
+	for(auto it = property_lists.begin(); it != property_lists.end(); ++it)
+		it->second->clear_dirty();
 }
