@@ -10,7 +10,7 @@
 #include <ClanLib/core.h>
 
 // Totem
-#include <Totem/Component.h>
+#include "../Totem/Component.h"
 
 // STL
 #include <memory>
@@ -24,7 +24,7 @@ class SceneManager; typedef std::shared_ptr<SceneManager> SceneManagerPtr; typed
 class Entity; typedef std::shared_ptr<Entity> EntityPtr; typedef std::weak_ptr<Entity> EntityWeakPtr;
 class Transform; typedef std::shared_ptr<Transform> TransformPtr; typedef std::weak_ptr<Transform> TransformWeakPtr;
 
-class Transform : public Totem::Component<Transform>, public std::enable_shared_from_this<Transform>
+class Transform : public Component<Transform>, public std::enable_shared_from_this<Transform>
 {
 public:
 	Transform(EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name = std::string());
@@ -105,12 +105,12 @@ private:
 	clan::Signal<const Transform* const, const Transform* const> child_removed_sig;
 
 	// TODO: Proper defs. of variables
-	Totem::Property<glm::vec3> position_property;
-	Totem::Property<glm::vec3> scale_property;
-	Totem::Property<glm::quat> orientation_property;
+	Property<glm::vec3> position_property;
+	Property<glm::vec3> scale_property;
+	Property<glm::quat> orientation_property;
 
-	Totem::Property<glm::mat4> object_matrix_property;
-	Totem::Property<glm::mat4> world_matrix_property;
+	Property<glm::mat4> object_matrix_property;
+	Property<glm::mat4> world_matrix_property;
 };
 
 } // namespace Framework
