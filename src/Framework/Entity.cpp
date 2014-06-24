@@ -9,28 +9,28 @@ Entity::Entity(const std::string &name)
 : name(name)
 , component_removed_slot(this, &Entity::on_component_removed)
 {
-	componentAdded().connect(clan::Callback<void(std::shared_ptr<Totem::IComponent<>>)>(this, &Entity::on_component_added));
-	componentRemoved().connect(component_removed_slot);
+	component_added().connect(clan::Callback<void(std::shared_ptr<IComponent<>>)>(this, &Entity::on_component_added));
+	component_removed().connect(component_removed_slot);
 }
 
 Entity::~Entity() {
 	// Since Entity inherits Totem::ComponentContainer we must avoid letting
 	// it call methods on objects that are no longer valid (like ours)
-	componentRemoved().disconnect(component_removed_slot);
+	component_removed().disconnect(component_removed_slot);
 
 	//std::cout << "Entity destroyed" << std::endl;
 }
 
-void Entity::on_component_added(std::shared_ptr<Totem::IComponent<>> component) {
-	if (Totem::IComponent<>::isType<Transform>(component)) {
+void Entity::on_component_added(std::shared_ptr<IComponent<>> component) {
+	if (IComponent<>::is_type<Transform>(component)) {
 		transform = std::static_pointer_cast<Transform>(component);
 	}
 }
 
-void Entity::on_component_removed(std::shared_ptr<Totem::IComponent<>> component) {
+void Entity::on_component_removed(std::shared_ptr<IComponent<>> component) {
 	// This method must not get called in the destructor
 	// Disconnect all signals to this method
-	if (Totem::IComponent<>::isType<Transform>(component)) {
+	if (IComponent<>::is_type<Transform>(component)) {
 		transform.reset();
 	}
 }

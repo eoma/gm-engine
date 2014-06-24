@@ -10,7 +10,6 @@
 #include <iostream>
 
 using namespace GM::Framework;
-using namespace Totem;
 
 Transform::Transform(EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name)
 : Component<Transform>(name)
@@ -103,13 +102,13 @@ void Transform::remove_callback(Transform * const child, Transform * const paren
 }
 
 bool Transform::is_dirty() const {
-	return (position_property.isDirty() || scale_property.isDirty() || orientation_property.isDirty());
+	return (position_property.is_dirty() || scale_property.is_dirty() || orientation_property.is_dirty());
 }
 
 void Transform::clear_dirty() {
-	position_property.clearDirty();
-	scale_property.clearDirty();
-	orientation_property.clearDirty();
+	position_property.clear_dirty();
+	scale_property.clear_dirty();
+	orientation_property.clear_dirty();
 }
 
 void Transform::update_object_matrix() {

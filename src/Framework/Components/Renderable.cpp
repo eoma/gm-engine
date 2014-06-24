@@ -3,7 +3,6 @@
 #include "GM/Framework/Systems/RenderSystem.h"
 
 using namespace GM::Framework;
-using namespace Totem;
 
 Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_system, const std::string &name)
 : Component<Renderable>(name)
