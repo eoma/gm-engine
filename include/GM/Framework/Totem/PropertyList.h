@@ -1,7 +1,10 @@
 #pragma once
 #include <ClanLib/core.h>
-#pragma warning(push)
-#pragma warning(disable : 4481)
+
+#if defined(_MSC_VER) // for visual studio
+#     pragma warning(push)
+#     pragma warning(disable : 4481)
+#endif
 
 #include "IPropertyList.h"
 
@@ -97,4 +100,7 @@ private:
 
 } // namespace Framework
 } // namespace GM
-#pragma warning(pop)
+
+#if defined(_MSC_VER)
+#    pragma warning(pop)
+#endif
