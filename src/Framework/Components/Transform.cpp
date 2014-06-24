@@ -102,14 +102,18 @@ void Transform::remove_callback(Transform * const child, Transform * const paren
 	}
 }
 
-void Transform::update_object_matrix() {
-	if (position_property.isDirty() || orientation_property.isDirty() || scale_property.isDirty()) {
-		object_matrix_property = make_object_matrix();
+bool Transform::is_dirty() const {
+	return (position_property.isDirty() || scale_property.isDirty() || orientation_property.isDirty());
+}
 
-		position_property.clearDirty();
-		orientation_property.clearDirty();
-		scale_property.clearDirty();
-	}
+void Transform::clear_dirty() {
+	position_property.clearDirty();
+	scale_property.clearDirty();
+	orientation_property.clearDirty();
+}
+
+void Transform::update_object_matrix() {
+	object_matrix_property = make_object_matrix();
 }
 
 glm::mat4 Transform::make_object_matrix() const {

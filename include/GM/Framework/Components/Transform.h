@@ -63,6 +63,10 @@ public:
 	void scale(const glm::vec3 &scale) { scale_property += scale; }
 	void rotate(const glm::quat &orientation) { orientation_property *= orientation; }
 
+	// Called by SceneManager
+	bool is_dirty() const;
+	bool clear_dirty() const;
+
 	const glm::mat4 &get_world_matrix() const { return world_matrix_property; };
 
 	// Essentially goes world_matrix_property = make_world_matrix();
