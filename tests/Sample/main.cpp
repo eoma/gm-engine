@@ -23,11 +23,13 @@ void on_component_added(std::shared_ptr<Totem::IComponent<>> component) {
 	std::cout << "Component " << component->getName() << " was added to " << owner_name << "!" << std::endl;
 }
 
-void on_transform_child_added(const TransformPtr& parent, const TransformPtr& child) {
+void on_transform_child_added(const Transform * const parent, const Transform * const child) {
 	std::cout << "Transform " << child->get_owner()->get_name() << " was added as child to parent transform " << parent->get_owner()->get_name() << std::endl;
 }
 
 bool mainTest() {
+
+	typedef clan::Callback<void(const Transform * const, const Transform * const)> CallbackParentChild;
 
 	auto entity_manager = std::make_shared<EntityManager>();
 	auto scene_manager = std::make_shared<SceneManager>();
@@ -35,12 +37,12 @@ bool mainTest() {
 	auto root_entity = entity_manager->create_entity("Root");
 	root_entity->componentAdded().connect(clan::Callback<void(std::shared_ptr<Totem::IComponent<>>)>(&on_component_added));
 	auto root_transform = root_entity->addComponent<Transform>(std::make_shared<Transform>(root_entity, scene_manager, Transform::get_static_type()));
-	root_transform->get_child_added_signal().connect(clan::Callback<void(const TransformPtr&, const TransformPtr&)>(&on_transform_child_added));
+	root_transform->get_child_added_signal().connect(CallbackParentChild(&on_transform_child_added));
 
 	auto child_entity = entity_manager->create_entity("Child");
 	child_entity->componentAdded().connect(clan::Callback<void(std::shared_ptr<Totem::IComponent<>>)>(&on_component_added));
 	auto child_transform = child_entity->addComponent<Transform>(std::make_shared<Transform>(child_entity, scene_manager, Transform::get_static_type()));
-	child_transform->get_child_added_signal().connect(clan::Callback<void(const TransformPtr&, const TransformPtr&)>(&on_transform_child_added));
+	child_transform->get_child_added_signal().connect(CallbackParentChild(&on_transform_child_added));
 
 	root_transform->add_child(child_transform);
 
