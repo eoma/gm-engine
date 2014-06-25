@@ -5,8 +5,11 @@
 
 using namespace GM::Framework;
 
+std::atomic<unsigned long> Entity::next_id(0);
+
 Entity::Entity(const std::string &name)
-: name(name)
+: id(next_id++)
+, name(name)
 , component_removed_slot(this, &Entity::on_component_removed)
 {
 	component_added().connect(clan::Callback<void(std::shared_ptr<IComponent<>>)>(this, &Entity::on_component_added));
