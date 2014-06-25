@@ -93,3 +93,23 @@ EntityPtr EntityManager::remove_entity(const EntityPtr &entity, bool immediate)
 
 	return entity;
 }
+
+EntityPtr EntityManager::remove_entity(const unsigned long id, bool immediate) {
+	// Can use binary search (using std::lower_bound) if we can guarantee that
+	// the entity manager is the only one to create entities.
+	auto entity_it = std::find_if(entities.begin(), entities.end(), 
+		[id](const EntityPtr &entity) { return entity->get_id() == id; });
+
+	EntityPtr entity = nullptr;
+
+	if(entity_it != entities.end())
+	{
+		entity = *entity_it;
+		if(immediate)
+			entities.erase(entity_it);
+		else
+			pending_deletion.push_back(entity);
+	}
+
+	return entity;
+}

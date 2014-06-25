@@ -21,6 +21,7 @@ public:
 
 	EntityPtr add_entity(EntityPtr entity);
 	EntityPtr remove_entity(const EntityPtr &entity, bool immediate = false);
+	EntityPtr remove_entity(const unsigned long id, bool immediate = false);
 
 	void update();
 
