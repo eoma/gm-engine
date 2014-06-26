@@ -9,6 +9,7 @@
 namespace GM {
 namespace Framework {
 
+class Camera; typedef std::shared_ptr<Camera> CameraPtr;
 class IRenderable; typedef std::shared_ptr<IRenderable> IRenderablePtr;
 class RenderSystem; typedef std::shared_ptr<RenderSystem> RenderSystemPtr;
 
@@ -19,6 +20,10 @@ public:
 
 	void add_renderable(IRenderable *renderable);
 	void remove_renderable(IRenderable *renderable);
+
+	// No implementation yet
+	void add_camera(Camera * /*camera*/) {};
+	void remove_camera(Camera * /*camera*/) {};
 
 	void render();
 
