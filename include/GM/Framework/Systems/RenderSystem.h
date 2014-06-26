@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+#include <limits>
 #include <memory>
 #include <vector>
 
@@ -15,11 +17,20 @@ public:
 	RenderSystem();
 	~RenderSystem();
 
-	void add_renderable(const IRenderable *renderable);
-	void remove_renderable(const IRenderable *renderable);
+	void add_renderable(IRenderable *renderable);
+	void remove_renderable(IRenderable *renderable);
+
+	void render();
+
+	const std::vector<IRenderable*> &get_bucket(const unsigned int bucket_index);
+
+public:
+
+	// Should this be moved to a utility class?
+	static std::vector<unsigned int> bit_index_maker(const unsigned int bits);
 
 private:
-	std::vector<const IRenderable*> renderables;
+	std::array<std::vector<IRenderable*>, std::numeric_limits<unsigned int>::digits> buckets;
 };
 
 } // namespace Framework
