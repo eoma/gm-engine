@@ -1,4 +1,5 @@
 
+#include "GM/Framework/Components/Camera.h"
 #include "GM/Framework/Components/IRenderable.h"
 #include "GM/Framework/Systems/RenderSystem.h"
 
@@ -36,6 +37,40 @@ void RenderSystem::remove_renderable(IRenderable *renderable) {
 
 		if (iter != bucket.end()) {
 			bucket.erase(iter);
+		}
+	}
+}
+
+void RenderSystem::add_camera(Camera *camera) {
+	unsigned int layer_bits = camera->get_render_layers();
+
+	for (auto &layer_index : bit_index_maker(layer_bits)) {
+		auto &depth_sorted_cameras = cameras_in_layers[layer_index];
+		auto iter = std::find(depth_sorted_cameras.begin(), depth_sorted_cameras.end(), camera);
+
+		if (iter == depth_sorted_cameras.end()) {
+			depth_sorted_cameras.push_back(camera);
+			std::sort(
+				depth_sorted_cameras.begin(),
+				depth_sorted_cameras.end(),
+
+				[](const Camera* cam1, const Camera* cam2) -> bool {
+					return cam1->get_depth() < cam2->get_depth();
+				}
+			);
+		}
+	}
+}
+
+void RenderSystem::remove_camera(Camera *camera) {
+	unsigned int layer_bits = camera->get_render_layers();
+
+	for (auto &layer_index : bit_index_maker(layer_bits)) {
+		auto &depth_sorted_cameras = cameras_in_layers[layer_index];
+		auto iter = std::find(depth_sorted_cameras.begin(), depth_sorted_cameras.end(), camera);
+
+		if (iter != depth_sorted_cameras.end()) {
+			depth_sorted_cameras.erase(iter);
 		}
 	}
 }

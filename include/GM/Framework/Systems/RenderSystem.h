@@ -21,9 +21,8 @@ public:
 	void add_renderable(IRenderable *renderable);
 	void remove_renderable(IRenderable *renderable);
 
-	// No implementation yet
-	void add_camera(Camera * /*camera*/) {};
-	void remove_camera(Camera * /*camera*/) {};
+	void add_camera(Camera *camera);
+	void remove_camera(Camera *camera);
 
 	void render();
 
@@ -35,7 +34,14 @@ public:
 	static std::vector<unsigned int> bit_index_maker(const unsigned int bits);
 
 private:
+	// Position is interpreted as layer. Position 0 is interpreted as layer 1,
+	// position 1 is layer 2, and so forth.
 	std::array<std::vector<IRenderable*>, std::numeric_limits<unsigned int>::digits> buckets;
+
+	// Follows almost same structure as the buckets structure.
+	// Position is determined by layer. The order in the layer's
+	//  vector is depth sorted.
+	std::array<std::vector<Camera*>, std::numeric_limits<unsigned int>::digits> cameras_in_layers;
 };
 
 } // namespace Framework
