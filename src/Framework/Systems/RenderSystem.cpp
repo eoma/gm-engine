@@ -99,9 +99,15 @@ const std::vector<IRenderable*> &RenderSystem::get_bucket(const unsigned int buc
 }
 
 void RenderSystem::render() {
-	for (const auto &bucket : buckets) {
-		for (IRenderable *renderable : bucket) {
-			renderable->render();
+	for (unsigned int layer = 0; layer < buckets.size(); ++layer) {
+		const auto &bucket = buckets[layer];
+		const auto &cameras = cameras_in_layers[layer];
+
+		// Draw from depth zero and up
+		for (Camera *camera : cameras)	{
+			for (IRenderable *renderable : bucket) {
+				renderable->render(camera);
+			}
 		}
 	}
 }
