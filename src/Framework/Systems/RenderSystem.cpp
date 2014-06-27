@@ -91,11 +91,11 @@ std::vector<unsigned int> RenderSystem::bit_index_maker(const unsigned int bits)
 }
 
 const std::vector<IRenderable*> &RenderSystem::get_bucket(const unsigned int bucket_index) {
-	if (bucket_index < std::numeric_limits<unsigned int>::digits) {
-		return buckets[bucket_index];
-	} else {
-		throw std::runtime_error("index out of bounds");
-	}
+	return buckets.at(bucket_index);
+}
+
+const std::vector<Camera*> &RenderSystem::get_cameras(const unsigned int layer_index) {
+	return cameras_in_layers.at(layer_index);
 }
 
 void RenderSystem::render() {
