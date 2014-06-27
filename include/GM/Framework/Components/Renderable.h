@@ -29,7 +29,7 @@ public:
 
 	virtual unsigned int get_render_layers() const override { return render_layers; };
 
-	virtual void render() override;
+	virtual void render(Camera *camera) override;
 public:
 	static std::string get_static_type() { return COMPONENT_RENDERABLE; }
 

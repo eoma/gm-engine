@@ -1,3 +1,4 @@
+#include "GM/Framework/Components/Camera.h"
 #include "GM/Framework/Components/Renderable.h"
 #include "GM/Framework/DefinitionsPropertyNames.h"
 #include "GM/Framework/Entity.h"
@@ -23,6 +24,6 @@ Renderable::~Renderable() {
 	render_system->remove_renderable(this);
 }
 
-void Renderable::render() {
+void Renderable::render(Camera * /*camera*/) {
 
 }
