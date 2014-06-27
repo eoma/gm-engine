@@ -7,6 +7,7 @@
 namespace GM {
 namespace Framework {
 
+class Camera;
 class IRenderable; typedef std::shared_ptr<IRenderable> IRenderablePtr;
 
 class IRenderable {
@@ -28,7 +29,7 @@ public:
 	// Default should be 1.
 	virtual unsigned int get_render_layers() const = 0;
 
-	virtual void render() = 0;
+	virtual void render(Camera *camera) = 0;
 };
 
 } // namespace Framework
