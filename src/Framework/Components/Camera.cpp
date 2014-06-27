@@ -9,9 +9,11 @@
 
 using namespace GM::Framework;
 
-Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, const std::string &name)
+Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, unsigned int render_layers, unsigned int depth, const std::string &name)
 : Component(owner, name)
 , render_system(render_system)
+, render_layers(render_layers)
+, depth(depth)
 {
 
 	view_matrix_property = owner->add<glm::mat4>(PROPERTY_VIEW_MATRIX, glm::mat4());
