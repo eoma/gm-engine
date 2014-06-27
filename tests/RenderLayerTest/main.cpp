@@ -28,7 +28,7 @@ public:
 	virtual bool is_culled() const override { return false; };
 	virtual bool is_invisible() const override { return false; };
 
-	virtual void render() override {};
+	virtual void render(Camera * /*camera*/) override {};
 
 	virtual unsigned int get_render_layers() const override { return render_layers; };
 
