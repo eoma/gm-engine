@@ -3,6 +3,7 @@
 #include "Totem/Totem.h"
 
 #include <atomic>
+#include <memory>
 #include <string>
 
 namespace GM {
@@ -10,7 +11,7 @@ namespace Framework {
 
 class Transform; typedef std::shared_ptr<Transform> TransformPtr;
 
-class Entity : public PropertyContainer<>, public ComponentContainer<> {
+class Entity : public PropertyContainer<>, public ComponentContainer<>, public std::enable_shared_from_this<Entity> {
 public:
 	Entity(const std::string &name);
 	virtual ~Entity();
