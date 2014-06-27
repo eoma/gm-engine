@@ -25,8 +25,10 @@ bool mainTest() {
 	auto entity1 = entity_manager->create_entity("one");
 	auto entity2 = entity_manager->create_entity("two");
 
-	auto transform1 = entity1->add_component<Transform>(std::make_shared<Transform>(entity1, scene_manager));
-	auto camera1 = entity1->add_component<Camera>(std::make_shared<Camera>(entity1, render_system));
+	auto transform1 = entity1->create_component<Transform>(scene_manager);
+
+	// Make a camera associated with render layer 0 and depth 1
+	auto camera1 = entity1->create_component<Camera>(render_system, (1<<0), 1);
 
 	bool changed = false;
 
@@ -41,6 +43,15 @@ bool mainTest() {
 
 	if (!changed) {
 		throw std::runtime_error("View matrix should have been automatically updated when world matrix got updated.");
+	}
+
+	auto transform2 = entity2->create_component<Transform>(scene_manager);
+	auto camera2 = entity2->create_component<Camera>(render_system, (1<<0), 0);
+
+	// THis tests the sorting of camera depth
+	auto &cameras = render_system->get_cameras(0);
+	if (cameras[0] != camera2.get() || cameras[1] != camera1.get()) {
+		throw std::runtime_error("Cameras are not in expected order in render layer!");
 	}
 
 	return true;
