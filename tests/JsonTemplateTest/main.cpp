@@ -59,12 +59,12 @@ void on_component_added(std::shared_ptr<IComponent<>> component) {
 
 void on_position_changed(const glm::vec3 &old_value, const glm::vec3 &new_value) {
 	std::cout << "Position property changed from [" +
-		clan::StringHelp::float_to_text(old_value.x) + ", " +
-		clan::StringHelp::float_to_text(old_value.y) + ", " +
-		clan::StringHelp::float_to_text(old_value.z) + "] to [" +
-		clan::StringHelp::float_to_text(new_value.x) + ", " +
-		clan::StringHelp::float_to_text(new_value.y) + ", " +
-		clan::StringHelp::float_to_text(new_value.z) + "]."
+		clan::StringHelp::float_to_text(old_value.x, 1) + ", " +
+		clan::StringHelp::float_to_text(old_value.y, 1) + ", " +
+		clan::StringHelp::float_to_text(old_value.z, 1) + "] to [" +
+		clan::StringHelp::float_to_text(new_value.x, 1) + ", " +
+		clan::StringHelp::float_to_text(new_value.y, 1) + ", " +
+		clan::StringHelp::float_to_text(new_value.z, 1) + "]."
 		<< std::endl;
 }
 
@@ -103,13 +103,22 @@ bool mainTest() {
 	entity3->component_added().connect(clan::Callback<void(std::shared_ptr<IComponent<>>)>(&on_component_added));
 
 	entity1->add<glm::vec3>(PROPERTY_POSITION, glm::vec3(0,0,0)).value_changed().connect(
-		clan::Callback<void(const glm::vec3 &, const glm::vec3 &)>(&on_position_changed));
+		std::function<void(const glm::vec3&, const glm::vec3&)>([&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
+		std::cout << "Entity " + entity1->get_name() << "'s "; 
+		on_position_changed(old_value, new_value);
+	}));
 
 	entity2->add<glm::vec3>(PROPERTY_POSITION, glm::vec3(0, 0, 0)).value_changed().connect(
-		clan::Callback<void(const glm::vec3 &, const glm::vec3 &)>(&on_position_changed));
+		std::function<void(const glm::vec3&, const glm::vec3&)>([&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
+		std::cout << "Entity " + entity2->get_name() << "'s ";
+		on_position_changed(old_value, new_value);
+	}));
 
 	entity3->add<glm::vec3>(PROPERTY_POSITION, glm::vec3(0, 0, 0)).value_changed().connect(
-		clan::Callback<void(const glm::vec3 &, const glm::vec3 &)>(&on_position_changed));
+		std::function<void(const glm::vec3&, const glm::vec3&)>([&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
+		std::cout << "Entity " + entity3->get_name() << "'s ";
+		on_position_changed(old_value, new_value);
+	}));
 
 	template_manager->apply("Test", entity1);
 	template_manager->apply("Test2", entity2);
