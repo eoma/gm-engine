@@ -22,12 +22,17 @@ void TemplateManager::apply(const std::string &template_name, const EntityPtr &e
 		{
 			for(auto it_require = it_template->requires.begin(); it_require != it_template->requires.end(); ++it_require)
 			{
-				apply((*it_require), entity);
+				apply_components((*it_require), entity);
 			}
 
 			for(auto it_component = it_template->components.begin(); it_component != it_template->components.end(); ++it_component)
 			{
 				component_serializer->create_and_add_component(entity, (*it_component), (*it_component));
+			}
+
+			for (auto it_require = it_template->requires.begin(); it_require != it_template->requires.end(); ++it_require)
+			{
+				apply_properties((*it_require), entity);
 			}
 
 			for(auto it_property = it_template->properties.begin(); it_property != it_template->properties.end(); ++it_property)
@@ -40,6 +45,32 @@ void TemplateManager::apply(const std::string &template_name, const EntityPtr &e
 	}
 
 	throw Exception("Unable to apply template " + template_name);
+}
+
+void TemplateManager::apply_components(const std::string &template_name, const EntityPtr &entity) {
+	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
+	{
+		if (StringHelp::compare(template_name, it_template->name, true) == 0)
+		{
+			for (auto it_component = it_template->components.begin(); it_component != it_template->components.end(); ++it_component)
+			{
+				component_serializer->create_and_add_component(entity, (*it_component), (*it_component));
+			}
+		}
+	}
+}
+
+void TemplateManager::apply_properties(const std::string &template_name, const EntityPtr &entity) {
+	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
+	{
+		if (StringHelp::compare(template_name, it_template->name, true) == 0)
+		{
+			for (auto it_property = it_template->properties.begin(); it_property != it_template->properties.end(); ++it_property)
+			{
+				PropertySerializer::create_and_add_property(*entity, (*it_property).type_id, (*it_property).name, (*it_property).value);
+			}
+		}
+	}
 }
 
 void TemplateManager::add_templates(const std::string template_filename)
