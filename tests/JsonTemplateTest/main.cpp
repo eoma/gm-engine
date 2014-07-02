@@ -10,6 +10,7 @@
 #include <GM/Framework/Components/Renderable.h>
 #include <GM/Framework/Utilities/TemplateManager.h>
 #include <GM/Framework/Utilities/ComponentSerializer.h>
+#include <GM/Framework/Utilities/Tools.h>
 
 #include <memory>
 
@@ -41,13 +42,6 @@ private:
 	SceneManagerPtr scene_manager;
 	RenderSystemPtr render_system;
 };
-
-std::string trim_path(std::string path, const std::string &sign, unsigned int num_trims) {
-	for (unsigned int i = 0; i < num_trims; i++) {
-		path = path.substr(0, path.find_last_of(sign));
-	}
-	return path + sign;
-}
 
 void on_component_added(std::shared_ptr<IComponent<>> component) {
 	std::string name = component->get_name();
@@ -82,17 +76,12 @@ bool mainTest() {
 	auto path = clan::System::get_exe_path();
 	std::cout << "Base path: " << path << std::endl;
 
-#if WIN32
-	path = trim_path(path, "\\", 4);
-	std::cout << "Trimmed path: " << path << std::endl;
-#else
-	//TODO: Set this up for Linux/OsX?
-#endif
+	std::string wanted_directory = "resources/json/tests";
 
-	path += "resources/json/tests/";
+	path = find_path_in_hierarchy(path, wanted_directory);
 	std::cout << "Resource path: " << path << std::endl;
 
-	template_manager->add_templates(path + "test_entity_template1.js");
+	template_manager->add_templates(path + "/test_entity_template1.js");
 
 	auto entity1 = entity_manager->create_entity("One");
 	auto entity2 = entity_manager->create_entity("Two");
