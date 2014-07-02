@@ -93,3 +93,27 @@ void SceneManager::remove(Transform * const transform, Transform * const parent,
 const std::vector<Transform*> &SceneManager::get_transforms() const {
 	return parentlessTransforms;
 }
+
+void SceneManager::prepare() {
+	for (Transform *transform : parentlessTransforms) {
+		prepare(transform);
+	}
+
+}
+
+void SceneManager::prepare(Transform *transform, bool must_update_world) {
+	if (transform->is_dirty()) {
+		transform->update_object_matrix();
+		transform->clear_dirty();
+
+		must_update_world = true;
+	}
+
+	if (must_update_world) {
+		transform->update_world_matrix();
+	}
+
+	for (Transform *child : transform->get_children()) {
+		prepare(child, must_update_world);
+	}
+}

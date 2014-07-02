@@ -14,6 +14,9 @@ public:
 	SceneManager();
 	~SceneManager();
 
+	// Prepare the transform
+	void prepare();
+
 	void add(Transform * const transform);
 	void add(Transform * const child, Transform * const parent);
 	void add(Transform * const transform, Transform * const parent,
@@ -26,6 +29,10 @@ public:
 		std::function<void(Transform * const child, Transform * const parent)> remove_callback);
 
 	const std::vector<Transform*> &get_transforms() const;
+
+private:
+	// Walk through the tree and update object and world matrices, if necessary
+	void prepare(Transform *transform, bool must_update_world = false);
 
 private:
 	// SceneManager will not attempt to destruct these when it is itself destructed.
