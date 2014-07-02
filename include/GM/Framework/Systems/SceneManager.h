@@ -33,5 +33,7 @@ private:
 
 };
 
+typedef std::shared_ptr<SceneManager> SceneManagerPtr;
+
 } // namespace Framework
 } // namespace GM

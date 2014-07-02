@@ -11,7 +11,6 @@ namespace Framework {
 
 class Camera; typedef std::shared_ptr<Camera> CameraPtr;
 class IRenderable; typedef std::shared_ptr<IRenderable> IRenderablePtr;
-class RenderSystem; typedef std::shared_ptr<RenderSystem> RenderSystemPtr;
 
 class RenderSystem {
 public:
@@ -45,6 +44,8 @@ private:
 	//  vector is depth sorted.
 	std::array<std::vector<Camera*>, std::numeric_limits<unsigned int>::digits> cameras_in_layers;
 };
+
+typedef std::shared_ptr<RenderSystem> RenderSystemPtr;
 
 } // namespace Framework
 } // namespace GM
