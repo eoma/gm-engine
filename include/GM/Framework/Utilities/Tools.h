@@ -5,11 +5,11 @@
 namespace GM {
 	namespace Framework {
 		/**
-		 * Locates a path based on path hierarchgy. Will only search upward the hierarchy.
+		 * Locates a path based on path hierarchy. Will only search upward in the hierarchy.
 		 *
 		 * @param start_path The starting point, eg. the path to your executable.
 		 * @param wanted_end_of_path what the resulting path must contain.
-		 * @param max_ancsetor_length how many steps up the directory hierarchy are allowed to search.
+		 * @param max_ancestor_length how many steps up the directory hierarchy are allowed to search.
 		 * @return the found path
 		 * @throws std::runtime_error if path is not found.
 		 */
