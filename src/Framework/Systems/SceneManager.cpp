@@ -19,10 +19,10 @@ void SceneManager::add(Transform * const transform) {
 		return;
 	}
 
-	auto iter = std::find(parentlessTransforms.begin(), parentlessTransforms.end(), transform);
+	auto iter = std::find(parentless_transforms.begin(), parentless_transforms.end(), transform);
 
-	if (iter == parentlessTransforms.end()) {
-		parentlessTransforms.push_back(transform);
+	if (iter == parentless_transforms.end()) {
+		parentless_transforms.push_back(transform);
 	}
 }
 
@@ -60,10 +60,10 @@ void SceneManager::remove(Transform * const transform) {
 		return;
 	}
 
-	auto iter = std::find(parentlessTransforms.begin(), parentlessTransforms.end(), transform);
+	auto iter = std::find(parentless_transforms.begin(), parentless_transforms.end(), transform);
 
-	if (iter != parentlessTransforms.end()) {
-		parentlessTransforms.erase(iter);
+	if (iter != parentless_transforms.end()) {
+		parentless_transforms.erase(iter);
 	}
 }
 
@@ -91,11 +91,11 @@ void SceneManager::remove(Transform * const transform, Transform * const parent,
 }
 
 const std::vector<Transform*> &SceneManager::get_transforms() const {
-	return parentlessTransforms;
+	return parentless_transforms;
 }
 
 void SceneManager::prepare() {
-	for (Transform *transform : parentlessTransforms) {
+	for (Transform *transform : parentless_transforms) {
 		prepare(transform);
 	}
 

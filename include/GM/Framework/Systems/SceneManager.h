@@ -36,7 +36,7 @@ private:
 
 private:
 	// SceneManager will not attempt to destruct these when it is itself destructed.
-	std::vector<Transform*> parentlessTransforms;
+	std::vector<Transform*> parentless_transforms;
 
 };
 
