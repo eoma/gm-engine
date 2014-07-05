@@ -18,7 +18,7 @@ std::string GM::Framework::find_path_in_hierarchy(const std::string &start_path,
 			try {
 				root_path = clan::PathHelp::make_absolute(root_path, "../");
 			} catch (clan::Exception e) {
-				// We are unable to get firther down the hiearchy, break out of loop
+				// We are unable to get further down the hiearchy, break out of loop
 				break;
 			}
 
