@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
+//FIXME: Move this into Core
 namespace GM {
 
 namespace Core {
