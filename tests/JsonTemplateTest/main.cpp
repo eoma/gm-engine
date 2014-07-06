@@ -81,7 +81,7 @@ bool mainTest() {
 	path = find_path_in_hierarchy(path, wanted_directory);
 	std::cout << "Resource path: " << path << std::endl;
 
-	template_manager->add_templates(path + "/test_entity_template1.js");
+	template_manager->add_templates(path + "/test_entity_template1.json");
 
 	auto entity1 = entity_manager->create_entity("One");
 	auto entity2 = entity_manager->create_entity("Two");
