@@ -1,5 +1,5 @@
 
-#include <GM/Framework/Utilities/TemplateManager.h>
+#include <GM/Framework/Managers/TemplateManager.h>
 #include <GM/Framework/Utilities/ComponentSerializer.h>
 #include <GM/Framework/Entity.h>
 
@@ -7,7 +7,9 @@ using namespace GM;
 using namespace Framework;
 using namespace clan;
 
-#pragma warning (disable:4701) // Avoid warning about uninitialized forced_type
+#if defined(_MSC_VER)
+#	pragma warning (disable:4701) // Avoid warning about uninitialized forced_type
+#endif
 
 TemplateManager::TemplateManager(const ComponentSerializerPtr &component_serializer)
 : component_serializer(component_serializer)

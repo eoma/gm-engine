@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PropertySerializer.h"
+#include "../Utilities/PropertySerializer.h"
 
 namespace GM {
 	namespace Framework {

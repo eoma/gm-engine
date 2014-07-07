@@ -8,7 +8,7 @@
 #include <GM/Framework/Systems/SceneSystem.h>
 #include <GM/Framework/Components/Transform.h>
 #include <GM/Framework/Components/Renderable.h>
-#include <GM/Framework/Utilities/TemplateManager.h>
+#include <GM/Framework/Managers/TemplateManager.h>
 #include <GM/Framework/Utilities/ComponentSerializer.h>
 #include <GM/Framework/Utilities/Tools.h>
 
