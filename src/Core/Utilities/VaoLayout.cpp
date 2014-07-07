@@ -11,6 +11,8 @@ namespace GM {
 namespace Core {
 
 VaoLayout::VaoLayout()
+: active_buffer(0)
+, active_type(0)
 {
 }
 
