@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VaoLayout.h"
+#include "../../Core/Utilities/VaoLayout.h"
 
 #include <map>
 
@@ -14,13 +14,13 @@ public:
 	VaoManager();
 	~VaoManager();
 
-	unsigned int get_vao_for(const VaoLayout &layout);
+	unsigned int get_vao_for(const Core::VaoLayout &layout);
 
 private:
-	unsigned int build_vao(const VaoLayout &layout);
+	unsigned int build_vao(const Core::VaoLayout &layout);
 
 private:
-	std::map<VaoLayout, unsigned int> vaos;
+	std::map<Core::VaoLayout, unsigned int> vaos;
 
 };
 

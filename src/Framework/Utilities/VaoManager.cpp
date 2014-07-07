@@ -8,6 +8,8 @@
 namespace GM {
 namespace Framework {
 
+using namespace Core;
+
 VaoManager::VaoManager()
 {
 }
