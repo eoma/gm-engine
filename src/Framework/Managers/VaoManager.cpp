@@ -1,6 +1,6 @@
-#include "GM/Framework/Utilities/VaoManager.h"
+#include "GM/Framework/Managers/VaoManager.h"
 
-// remove when intriducing gl
+// FIXME: remove when intriducing gl
 #ifndef GL_ARRAY_BUFFER
 #define GL_ARRAY_BUFFER 1
 #endif
