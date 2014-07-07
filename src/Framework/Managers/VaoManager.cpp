@@ -41,11 +41,11 @@ unsigned int VaoManager::build_vao(const VaoLayout &layout)
 
 	// glGenVertexArrays(&vao, 0); or something similar
 
-	for (const BufferUse &buffer_use : layout.get_buffer_use())
+	for (const BufferUse &used_buffer : layout.get_used_buffers())
 	{
-		if (buffer_use.type != GL_ARRAY_BUFFER)
+		if (used_buffer.type != GL_ARRAY_BUFFER)
 		{
-			// activate buffer_use.name with type buffer_use.type
+			// activate used_buffer.name with type used_buffer.type
 		}
 	}
 

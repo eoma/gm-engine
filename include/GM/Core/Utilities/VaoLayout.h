@@ -31,7 +31,7 @@ public:
 
 	// Relevant for VaoManager.
 	const std::vector<BufferVertexAttribDefinition> &get_definitions() const;
-	const std::vector<BufferUse> &get_buffer_use() const;
+	const std::vector<BufferUse> &get_used_buffers() const;
 
 	bool operator< (const VaoLayout &other) const;
 

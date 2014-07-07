@@ -121,6 +121,10 @@ const std::vector<BufferVertexAttribDefinition> &VaoLayout::get_definitions() co
 	return definitions;
 }
 
+const std::vector<BufferUse> &VaoLayout::get_used_buffers() const
+{
+	return used_buffers;
+}
 
 bool VaoLayout::operator< (const VaoLayout &other) const
 {
