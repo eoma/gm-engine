@@ -7,7 +7,7 @@ project(${NAME})
 set(PROJECT_HEADER_ROOT ${CMAKE_SOURCE_DIR}/include/GM/Framework)
 set(PROJECT_SOURCE_ROOT ${CMAKE_SOURCE_DIR}/src/Framework)
 
-set(PROJECT_FOLDERS Components Systems Totem Utilities)
+set(PROJECT_FOLDERS Components Systems Totem Utilities Managers)
 # end customization
 
 # initialize with possible files in root
