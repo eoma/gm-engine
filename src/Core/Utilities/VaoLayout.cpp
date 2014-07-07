@@ -1,4 +1,4 @@
-#include "GM/Framework/Utilities/VaoLayout.h"
+#include "GM/Core/Utilities/VaoLayout.h"
 
 #include <algorithm>
 
@@ -8,7 +8,7 @@
 #endif
 
 namespace GM {
-namespace Framework {
+namespace Core {
 
 VaoLayout::VaoLayout()
 {
@@ -125,5 +125,5 @@ bool VaoLayout::operator< (const VaoLayout &other) const
 	return (used_buffers < other.used_buffers) || (definitions < other.definitions);
 }
 
-} // namespace Framework
+} // namespace Core
 } // namespace GM

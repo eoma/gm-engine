@@ -1,7 +1,7 @@
-#include "GM/Framework/Utilities/BufferUse.h"
+#include "GM/Core/Utilities/BufferUse.h"
 
 namespace GM {
-namespace Framework {
+namespace Core {
 
 int BufferUse::compare(const BufferUse &current, const BufferUse &other)
 {
@@ -23,5 +23,5 @@ bool operator== (const BufferUse &current, const BufferUse &other)
 	return BufferUse::compare(current, other) == 0;
 }
 
-} // namespace Framework
+} // namespace Core
 } // namespace GM

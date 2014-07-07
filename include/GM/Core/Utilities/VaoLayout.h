@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace GM {
-namespace Framework {
+namespace Core {
 
 class VaoLayout {
 public:
@@ -45,5 +45,5 @@ private:
 	std::vector<BufferUse> used_buffers;
 };
 
-} // namespace Framework
+} // namespace Core
 } // namespace GM

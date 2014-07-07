@@ -1,5 +1,8 @@
 #pragma once
 
+namespace GM {
+namespace Core {
+
 // It is assumed the buffer can act as a GL_ARRAY_BUFFER
 struct BufferVertexAttribDefinition
 {
@@ -18,3 +21,6 @@ struct BufferVertexAttribDefinition
 };
 
 bool operator< (const BufferVertexAttribDefinition &current, const BufferVertexAttribDefinition &other);
+
+} // namespace Core
+} // namespace GM

@@ -1,7 +1,7 @@
 #pragma once
 
 namespace GM {
-namespace Framework {
+namespace Core {
 
 struct BufferUse
 {
@@ -16,5 +16,5 @@ struct BufferUse
 bool operator< (const BufferUse &current, const BufferUse &other);
 bool operator== (const BufferUse &current, const BufferUse &other);
 
-} // namespace Framework
+} // namespace Core
 } // namespace GM

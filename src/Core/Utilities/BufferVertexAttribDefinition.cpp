@@ -1,5 +1,7 @@
-#include "GM/Framework/Utilities/BufferVertexAttribDefinition.h"
+#include "GM/Core/Utilities/BufferVertexAttribDefinition.h"
 
+namespace GM {
+namespace Core {
 
 int BufferVertexAttribDefinition::compare(const BufferVertexAttribDefinition &current, const BufferVertexAttribDefinition &other)
 {
@@ -20,3 +22,6 @@ int BufferVertexAttribDefinition::compare(const BufferVertexAttribDefinition &cu
 bool operator< (const BufferVertexAttribDefinition &current, const BufferVertexAttribDefinition &other) {
 	return BufferVertexAttribDefinition::compare(current, other) < 0;
 }
+
+} // namespace Core
+} // namespace GM
