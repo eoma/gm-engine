@@ -2,6 +2,8 @@
 
 #include <ClanLib/core.h>
 
+#include "GM/Framework/Utilities/Tools.h"
+
 #include <algorithm>
 
 namespace GM {
@@ -13,35 +15,6 @@ ShaderManager::ShaderManager()
 
 ShaderManager::~ShaderManager()
 {
-}
-
-template<class T>
-std::set<T> general_set_intersection(const std::vector<std::set<T>> &sets) {
-	std::vector<T> result;
-
-	if (sets.size() > 0)
-	{
-		result.assign(sets[0].begin(), sets[0].end());
-
-		std::vector<T> temp;
-		for (auto iter = sets.begin()+1; iter != sets.end(); ++iter)
-		{
-			temp.clear();
-			temp.reserve(result.size() + iter->size());
-
-			auto end = std::set_intersection(result.begin(), result.end(), iter->begin(), iter->end(), temp.begin());
-
-			result.clear();
-			result.assign(temp.begin(), end);
-
-			if (result.size() == 0)
-			{
-				break;
-			}
-		}
-	}
-
-	return std::set<T>(result.begin(), result.end());
 }
 
 ShaderId ShaderManager::load(const std::string &vs_file, const std::string &gs_file, const std::string &fs_file)
