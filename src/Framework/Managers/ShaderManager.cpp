@@ -1,4 +1,4 @@
-#include "GM/Framework/Utilities/ShaderManager.h"
+#include "GM/Framework/Managers/ShaderManager.h"
 
 #include <ClanLib/core.h>
 
