@@ -1,4 +1,4 @@
-#include "GM/Framework/Utilities/BufferManager.h"
+#include "GM/Framework/Managers/BufferManager.h"
 
 #include <algorithm>
 
