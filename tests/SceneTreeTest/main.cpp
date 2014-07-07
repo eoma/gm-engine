@@ -2,7 +2,7 @@
 #include <GM/Framework/DefinitionsPropertyNames.h>
 #include <GM/Framework/EntityManager.h>
 #include <GM/Framework/Entity.h>
-#include <GM/Framework/Systems/SceneManager.h>
+#include <GM/Framework/Systems/SceneSystem.h>
 #include <GM/Framework/Components/Transform.h>
 #include <GM/Framework/Components/Renderable.h>
 
@@ -16,15 +16,15 @@ bool mainTest() {
 	typedef clan::Callback<void(const Transform * const, const Transform * const)> CallbackParentChild;
 
 	auto entity_manager = std::make_shared<EntityManager>();
-	auto scene_manager = std::make_shared<SceneManager>();
+	auto scene_system = std::make_shared<SceneSystem>();
 
 	auto parent = entity_manager->create_entity("parent");
 	auto child1 = entity_manager->create_entity("child1");
 	auto child2 = entity_manager->create_entity("child2");
 
-	auto parent_transform = parent->create_component<Transform>(scene_manager);
-	auto child1_transform = child1->create_component<Transform>(scene_manager);
-	auto child2_transform = child2->create_component<Transform>(scene_manager);
+	auto parent_transform = parent->create_component<Transform>(scene_system);
+	auto child1_transform = child1->create_component<Transform>(scene_system);
+	auto child2_transform = child2->create_component<Transform>(scene_system);
 
 	parent_transform->add_child(child1_transform);
 	parent_transform->add_child(child2_transform);
@@ -43,7 +43,7 @@ bool mainTest() {
 	// Only move parent transform
 	parent_transform->translate(glm::vec3(1,1,1));
 
-	scene_manager->prepare();
+	scene_system->prepare();
 
 	if (!child1changed || !child2changed) {
 		throw std::runtime_error("Child 1 and child 2 should have been changed when preparing scene graph after parent has changed.");

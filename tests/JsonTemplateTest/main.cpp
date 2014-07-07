@@ -5,7 +5,7 @@
 #include <GM/Framework/EntityManager.h>
 #include <GM/Framework/Entity.h>
 #include <GM/Framework/Systems/RenderSystem.h>
-#include <GM/Framework/Systems/SceneManager.h>
+#include <GM/Framework/Systems/SceneSystem.h>
 #include <GM/Framework/Components/Transform.h>
 #include <GM/Framework/Components/Renderable.h>
 #include <GM/Framework/Utilities/TemplateManager.h>
@@ -20,8 +20,8 @@ using namespace Framework;
 class MyComponentSerializer {
 public:
 
-	MyComponentSerializer(const ComponentSerializerPtr &component_serializer, const SceneManagerPtr &scene_manager, const RenderSystemPtr &render_system)
-		: scene_manager(scene_manager), render_system(render_system)
+	MyComponentSerializer(const ComponentSerializerPtr &component_serializer, const SceneSystemPtr &scene_system, const RenderSystemPtr &render_system)
+		: scene_system(scene_system), render_system(render_system)
 	{
 		component_serializer->sig_create_component.connect(
 			clan::Callback<void(const EntityPtr &, const std::string &, const std::string &)>(
@@ -30,7 +30,7 @@ public:
 
 	void create_and_add_component(const EntityPtr &owner, const std::string &type, const std::string &/*name*/) {
 		if (type == Transform::get_static_type()) {
-			owner->create_component<Transform>(scene_manager);
+			owner->create_component<Transform>(scene_system);
 		}
 		else if (type == Renderable::get_static_type()) {
 			owner->create_component<Renderable>(render_system);
@@ -39,7 +39,7 @@ public:
 	}
 
 private:
-	SceneManagerPtr scene_manager;
+	SceneSystemPtr scene_system;
 	RenderSystemPtr render_system;
 };
 
@@ -66,11 +66,11 @@ bool mainTest() {
 
 	auto entity_manager = std::make_shared<EntityManager>();
 	auto render_system = std::make_shared<RenderSystem>();
-	auto scene_manager = std::make_shared<SceneManager>();
+	auto scene_system = std::make_shared<SceneSystem>();
 	auto component_serializer = std::make_shared<ComponentSerializer>();
 	auto template_manager = std::make_shared<TemplateManager>(component_serializer);
 
-	auto my_component_serializer = std::make_shared<MyComponentSerializer>(component_serializer, scene_manager, render_system);
+	auto my_component_serializer = std::make_shared<MyComponentSerializer>(component_serializer, scene_system, render_system);
 	
 
 	auto path = clan::System::get_exe_path();

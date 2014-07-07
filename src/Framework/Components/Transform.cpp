@@ -4,16 +4,16 @@
 
 #include "GM/Framework/DefinitionsPropertyNames.h"
 #include "GM/Framework/Entity.h"
-#include "GM/Framework/Systems/SceneManager.h"
+#include "GM/Framework/Systems/SceneSystem.h"
 
 #include <algorithm>
 #include <iostream>
 
 using namespace GM::Framework;
 
-Transform::Transform(const EntityPtr &owner, const SceneManagerPtr &scene_manager, const std::string &name)
+Transform::Transform(const EntityPtr &owner, const SceneSystemPtr &scene_system, const std::string &name)
 : Component<Transform>(owner, name)
-, scene_manager(scene_manager)
+, scene_system(scene_system)
 , parent(nullptr)
 {
 	position_property = owner->add(PROPERTY_POSITION, glm::vec3());
@@ -23,7 +23,7 @@ Transform::Transform(const EntityPtr &owner, const SceneManagerPtr &scene_manage
 	object_matrix_property = owner->add(PROPERTY_OBJECT_MATRIX, glm::mat4());
 	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4());
 
-	scene_manager->add(this);
+	scene_system->add(this);
 }
 
 Transform::~Transform() {
@@ -35,12 +35,12 @@ Transform::~Transform() {
 	}
 
 	// Nodes are always added to the scene manager's parentLess transforms when removed from a parent
-	scene_manager->remove(this);
+	scene_system->remove(this);
 
 	// Add all of the children to the scene manager.
 	for (Transform * child : children) {
 		child->parent = nullptr;
-		scene_manager->add(child);
+		scene_system->add(child);
 	}
 
 	children.clear();
@@ -49,11 +49,11 @@ Transform::~Transform() {
 }
 
 void Transform::add_child(Transform * const child) {
-	scene_manager->add(child, this, add_callback, remove_callback);
+	scene_system->add(child, this, add_callback, remove_callback);
 }
 
 void Transform::remove_child(Transform * const child) {
-	scene_manager->remove(child, this, remove_callback);
+	scene_system->remove(child, this, remove_callback);
 }
 
 Transform* Transform::get_parent() const {
@@ -94,7 +94,7 @@ void Transform::remove_callback(Transform * const child, Transform * const paren
 		child->parent = nullptr;
 
 		//The child has now become a parentless transform
-		parent->scene_manager->add(child);
+		parent->scene_system->add(child);
 
 		parent->child_removed_sig.invoke(parent, child);
 	}

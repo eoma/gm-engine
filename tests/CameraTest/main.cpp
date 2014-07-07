@@ -3,7 +3,7 @@
 #include <GM/Framework/DefinitionsPropertyNames.h>
 #include <GM/Framework/EntityManager.h>
 #include <GM/Framework/Entity.h>
-#include <GM/Framework/Systems/SceneManager.h>
+#include <GM/Framework/Systems/SceneSystem.h>
 #include <GM/Framework/Systems/RenderSystem.h>
 #include <GM/Framework/Components/Camera.h>
 #include <GM/Framework/Components/Transform.h>
@@ -20,12 +20,12 @@ bool mainTest() {
 
 	auto entity_manager = std::make_shared<EntityManager>();
 	auto render_system = std::make_shared<RenderSystem>();
-	auto scene_manager = std::make_shared<SceneManager>();
+	auto scene_system = std::make_shared<SceneSystem>();
 
 	auto entity1 = entity_manager->create_entity("one");
 	auto entity2 = entity_manager->create_entity("two");
 
-	auto transform1 = entity1->create_component<Transform>(scene_manager);
+	auto transform1 = entity1->create_component<Transform>(scene_system);
 
 	// Make a camera associated with render layer 0 and depth 1
 	auto camera1 = entity1->create_component<Camera>(render_system, (1<<0), 1);
@@ -45,7 +45,7 @@ bool mainTest() {
 		throw std::runtime_error("View matrix should have been automatically updated when world matrix got updated.");
 	}
 
-	auto transform2 = entity2->create_component<Transform>(scene_manager);
+	auto transform2 = entity2->create_component<Transform>(scene_system);
 	auto camera2 = entity2->create_component<Camera>(render_system, (1<<0), 0);
 
 	// THis tests the sorting of camera depth

@@ -1,9 +1,6 @@
 #include <cstdlib>
 #include <GM/Framework/EntityManager.h>
 #include <GM/Framework/Entity.h>
-#include <GM/Framework/Systems/SceneManager.h>
-#include <GM/Framework/Components/Transform.h>
-#include <GM/Framework/Components/Renderable.h>
 
 #include <memory>
 

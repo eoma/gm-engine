@@ -1,4 +1,4 @@
-#include "GM/Framework/Systems/SceneManager.h"
+#include "GM/Framework/Systems/SceneSystem.h"
 #include "GM/Framework/Components/Transform.h"
 
 #include <algorithm>
@@ -6,15 +6,15 @@
 
 using namespace GM::Framework;
 
-SceneManager::SceneManager() {
+SceneSystem::SceneSystem() {
 
 }
 
-SceneManager::~SceneManager() {
-	//std::cout << "SceneManager destroyed" << std::endl;
+SceneSystem::~SceneSystem() {
+	//std::cout << "SceneSystem destroyed" << std::endl;
 }
 
-void SceneManager::add(Transform * const transform) {
+void SceneSystem::add(Transform * const transform) {
 	if (transform == nullptr) {
 		return;
 	}
@@ -26,7 +26,7 @@ void SceneManager::add(Transform * const transform) {
 	}
 }
 
-void SceneManager::add(Transform * const transform, Transform * const parent) {
+void SceneSystem::add(Transform * const transform, Transform * const parent) {
 	if (transform == nullptr) {
 		return;
 	} else if (parent == nullptr) {
@@ -36,7 +36,7 @@ void SceneManager::add(Transform * const transform, Transform * const parent) {
 	}
 }
 
-void SceneManager::add(Transform * const transform, Transform * const parent,
+void SceneSystem::add(Transform * const transform, Transform * const parent,
 	std::function<void(Transform * const child, Transform * const parent)> add_callback,
 	std::function<void(Transform * const child, Transform * const parent)> remove_callback) {
 	if (transform == nullptr) {
@@ -55,7 +55,7 @@ void SceneManager::add(Transform * const transform, Transform * const parent,
 	}
 }
 
-void SceneManager::remove(Transform * const transform) {
+void SceneSystem::remove(Transform * const transform) {
 	if (transform == nullptr) {
 		return;
 	}
@@ -67,7 +67,7 @@ void SceneManager::remove(Transform * const transform) {
 	}
 }
 
-void SceneManager::remove(Transform * const transform, Transform * const parent) {
+void SceneSystem::remove(Transform * const transform, Transform * const parent) {
 	if (transform == nullptr) {
 		return;
 	} else if (parent == nullptr) {
@@ -77,7 +77,7 @@ void SceneManager::remove(Transform * const transform, Transform * const parent)
 	}
 }
 
-void SceneManager::remove(Transform * const transform, Transform * const parent,
+void SceneSystem::remove(Transform * const transform, Transform * const parent,
 	std::function<void(Transform * const child, Transform * const parent)> remove_callback) {
 	if (transform == nullptr) {
 		return;
@@ -90,18 +90,18 @@ void SceneManager::remove(Transform * const transform, Transform * const parent,
 	}
 }
 
-const std::vector<Transform*> &SceneManager::get_transforms() const {
+const std::vector<Transform*> &SceneSystem::get_transforms() const {
 	return parentless_transforms;
 }
 
-void SceneManager::prepare() {
+void SceneSystem::prepare() {
 	for (Transform *transform : parentless_transforms) {
 		prepare(transform);
 	}
 
 }
 
-void SceneManager::prepare(Transform *transform, bool must_update_world) {
+void SceneSystem::prepare(Transform *transform, bool must_update_world) {
 	if (transform->is_dirty()) {
 		transform->update_object_matrix();
 		transform->clear_dirty();

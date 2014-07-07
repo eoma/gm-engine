@@ -9,10 +9,10 @@ namespace Framework {
 
 class Transform; typedef std::shared_ptr<Transform> TransformPtr;
 
-class SceneManager {
+class SceneSystem {
 public:
-	SceneManager();
-	~SceneManager();
+	SceneSystem();
+	~SceneSystem();
 
 	// Prepare the transform
 	void prepare();
@@ -40,7 +40,7 @@ private:
 
 };
 
-typedef std::shared_ptr<SceneManager> SceneManagerPtr;
+typedef std::shared_ptr<SceneSystem> SceneSystemPtr;
 
 } // namespace Framework
 } // namespace GM
