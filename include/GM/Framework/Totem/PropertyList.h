@@ -22,11 +22,11 @@ public:
 	std::vector<PropertyType> value;
 	std::string name;
 	bool dirty;
-	clan::Signal<unsigned int, const PropertyType &, const PropertyType &> value_changed;
-	clan::Signal<unsigned int, const PropertyType &> value_added;
-	clan::Signal<unsigned int, const PropertyType &> value_erased;
-	clan::Signal<> values_cleared;
-	clan::Signal<unsigned int, unsigned int> list_resized;
+	clan::Signal<void(unsigned int, const PropertyType &, const PropertyType &)> value_changed;
+	clan::Signal<void(unsigned int, const PropertyType &)> value_added;
+	clan::Signal<void(unsigned int, const PropertyType &)> value_erased;
+	clan::Signal<void()> values_cleared;
+	clan::Signal<void(unsigned int, unsigned int)> list_resized;
 };
 
 template<class PropertyType>
@@ -82,11 +82,11 @@ public:
 	bool is_dirty() const override;
 	void clear_dirty() override;
 
-	clan::Signal<unsigned int, const PropertyType &, const PropertyType &> &value_changed();
-	clan::Signal<unsigned int, const PropertyType &> &value_added();
-	clan::Signal<unsigned int, const PropertyType &> &value_erased();
-	clan::Signal<> &values_cleared();
-	clan::Signal<unsigned int, unsigned int> &list_resized();
+	clan::Signal<void(unsigned int, const PropertyType &, const PropertyType &)> &value_changed();
+	clan::Signal<void(unsigned int, const PropertyType &)> &value_added();
+	clan::Signal<void(unsigned int, const PropertyType &)> &value_erased();
+	clan::Signal<void()> &values_cleared();
+	clan::Signal<void(unsigned int, unsigned int)> &list_resized();
 
 	PropertyList<PropertyType> operator= (const PropertyList<PropertyType>& rhs);
 	PropertyListIndexValue<PropertyType> operator[] (const unsigned int& index);

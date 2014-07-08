@@ -21,7 +21,7 @@ public:
 	PropertyType value;
 	std::string name;
 	bool dirty;
-	clan::Signal<const PropertyType &, const PropertyType &> value_changed;
+	clan::Signal<void(const PropertyType &, const PropertyType &)> value_changed;
 
 	PropertyData();
 };
@@ -43,7 +43,7 @@ public:
 	void clear_dirty() override;
 	unsigned int get_runtime_type_id() const override;
 
-	clan::Signal<const PropertyType &, const PropertyType &> &value_changed();
+	clan::Signal<void(const PropertyType &, const PropertyType &)> &value_changed();
 
 	Property<PropertyType> &operator= (const Property<PropertyType>& rhs);
 	Property<PropertyType> &operator= (const PropertyType& rhs);

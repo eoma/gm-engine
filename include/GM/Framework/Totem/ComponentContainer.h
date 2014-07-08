@@ -29,8 +29,8 @@ public:
 	void update_components(float elapsed_time);
 	template<class ComponentType> void remove_component(const std::string &name = std::string(), bool uphold_order_in_list = false);
 
-	clan::Signal<std::shared_ptr<IComponent<UserData>>> &component_added();
-	clan::Signal<std::shared_ptr<IComponent<UserData>>> &component_removed();
+	clan::Signal<void(std::shared_ptr<IComponent<UserData>>)> &component_added();
+	clan::Signal<void(std::shared_ptr<IComponent<UserData>>)> &component_removed();
 
 protected:
 	void check_duplication_and_add(unsigned int type_id, const std::string &name);
@@ -39,8 +39,8 @@ protected:
 	std::unordered_map<unsigned int, std::vector<std::string>> names_for_component_types;
 	std::vector<std::shared_ptr<IComponent<UserData>>> components;
 
-	clan::Signal<std::shared_ptr<IComponent<UserData>>> sign_ComponentAdded;
-	clan::Signal<std::shared_ptr<IComponent<UserData>>> sign_ComponentRemoved;
+	clan::Signal<void(std::shared_ptr<IComponent<UserData>>)> sign_ComponentAdded;
+	clan::Signal<void(std::shared_ptr<IComponent<UserData>>)> sign_ComponentRemoved;
 };
 
 #include "ComponentContainer.inl"

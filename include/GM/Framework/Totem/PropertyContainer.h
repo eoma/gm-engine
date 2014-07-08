@@ -45,19 +45,19 @@ public:
 
 	PropertyContainer &operator= (const PropertyContainer &rhs);
 
-	clan::Signal<std::shared_ptr<IProperty>> &property_added();
-	clan::Signal<std::shared_ptr<IProperty>, const UserData&> &property_with_user_data_added();
-	clan::Signal<std::shared_ptr<IProperty>> &property_removed();
-	clan::Signal<std::shared_ptr<IProperty>, const UserData&> &property_with_user_data_removed();
+	clan::Signal<void(std::shared_ptr<IProperty>)> &property_added();
+	clan::Signal<void(std::shared_ptr<IProperty>, const UserData&)> &property_with_user_data_added();
+	clan::Signal<void(std::shared_ptr<IProperty>)> &property_removed();
+	clan::Signal<void(std::shared_ptr<IProperty>, const UserData&)> &property_with_user_data_removed();
 
 protected:
 	std::unordered_map<std::string, std::shared_ptr<IProperty>> properties;
 	std::vector<std::shared_ptr<IProperty>> deleted_properties;
 
-	clan::Signal<std::shared_ptr<IProperty>> sign_PropertyAdded;
-	clan::Signal<std::shared_ptr<IProperty>, const UserData&> sign_PropertyWithUserDataAdded;
-	clan::Signal<std::shared_ptr<IProperty>> sign_PropertyRemoved;
-	clan::Signal<std::shared_ptr<IProperty>, const UserData&> sign_PropertyWithUserDataRemoved;
+	clan::Signal<void(std::shared_ptr<IProperty>)> sign_PropertyAdded;
+	clan::Signal<void(std::shared_ptr<IProperty>, const UserData&)> sign_PropertyWithUserDataAdded;
+	clan::Signal<void(std::shared_ptr<IProperty>)> sign_PropertyRemoved;
+	clan::Signal<void(std::shared_ptr<IProperty>, const UserData&)> sign_PropertyWithUserDataRemoved;
 };
 
 #include "PropertyContainer.inl"

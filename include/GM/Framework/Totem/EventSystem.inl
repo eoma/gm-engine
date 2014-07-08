@@ -29,9 +29,9 @@ inline void EventSystem<EventFactory>::send_event(HashedString type, Ts... args,
 	auto signal = std::dynamic_pointer_cast<EventSignal<Ts...>>(it->second);
 	if (signal == nullptr)
 		throw clan::Exception(("Tried to invoke event " + type.get_str() + ", but one or both of the argument types didn't match the registered types!").c_str());
-	signal->signal.invoke(args...);
+	signal->signal(args...);
 #else
-	std::static_pointer_cast<EventSignal<Ts...>>(it->second)->signal.invoke(args...);
+	std::static_pointer_cast<EventSignal<Ts...>>(it->second)->signal(args...);
 #endif
 }
 
@@ -40,7 +40,7 @@ inline void EventSystem<EventFactory>::send_event(HashedString type, Ts... args,
 
 template<class EventFactory>
 template<class... Ts>
-inline clan::Signal<Ts...> &EventSystem<EventFactory>::register_to_event(HashedString type)
+inline clan::Signal<void(Ts...)> &EventSystem<EventFactory>::register_to_event(HashedString type)
 {
 	auto events_it = event_size_map.find(sizeof...(Ts));
 	if (events_it == event_size_map.end()) {

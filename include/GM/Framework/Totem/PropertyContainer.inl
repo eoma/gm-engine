@@ -44,7 +44,7 @@ inline Property<T> PropertyContainer<UserData>::add(const std::string& name, con
 	property->set(default_value, true);
 	properties[property->get_name()] = property;
 
-	sign_PropertyAdded.invoke(std::static_pointer_cast<IProperty>(property));
+	sign_PropertyAdded(std::static_pointer_cast<IProperty>(property));
 	return *property.get();
 }
 
@@ -70,7 +70,7 @@ inline Property<T> PropertyContainer<UserData>::add(const std::string& name, con
 	property->set(default_value, true);
 	properties[property->get_name()] = property;
 
-	sign_PropertyWithUserDataAdded.invoke(std::static_pointer_cast<IProperty>(property), user_data);
+	sign_PropertyWithUserDataAdded(std::static_pointer_cast<IProperty>(property), user_data);
 	return *property.get();
 }
 
@@ -111,25 +111,25 @@ inline PropertyContainer<UserData> &PropertyContainer<UserData>::operator= (cons
 }
 
 template<class UserData>
-inline clan::Signal<std::shared_ptr<IProperty>> &PropertyContainer<UserData>::property_added() 
+inline clan::Signal<void(std::shared_ptr<IProperty>)> &PropertyContainer<UserData>::property_added() 
 { 
 	return sign_PropertyAdded; 
 }
 
 template<class UserData>
-inline clan::Signal<std::shared_ptr<IProperty>, const UserData&> &PropertyContainer<UserData>::property_with_user_data_added() 
+inline clan::Signal<void(std::shared_ptr<IProperty>, const UserData&)> &PropertyContainer<UserData>::property_with_user_data_added() 
 { 
 	return sign_PropertyWithUserDataAdded; 
 }
 
 template<class UserData>
-inline clan::Signal<std::shared_ptr<IProperty>> &PropertyContainer<UserData>::property_removed() 
+inline clan::Signal<void(std::shared_ptr<IProperty>)> &PropertyContainer<UserData>::property_removed() 
 { 
 	return sign_PropertyRemoved; 
 }
 
 template<class UserData>
-inline clan::Signal<std::shared_ptr<IProperty>, const UserData&> &PropertyContainer<UserData>::property_with_user_data_removed()
+inline clan::Signal<void(std::shared_ptr<IProperty>, const UserData&)> &PropertyContainer<UserData>::property_with_user_data_removed()
 {
 	return sign_PropertyWithUserDataRemoved;
 }
@@ -166,7 +166,7 @@ if(it != properties.end())
 		deleted_properties.push_back(property);
 	properties.erase(it);
 
-	sign_PropertyRemoved.invoke(property);
+	sign_PropertyRemoved(property);
 }
 }
 
@@ -181,7 +181,7 @@ if(it != properties.end())
 		deleted_properties.push_back(property);
 	properties.erase(it);
 
-	sign_PropertyWithUserDataRemoved.invoke(property, user_data);
+	sign_PropertyWithUserDataRemoved(property, user_data);
 }
 }
 
@@ -189,7 +189,7 @@ template<class UserData>
 inline void PropertyContainer<UserData>::remove_all_properties()
 {
 for(auto it = properties.begin(); it != properties.end(); ++it)
-	sign_PropertyRemoved.invoke(it->second);
+	sign_PropertyRemoved(it->second);
 
 	properties.clear();
 	clear_deleted_properties();
@@ -199,7 +199,7 @@ template<class UserData>
 inline void PropertyContainer<UserData>::remove_all_properties(const UserData &user_data)
 {
 for(auto it = properties.begin(); it != properties.end(); ++it)
-	sign_PropertyWithUserDataRemoved.invoke(it->second, user_data);
+	sign_PropertyWithUserDataRemoved(it->second, user_data);
 
 	properties.clear();
 	clear_deleted_properties();

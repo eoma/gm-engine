@@ -33,7 +33,7 @@ inline void Property<PropertyType>::set(const PropertyType& value, bool invoke_v
 		data->dirty = true; 
 
 		if(invoke_value_changed)
-			data->value_changed.invoke(old_value, value);
+			data->value_changed(old_value, value);
 	}
 }
 
@@ -59,7 +59,7 @@ template<class PropertyType>
 inline void Property<PropertyType>::clear_dirty() { data->dirty = false; }
 
 template<class PropertyType>
-inline clan::Signal<const PropertyType &, const PropertyType &> &Property<PropertyType>::value_changed() { return data->value_changed; }
+inline clan::Signal<void(const PropertyType &, const PropertyType &)> &Property<PropertyType>::value_changed() { return data->value_changed; }
 
 /// Instead of property.get() this operator exist for convenience.
 template<class PropertyType>

@@ -38,7 +38,7 @@ PropertyList<T> PropertyListContainer<UserData>::add_list(const std::string& nam
 	property_lists[property->get_name()] = property;
 
 	//return *property;
-	sign_PropertyListAdded.invoke(std::static_pointer_cast<IPropertyList>(property));
+	sign_PropertyListAdded(std::static_pointer_cast<IPropertyList>(property));
 	//return get_property<T>(name);
 	return *property.get();
 }
@@ -65,7 +65,7 @@ PropertyList<T> PropertyListContainer<UserData>::add_list(const std::string& nam
 	property_lists[property->get_name()] = property;
 
 	//return *property;
-	sign_PropertyListWithUserDataAdded.invoke(std::static_pointer_cast<IPropertyList>(property), user_data);
+	sign_PropertyListWithUserDataAdded(std::static_pointer_cast<IPropertyList>(property), user_data);
 	//return get_property<T>(name);
 	return *property.get();
 }
@@ -107,25 +107,25 @@ PropertyListContainer<UserData> &PropertyListContainer<UserData>::operator= (con
 }
 
 template<class UserData>
-clan::Signal<std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::property_list_added() 
+clan::Signal<void(std::shared_ptr<IPropertyList>)> &PropertyListContainer<UserData>::property_list_added() 
 {
 	return sign_PropertyListAdded;
 }
 
 template<class UserData>
-clan::Signal<std::shared_ptr<IPropertyList>, const UserData&> &PropertyListContainer<UserData>::property_list_with_user_data_added() 
+clan::Signal<void(std::shared_ptr<IPropertyList>, const UserData&)> &PropertyListContainer<UserData>::property_list_with_user_data_added() 
 {
 	return sign_PropertyListWithUserDataAdded; 
 }
 
 template<class UserData>
-clan::Signal<std::shared_ptr<IPropertyList>> &PropertyListContainer<UserData>::property_list_removed()
+clan::Signal<void(std::shared_ptr<IPropertyList>)> &PropertyListContainer<UserData>::property_list_removed()
 {
 	return sign_PropertyListRemoved;
 }
 
 template<class UserData>
-clan::Signal<std::shared_ptr<IPropertyList>, const UserData&> &PropertyListContainer<UserData>::property_list_with_user_data_removed()
+clan::Signal<void(std::shared_ptr<IPropertyList>, const UserData&)> &PropertyListContainer<UserData>::property_list_with_user_data_removed()
 {
 	return sign_PropertyListWithUserDataRemoved;
 }
@@ -172,7 +172,7 @@ inline void PropertyListContainer<UserData>::remove_property_list(const std::str
 			deleted_property_lists.push_back(property);
 		property_lists.erase(it);
 
-		sign_PropertyListRemoved.invoke(property);
+		sign_PropertyListRemoved(property);
 	}
 }
 
@@ -187,7 +187,7 @@ inline void PropertyListContainer<UserData>::remove_property_list(const std::str
 			deleted_property_lists.push_back(property);
 		property_lists.erase(it);
 
-		sign_PropertyListWithUserDataRemoved.invoke(property, user_data);
+		sign_PropertyListWithUserDataRemoved(property, user_data);
 	}
 }
 

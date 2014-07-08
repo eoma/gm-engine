@@ -15,7 +15,7 @@ class IEventSignal { public IEventSignal() {} virtual ~IEventSignal() {}
 };
 
 template<class... Ts>
-class EventSignal : public IEventSignal { public: clan::Signal<Ts...> signal; };
+class EventSignal : public IEventSignal { public: clan::Signal<void(Ts...)> signal; };
 
 class DefaultEventFactory
 {
@@ -31,7 +31,7 @@ public:
 
 	template<class... Ts> void send_event(HashedString type, Ts... args, bool require_receiver = true);
 
-	template<class... Ts> clan::Signal<Ts...> &register_to_event(HashedString type);
+	template<class... Ts> clan::Signal<void(Ts...)> &register_to_event(HashedString type);
 
 	bool has_event(const HashedString &id, int num_params = -1);
 

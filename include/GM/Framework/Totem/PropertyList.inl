@@ -24,7 +24,7 @@ void PropertyListIndexValue<PropertyType>::set(const PropertyType &rhs, bool inv
 	data->value[index] = rhs;
 	data->dirty = true; 
 	if(invoke_value_changed)
-		data->value_changed.invoke(index, old_value, rhs);
+		data->value_changed(index, old_value, rhs);
 }
 
 template<class PropertyType>
@@ -134,7 +134,7 @@ void PropertyList<PropertyType>::push_back(const PropertyType& value, bool invok
 	data->value.push_back(value); 
 
 	if(invoke_value_added)
-		data->value_added.invoke(data->value.size()-1, value);
+		data->value_added(data->value.size()-1, value);
 }
 
 template<class PropertyType>
@@ -143,7 +143,7 @@ void PropertyList<PropertyType>::erase(unsigned int index, bool invoke_value_era
 	PropertyType value = data->value[index];
 	data->value.erase(data->value.begin()+index);
 	if(invoke_value_erased)
-		data->value_erased.invoke(index, value);
+		data->value_erased(index, value);
 }
 
 template<class PropertyType>
@@ -151,7 +151,7 @@ void PropertyList<PropertyType>::clear(bool invoke_values_cleared)
 {
 	data->value.clear();
 	if(invoke_values_cleared)
-		data->values_cleared.invoke();
+		data->values_cleared();
 }
 
 template<class PropertyType>
@@ -236,31 +236,31 @@ void PropertyList<PropertyType>::clear_dirty()
 }
 
 template<class PropertyType>
-clan::Signal<unsigned int, const PropertyType &, const PropertyType &> &PropertyList<PropertyType>::value_changed() 
+clan::Signal<void(unsigned int, const PropertyType &, const PropertyType &)> &PropertyList<PropertyType>::value_changed() 
 { 
 	return data->value_changed; 
 }
 
 template<class PropertyType>
-clan::Signal<unsigned int, const PropertyType &> &PropertyList<PropertyType>::value_added() 
+clan::Signal<void(unsigned int, const PropertyType &)> &PropertyList<PropertyType>::value_added() 
 {
 	return data->value_added;
 }
 
 template<class PropertyType>
-clan::Signal<unsigned int, const PropertyType &> &PropertyList<PropertyType>::value_erased() 
+clan::Signal<void(unsigned int, const PropertyType &)> &PropertyList<PropertyType>::value_erased() 
 { 
 	return data->value_erased;
 }
 
 template<class PropertyType>
-clan::Signal<> &PropertyList<PropertyType>::values_cleared() 
+clan::Signal<void()> &PropertyList<PropertyType>::values_cleared() 
 { 
 	return data->values_cleared; 
 }
 
 template<class PropertyType>
-clan::Signal<unsigned int, unsigned int> &PropertyList<PropertyType>::list_resized()
+clan::Signal<void(unsigned int, unsigned int)> &PropertyList<PropertyType>::list_resized()
 {
 	return data->list_resized; 
 }
