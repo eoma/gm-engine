@@ -7,7 +7,7 @@ PropertyData<PropertyType>::PropertyData()
 }
 
 template<class PropertyType>
-Property<PropertyType>::Property() {}
+Property<PropertyType>::Property() : data() {}
 
 template<class PropertyType>
 Property<PropertyType>::Property(const Property &copy)
