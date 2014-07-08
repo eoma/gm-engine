@@ -40,8 +40,8 @@ public:
 
 	// These signals are invoked when a child is added or removed from this transform.
 	// Ther order of parameters: parent, then child
-	clan::Signal<const Transform* const, const Transform* const> get_child_added_signal() const { return child_added_sig; };
-	clan::Signal<const Transform* const, const Transform* const> get_child_removed_signal() const { return child_removed_sig; };
+	clan::Signal<void(const Transform* const, const Transform* const)> &get_child_added_signal() { return child_added_sig; };
+	clan::Signal<void(const Transform* const, const Transform* const)> &get_child_removed_signal() { return child_removed_sig; };
 
 	Transform* get_parent() const;
 	const std::vector<Transform*>& get_children() const;
@@ -98,8 +98,8 @@ private:
 
 	// Signal is invoked when a new child is added to or removed from the transform
 	// First argument is parent, second is child.
-	clan::Signal<const Transform* const, const Transform* const> child_added_sig;
-	clan::Signal<const Transform* const, const Transform* const> child_removed_sig;
+	clan::Signal<void(const Transform* const, const Transform* const)> child_added_sig;
+	clan::Signal<void(const Transform* const, const Transform* const)> child_removed_sig;
 
 	// TODO: Proper defs. of variables
 	Property<glm::vec3> position_property;

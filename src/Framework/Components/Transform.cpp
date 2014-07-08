@@ -79,7 +79,7 @@ void Transform::add_callback(Transform * const child, Transform * const parent) 
 	parent->children.push_back(child);
 	child->parent = parent;
 
-	parent->child_added_sig.invoke(parent, child);
+	parent->child_added_sig(parent, child);
 }
 
 void Transform::remove_callback(Transform * const child, Transform * const parent) {
@@ -96,7 +96,7 @@ void Transform::remove_callback(Transform * const child, Transform * const paren
 		//The child has now become a parentless transform
 		parent->scene_system->add(child);
 
-		parent->child_removed_sig.invoke(parent, child);
+		parent->child_removed_sig(parent, child);
 	}
 }
 

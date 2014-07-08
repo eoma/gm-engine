@@ -57,7 +57,7 @@ private:
 	std::string name;
 
 	// It's needed to save connected callbacks in order to disconnect them
-	clan::Callback<void(std::shared_ptr<IComponent<>>)> component_removed_slot;
+	clan::SlotContainer slots;
 
 	TransformPtr transform;
 };

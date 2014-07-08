@@ -39,7 +39,7 @@ private:
 
 	static std::string get_static_type() { return COMPONENT_CAMERA; };
 private:
-	clan::CallbackContainer slots;
+	clan::SlotContainer slots;
 
 	RenderSystemPtr render_system;
 

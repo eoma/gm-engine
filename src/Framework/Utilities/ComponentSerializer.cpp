@@ -6,5 +6,5 @@ using namespace Framework;
 
 void ComponentSerializer::create_and_add_component(const EntityPtr &owner, const std::string &type, const std::string &name)
 {
-	sig_create_component.invoke(owner, type, name);
+	sig_create_component(owner, type, name);
 }

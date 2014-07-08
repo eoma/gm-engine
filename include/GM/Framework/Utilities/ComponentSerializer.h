@@ -16,7 +16,7 @@ namespace GM {
 
 			virtual void create_and_add_component(const EntityPtr &owner, const std::string &type, const std::string &name);
 
-			clan::Signal<const EntityPtr &/*owner*/, const std::string &/*type*/, const std::string &/*name*/> sig_create_component;
+			clan::Signal<void(const EntityPtr &/*owner*/, const std::string &/*type*/, const std::string &/*name*/)> sig_create_component;
 		};
 
 		typedef std::shared_ptr<ComponentSerializer> ComponentSerializerPtr;

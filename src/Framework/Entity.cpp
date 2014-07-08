@@ -10,17 +10,16 @@ std::atomic<unsigned long> Entity::next_id(0);
 Entity::Entity(const std::string &name)
 : id(next_id++)
 , name(name)
-, component_removed_slot(this, &Entity::on_component_removed)
+, slots()
 , transform(nullptr)
 {
-	component_added().connect(clan::Callback<void(std::shared_ptr<IComponent<>>)>(this, &Entity::on_component_added));
-	component_removed().connect(component_removed_slot);
+	slots.connect(component_added(), this, &Entity::on_component_added);
+	slots.connect(component_removed(), this, &Entity::on_component_removed);
 }
 
 Entity::~Entity() {
 	// Since Entity inherits Totem::ComponentContainer we must avoid letting
 	// it call methods on objects that are no longer valid (like ours)
-	component_removed().disconnect(component_removed_slot);
 	
 	//Need to call this here so that Entity isn't destroyed when ComponentContainer invoke it's ComponentRemoved signals.
 	pre_destruction();
