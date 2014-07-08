@@ -13,6 +13,8 @@ namespace Core {
 VaoLayout::VaoLayout()
 : active_buffer(0)
 , active_type(0)
+, definitions()
+, used_buffers()
 {
 }
 
