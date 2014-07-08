@@ -17,7 +17,7 @@ int BufferVertexAttribDefinition::compare(const BufferVertexAttribDefinition &cu
 	if (result == 0) result = current.divisor - other.divisor;
 
 	return result;
-};
+}
 
 bool operator< (const BufferVertexAttribDefinition &current, const BufferVertexAttribDefinition &other) {
 	return BufferVertexAttribDefinition::compare(current, other) < 0;
