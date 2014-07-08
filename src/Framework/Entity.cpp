@@ -11,6 +11,7 @@ Entity::Entity(const std::string &name)
 : id(next_id++)
 , name(name)
 , component_removed_slot(this, &Entity::on_component_removed)
+, transform(nullptr)
 {
 	component_added().connect(clan::Callback<void(std::shared_ptr<IComponent<>>)>(this, &Entity::on_component_added));
 	component_removed().connect(component_removed_slot);
