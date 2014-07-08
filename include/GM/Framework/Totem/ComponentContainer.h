@@ -18,6 +18,7 @@ template<class UserData = void*>
 class ComponentContainer
 {
 public:
+	ComponentContainer();
 	virtual ~ComponentContainer();
 
 	std::shared_ptr<IComponent<UserData>> add_component(std::shared_ptr<IComponent<UserData>> component);

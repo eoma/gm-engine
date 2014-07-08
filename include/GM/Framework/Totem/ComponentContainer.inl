@@ -1,5 +1,14 @@
 
 template<class UserData>
+ComponentContainer<UserData>::ComponentContainer()
+: names_for_component_types()
+, components()
+, sign_ComponentAdded()
+, sign_ComponentRemoved()
+{
+}
+
+template<class UserData>
 ComponentContainer<UserData>::~ComponentContainer()
 {
 	for(unsigned int i = 0; i < components.size(); i++)
