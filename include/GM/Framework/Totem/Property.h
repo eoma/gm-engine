@@ -45,8 +45,8 @@ public:
 
 	clan::Signal<const PropertyType &, const PropertyType &> &value_changed();
 
-	Property<PropertyType> operator= (const Property<PropertyType>& rhs);
-	Property<PropertyType> operator= (const PropertyType& rhs);
+	Property<PropertyType> &operator= (const Property<PropertyType>& rhs);
+	Property<PropertyType> &operator= (const PropertyType& rhs);
 	Property<PropertyType> operator+= (const Property<PropertyType>& rhs);
 	Property<PropertyType> operator+= (const PropertyType& rhs);
 	Property<PropertyType> operator-= (const Property<PropertyType>& rhs);

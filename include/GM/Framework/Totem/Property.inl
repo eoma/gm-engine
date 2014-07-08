@@ -69,14 +69,14 @@ template<class PropertyType>
 inline Property<PropertyType>::operator PropertyType &() { return data->value; }
 
 template<class PropertyType>
-inline Property<PropertyType> Property<PropertyType>::operator =(const Property<PropertyType> &rhs)
+inline Property<PropertyType> &Property<PropertyType>::operator =(const Property<PropertyType> &rhs)
 {
 	data = rhs.data;
 	return *this;
 }
 
 template<class PropertyType>
-inline Property<PropertyType> Property<PropertyType>::operator =(const PropertyType &rhs)
+inline Property<PropertyType> &Property<PropertyType>::operator =(const PropertyType &rhs)
 {
 	set(rhs);
 	return *this;
