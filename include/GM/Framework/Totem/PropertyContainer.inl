@@ -7,6 +7,12 @@ std::shared_ptr<GM::Framework::Property<PropertyType>> PropertyFactory::create_p
 
 template<class UserData>
 PropertyContainer<UserData>::PropertyContainer() 
+: properties()
+, deleted_properties()
+, sign_PropertyAdded()
+, sign_PropertyWithUserDataAdded()
+, sign_PropertyRemoved()
+, sign_PropertyWithUserDataRemoved()
 {
 }
 
