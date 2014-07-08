@@ -24,56 +24,17 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Marcel Hellwig
 */
 
-
 #pragma once
-
-#include "../api_network.h"
-#include "event.h"
-#include <map>
-#include "../../Core/Signals/callback.h"
+#include <functional>
 
 namespace clan
 {
-/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
+/// \addtogroup clanCore_Signals clanCore Signals
 /// \{
-
-/// \brief NetGameEventDispatcher_v0
-class CL_API_NETWORK NetGameEventDispatcher_v0
-{
-public:
-	typedef Callback<void(const NetGameEvent &)> CallbackClass;
-
-	CallbackClass &func_event(const std::string &name) { return event_handlers[name]; }
-
-	/// \brief Dispatch
-	///
-	/// \param game_event = Net Game Event
-	///
-	/// \return bool
-	bool dispatch(const NetGameEvent &game_event);
-
-private:
-	std::map<std::string, CallbackClass> event_handlers;
-};
-
-inline bool NetGameEventDispatcher_v0::dispatch(const NetGameEvent &game_event)
-{
-	std::map<std::string, CallbackClass>::iterator it;
-	it = event_handlers.find(game_event.get_name());
-	if (it != event_handlers.end() && !it->second.is_null())
-	{
-		it->second.invoke(game_event);
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	template<class R, class T, class... Args>
+	std::function<R(Args...)> bind_member(T* instance, R(T::*method)(Args...)) { return [=](Args && ... args) -> R { return (instance->*method)(std::forward<Args>(args)...); }; }
 }
-
-}
-
 /// \}
-

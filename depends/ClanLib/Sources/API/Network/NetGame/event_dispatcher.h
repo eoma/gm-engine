@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2014 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -24,60 +24,47 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Chu Chin Kuan
 */
-
 
 #pragma once
 
 #include "../api_network.h"
 #include "event.h"
-#include <map>
-#include "../../Core/Signals/callback.h"
 
 namespace clan
 {
-/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
-/// \{
 
-template<typename ContextParam1, typename ContextParam2>
-/// \brief NetGameEventDispatcher_v2
-class CL_API_NETWORK NetGameEventDispatcher_v2
+template<class... Params>
+class CL_API_NETWORK NetGameEventDispatcher
 {
 public:
-	typedef Callback<void(const NetGameEvent &, ContextParam1, ContextParam2)> CallbackClass;
+	typedef std::function< void (const NetGameEvent &, Params... ) > CallbackClass;
 
 	CallbackClass &func_event(const std::string &name) { return event_handlers[name]; }
 
-	/// \brief Dispatch
-	///
-	/// \param game_event = Net Game Event
-	/// \param context1 = Context Param1
-	/// \param context2 = Context Param2
-	///
-	/// \return bool
-	bool dispatch(const NetGameEvent &game_event, ContextParam1 context1, ContextParam2 context2);
+	/** \brief Dispatches the event object.
+	 *  \return true if the event handler is invoked and false if the
+	 *          event handler is not found.
+	 */
+	bool dispatch(const NetGameEvent &game_event, Params... params)
+	{
+		auto it = event_handlers.find(game_event.get_name());
+		if (it != event_handlers.end() && !it->second.is_null())
+		{
+			it->second(game_event, params...);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 private:
 	std::map<std::string, CallbackClass> event_handlers;
+
 };
 
-template<typename ContextParam1, typename ContextParam2>
-bool NetGameEventDispatcher_v2<ContextParam1, ContextParam2>::dispatch(const NetGameEvent &game_event, ContextParam1 context1, ContextParam2 context2)
-{
-	typename std::map<std::string, CallbackClass>::iterator it;
-	it = event_handlers.find(game_event.get_name());
-	if (it != event_handlers.end() && !it->second.is_null())
-	{
-		it->second.invoke(game_event, context1, context2);
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }
-
-}
-
-/// \}
 
