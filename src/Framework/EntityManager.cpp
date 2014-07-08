@@ -8,8 +8,9 @@
 using namespace GM::Framework;
 
 EntityManager::EntityManager()
+: entities()
+, pending_deletion()
 {
-
 }
 
 EntityManager::~EntityManager()
