@@ -39,7 +39,7 @@ public:
 	PropertyType &get();
 	void set(const PropertyType &rhs, bool invoke_value_changed = true);
 
-	void operator= (const PropertyType &rhs);
+	PropertyListIndexValue<PropertyType> &operator= (const PropertyType &rhs);
 	PropertyListIndexValue<PropertyType> &operator= (const PropertyListIndexValue<PropertyType> &rhs);
 	operator const PropertyType &() const { return get(); }
 	PropertyListIndexValue<PropertyType> &operator+= (const PropertyListIndexValue<PropertyType>& rhs);

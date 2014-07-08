@@ -28,9 +28,10 @@ void PropertyListIndexValue<PropertyType>::set(const PropertyType &rhs, bool inv
 }
 
 template<class PropertyType>
-void PropertyListIndexValue<PropertyType>::operator= (const PropertyType &rhs) 
+PropertyListIndexValue<PropertyType> &PropertyListIndexValue<PropertyType>::operator= (const PropertyType &rhs) 
 {
 	set(rhs);
+	return *this;
 }
 
 template<class PropertyType>
