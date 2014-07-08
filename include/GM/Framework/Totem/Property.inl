@@ -1,4 +1,11 @@
 
+
+template<class PropertyType>
+PropertyData<PropertyType>::PropertyData()
+	: value(), name(), dirty(false), value_changed()
+{
+}
+
 template<class PropertyType>
 Property<PropertyType>::Property() {}
 

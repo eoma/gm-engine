@@ -22,6 +22,8 @@ public:
 	std::string name;
 	bool dirty;
 	clan::Signal<const PropertyType &, const PropertyType &> value_changed;
+
+	PropertyData();
 };
 
 template<class PropertyType>
