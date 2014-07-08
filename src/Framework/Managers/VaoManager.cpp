@@ -11,6 +11,7 @@ namespace Framework {
 using namespace Core;
 
 VaoManager::VaoManager()
+: vaos()
 {
 }
 
