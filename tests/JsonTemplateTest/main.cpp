@@ -24,8 +24,7 @@ public:
 		: scene_system(scene_system), render_system(render_system)
 	{
 		component_serializer->sig_create_component.connect(
-			clan::Callback<void(const EntityPtr &, const std::string &, const std::string &)>(
-			this, &MyComponentSerializer::create_and_add_component));
+			this, &MyComponentSerializer::create_and_add_component);
 	}
 
 	void create_and_add_component(const EntityPtr &owner, const std::string &type, const std::string &/*name*/) {
@@ -64,6 +63,8 @@ void on_position_changed(const glm::vec3 &old_value, const glm::vec3 &new_value)
 
 bool mainTest() {
 
+	clan::SlotContainer slots;
+
 	auto entity_manager = std::make_shared<EntityManager>();
 	auto render_system = std::make_shared<RenderSystem>();
 	auto scene_system = std::make_shared<SceneSystem>();
@@ -87,27 +88,24 @@ bool mainTest() {
 	auto entity2 = entity_manager->create_entity("Two");
 	auto entity3 = entity_manager->create_entity("Three");
 
-	entity1->component_added().connect(clan::Callback<void(std::shared_ptr<IComponent<>>)>(&on_component_added));
-	entity2->component_added().connect(clan::Callback<void(std::shared_ptr<IComponent<>>)>(&on_component_added));
-	entity3->component_added().connect(clan::Callback<void(std::shared_ptr<IComponent<>>)>(&on_component_added));
+	slots.connect(entity1->component_added(), &on_component_added);
+	slots.connect(entity2->component_added(), &on_component_added);
+	slots.connect(entity3->component_added(), &on_component_added);
 
-	entity1->add<glm::vec3>(PROPERTY_POSITION, glm::vec3(0,0,0)).value_changed().connect(
-		std::function<void(const glm::vec3&, const glm::vec3&)>([&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
+	slots.connect(entity1->add<glm::vec3>(PROPERTY_POSITION, glm::vec3(0,0,0)).value_changed(), [&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
 		std::cout << "Entity " + entity1->get_name() << "'s "; 
 		on_position_changed(old_value, new_value);
-	}));
+	});
 
-	entity2->add<glm::vec3>(PROPERTY_POSITION, glm::vec3(0, 0, 0)).value_changed().connect(
-		std::function<void(const glm::vec3&, const glm::vec3&)>([&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
+	slots.connect(entity2->add<glm::vec3>(PROPERTY_POSITION, glm::vec3(0, 0, 0)).value_changed(), [&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
 		std::cout << "Entity " + entity2->get_name() << "'s ";
 		on_position_changed(old_value, new_value);
-	}));
+	});
 
-	entity3->add<glm::vec3>(PROPERTY_POSITION, glm::vec3(0, 0, 0)).value_changed().connect(
-		std::function<void(const glm::vec3&, const glm::vec3&)>([&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
+	slots.connect(entity3->add<glm::vec3>(PROPERTY_POSITION, glm::vec3(0, 0, 0)).value_changed(), [&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
 		std::cout << "Entity " + entity3->get_name() << "'s ";
 		on_position_changed(old_value, new_value);
-	}));
+	});
 
 	template_manager->apply("Test", entity1);
 	template_manager->apply("Test2", entity2);

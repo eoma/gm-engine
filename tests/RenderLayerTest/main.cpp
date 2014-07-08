@@ -38,8 +38,6 @@ private:
 
 bool mainTest() {
 
-	typedef clan::Callback<void(const Transform * const, const Transform * const)> CallbackParentChild;
-
 	auto entity_manager = std::make_shared<EntityManager>();
 	auto render_system = std::make_shared<RenderSystem>();
 

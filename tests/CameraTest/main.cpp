@@ -16,7 +16,7 @@ using namespace Framework;
 
 bool mainTest() {
 
-	typedef clan::Callback<void(const Transform * const, const Transform * const)> CallbackParentChild;
+	clan::SlotContainer slots;
 
 	auto entity_manager = std::make_shared<EntityManager>();
 	auto render_system = std::make_shared<RenderSystem>();
@@ -32,10 +32,9 @@ bool mainTest() {
 
 	bool changed = false;
 
-	entity1->add<glm::mat4>(PROPERTY_VIEW_MATRIX, glm::mat4()).value_changed().connect(
-		std::function<void(const glm::mat4&, const glm::mat4&)>(
-			[&changed](const glm::mat4 &/*o*/, const glm::mat4 &/*n*/) mutable { changed = true; }
-		)
+	slots.connect(
+		entity1->add<glm::mat4>(PROPERTY_VIEW_MATRIX, glm::mat4()).value_changed(), 
+		[&changed](const glm::mat4 &/*o*/, const glm::mat4 &/*n*/) mutable { changed = true; }
 	);
 
 	transform1->set_position(glm::vec3(1,0,0));

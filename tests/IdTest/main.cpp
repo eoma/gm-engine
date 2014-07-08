@@ -9,8 +9,6 @@ using namespace Framework;
 
 bool mainTest() {
 
-	typedef clan::Callback<void(const Transform * const, const Transform * const)> CallbackParentChild;
-
 	auto entity_manager = std::make_shared<EntityManager>();
 
 	auto entity1 = entity_manager->create_entity("one");

@@ -13,7 +13,7 @@ using namespace Framework;
 
 bool mainTest() {
 
-	typedef clan::Callback<void(const Transform * const, const Transform * const)> CallbackParentChild;
+	clan::SlotContainer slots;
 
 	auto entity_manager = std::make_shared<EntityManager>();
 	auto scene_system = std::make_shared<SceneSystem>();
@@ -33,11 +33,14 @@ bool mainTest() {
 	bool child2changed = false;
 
 	// Add world matrix property value listeners on the children
-	child1->get<glm::mat4>(PROPERTY_WORLD_MATRIX).value_changed().connect(
-		std::function<void(const glm::mat4&, const glm::mat4&)>([&](const glm::mat4 &/*o*/, const glm::mat4 &/*n*/) mutable { child1changed = true; })
+	slots.connect(
+		child1->get<glm::mat4>(PROPERTY_WORLD_MATRIX).value_changed(),
+		[&](const glm::mat4 &/*o*/, const glm::mat4 &/*n*/) mutable { child1changed = true; }
 	);
-	child2->get<glm::mat4>(PROPERTY_WORLD_MATRIX).value_changed().connect(
-		std::function<void(const glm::mat4&, const glm::mat4&)>([&](const glm::mat4 &/*o*/, const glm::mat4 &/*n*/) mutable { child2changed = true; })
+
+	slots.connect(
+		child2->get<glm::mat4>(PROPERTY_WORLD_MATRIX).value_changed(),
+		[&](const glm::mat4 &/*o*/, const glm::mat4 &/*n*/) mutable { child2changed = true; }
 	);
 
 	// Only move parent transform
