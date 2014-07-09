@@ -54,8 +54,12 @@ private:
 	};
 
 //FIXME: Remove when gl is introduced
-#define GL_ARRAY_BUFFER 0
-#define GL_STATIC_DRAW 0
+#ifndef GL_ARRAY_BUFFER
+#	define GL_ARRAY_BUFFER 1
+#endif
+#ifndef GL_STATIC_DRAW
+#	define GL_STATIC_DRAW 1
+#endif
 
 
 private:

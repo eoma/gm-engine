@@ -6,12 +6,13 @@
 using namespace GM;
 using namespace Core;
 
+// FIXME: Remove when GL is introduced
 #ifndef GL_ARRAY_BUFFER
-#define GL_ARRAY_BUFFER 1
+#	define GL_ARRAY_BUFFER 1
 #endif
 
 #ifndef GL_ELEMENT_ARRAY_BUFFER
-#define GL_ELEMENT_ARRAY_BUFFER 2
+#	define GL_ELEMENT_ARRAY_BUFFER 2
 #endif
 
 #define POSITION 0

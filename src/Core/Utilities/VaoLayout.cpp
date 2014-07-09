@@ -2,9 +2,9 @@
 
 #include <algorithm>
 
-// Remove when introducing GL
+// FIXME: Remove when introducing GL
 #ifndef GL_ARRAY_BUFFER
-	#define GL_ARRAY_BUFFER 1
+#	define GL_ARRAY_BUFFER 1
 #endif
 
 namespace GM {
