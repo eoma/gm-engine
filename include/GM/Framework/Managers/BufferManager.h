@@ -27,7 +27,7 @@ private:
 		unsigned int total_size;
 		unsigned int allocated;
 		unsigned int content_type; // 
-		unsigned int use_type; // read,write or copy; static, dynamic or stream
+		unsigned int use_type; // draw, read or copy; static, dynamic or stream
 
 		unsigned int get_unused_size() const { return total_size - allocated; };
 
