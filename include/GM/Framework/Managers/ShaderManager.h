@@ -1,32 +1,14 @@
 #pragma once
 
+#include "../../Core/Utilities/ShaderSource.h"
+
 #include <memory>
 #include <set>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
-//FIXME: Move this into Core
 namespace GM {
-
-namespace Core {
-
-struct ShaderSource {
-	// This struct passed on to the subsystem resposnsible for compiling shaders
-	std::string name; // For example file name
-	std::string content; // The shader content
-	unsigned int shader_type; // The shader type, usually one of GL_{VERTEX,TESS_CONTROL,TESS_EVALUATION,GEOMETRY,FRAGMENT,COMPUTE}_SHADER
-
-	ShaderSource(const std::string &name, const std::string &content, const unsigned int shader_type)
-	: name(name)
-	, content(content)
-	, shader_type(shader_type)
-	{
-	}
-};
-
-
-} // namespace Core
-
 namespace Framework {
 
 typedef unsigned int ShaderId;
