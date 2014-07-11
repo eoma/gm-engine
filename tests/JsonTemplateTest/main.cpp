@@ -23,7 +23,7 @@ public:
 	MyComponentSerializer(const ComponentSerializerPtr &component_serializer, const SceneSystemPtr &scene_system, const RenderSystemPtr &render_system)
 		: scene_system(scene_system), render_system(render_system)
 	{
-		component_serializer->sig_create_component.connect(
+		slots.connect(component_serializer->sig_create_component,
 			this, &MyComponentSerializer::create_and_add_component);
 	}
 
@@ -40,6 +40,8 @@ public:
 private:
 	SceneSystemPtr scene_system;
 	RenderSystemPtr render_system;
+
+	clan::SlotContainer slots;
 };
 
 void on_component_added(std::shared_ptr<IComponent<>> component) {
