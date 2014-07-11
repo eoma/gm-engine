@@ -28,22 +28,22 @@ bool mainTest() {
 	auto vao_manager = std::make_shared<VaoManager>();
 
 	// Buffer should be allocated before we start our VAO definition
-	auto allocated1 = buffer_manager->allocate(3000);
-	auto allocated2 = buffer_manager->allocate(1000);
-	auto allocated3 = buffer_manager->allocate(2000, true);
+	auto buffer1 = buffer_manager->allocate(3000);
+	auto buffer2 = buffer_manager->allocate(1000);
+	auto buffer3 = buffer_manager->allocate(2000, BufferManager::UNIQUE_BUFFER);
 
 	// Do stuff with allocated
 
 	VaoLayout layout;
 	layout
-		.for_buffer(allocated1.name)
+		.for_buffer(buffer1.name)
 			.use_as(GL_ARRAY_BUFFER)
 				.bind(0, 3, 1, false)
 			.use_as(GL_ELEMENT_ARRAY_BUFFER)
-		.for_buffer(allocated2.name)
+		.for_buffer(buffer2.name)
 			.use_as(GL_ARRAY_BUFFER)
 				.bind(1, 2, 1, false)
-		.for_buffer(allocated3.name)
+		.for_buffer(buffer3.name)
 			.use_as(GL_ARRAY_BUFFER)
 				.bind(2, 4, 2, false)
 	;

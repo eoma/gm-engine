@@ -6,7 +6,13 @@ namespace GM {
 namespace Framework {
 
 class BufferManager {
+
 public:
+
+	enum BufferAllocationType {
+		SHARED_BUFFER, // Mainly used for general buffer usage like VBO, IBO, ...
+		UNIQUE_BUFFER // Mainly used where you cannot share it. Relevant when you want TFB and such
+	};
 
 	struct BufferAllocation
 	{
@@ -18,7 +24,7 @@ public:
 	BufferManager(unsigned int default_pool_size = 32 * (1<<20));
 	~BufferManager();
 
-	BufferAllocation allocate(const unsigned int size, const bool force_unique = false);
+	BufferAllocation allocate(const unsigned int size, const BufferAllocationType type = SHARED_BUFFER);
 
 private:
 	struct PoolData

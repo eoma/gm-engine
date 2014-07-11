@@ -17,12 +17,12 @@ BufferManager::~BufferManager()
 	}
 }
 
-BufferManager::BufferAllocation BufferManager::allocate(const unsigned int size, const bool force_unique)
+BufferManager::BufferAllocation BufferManager::allocate(const unsigned int size, const BufferAllocationType type)
 {
 	BufferAllocation allocation;
 	std::vector<PoolData>::iterator iter;
 
-	if (!force_unique) // we have the freedom to allocate where it seems fit
+	if (type == SHARED_BUFFER) // we have the freedom to allocate where it seems fit
 	{
 		// Locate a a pool with enough vacant size
 		iter = std::find_if(pools.begin(), pools.end(), 
@@ -40,7 +40,7 @@ BufferManager::BufferAllocation BufferManager::allocate(const unsigned int size,
 			iter = --(pools.end());
 		}
 	}
-	else
+	else // Unique buffer
 	{
 		PoolData pool = create_pool(size);
 
