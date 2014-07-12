@@ -5,6 +5,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/include
 	${CMAKE_SOURCE_DIR}/depends/glm/include
 	${CMAKE_SOURCE_DIR}/depends/ClanLib/Include
+	${CMAKE_SOURCE_DIR}/depends/SOIL2/include
 )
 
 add_definitions(-DGLM_FORCE_RADIANS)

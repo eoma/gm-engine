@@ -53,6 +53,7 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPI
 endif()
 
 add_subdirectory(depends/ClanLib)
+add_subdirectory(depends/SOIL2)
 
 add_subdirectory(src)
 
