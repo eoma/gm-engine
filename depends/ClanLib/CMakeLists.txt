@@ -64,8 +64,8 @@ foreach(module ${CLANLIB_MODULES})
 		list(REMOVE_ITEM CLANLIB_${MODULE}_SOURCES ${fileToRemove})
 	endforeach()
 
-	source_group("Header Files\\Depends\\ClanLib\\${module}" FILES ${CLANLIB_${MODULE}_HEADERS})
-	source_group("Source Files\\Depends\\ClanLib\\${module}" FILES ${CLANLIB_${MODULE}_SOURCES})
+	source_group("Header Files" FILES ${CLANLIB_${MODULE}_HEADERS})
+	source_group("Source Files" FILES ${CLANLIB_${MODULE}_SOURCES})
 
 	set(headers
 		${CLANLIB_API_HEADERS}
