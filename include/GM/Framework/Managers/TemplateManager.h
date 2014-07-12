@@ -15,9 +15,6 @@ namespace GM {
 
 			void apply(const std::string &template_name, const EntityPtr &entity);
 
-		private:
-			void apply_components(const std::string &template_name, const EntityPtr &entity);
-			void apply_properties(const std::string &template_name, const EntityPtr &entity);
 			struct Property {
 				PropertySerializer::PropertyType type_id;
 				std::string name;
@@ -30,6 +27,10 @@ namespace GM {
 				std::vector<std::string> components;
 				std::vector<Property> properties;
 			};
+
+		private:
+			void apply_components(const std::string &template_name, const EntityPtr &entity);
+			void apply_properties(const std::string &template_name, const EntityPtr &entity);
 
 			ComponentSerializerPtr component_serializer;
 

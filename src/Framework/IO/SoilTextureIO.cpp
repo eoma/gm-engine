@@ -1,4 +1,4 @@
-#include "GM/Framework/Utilities/SoilTextureIO.h"
+#include "GM/Framework/IO/SoilTextureIO.h"
 
 #include <ClanLib/core.h>
 

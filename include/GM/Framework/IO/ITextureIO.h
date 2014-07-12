@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RawImage.h"
+#include "../Utilities/RawImage.h"
 
 #include <string>
 #include <vector>
