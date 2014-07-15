@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TexParameter.h"
+#include "TextureParameter.h"
 
 #include <string>
 #include <vector>
@@ -22,8 +22,8 @@ public:
 
 	const std::vector<std::string> &get_image_files() const { return image_files; };
 
-	const std::vector<TexParameterInt> &get_int_parameters() const { return int_parameters; };
-	const std::vector<TexParameterFloat> &get_float_parameters() const { return float_parameters; };
+	const std::vector<TextureParameterInt> &get_int_parameters() const { return int_parameters; };
+	const std::vector<TextureParameterFloat> &get_float_parameters() const { return float_parameters; };
 
 	static int compare(const TextureFormat &current, const TextureFormat &other);
 
@@ -35,8 +35,8 @@ protected:
 
 	void add_image_file(const std::string &file_name) { image_files.push_back(file_name); };
 
-	void set_parameter(unsigned int param_name, float param) { float_parameters.push_back(TexParameterFloat(param_name, param)); };
-	void set_parameter(unsigned int param_name, int param) { int_parameters.push_back(TexParameterInt(param_name, param)); };
+	void set_parameter(unsigned int param_name, float param) { float_parameters.push_back(TextureParameterFloat(param_name, param)); };
+	void set_parameter(unsigned int param_name, int param) { int_parameters.push_back(TextureParameterInt(param_name, param)); };
 
 protected:
 	const unsigned int type; // texture format type
@@ -45,8 +45,8 @@ protected:
 	// Can _not_ be sorted, order must be preserved
 	std::vector<std::string> image_files;
 
-	std::vector<TexParameterInt> int_parameters;
-	std::vector<TexParameterFloat> float_parameters;
+	std::vector<TextureParameterInt> int_parameters;
+	std::vector<TextureParameterFloat> float_parameters;
 };
 
 bool operator< (const TextureFormat &current, const TextureFormat &other);
