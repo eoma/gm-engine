@@ -50,5 +50,23 @@ bool operator< (const TextureFormat &current, const TextureFormat &other)
 	return TextureFormat::compare(current, other) ? true : false;
 }
 
+TextureFormat TextureFormat::create_texture2d_format(const std::string &name, bool generate_mipmap, unsigned int wrap_mode)
+{
+	// FIXME: Uncomment when GL comes
+	TextureFormat format(/*GL_TEXTURE_2D*/ 1);
+
+	format.add_image_file(name);
+
+	// FIXME: uncomment when GL comes
+	//format.set_parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	//format.set_parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//format.set_parameter(GL_TEXTURE_WRAP_S, wrap_mode);
+	//format.set_parameter(GL_TEXTURE_WRAP_T, wrap_mode);
+
+	format.set_generate_mipmap(generate_mipmap);
+
+	return format;
+}
+
 } // namespace Core
 } // namespace GM

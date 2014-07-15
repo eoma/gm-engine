@@ -32,7 +32,9 @@ public:
 
 public:
 	// Static convenience functions dealing with creation of formats
-	static TextureFormat create_texture2d_format(const std::string &name);
+
+	// FIXME: When GL comes...
+	static TextureFormat create_texture2d_format(const std::string &name, bool generate_mipmap = true, unsigned int wrap_mode = /*GL_CLAMP_TO_EDGE*/ 1);
 
 protected:
 	// TODO: A bit unclear a bout these, why should they be protected?
