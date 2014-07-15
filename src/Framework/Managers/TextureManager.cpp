@@ -20,8 +20,7 @@ const RawImage &TextureManager::load_image(const std::string &file_name)
 	if (iter == loaded_images.end())
 	{
 		// TODO: check if file exists. Catch eventual exceptions. Check if image is empty
-		if (!clan::FileHelp::file_exists(file_name))
-		{
+		if (!clan::FileHelp::file_exists(file_name)) {
 			throw std::runtime_error("Texture does not exist!");
 		}
 

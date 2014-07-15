@@ -1,4 +1,5 @@
 #include "GM/Framework/Managers/ShaderManager.h"
+#include "GM/Framework/IO/ShaderIO.h"
 
 #include <ClanLib/core.h>
 
@@ -15,6 +16,11 @@ ShaderManager::ShaderManager()
 
 ShaderManager::~ShaderManager()
 {
+}
+
+ShaderId ShaderManager::load(const std::string &vs_file, const std::string &fs_file)
+{
+	return load(vs_file, "", fs_file);
 }
 
 ShaderId ShaderManager::load(const std::string &vs_file, const std::string &gs_file, const std::string &fs_file)
@@ -40,19 +46,19 @@ ShaderId ShaderManager::load(const std::string &vs_file, const std::string &gs_f
 
 		if (!vs_file.empty())
 		{
-			Core::ShaderSource res(vs_file, load_contents(vs_file), 0);
+			Core::ShaderSource res(vs_file, load_contents(vs_file), 0); //TODO: Replace with GL_VERTEX_SHADER
 			shader_sources.push_back(res);
 		}
 
 		if (!gs_file.empty())
 		{
-			Core::ShaderSource res(gs_file, load_contents(gs_file), 1);
+			Core::ShaderSource res(gs_file, load_contents(gs_file), 1); //TODO: Replace with GL_GEOMETRY_SHADER
 			shader_sources.push_back(res);
 		}
 
 		if (!fs_file.empty())
 		{
-			Core::ShaderSource res(fs_file, load_contents(fs_file), 2);
+			Core::ShaderSource res(fs_file, load_contents(fs_file), 2); //TODO: Replace with GL_FRAGMENT_SHADER
 			shader_sources.push_back(res);
 		}
 
@@ -75,10 +81,10 @@ const std::string &ShaderManager::load_contents(const std::string &file_name)
 
 	if (iter == file_content_cache.end())
 	{
-		// TODO: Maybe test if file exists?
-		std::string contents = clan::File::read_text(file_name);
-
-		iter = file_content_cache.insert(std::make_pair(file_name, contents)).first;
+		iter = file_content_cache.insert(std::make_pair(
+			file_name, 
+			ShaderIO::load_contents(file_name)
+		)).first;
 	}
 	
 	return iter->second;

@@ -18,7 +18,8 @@ VaoManager::VaoManager()
 VaoManager::~VaoManager()
 {
 	// clean up
-	for (auto &layout_and_vao : vaos) {
+	for (auto &layout_and_vao : vaos) 
+	{
 		// Release vao stored in layoutAndVao.second
 	}
 }

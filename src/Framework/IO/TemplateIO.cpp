@@ -12,7 +12,8 @@ using namespace clan;
 #	pragma warning (disable:4701) // Avoid warning about uninitialized forced_type
 #endif
 
-TemplateIO::TemplateIO() {
+TemplateIO::TemplateIO() 
+{
 }
 
 void TemplateIO::load_templates(const std::string template_filename, std::function<void(const TemplateManager::Template &)> func)

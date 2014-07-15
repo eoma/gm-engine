@@ -18,7 +18,9 @@ public:
 	ShaderManager();
 	~ShaderManager();
 
+	ShaderId load(const std::string &vs_file, const std::string &fs_file);
 	ShaderId load(const std::string &vs_file, const std::string &gs_file, const std::string &fs_file);
+	// TODO: Extend to all 4.3 spec types (tesselation and compute is missing, support Transform Feedback with diabled rasterization, etc
 
 private:
 
