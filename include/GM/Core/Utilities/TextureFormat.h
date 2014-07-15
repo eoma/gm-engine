@@ -63,6 +63,15 @@ protected:
 		set_parameter<int>(param_name, param);
 	}
 
+	void set_parameter(unsigned int param_name, std::vector<float> param)
+	{
+		set_parameter<std::vector<float>>(param_name, param);
+	}
+
+	void set_parameter(unsigned int param_name, std::vector<int> param)
+	{
+		set_parameter<std::vector<int>>(param_name, param);
+	}
 protected:
 	const unsigned int type; // texture format type
 	bool make_mipmap; // should we create a mipmap for the(se) texture(s)?
