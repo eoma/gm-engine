@@ -17,8 +17,8 @@ namespace GM {
 			static int compare(const ITextureParameter &current, const ITextureParameter &other)
 			{
 				int result = current.param_name - other.param_name;
-
-				//if (result == 0) result = (int)(current.param - other.param);
+				
+				if (result == 0) result = (int)current.get_runtime_type_id() - (int)other.get_runtime_type_id();
 
 				return result;
 			}
