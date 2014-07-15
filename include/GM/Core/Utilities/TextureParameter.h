@@ -2,6 +2,8 @@
 
 #include "ITextureParameter.h"
 
+#include <vector>
+
 namespace GM {
 namespace Core {
 
@@ -13,8 +15,15 @@ class TextureParameter;
 
 typedef TextureParameter<int> TextureParameterInt;
 typedef std::shared_ptr<TextureParameterInt> TextureParameterIntPtr;
+
+typedef TextureParameter<std::vector<int>> TextureParameterIntVector;
+typedef std::shared_ptr<TextureParameterIntVector> TextureParameterIntVectorPtr;
+
 typedef TextureParameter<float> TextureParameterFloat;
 typedef std::shared_ptr<TextureParameterFloat> TextureParameterFloatPtr;
+
+typedef TextureParameter<std::vector<float>> TextureParameterFloatVector;
+typedef std::shared_ptr<TextureParameterFloatVector> TextureParameterFloatVectorPtr;
 
 template<class T>
 class TextureParameter : public ITextureParameter
@@ -31,19 +40,40 @@ public:
 	static int compare(const TextureParameter<T> &current, const TextureParameter<T> &other)
 	{
 		int result = ITextureParameter::compare(current, other);
-
-		if (result == 0) result = (int)(current.param - other.param);
-
 		return result;
 	}
 
 	unsigned int get_runtime_type_id() const override;
+
+protected:
+	int compare_param(const ITextureParameter &other) const override;
 };
 
 template<class T>
 unsigned int TextureParameter<T>::get_runtime_type_id() const
 {
 	return ITextureParameter::template get_runtime_type_id<T>();
+}
+
+template<class T>
+int TextureParameter<T>::compare_param(const ITextureParameter &other) const
+{
+	// Should only be called if other is of same type as us
+	int result = 0;
+
+	// May be skipped if we can guarantee that other is _always_ of the same type as us
+	if (!ITextureParameter::is_type<T>(other)) {
+		result = (int)(get_runtime_type_id() - other.get_runtime_type_id());
+	}
+	else
+	{
+		const T &other_param = static_cast<const TextureParameter<T>&>(other).get_param();
+
+		// Safe comparison using relational algebra. STL implements relation algebra for vector, set, ...
+		result = param < other_param ? -1 : (other_param < param ? 1 : 0); // if result is 0, they should be equal
+	}
+
+	return result;
 }
 
 template <class T>
