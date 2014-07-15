@@ -24,7 +24,7 @@ struct TexParameter
 	{
 		int result = current.param_name - other.param_name;
 
-		if (result == 0) result = current.param - other.param;
+		if (result == 0) result = (int)(current.param - other.param);
 
 		return result;
 	}
