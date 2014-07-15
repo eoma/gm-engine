@@ -18,7 +18,8 @@ namespace GM {
 			{
 				int result = current.param_name - other.param_name;
 				
-				if (result == 0) result = (int)current.get_runtime_type_id() - (int)other.get_runtime_type_id();
+				if (result == 0) result = (int)(current.get_runtime_type_id() - other.get_runtime_type_id());
+				if (result == 0) result = current.compare_param(other); // types should be equal now
 
 				return result;
 			}
@@ -27,6 +28,10 @@ namespace GM {
 			template<class T> static bool is_type(const ITextureParameter &parameter);
 			virtual unsigned int get_runtime_type_id() const = 0;
 			template<class T> static unsigned int get_runtime_type_id();
+
+		protected:
+			// Compares two parameter values if they are of equal type.
+			virtual int compare_param(const ITextureParameter &other) const = 0;
 		};
 
 		typedef std::shared_ptr<ITextureParameter> ITextureParameterPtr;
