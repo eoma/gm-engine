@@ -21,9 +21,20 @@ public:
 	bool get_make_mipmap() const { return make_mipmap; };
 
 	const std::vector<std::string> &get_image_files() const { return image_files; };
+	const std::vector<ITextureParameterPtr> &get_parameters() const { return parameters; }
 
-	const std::vector<TextureParameterInt> &get_int_parameters() const { return int_parameters; };
-	const std::vector<TextureParameterFloat> &get_float_parameters() const { return float_parameters; };
+	template<class T>
+	std::vector<TextureParameter<T>> get_parameters_of_type() const
+	{
+		std::vector<TextureParameter<T>> type_parameters;
+		for (auto parameter : parameters)
+		{
+			if (ITextureParameter::is_type<T>(parameter))
+				type_parameters.push_back(parameter);
+		}
+
+		return type_parameters;
+	}
 
 	static int compare(const TextureFormat &current, const TextureFormat &other);
 
@@ -35,8 +46,22 @@ protected:
 
 	void add_image_file(const std::string &file_name) { image_files.push_back(file_name); };
 
-	void set_parameter(unsigned int param_name, float param) { float_parameters.push_back(TextureParameterFloat(param_name, param)); };
-	void set_parameter(unsigned int param_name, int param) { int_parameters.push_back(TextureParameterInt(param_name, param)); };
+	template<class T>
+	void set_parameter(unsigned int param_name, T param) 
+	{ 
+		auto texture_parameter = std::make_shared<TextureParameter<T>>(param_name, param);
+		parameters.push_back(std::static_pointer_cast<ITextureParameter>(texture_parameter));
+	}
+
+	void set_parameter(unsigned int param_name, float param)
+	{
+		set_parameter<float>(param_name, param);
+	}
+
+	void set_parameter(unsigned int param_name, int param)
+	{
+		set_parameter<int>(param_name, param);
+	}
 
 protected:
 	const unsigned int type; // texture format type
@@ -45,8 +70,7 @@ protected:
 	// Can _not_ be sorted, order must be preserved
 	std::vector<std::string> image_files;
 
-	std::vector<TextureParameterInt> int_parameters;
-	std::vector<TextureParameterFloat> float_parameters;
+	std::vector<ITextureParameterPtr> parameters;
 };
 
 bool operator< (const TextureFormat &current, const TextureFormat &other);

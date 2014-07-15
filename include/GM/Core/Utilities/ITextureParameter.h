@@ -29,6 +29,8 @@ namespace GM {
 			template<class T> static unsigned int get_runtime_type_id();
 		};
 
+		typedef std::shared_ptr<ITextureParameter> ITextureParameterPtr;
+
 		template<class T>
 		bool ITextureParameter::is_type(const std::shared_ptr<ITextureParameter> &parameter)
 		{

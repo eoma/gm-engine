@@ -12,10 +12,12 @@ template<class T>
 class TextureParameter;
 
 typedef TextureParameter<int> TextureParameterInt;
+typedef std::shared_ptr<TextureParameterInt> TextureParameterIntPtr;
 typedef TextureParameter<float> TextureParameterFloat;
+typedef std::shared_ptr<TextureParameterFloat> TextureParameterFloatPtr;
 
 template<class T>
-class TextureParameter : ITextureParameter
+class TextureParameter : public ITextureParameter
 {
 private:
 	T param;
