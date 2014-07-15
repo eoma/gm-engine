@@ -24,13 +24,13 @@ public:
 	const std::vector<ITextureParameterPtr> &get_parameters() const { return parameters; }
 
 	template<class T>
-	std::vector<TextureParameter<T>> get_parameters_of_type() const
+	std::vector<std::shared_ptr<TextureParameter<T>>> get_parameters_of_type() const
 	{
-		std::vector<TextureParameter<T>> type_parameters;
+		std::vector<std::shared_ptr<TextureParameter<T>>> type_parameters;
 		for (auto parameter : parameters)
 		{
 			if (ITextureParameter::is_type<T>(parameter))
-				type_parameters.push_back(parameter);
+				type_parameters.push_back(std::static_pointer_cast<TextureParameter<T>>(parameter));
 		}
 
 		return type_parameters;
