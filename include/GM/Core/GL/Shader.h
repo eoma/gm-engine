@@ -1,7 +1,11 @@
 #pragma once
 
+#include <memory>
+
 namespace GM {
 namespace Core {
+
+class Shader; typedef std::shared_ptr<Shader> ShaderPtr;
 
 class Shader
 {

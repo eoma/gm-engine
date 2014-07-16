@@ -1,7 +1,11 @@
 #pragma once
 
+#include <memory>
+
 namespace GM {
 namespace Core {
+
+class BufferObject; typedef std::shared_ptr<BufferObject> BufferObjectPtr;
 
 // FIXME: When GL comes...
 class BufferObject

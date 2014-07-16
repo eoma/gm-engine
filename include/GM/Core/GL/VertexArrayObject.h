@@ -1,7 +1,11 @@
 #pragma once
 
+#include <memory>
+
 namespace GM {
 namespace Core {
+
+class VertexArrayObject; typedef std::shared_ptr<VertexArrayObject> VertexArrayObjectPtr;
 
 class VertexArrayObject
 {
