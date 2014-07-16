@@ -19,7 +19,7 @@ public:
 	 * You _must_ specify a file fetcher. The function do not care how the image is produced, as long as it is produced.
 	 *
 	 * The file fetcher can be whatever, eg.
-	 * [](const std::string &name, unsigned int *w, unsigned int *h, unsigned int *c) -> std::shared_ptr<vector<unsigned char>> {
+	 * [](const std::string &name, unsigned int *w, unsigned int *h, unsigned int *c) -> std::shared_ptr<const vector<unsigned char>> {
 	 * 	SOILTextureIO io; 
 	 * 	auto img = io.load(name); 
 	 * 	*w = img.get_width(); 
@@ -30,7 +30,8 @@ public:
 	 *
 	 * @return A texture id
 	 */
-	static unsigned int create(const TextureFormat &format, FileFetcherFunction file_fetcher);
+	static unsigned int create(const TextureFormat &format, const std::vector<std::string> &image_paths, FileFetcherFunction file_fetcher);
+
 };
 
 } // namespace Core
