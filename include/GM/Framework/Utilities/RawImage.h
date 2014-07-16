@@ -3,6 +3,9 @@
 #include <memory>
 #include <vector>
 
+namespace GM {
+namespace Framework {
+
 class RawImage {
 public:
 	RawImage() : dataptr(std::make_shared<std::vector<unsigned char>>()), width(0), height(0), num_channels(0) {};
@@ -40,3 +43,6 @@ private:
 	unsigned int height;
 	unsigned int num_channels;
 };
+
+} // namespace Framework
+} // namespace GM
