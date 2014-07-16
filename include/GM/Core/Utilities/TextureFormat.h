@@ -21,8 +21,6 @@ public:
 
 	bool is_generating_mipmap() const { return make_mipmap; }
 
-	const std::vector<std::string> &get_image_files() const { return image_files; }
-
 	const std::vector<ITextureParameterPtr> &get_parameters() const { return parameters; }
 
 	template<class T>
@@ -34,15 +32,13 @@ public:
 	// Static convenience functions dealing with creation of formats
 
 	// FIXME: When GL comes...
-	static TextureFormat create_texture2d_format(const std::string &name, bool generate_mipmap = true, unsigned int wrap_mode = /*GL_CLAMP_TO_EDGE*/ 1);
+	static TextureFormat create_texture2d_format(bool generate_mipmap = true, unsigned int wrap_mode = /*GL_CLAMP_TO_EDGE*/ 1);
 
 protected:
 	// TODO: A bit unclear a bout these, why should they be protected?
 	TextureFormat(const unsigned int type);
 
 	void set_generate_mipmap(bool value) { make_mipmap = value; }
-
-	void add_image_file(const std::string &file_name) { image_files.push_back(file_name); }
 
 	template<class T>
 	void set_parameter(unsigned int param_name, T param); 
@@ -58,9 +54,6 @@ protected:
 
 	// should we create a mipmap for the(se) texture(s)?
 	bool make_mipmap;
-
-	// Can _not_ be sorted, order must be preserved
-	std::vector<std::string> image_files;
 
 	// Ordered list of parameters.
 	std::vector<ITextureParameterPtr> parameters;

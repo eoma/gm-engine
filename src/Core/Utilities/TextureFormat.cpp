@@ -8,7 +8,6 @@ namespace Core {
 TextureFormat::TextureFormat(const unsigned int type)
 : type(type)
 , make_mipmap(false)
-, image_files()
 {
 };
 
@@ -17,7 +16,6 @@ int TextureFormat::compare(const TextureFormat &current, const TextureFormat &ot
 	int result = current.type - other.type;
 
 	if (result == 0) result = current.make_mipmap - other.make_mipmap;
-	if (result == 0) result = (current.image_files < other.image_files) ? -1 : (other.image_files < current.image_files ? 1 : 0);
 	if (result == 0)
 	{
 		// test if current.parameters < other.parameters
@@ -50,12 +48,10 @@ bool operator< (const TextureFormat &current, const TextureFormat &other)
 	return TextureFormat::compare(current, other) ? true : false;
 }
 
-TextureFormat TextureFormat::create_texture2d_format(const std::string &name, bool generate_mipmap, unsigned int wrap_mode)
+TextureFormat TextureFormat::create_texture2d_format(bool generate_mipmap, unsigned int wrap_mode)
 {
 	// FIXME: Uncomment when GL comes
 	TextureFormat format(/*GL_TEXTURE_2D*/ 1);
-
-	format.add_image_file(name);
 
 	// FIXME: uncomment when GL comes
 	//format.set_parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
