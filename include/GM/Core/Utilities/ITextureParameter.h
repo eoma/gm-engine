@@ -55,10 +55,7 @@ namespace GM {
 			return type_id;
 		}
 
-		bool operator< (const ITextureParameter &current, const ITextureParameter &other)
-		{
-			return ITextureParameter::compare(current, other) < 0;
-		}
+		bool operator< (const ITextureParameter &current, const ITextureParameter &other);
 
 	} // namespace Core
 } // namespace GM
