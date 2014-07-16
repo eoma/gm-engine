@@ -7,7 +7,7 @@ project(${NAME})
 set(PROJECT_HEADER_ROOT ${CMAKE_SOURCE_DIR}/include/GM/Core)
 set(PROJECT_SOURCE_ROOT ${CMAKE_SOURCE_DIR}/src/Core)
 
-set(PROJECT_FOLDERS Utilities)
+set(PROJECT_FOLDERS Utilities GL)
 # end customization
 
 # initialize with possible files in root
