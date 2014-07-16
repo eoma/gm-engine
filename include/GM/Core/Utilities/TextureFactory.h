@@ -12,6 +12,7 @@ namespace Core {
 
 class TextureFactory
 {
+public:
 	typedef std::function<std::shared_ptr<const std::vector<unsigned char>> (const std::string &file_name, unsigned int *width, unsigned int *height, unsigned int *num_channels)> FileFetcherFunction;
 
 	/** Creates and loads a texture as the format requires.
