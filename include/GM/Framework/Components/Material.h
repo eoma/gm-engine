@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../DefinitionsComponentNames.h"
 #include "../Entity.h"
 #include "../Totem/Component.h"
 
@@ -23,6 +24,8 @@ public:
 	Material(const EntityPtr &owner, const Core::ShaderPtr &shader, const std::string &name = std::string());
 	virtual ~Material() {};
 
+	std::string get_type() const override { return get_static_type(); };
+
 	Core::ShaderPtr &get_shader() { return shader; }
 
 	// Care must be used when updating textures
@@ -39,6 +42,9 @@ protected:
 
 	// Stores pairs of properties and the corresponding uniform location
 	std::vector<std::pair<IPropertyPtr, unsigned int>> property_uniform_pairs;
+
+private:
+	static std::string get_static_type() { return COMPONENT_MATERIAL; };
 };
 
 template <class T>
