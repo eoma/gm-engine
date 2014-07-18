@@ -53,6 +53,14 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPI
 endif()
 
 add_subdirectory(depends/gl3w)
+
+# The options are set as internal because the folders containing the code has been removed
+set(GLFW_BUILD_EXAMPLES OFF CACHE INTERNAL "Build the GLFW example programs")
+set(GLFW_BUILD_TESTS OFF CACHE INTERNAL "Build the GLFW test programs")
+set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "Build the GLFW documentation")
+set(GLFW_INSTALL OFF CACHE INTERNAL "Generate installation target")
+add_subdirectory(depends/glfw)
+
 add_subdirectory(depends/ClanLib)
 add_subdirectory(depends/SOIL2)
 
