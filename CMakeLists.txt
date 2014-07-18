@@ -61,6 +61,10 @@ set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "Build the GLFW documentation")
 set(GLFW_INSTALL OFF CACHE INTERNAL "Generate installation target")
 add_subdirectory(depends/glfw)
 
+set_target_properties(glfw
+	PROPERTIES
+	FOLDER "Dependencies")
+
 add_subdirectory(depends/ClanLib)
 add_subdirectory(depends/SOIL2)
 
