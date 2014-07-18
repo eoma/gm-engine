@@ -1,30 +1,30 @@
 #include "GM/Core/GL/Texture.h"
 
+#include "GL/gl3w.h"
+
 namespace GM {
 namespace Core {
-
-// FIXME: When GL comes...
 
 Texture::Texture(unsigned int type)
 : type(type)
 , handle(0)
 {
-	//glGenTextures(1, &handle);
+	glGenTextures(1, &handle);
 }
 
 Texture::~Texture()
 {
-	//glDeleteTextures(1, &handle);
+	glDeleteTextures(1, &handle);
 }
 
 void Texture::bind() const
 {
-	//glBindTexture(type, handle);
+	glBindTexture(type, handle);
 }
 
 void Texture::unbind() const
 {
-	//glBindTexture(type, 0);
+	glBindTexture(type, 0);
 }
 
 } // namespace Core

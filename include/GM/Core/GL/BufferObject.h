@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GL/gl3w.h"
+
 #include <memory>
 
 namespace GM {
@@ -7,11 +9,10 @@ namespace Core {
 
 class BufferObject; typedef std::shared_ptr<BufferObject> BufferObjectPtr;
 
-// FIXME: When GL comes...
 class BufferObject
 {
 public:
-	BufferObject(const unsigned int primary_type = /*GL_ARRAY_BUFFER*/ 1);
+	BufferObject(const unsigned int primary_type = GL_ARRAY_BUFFER);
 	~BufferObject();
 
 	// Bind as primary type

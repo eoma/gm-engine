@@ -1,28 +1,28 @@
 #include "GM/Core/GL/Shader.h"
 
+#include "GL/gl3w.h"
+
 namespace GM {
 namespace Core {
 
-// FIXME: When GL comes...
-
 Shader::Shader()
 {
-	handle = /*glCreateProgram()*/ 0;
+	handle = glCreateProgram();
 }
 
 Shader::~Shader()
 {
-	//glDeleteProgram(handle);
+	glDeleteProgram(handle);
 }
 
 void Shader::bind() const
 {
-	//glUseProgram(handle);
+	glUseProgram(handle);
 }
 
 void Shader::unbind() const
 {
-	//glUseProgram(0);
+	glUseProgram(0);
 }
 
 } // namespace Core
