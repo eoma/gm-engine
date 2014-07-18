@@ -80,7 +80,9 @@ foreach(module ${CLANLIB_MODULES})
 	set_target_properties(clan${module} 
 		PROPERTIES
 		FOLDER "Dependencies"
-		POSTFIX "-static-mt"
+		RELEASE_POSTFIX "-static-mt"
+		RELWITHDEBINFO_POSTFIX "-static-mt"
+		MINSIZEREL_POSTFIX "-static-mt"
 		DEBUG_POSTFIX "-static-mt-debug")
 
 	# Uncomment these and other similar to enable building of a mega library
