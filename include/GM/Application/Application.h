@@ -8,7 +8,7 @@
 #include <GLFW/glfw3.h>
 
 #include <ClanLib/core.h>
-
+#include <glm/glm.hpp>
 #include <string>
 
 namespace GM {
@@ -61,8 +61,9 @@ public:
 	void run();
 
 	const std::string &get_title() const { return title; }
-	unsigned int get_width() const { return width; }
-	unsigned int get_height() const { return height; }
+	glm::uvec2 get_resolution() const { return resolution; }
+	unsigned int get_width() const { return resolution.get().x; }
+	unsigned int get_height() const { return resolution.get().y; }
 	bool is_fullscreen() const { return fullscreen; }
 	bool is_running() const { return keep_running; }
 
@@ -124,8 +125,7 @@ protected:
 	Framework::VaoManagerPtr vao_manager;
 
 	Framework::Property<std::string> title;
-	Framework::Property<unsigned int> width;
-	Framework::Property<unsigned int> height;
+	Framework::Property<glm::uvec2> resolution;
 	Framework::Property<bool> fullscreen;
 	Framework::Property<bool> keep_running;
 
@@ -147,6 +147,11 @@ protected:
 
 	// Called when run() is finishing, before context destruction
 	clan::Signal<void(void)> clean_up_sign;
+
+	// Property value changed listeners
+	void on_title_changed(const std::string &old_value, const std::string &new_value);
+	void on_resolution_changed(const glm::uvec2 &old_value, const glm::uvec2 &new_value);
+	void on_fullscreen_changed(const bool &old_value, const bool &new_value);
 };
 
 } // namespace Application

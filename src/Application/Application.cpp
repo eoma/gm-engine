@@ -28,8 +28,7 @@ namespace Application {
 , vao_manager()
 
 , title(add<std::string>("title", title))
-, width(add<unsigned int>("width", width))
-, height(add<unsigned int>("height", height))
+, resolution(add<glm::uvec2>("width", glm::uvec2(width, height)))
 , fullscreen(add<bool>("fullscreen", fullscreen))
 , keep_running(add<bool>("keep_running", true))
 
@@ -42,6 +41,9 @@ namespace Application {
 , render_sign()
 , clean_up_sign()
 {
+	slots.connect(this->title.value_changed(), this, &Application::on_title_changed);
+	slots.connect(this->resolution.value_changed(), this, &Application::on_resolution_changed);
+	slots.connect(this->fullscreen.value_changed(), this, &Application::on_fullscreen_changed);
 
 	if (flags & GM_FRAMEWORK_SCENE_SYSTEM)
 	{
@@ -164,6 +166,18 @@ void Application::render() {
 }
 void Application::clean_up() {
 	clean_up_sign();
+}
+
+void Application::on_title_changed(const std::string &old_value, const std::string &new_value) {
+	// TODO: Update title caption in GLFW
+}
+
+void Application::on_resolution_changed(const glm::uvec2 &old_value, const glm::uvec2 &new_value) {
+	// TODO: Update window resolution for GLFW
+}
+
+void Application::on_fullscreen_changed(const bool &old_value, const bool &new_value) {
+	// TODO: Update fullscreen state for GLFW
 }
 
 } // namespace Application
