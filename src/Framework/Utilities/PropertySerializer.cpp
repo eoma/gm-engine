@@ -98,6 +98,14 @@ void PropertySerializer::create_and_add_property(PropertyContainer<> &container,
 			property.set(result);
 			break;
 		}
+		case PropertySerializer::TYPE_COLOR:
+		{
+			Color result;
+			from_string(value, result);
+			Property<Color> property = container.add<Color>(name, result);
+			property.set(result);
+			break;
+		}
 		default:
 			throw Exception(string_format("PropertySerializer::create_and_add_property - Unknown property type %1", type_id));
 	}
@@ -337,4 +345,34 @@ void PropertySerializer::from_string(const std::string &value, glm::quat &result
 	float w = StringHelp::text_to_float(values[3]);
 
 	result = glm::quat(x, y, z, w);
+}
+
+void PropertySerializer::from_string(const std::string &value, Color &result)
+{
+	std::vector<std::string> values = StringHelp::split_text(value, " ");
+	if (values.size() == 4)
+	{
+		int r = StringHelp::text_to_int(values[0]);
+		int g = StringHelp::text_to_int(values[1]);
+		int b = StringHelp::text_to_int(values[2]);
+		int a = StringHelp::text_to_int(values[3]);
+
+		result = Color(r, g, b, a);
+	}
+	else if (values.size() == 3)
+	{
+		int r = StringHelp::text_to_int(values[0]);
+		int g = StringHelp::text_to_int(values[1]);
+		int b = StringHelp::text_to_int(values[2]);
+
+		result = Color(r, g, b);
+	}
+	else if (values.size() == 1)
+	{
+		result = Color(value);
+	}
+	else
+	{
+		throw Exception("Color from_string failed");
+	}
 }
