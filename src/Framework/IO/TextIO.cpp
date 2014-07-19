@@ -1,5 +1,5 @@
 
-#include <GM/Framework/IO/TemplateIO.h>
+#include <GM/Framework/IO/TextIO.h>
 #include <GM/Framework/Utilities/PropertySerializer.h>
 
 #include <ClanLib/core.h>
@@ -12,15 +12,15 @@ using namespace clan;
 #	pragma warning (disable:4701) // Avoid warning about uninitialized forced_type
 #endif
 
-TemplateIO::TemplateIO() 
+TextIO::TextIO()
 {
 }
 
-std::string TemplateIO::load_contents(const std::string &template_filename)
+std::string TextIO::load_contents(const std::string &template_filename)
 {
 	if (!clan::FileHelp::file_exists(template_filename))
 	{
-		throw std::runtime_error("Template file does not exist!");
+		throw std::runtime_error(string_format("Text file %1 does not exist!", template_filename));
 	}
 
 	return File::read_text(template_filename);

@@ -1,5 +1,5 @@
 #include "GM/Framework/Managers/ShaderManager.h"
-#include "GM/Framework/IO/ShaderIO.h"
+#include "GM/Framework/IO/TextIO.h"
 
 #include <ClanLib/core.h>
 
@@ -83,7 +83,7 @@ const std::string &ShaderManager::load_contents(const std::string &file_name)
 	{
 		iter = file_content_cache.insert(std::make_pair(
 			file_name, 
-			ShaderIO::load_contents(file_name)
+			TextIO::load_contents(file_name)
 		)).first;
 	}
 	

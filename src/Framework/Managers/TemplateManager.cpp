@@ -1,6 +1,6 @@
 
 #include <GM/Framework/Managers/TemplateManager.h>
-#include <GM/Framework/IO/TemplateIO.h>
+#include <GM/Framework/IO/TextIO.h>
 #include <GM/Framework/Parsers/TemplateParser.h>
 #include <GM/Framework/Utilities/ComponentSerializer.h>
 #include <GM/Framework/Entity.h>
@@ -80,7 +80,7 @@ void TemplateManager::apply_properties(const std::string &template_name, const E
 void TemplateManager::add_templates(const std::string template_filename)
 {
 	TemplateParser::parse_templates(
-		TemplateIO::load_contents(template_filename), 
+		TextIO::load_contents(template_filename),
 		[this](const TemplateManager::Template &t) 
 		{
 			templates.push_back(t);

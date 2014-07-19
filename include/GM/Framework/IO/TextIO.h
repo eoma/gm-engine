@@ -9,12 +9,12 @@
 namespace GM {
 	namespace Framework {
 
-		class TemplateIO {
+		class TextIO {
 		public:
-			TemplateIO();
+			TextIO();
 
 			static std::string load_contents(const std::string &template_filename);
 		};
-		typedef std::shared_ptr<TemplateIO> TemplateIOPtr;
+		typedef std::shared_ptr<TextIO> TextIOPtr;
 	}
 }
