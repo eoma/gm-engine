@@ -1,6 +1,6 @@
 [
     {
-    	"template": "Test",
+    	"entity": "Test",
     	"components": [ "Transform" ],
 		"properties": [
 			{
@@ -11,11 +11,11 @@
 		]
     },
 	{
-    	"template": "Test2",
+    	"entity": "Test2",
     	"components": [ "Renderable" ]
     },
 	{
-    	"template": "Test3",
+    	"entity": "Test3",
 		"requires": [ "Test", "Test2" ]
     }
 ]
