@@ -13,7 +13,7 @@ namespace GM {
 		public:
 			TemplateIO();
 
-			static void load_templates(const std::string template_filename, std::function<void(const TemplateManager::Template &)> func);
+			static std::string load_contents(const std::string &template_filename);
 		};
 		typedef std::shared_ptr<TemplateIO> TemplateIOPtr;
 	}
