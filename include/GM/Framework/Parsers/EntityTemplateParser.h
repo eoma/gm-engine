@@ -9,12 +9,12 @@
 namespace GM {
 	namespace Framework {
 
-		class TemplateParser {
+		class EntityTemplateParser {
 		public:
-			TemplateParser();
+			EntityTemplateParser();
 
 			static void parse_templates(const std::string &data, std::function<void(const TemplateManager::Template &)> func);
 		};
-		typedef std::shared_ptr<TemplateParser> TemplateParserPtr;
+		typedef std::shared_ptr<EntityTemplateParser> EntityTemplateParserPtr;
 	}
 }

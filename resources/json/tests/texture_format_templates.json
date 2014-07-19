@@ -1,0 +1,10 @@
+[
+	{
+    	"format": "texture2D",
+    	"min_filter": "linear_mipmap_linear",
+		"mag_filter": "linear",
+		"wrap_s": "clamp_to_edge",
+		"wrap_t": "clamp_to_edge",
+		"generate_mipmap": true
+    }
+]

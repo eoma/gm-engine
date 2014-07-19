@@ -1,5 +1,5 @@
 
-#include <GM/Framework/Parsers/TemplateParser.h>
+#include <GM/Framework/Parsers/EntityTemplateParser.h>
 #include <GM/Framework/Utilities/PropertySerializer.h>
 
 #include <ClanLib/core.h>
@@ -12,11 +12,11 @@ using namespace clan;
 #	pragma warning (disable:4701) // Avoid warning about uninitialized forced_type
 #endif
 
-TemplateParser::TemplateParser()
+EntityTemplateParser::EntityTemplateParser()
 {
 }
 
-void TemplateParser::parse_templates(const std::string &data, std::function<void(const TemplateManager::Template &)> func)
+void EntityTemplateParser::parse_templates(const std::string &data, std::function<void(const TemplateManager::Template &)> func)
 {
 	if (func == nullptr)
 		throw Exception("Func callback is required to use TemplateParser's parse_templates!");

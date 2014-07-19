@@ -1,0 +1,18 @@
+[
+	{
+    	"material": "Diffuse",
+    	"shader": "Diffuse",
+		"uniforms": [
+			{
+				"name": "diffuse_color",
+				"value": "0xFF0000",
+				"type": "color"
+			},
+			{
+				"name": "diffuse_map",
+				"value": "gmLogo",
+				"type": "texture"
+			}
+		]
+    }
+]
