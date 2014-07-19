@@ -18,7 +18,7 @@ EntityManager::~EntityManager()
 	//std::cout << "EntityManager destroyed" << std::endl;
 }
 
-void EntityManager::update()
+void EntityManager::update(float elapsed_time)
 {
 	for(auto entity : pending_deletion)
 	{
@@ -26,6 +26,12 @@ void EntityManager::update()
 		remove_entity(entity, true);
 	}
 	pending_deletion.clear();
+
+	for (auto entity : entities)
+	{
+		entity->update_components(elapsed_time);
+		entity->update_properties();
+	}
 }
 
 EntityPtr EntityManager::get_entity(const std::string &name) const

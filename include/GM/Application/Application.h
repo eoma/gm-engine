@@ -67,7 +67,7 @@ public:
 	bool is_running() const { return keep_running; }
 
 	clan::Signal<void()> &on_initialize() { return initialize_sign; }
-	clan::Signal<void(double)> &on_update() { return update_sign; }
+	clan::Signal<void(float)> &on_update() { return update_sign; }
 	clan::Signal<void()> &on_prepare() { return prepare_sign; }
 	clan::Signal<void()> &on_render() { return render_sign; }
 	clan::Signal<void()> &on_clean_up() { return clean_up_sign; }
@@ -129,13 +129,15 @@ protected:
 	Framework::Property<bool> fullscreen;
 	Framework::Property<bool> keep_running;
 
+	clan::GameTime game_time;
+
 	clan::SlotContainer slots;
 
 	// This signal is invoked when the OpenGL context has been created
 	clan::Signal<void(void)> initialize_sign;
 
 	// The update signal is called at the start of every render loop
-	clan::Signal<void(double)> update_sign;
+	clan::Signal<void(float)> update_sign;
 
 	// This is called just before render, relevant for scene manager
 	clan::Signal<void(void)> prepare_sign;

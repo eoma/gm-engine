@@ -33,6 +33,8 @@ namespace Application {
 , fullscreen(add<bool>("fullscreen", fullscreen))
 , keep_running(add<bool>("keep_running", true))
 
+, game_time(30, 0)
+
 , slots()
 , initialize_sign()
 , update_sign()
@@ -135,11 +137,14 @@ void Application::initialize() {
 }
 void Application::update() {
 
+	game_time.update();
+	auto elapsed_time = game_time.get_time_elapsed();
+
 	if (has_entity_manager()) {
-		entity_manager->update();
+		entity_manager->update(elapsed_time);
 	}
 
-	update_sign(0.1); // FIXME: fix this with actual time
+	update_sign(elapsed_time);
 }
 void Application::prepare() {
 
