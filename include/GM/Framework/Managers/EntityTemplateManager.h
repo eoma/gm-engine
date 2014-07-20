@@ -7,11 +7,11 @@ namespace GM {
 		class ComponentSerializer; typedef std::shared_ptr<ComponentSerializer> ComponentSerializerPtr;
 		class Entity; typedef std::shared_ptr<Entity> EntityPtr;
 
-		class TemplateManager {
+		class EntityTemplateManager {
 		public:
-			TemplateManager(const ComponentSerializerPtr &component_serializer);
+			EntityTemplateManager(const ComponentSerializerPtr &component_serializer);
 
-			void add_templates(const std::string template_filename);
+			void add_templates(const std::string &template_filename);
 
 			void apply(const std::string &template_name, const EntityPtr &entity);
 
@@ -36,6 +36,6 @@ namespace GM {
 
 			std::vector<Template> templates;
 		};
-		typedef std::shared_ptr<TemplateManager> TemplateManagerPtr;
+		typedef std::shared_ptr<EntityTemplateManager> EntityTemplateManagerPtr;
 	}
 }

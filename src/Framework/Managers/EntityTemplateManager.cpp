@@ -1,5 +1,5 @@
 
-#include <GM/Framework/Managers/TemplateManager.h>
+#include <GM/Framework/Managers/EntityTemplateManager.h>
 #include <GM/Framework/IO/TextIO.h>
 #include <GM/Framework/Parsers/EntityTemplateParser.h>
 #include <GM/Framework/Utilities/ComponentSerializer.h>
@@ -13,12 +13,12 @@ using namespace clan;
 #	pragma warning (disable:4701) // Avoid warning about uninitialized forced_type
 #endif
 
-TemplateManager::TemplateManager(const ComponentSerializerPtr &component_serializer)
+EntityTemplateManager::EntityTemplateManager(const ComponentSerializerPtr &component_serializer)
 : component_serializer(component_serializer)
 {
 }
 
-void TemplateManager::apply(const std::string &template_name, const EntityPtr &entity)
+void EntityTemplateManager::apply(const std::string &template_name, const EntityPtr &entity)
 {
 	for(auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
 	{
@@ -51,7 +51,7 @@ void TemplateManager::apply(const std::string &template_name, const EntityPtr &e
 	throw Exception("Unable to apply template " + template_name);
 }
 
-void TemplateManager::apply_components(const std::string &template_name, const EntityPtr &entity) {
+void EntityTemplateManager::apply_components(const std::string &template_name, const EntityPtr &entity) {
 	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
 	{
 		if (StringHelp::compare(template_name, it_template->name, true) == 0)
@@ -64,7 +64,7 @@ void TemplateManager::apply_components(const std::string &template_name, const E
 	}
 }
 
-void TemplateManager::apply_properties(const std::string &template_name, const EntityPtr &entity) {
+void EntityTemplateManager::apply_properties(const std::string &template_name, const EntityPtr &entity) {
 	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
 	{
 		if (StringHelp::compare(template_name, it_template->name, true) == 0)
@@ -77,11 +77,11 @@ void TemplateManager::apply_properties(const std::string &template_name, const E
 	}
 }
 
-void TemplateManager::add_templates(const std::string template_filename)
+void EntityTemplateManager::add_templates(const std::string &template_filename)
 {
 	EntityTemplateParser::parse_templates(
 		TextIO::load_contents(template_filename),
-		[this](const TemplateManager::Template &t) 
+		[this](const EntityTemplateManager::Template &t)
 		{
 			templates.push_back(t);
 		});

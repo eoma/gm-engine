@@ -8,7 +8,7 @@
 #include <GM/Framework/Systems/SceneSystem.h>
 #include <GM/Framework/Components/Transform.h>
 #include <GM/Framework/Components/Renderable.h>
-#include <GM/Framework/Managers/TemplateManager.h>
+#include <GM/Framework/Managers/EntityTemplateManager.h>
 #include <GM/Framework/Utilities/ComponentSerializer.h>
 #include <GM/Framework/Utilities/Tools.h>
 
@@ -66,15 +66,12 @@ void on_position_changed(const glm::vec3 &old_value, const glm::vec3 &new_value)
 bool mainTest() {
 
 	clan::SlotContainer slots;
-
-	auto entity_manager = std::make_shared<EntityManager>();
+	
 	auto render_system = std::make_shared<RenderSystem>();
 	auto scene_system = std::make_shared<SceneSystem>();
-	auto component_serializer = std::make_shared<ComponentSerializer>();
-	auto template_manager = std::make_shared<TemplateManager>(component_serializer);
+	auto entity_manager = std::make_shared<EntityManager>();
 
-	auto my_component_serializer = std::make_shared<MyComponentSerializer>(component_serializer, scene_system, render_system);
-	
+	auto my_component_serializer = std::make_shared<MyComponentSerializer>(entity_manager->get_component_serializer(), scene_system, render_system);
 
 	auto path = clan::System::get_exe_path();
 	std::cout << "Base path: " << path << std::endl;
@@ -84,7 +81,7 @@ bool mainTest() {
 	path = find_path_in_hierarchy(path, wanted_directory);
 	std::cout << "Resource path: " << path << std::endl;
 
-	template_manager->add_templates(path + "/entity_templates.json");
+	entity_manager->add_templates(path + "/entity_templates.json");
 
 	auto entity1 = entity_manager->create_entity("One");
 	auto entity2 = entity_manager->create_entity("Two");
@@ -109,9 +106,9 @@ bool mainTest() {
 		on_position_changed(old_value, new_value);
 	});
 
-	template_manager->apply("Test", entity1);
-	template_manager->apply("Test2", entity2);
-	template_manager->apply("Test3", entity3);
+	entity_manager->apply("Test", entity1);
+	entity_manager->apply("Test2", entity2);
+	entity_manager->apply("Test3", entity3);
 
 	return true;
 }

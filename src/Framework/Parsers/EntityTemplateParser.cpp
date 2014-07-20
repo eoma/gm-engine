@@ -16,7 +16,7 @@ EntityTemplateParser::EntityTemplateParser()
 {
 }
 
-void EntityTemplateParser::parse_templates(const std::string &data, std::function<void(const TemplateManager::Template &)> func)
+void EntityTemplateParser::parse_templates(const std::string &data, std::function<void(const EntityTemplateManager::Template &)> func)
 {
 	if (func == nullptr)
 		throw Exception("Func callback is required to use TemplateParser's parse_templates!");
@@ -28,7 +28,7 @@ void EntityTemplateParser::parse_templates(const std::string &data, std::functio
 
 	for (size_t i = 0; i < json_data.get_size(); i++)
 	{
-		TemplateManager::Template t;
+		EntityTemplateManager::Template t;
 
 		auto json_entry = json_data[i];
 		if (!json_entry.is_object())
@@ -121,7 +121,7 @@ void EntityTemplateParser::parse_templates(const std::string &data, std::functio
 				{
 					auto &json_members = json_value[j].get_members();
 
-					TemplateManager::Property p;
+					EntityTemplateManager::Property p;
 
 					bool has_forced_type = false;
 					PropertySerializer::PropertyType forced_type;

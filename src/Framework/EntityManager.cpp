@@ -1,6 +1,7 @@
 #include "GM/Framework/EntityManager.h"
-
+#include "GM/Framework/Managers/EntityTemplateManager.h"
 #include "GM/Framework/Entity.h"
+#include "GM/Framework/Utilities/ComponentSerializer.h"
 
 #include <algorithm>
 #include <iostream>
@@ -11,6 +12,8 @@ EntityManager::EntityManager()
 : entities()
 , pending_deletion()
 {
+	component_serializer = ComponentSerializerPtr(new ComponentSerializer());
+	template_manager = EntityTemplateManagerPtr(new EntityTemplateManager(component_serializer));
 }
 
 EntityManager::~EntityManager()
@@ -54,6 +57,15 @@ EntityPtr EntityManager::create_entity(const std::string &name)
 {
 	auto entity = EntityPtr(new Entity(name));
 	entities.push_back(entity);
+	return entity;
+}
+
+EntityPtr EntityManager::create_entity(const std::string &name, const std::string &template_name)
+{
+	auto entity = EntityPtr(new Entity(name));
+	entities.push_back(entity);
+
+	apply(template_name, entity);
 	return entity;
 }
 
@@ -119,4 +131,14 @@ EntityPtr EntityManager::remove_entity(const unsigned long id, bool immediate) {
 	}
 
 	return entity;
+}
+
+void EntityManager::add_templates(const std::string template_filename)
+{
+	template_manager->add_templates(template_filename);
+}
+
+void EntityManager::apply(const std::string &template_name, const EntityPtr &entity)
+{
+	template_manager->apply(template_name, entity);
 }

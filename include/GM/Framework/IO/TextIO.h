@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../Managers/TemplateManager.h"
-
 #include <string>
 #include <memory>
 #include <functional>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Managers/TemplateManager.h"
+#include "../Managers/EntityTemplateManager.h"
 
 #include <string>
 #include <memory>
@@ -13,7 +13,7 @@ namespace GM {
 		public:
 			EntityTemplateParser();
 
-			static void parse_templates(const std::string &data, std::function<void(const TemplateManager::Template &)> func);
+			static void parse_templates(const std::string &data, std::function<void(const EntityTemplateManager::Template &)> func);
 		};
 		typedef std::shared_ptr<EntityTemplateParser> EntityTemplateParserPtr;
 	}
