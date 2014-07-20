@@ -20,10 +20,11 @@ using namespace Framework;
 class MyComponentSerializer {
 public:
 
-	MyComponentSerializer(const ComponentSerializerPtr &component_serializer, const SceneSystemPtr &scene_system, const RenderSystemPtr &render_system)
+	MyComponentSerializer(const EntityManagerPtr &entity_manager, const SceneSystemPtr &scene_system, const RenderSystemPtr &render_system)
 		: scene_system(scene_system), render_system(render_system)
 	{
-		slots.connect(component_serializer->sig_create_component,
+		slots.connect(
+			entity_manager->register_component_serializer_signal(),
 			this, &MyComponentSerializer::create_and_add_component);
 	}
 
@@ -71,7 +72,7 @@ bool mainTest() {
 	auto scene_system = std::make_shared<SceneSystem>();
 	auto entity_manager = std::make_shared<EntityManager>();
 
-	auto my_component_serializer = std::make_shared<MyComponentSerializer>(entity_manager->get_component_serializer(), scene_system, render_system);
+	auto my_component_serializer = std::make_shared<MyComponentSerializer>(entity_manager, scene_system, render_system);
 
 	auto path = clan::System::get_exe_path();
 	std::cout << "Base path: " << path << std::endl;
