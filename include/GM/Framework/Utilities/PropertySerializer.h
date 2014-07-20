@@ -23,7 +23,8 @@ namespace GM {
 				TYPE_VEC3 = 102,			// x y z
 				TYPE_VEC4 = 103,			// x y z w
 				TYPE_QUAT = 104,			// x y z w
-				TYPE_COLOR = 105			// string (0xFFFFFF)
+				TYPE_COLOR = 105,			// string (0xFFFFFF or 0xFFFFFFFF)
+				TYPE_TEXTURE_NAME = 106			// string (texture name)
 			};
 
 		public:

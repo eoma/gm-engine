@@ -51,6 +51,9 @@ public:
 	// BGRA8888 format.
 	unsigned int get_bgra8() const { return (((unsigned int)b) << 24) | (((unsigned int)g) << 16) | (((unsigned int)r) << 8) | (unsigned int)a; }
 
+	std::string get_rgb8_hexstring() const;
+	std::string get_rgba8_hexstring() const;
+
 	bool operator==(const Color &c) const
 	{
 		return (r == c.r) && (g == c.g) && (b == c.b) && (a == c.a);
@@ -551,6 +554,10 @@ public:
 		b = (unsigned char) (blue * 255.0f);
 		a = (unsigned char) (alpha * 255.0f);
 	}
+
+protected:
+	static unsigned char hex[]; /* = { '0', '1', '2', '3', '4', '5', '6', '7',
+		'8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };*/
 };
 
 class Colorf : public glm::vec4

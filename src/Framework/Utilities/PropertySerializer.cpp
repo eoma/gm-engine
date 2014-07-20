@@ -106,6 +106,14 @@ void PropertySerializer::create_and_add_property(PropertyContainer<> &container,
 			property.set(result);
 			break;
 		}
+		case PropertySerializer::TYPE_TEXTURE_NAME:
+		{
+			std::string result;
+			from_string(value, result);
+			Property<std::string> property = container.add<std::string>(name, result);
+			property.set(result);
+			break;
+		}
 		default:
 			throw Exception(string_format("PropertySerializer::create_and_add_property - Unknown property type %1", type_id));
 	}
@@ -135,6 +143,10 @@ PropertySerializer::PropertyType PropertySerializer::get_property_type(const std
 		return PropertySerializer::TYPE_VEC4;
 	if (StringHelp::compare("quat", property_type, true) == 0)
 		return PropertySerializer::TYPE_QUAT;
+	if (StringHelp::compare("color", property_type, true) == 0)
+		return PropertySerializer::TYPE_COLOR;
+	if (StringHelp::compare("texture", property_type, true) == 0)
+		return PropertySerializer::TYPE_TEXTURE_NAME;
 	throw Exception(string_format("PropertySerializer::get_property_type - Unknown property type %1", property_type));
 }
 
@@ -184,6 +196,10 @@ PropertySerializer::PropertyType PropertySerializer::get_property_type(IProperty
 	else if (property->get_runtime_type_id() == IProperty::get_runtime_type_id<glm::quat>())
 	{
 		return TYPE_QUAT;
+	}
+	else if (property->get_runtime_type_id() == IProperty::get_runtime_type_id<Color>())
+	{
+		return TYPE_COLOR;
 	}
 	else 
 	{
@@ -247,6 +263,11 @@ std::string PropertySerializer::property_value_to_string(IProperty *property)
 	{
 		const glm::quat &value = static_cast<Property<glm::quat> *>(property)->get();
 		return string_format("%1 %2 %3 %4", value.x, value.y, value.z, value.w);
+	}
+	else if (property->get_runtime_type_id() == IProperty::get_runtime_type_id<Color>())
+	{
+		const Color &value = static_cast<Property<Color> *>(property)->get();
+		return value.get_rgba8_hexstring();
 	}
 	else 
 	{

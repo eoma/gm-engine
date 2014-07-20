@@ -15,6 +15,8 @@ namespace GM
 {
 	namespace Framework
 	{
+		unsigned char Color::hex[] = { '0', '1', '2', '3', '4', '5', '6', '7',
+			'8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 		/////////////////////////////////////////////////////////////////////////////
 		// Color construction:
@@ -40,6 +42,50 @@ namespace GM
 			{
 				set_rgba8(color);
 			}
+		}
+
+		std::string Color::get_rgb8_hexstring() const
+		{
+			std::string buffer = "0x000000";
+			auto num = get_rgba8();
+			int len = 0, k = 0;
+			do//for every 4 bits
+			{
+				//get the equivalent hex digit
+				buffer[len] = hex[num & 0xF];
+				len++;
+				num >>= 3;
+			} while (num != 0);
+			//since we get the digits in the wrong order reverse the digits in the buffer
+			for (; k < len / 2; k++)
+			{//xor swapping
+				buffer[k] ^= buffer[len - k - 1];
+				buffer[len - k - 1] ^= buffer[k];
+				buffer[k] ^= buffer[len - k - 1];
+			}
+			return buffer;
+		}
+
+		std::string Color::get_rgba8_hexstring() const
+		{ 
+			std::string buffer = "0x00000000";
+			auto num = get_rgba8();
+			int len = 0, k = 0;
+			do//for every 4 bits
+			{
+				//get the equivalent hex digit
+				buffer[len] = hex[num & 0xF];
+				len++;
+				num >>= 4;
+			} while (num != 0);
+			//since we get the digits in the wrong order reverse the digits in the buffer
+			for (; k < len / 2; k++)
+			{//xor swapping
+				buffer[k] ^= buffer[len - k - 1];
+				buffer[len - k - 1] ^= buffer[k];
+				buffer[k] ^= buffer[len - k - 1];
+			}
+			return buffer;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////

@@ -226,6 +226,14 @@ void MaterialTemplateParser::parse_templates(const std::string &data/*, std::fun
 							StringHelp::float_to_text(it->second[2].to_float()) + " " +
 							StringHelp::float_to_text(it->second[3].to_float());*/
 					}
+					else if (forced_type == PropertySerializer::TYPE_COLOR)
+					{
+						//p.value = it->second.to_string();
+					}
+					else if (forced_type == PropertySerializer::TYPE_TEXTURE_NAME)
+					{
+						//p.value = it->second.to_string();
+					}
 					/*else
 						throw Exception("Type not implemented yet for property " + p.name);*/
 
