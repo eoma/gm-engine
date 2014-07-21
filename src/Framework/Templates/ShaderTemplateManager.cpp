@@ -18,22 +18,37 @@ ShaderTemplateManager::ShaderTemplateManager() {
 
 }
 
-void ShaderTemplateManager::apply(const std::string &template_name, const Core::ShaderPtr &shader) {
+void ShaderTemplateManager::get(const std::string &template_name, std::function<void(const ShaderTemplateManager::Template &)> func) {
 	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
 	{
 		if (StringHelp::compare(template_name, it_template->name, true) == 0)
 		{
 			for (auto it_require = it_template->requires.begin(); it_require != it_template->requires.end(); ++it_require)
 			{
-				apply_template((*it_require), shader);
+				apply_requirement((*it_require), (*it_template));
 			}
+			if(func) func((*it_template));
+
+			return;
 		}
 	}
 }
 
-void ShaderTemplateManager::apply_template(const std::string &template_name, const Core::ShaderPtr &shader) {
-	// TODO: Need a way to apply a template to a shader... not entirely sure, but this will probably require a rethinking at some level...
-	// TODO: Maybe this just generates the "cache info" in ShaderManager, and thus it should take ShaderManager as input here instead of Shader?
+void ShaderTemplateManager::apply_requirement(const std::string &template_name, ShaderTemplateManager::Template &t) {
+	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
+	{
+		if (StringHelp::compare(template_name, it_template->name, true) == 0)
+		{
+			if (t.vertex_shader.empty()) t.vertex_shader = it_template->vertex_shader;
+			if (t.fragment_shader.empty()) t.fragment_shader = it_template->fragment_shader;
+			if (t.geometry_shader.empty()) t.geometry_shader = it_template->geometry_shader;
+			if (t.tesselation_control_shader.empty()) t.tesselation_control_shader = it_template->tesselation_control_shader;
+			if (t.tesselation_evaluation_shader.empty()) t.tesselation_evaluation_shader = it_template->tesselation_evaluation_shader;
+			if (t.compute_shader.empty()) t.compute_shader = it_template->compute_shader;
+			// FIXME: Should we be setting rasterizer discard here too?
+			return;
+		}
+	}
 }
 
 void ShaderTemplateManager::add_templates(const std::string &template_filename) {

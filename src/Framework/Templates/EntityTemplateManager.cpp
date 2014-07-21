@@ -60,6 +60,7 @@ void EntityTemplateManager::apply_components(const std::string &template_name, c
 			{
 				component_serializer->create_and_add_component(entity, (*it_component), (*it_component));
 			}
+			return;
 		}
 	}
 }
@@ -73,6 +74,7 @@ void EntityTemplateManager::apply_properties(const std::string &template_name, c
 			{
 				PropertySerializer::create_and_add_property(*entity, (*it_property).type_id, (*it_property).name, (*it_property).value);
 			}
+			return;
 		}
 	}
 }

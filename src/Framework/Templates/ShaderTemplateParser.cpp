@@ -124,6 +124,14 @@ void ShaderTemplateParser::parse_templates(const std::string &data, std::functio
 			t.compute_shader = it->second.to_string();
 		}
 
+		it = json_members.find("rasterizer_discard");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_boolean())
+				throw Exception("rasterizer_discard must be a boolean");
+			t.rasterizer_discard = it->second.is_boolean();
+		}
+
 		func(t);
 	}
 }

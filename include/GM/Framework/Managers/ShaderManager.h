@@ -11,6 +11,7 @@
 namespace GM {
 namespace Framework {
 
+class ShaderTemplateManager; typedef std::shared_ptr<ShaderTemplateManager> ShaderTemplateManagerPtr;
 typedef unsigned int ShaderId;
 
 class ShaderManager {
@@ -18,10 +19,15 @@ public:
 	ShaderManager();
 	~ShaderManager();
 
-	ShaderId load(const std::string &vs_file, const std::string &fs_file);
-	ShaderId load(const std::string &vs_file, const std::string &gs_file, const std::string &fs_file);
+	ShaderId get_or_create(const std::string &name);
+	ShaderId get_or_create(const std::string &name, const std::string &vs_file, const std::string &fs_file, bool rasterizer_discard);
+	ShaderId get_or_create(const std::string &name, const std::string &vs_file, const std::string &gs_file, const std::string &fs_file, bool rasterizer_discard);
+	ShaderId get_or_create(
+		const std::string &name, const std::string &vs_file, const std::string &gs_file, const std::string &fs_file, 
+		const std::string &tess_ctrl_file, const std::string &tess_eval_file, const std::string &compute_file, bool rasterizer_discard);
 	// TODO: Extend to all 4.3 spec types (tesselation and compute is missing, support Transform Feedback with diabled rasterization, etc
 
+	void add_templates(const std::string &template_filename);
 private:
 
 	// Determine if file is cached, if it is return the cached content,
@@ -36,6 +42,12 @@ private:
 
 	// Useful for mapping which shader pograms are using a file.
 	std::unordered_map<std::string, std::set<ShaderId>> file_to_shader_deps;
+
+	//Associates a name with a shader.
+	std::unordered_map<std::string, ShaderId> name_to_shader;
+	std::unordered_map<ShaderId, std::string> shader_to_name;
+
+	ShaderTemplateManagerPtr template_manager;
 };
 
 } // namespace Framework

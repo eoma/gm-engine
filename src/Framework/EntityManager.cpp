@@ -138,7 +138,7 @@ clan::Signal<void(const EntityPtr &/*owner*/, const std::string &/*type*/, const
 	return component_serializer->sig_create_component;
 }
 
-void EntityManager::add_templates(const std::string template_filename)
+void EntityManager::add_templates(const std::string &template_filename)
 {
 	template_manager->add_templates(template_filename);
 }
