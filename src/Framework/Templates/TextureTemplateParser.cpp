@@ -1,5 +1,5 @@
 
-#include <GM/Framework/Parsers/TextureTemplateParser.h>
+#include <GM/Framework/Templates/TextureTemplateParser.h>
 #include <GM/Framework/Utilities/PropertySerializer.h>
 
 #include <ClanLib/core.h>

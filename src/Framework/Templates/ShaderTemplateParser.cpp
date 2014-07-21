@@ -1,5 +1,5 @@
 
-#include <GM/Framework/Parsers/ShaderTemplateParser.h>
+#include <GM/Framework/Templates/ShaderTemplateParser.h>
 #include <GM/Framework/Utilities/PropertySerializer.h>
 
 #include <ClanLib/core.h>

@@ -1,7 +1,7 @@
 
-#include <GM/Framework/Managers/EntityTemplateManager.h>
+#include <GM/Framework/Templates/EntityTemplateManager.h>
+#include <GM/Framework/Templates/EntityTemplateParser.h>
 #include <GM/Framework/IO/TextIO.h>
-#include <GM/Framework/Parsers/EntityTemplateParser.h>
 #include <GM/Framework/Utilities/ComponentSerializer.h>
 #include <GM/Framework/Entity.h>
 

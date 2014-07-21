@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Managers/EntityTemplateManager.h"
+#include "EntityTemplateManager.h"
 
 #include <string>
 #include <memory>

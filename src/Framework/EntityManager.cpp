@@ -1,5 +1,5 @@
 #include "GM/Framework/EntityManager.h"
-#include "GM/Framework/Managers/EntityTemplateManager.h"
+#include "GM/Framework/Templates/EntityTemplateManager.h"
 #include "GM/Framework/Entity.h"
 #include "GM/Framework/Utilities/ComponentSerializer.h"
 
