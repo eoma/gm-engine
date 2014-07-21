@@ -10,7 +10,7 @@ namespace Framework {
 
 class ITextureIO {
 public:
-	virtual ~ITextureIO() = 0;
+	virtual ~ITextureIO() {};
 
 	/**
 	 * Load image from file.

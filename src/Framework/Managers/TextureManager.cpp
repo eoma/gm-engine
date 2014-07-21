@@ -13,6 +13,10 @@ TextureManager::TextureManager(const ITextureIOPtr &texture_io)
 {
 }
 
+TextureManager::~TextureManager()
+{
+}
+
 const RawImage &TextureManager::load_image(const std::string &file_name)
 {
 	auto iter = loaded_images.find(file_name);
