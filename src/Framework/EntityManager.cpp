@@ -133,7 +133,7 @@ EntityPtr EntityManager::remove_entity(const unsigned long id, bool immediate) {
 	return entity;
 }
 
-clan::Signal<void(const EntityPtr &/*owner*/, const std::string &/*type*/, const std::string &/*name*/)> EntityManager::register_component_serializer_signal()
+clan::Signal<void(const EntityPtr &/*owner*/, const std::string &/*type*/, const std::string &/*name*/)> &EntityManager::register_component_serializer_signal()
 {
 	return component_serializer->sig_create_component;
 }

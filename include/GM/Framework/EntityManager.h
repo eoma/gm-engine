@@ -31,7 +31,7 @@ public:
 	void update(float elapsed_time);
 
 	//ComponentSerializerPtr get_component_serializer() const { return component_serializer; }
-	clan::Signal<void(const EntityPtr &/*owner*/, const std::string &/*type*/, const std::string &/*name*/)> register_component_serializer_signal();
+	clan::Signal<void(const EntityPtr &/*owner*/, const std::string &/*type*/, const std::string &/*name*/)> &register_component_serializer_signal();
 
 	void add_templates(const std::string template_filename);
 	void apply(const std::string &template_name, const EntityPtr &entity);
