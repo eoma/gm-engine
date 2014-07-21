@@ -24,9 +24,14 @@ if(MSVC)
   if(STATIC_STD_LIBS)
     foreach(flag
       CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-      CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+      CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO
+      CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+      CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO)
       if(${flag} MATCHES "/MD")
         string(REGEX REPLACE "/MD" "/MT" ${flag} "${${flag}}")
+      endif()
+      if(${flag} MATCHES "/MDd")
+        string(REGEX REPLACE "/MDd" "/MTd" ${flag} "${${flag}}")
       endif()
     endforeach()
   endif()
@@ -59,6 +64,11 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE INTERNAL "Build the GLFW example programs")
 set(GLFW_BUILD_TESTS OFF CACHE INTERNAL "Build the GLFW test programs")
 set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "Build the GLFW documentation")
 set(GLFW_INSTALL OFF CACHE INTERNAL "Generate installation target")
+
+if(MSVC)
+	set(USE_MSVC_RUNTIME_LIBRARY_DLL NOT(${STATIC_STD_LIBS}) CACHE INTERNAL " " FORCE)
+endif()
+
 add_subdirectory(depends/glfw)
 
 set_target_properties(glfw
