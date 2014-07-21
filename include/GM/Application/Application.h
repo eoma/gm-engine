@@ -60,6 +60,13 @@ public:
 
 	void run();
 
+	glm::ivec2 get_gl_version() const { return gl_version; }
+	int get_gl_version_major() const { return gl_version.x; }
+	int get_gl_version_minor() const { return gl_version.y; }
+
+	// Set required GL version, should not be used on Mac OS X
+	void set_gl_version(int major, int minor);
+
 	const std::string &get_title() const { return title; }
 	glm::uvec2 get_resolution() const { return resolution; }
 	unsigned int get_width() const { return resolution.get().x; }
@@ -111,6 +118,9 @@ protected:
 	void render();
 	void clean_up();
 
+	void init_window_and_gl();
+
+protected:
 	GLFWwindow *window;
 
 	Application::ErrorFlags error_flags;
@@ -128,6 +138,8 @@ protected:
 	Framework::Property<glm::uvec2> resolution;
 	Framework::Property<bool> fullscreen;
 	Framework::Property<bool> keep_running;
+
+	glm::ivec2 gl_version;
 
 	clan::GameTime game_time;
 

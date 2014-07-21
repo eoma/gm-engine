@@ -11,6 +11,10 @@
 
 #include "GM/Framework/IO/SoilTextureIO.h"
 
+#include <glm/ext.hpp>
+
+#include <iostream>
+
 namespace GM {
 namespace Application {
 
@@ -30,7 +34,13 @@ namespace Application {
 , title(add<std::string>("title", title))
 , resolution(add<glm::uvec2>("width", glm::uvec2(width, height)))
 , fullscreen(add<bool>("fullscreen", fullscreen))
-, keep_running(add<bool>("keep_running", true))
+, keep_running(add<bool>("keep_running", false))
+
+#ifdef __APPLE__
+, gl_version(3,2)
+#else
+, gl_version(4,3)
+#endif
 
 , game_time(30, 0)
 
@@ -83,6 +93,10 @@ namespace Application {
 	}
 }
 
+Application::~Application()
+{
+}
+
 void Application::run() {
 
 	//Test if we should check for null systems
@@ -117,8 +131,9 @@ void Application::run() {
 		}
 	}
 
-	// TODO: set up window, context...
-	// TODO: check that context is valid
+	init_window_and_gl();
+	
+	keep_running = true;
 
 	initialize();
 
@@ -127,10 +142,20 @@ void Application::run() {
 		update();
 		prepare();
 		render();
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+
+		if (glfwWindowShouldClose(window))
+		{
+			keep_running = false;
+		}
 	}
 
 	clean_up();
 
+	glfwDestroyWindow(window);
+	glfwTerminate();
 	// TODO: destroy context, window
 }
 
@@ -169,15 +194,95 @@ void Application::clean_up() {
 }
 
 void Application::on_title_changed(const std::string &old_value, const std::string &new_value) {
-	// TODO: Update title caption in GLFW
+	if (is_running())
+	{
+		glfwSetWindowTitle(window, new_value.c_str());
+	}
 }
 
 void Application::on_resolution_changed(const glm::uvec2 &old_value, const glm::uvec2 &new_value) {
-	// TODO: Update window resolution for GLFW
+	if (is_running())
+	{
+		glfwSetWindowSize(window, new_value.x, new_value.y);
+	}
 }
 
 void Application::on_fullscreen_changed(const bool &old_value, const bool &new_value) {
 	// TODO: Update fullscreen state for GLFW
+	if (is_running())
+	{
+		
+	}
+}
+
+void Application::init_window_and_gl()
+{
+	glfwSetErrorCallback([](int error_code, const char * error_string){
+		std::cerr << "GLFW received error code " 
+			<< std::hex << std::showbase << error_code
+			<< " and error message: " << error_string << std::endl;
+	});
+
+	if (!glfwInit())
+	{
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
+
+	GLFWmonitor *fullscreen_monitor = nullptr;
+	if (fullscreen)
+	{
+		fullscreen_monitor = glfwGetPrimaryMonitor();
+	}
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_version.x);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version.y);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+	window = glfwCreateWindow(
+		resolution.get().x, resolution.get().y,
+		title.get().c_str(),
+		fullscreen_monitor,
+		nullptr
+	);
+	if (!window)
+	{
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
+
+	glfwMakeContextCurrent(window);
+
+	gl3wInit();
+
+	std::cerr << "VENDOR: " << glGetString(GL_VENDOR) << std::endl;
+	std::cerr << "VERSION: " << glGetString(GL_VERSION) << std::endl;
+	std::cerr << "RENDERER: " << glGetString(GL_RENDERER) << std::endl;
+
+	glm::ivec2 context_gl_version;
+	glGetIntegerv(GL_MAJOR_VERSION, &context_gl_version.x);
+	glGetIntegerv(GL_MINOR_VERSION, &context_gl_version.y);
+
+	if (gl_version != context_gl_version) {
+		std::cerr << "Requested GL version: " << glm::to_string(gl_version) << std::endl;
+		std::cerr << "Got GL version: " << glm::to_string(context_gl_version) << std::endl;
+	}
+}
+
+void Application::set_gl_version(int major, int minor)
+{
+	if (!is_running())
+	{
+#ifndef __APPLE__ // On Mac OS X, you will get the version supported by the os, OS X 10.9 supports 4.1
+		gl_version.x = major;
+		gl_version.y = minor;
+#endif
+	}
+	else
+	{
+		throw std::runtime_error("You should not set GL version while run() is running");
+	}
 }
 
 } // namespace Application
