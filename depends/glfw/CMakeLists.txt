@@ -36,7 +36,7 @@ if (UNIX AND NOT APPLE)
 endif()
 
 if (MSVC)
-    option(USE_MSVC_RUNTIME_LIBRARY_DLL "Use MSVC runtime library DLL" ON)
+    option(USE_MSVC_RUNTIME_LIBRARY_DLL "Use MSVC runtime library DLL" OFF)
 endif()
 
 if (BUILD_SHARED_LIBS)
@@ -106,7 +106,7 @@ endif()
 if (MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
-    if (NOT USE_MSVC_RUNTIME_LIBRARY_DLL)
+    #if (NOT USE_MSVC_RUNTIME_LIBRARY_DLL)
         foreach (flag CMAKE_C_FLAGS
                         CMAKE_C_FLAGS_DEBUG
                         CMAKE_C_FLAGS_RELEASE
@@ -121,7 +121,7 @@ if (MSVC)
             endif()
 
         endforeach()
-    endif()
+    #endif()
 endif()
 
 #--------------------------------------------------------------------
