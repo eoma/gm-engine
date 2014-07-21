@@ -26,7 +26,7 @@ namespace Framework {
 
 namespace Application {
 
-class Application : public Framework::PropertyContainer<>
+class Main : public Framework::PropertyContainer<>
 {
 public:
 
@@ -55,8 +55,8 @@ public:
 	};
 
 public:
-	Application(const std::string &title, Application::Flags flags = Flags::GM_FRAMEWORK_ALL_DEFAULTS, Application::ErrorFlags error_flags = GM_ERROR_ALL_CHECKS, unsigned int width = 800, unsigned int height = 640, bool fullscreen = false);
-	virtual ~Application();
+	Main(const std::string &title, Main::Flags flags = Flags::GM_FRAMEWORK_ALL_DEFAULTS, Main::ErrorFlags error_flags = GM_ERROR_ALL_CHECKS, unsigned int width = 800, unsigned int height = 640, bool fullscreen = false);
+	virtual ~Main();
 
 	void run();
 
@@ -123,7 +123,7 @@ protected:
 protected:
 	GLFWwindow *window;
 
-	Application::ErrorFlags error_flags;
+	Main::ErrorFlags error_flags;
 
 	Framework::SceneSystemPtr scene_system;
 	Framework::RenderSystemPtr render_system;

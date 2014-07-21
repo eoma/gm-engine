@@ -1,4 +1,4 @@
-#include "GM/Application/Application.h"
+#include "GM/Application/Main.h"
 
 #include "GM/Framework/Systems/SceneSystem.h"
 #include "GM/Framework/Systems/RenderSystem.h"
@@ -18,7 +18,7 @@
 namespace GM {
 namespace Application {
 
-	Application::Application(const std::string &title, Application::Flags flags, Application::ErrorFlags error_flags, unsigned int width, unsigned int height, bool fullscreen)
+	Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_flags, unsigned int width, unsigned int height, bool fullscreen)
 : Framework::PropertyContainer<>()
 , window(nullptr)
 , error_flags(error_flags)
@@ -51,9 +51,9 @@ namespace Application {
 , render_sign()
 , clean_up_sign()
 {
-	slots.connect(this->title.value_changed(), this, &Application::on_title_changed);
-	slots.connect(this->resolution.value_changed(), this, &Application::on_resolution_changed);
-	slots.connect(this->fullscreen.value_changed(), this, &Application::on_fullscreen_changed);
+	slots.connect(this->title.value_changed(), this, &Main::on_title_changed);
+	slots.connect(this->resolution.value_changed(), this, &Main::on_resolution_changed);
+	slots.connect(this->fullscreen.value_changed(), this, &Main::on_fullscreen_changed);
 
 	if (flags & GM_FRAMEWORK_SCENE_SYSTEM)
 	{
@@ -93,11 +93,11 @@ namespace Application {
 	}
 }
 
-Application::~Application()
+Main::~Main()
 {
 }
 
-void Application::run() {
+void Main::run() {
 
 	//Test if we should check for null systems
 	if (error_flags & GM_ERROR_NULL_SYSTEM)
@@ -159,10 +159,10 @@ void Application::run() {
 	// TODO: destroy context, window
 }
 
-void Application::initialize() {
+void Main::initialize() {
 	initialize_sign();
 }
-void Application::update() {
+void Main::update() {
 
 	game_time.update();
 	auto elapsed_time = game_time.get_time_elapsed();
@@ -173,7 +173,7 @@ void Application::update() {
 
 	update_sign(elapsed_time);
 }
-void Application::prepare() {
+void Main::prepare() {
 
 	if (has_scene_system()) {
 		scene_system->prepare();
@@ -181,7 +181,7 @@ void Application::prepare() {
 
 	prepare_sign();
 }
-void Application::render() {
+void Main::render() {
 
 	if (has_render_system()) {
 		render_system->render();
@@ -189,25 +189,25 @@ void Application::render() {
 
 	render_sign();
 }
-void Application::clean_up() {
+void Main::clean_up() {
 	clean_up_sign();
 }
 
-void Application::on_title_changed(const std::string &old_value, const std::string &new_value) {
+void Main::on_title_changed(const std::string &old_value, const std::string &new_value) {
 	if (is_running())
 	{
 		glfwSetWindowTitle(window, new_value.c_str());
 	}
 }
 
-void Application::on_resolution_changed(const glm::uvec2 &old_value, const glm::uvec2 &new_value) {
+void Main::on_resolution_changed(const glm::uvec2 &old_value, const glm::uvec2 &new_value) {
 	if (is_running())
 	{
 		glfwSetWindowSize(window, new_value.x, new_value.y);
 	}
 }
 
-void Application::on_fullscreen_changed(const bool &old_value, const bool &new_value) {
+void Main::on_fullscreen_changed(const bool &old_value, const bool &new_value) {
 	// TODO: Update fullscreen state for GLFW
 	if (is_running())
 	{
@@ -215,7 +215,7 @@ void Application::on_fullscreen_changed(const bool &old_value, const bool &new_v
 	}
 }
 
-void Application::init_window_and_gl()
+void Main::init_window_and_gl()
 {
 	glfwSetErrorCallback([](int error_code, const char * error_string){
 		std::cerr << "GLFW received error code " 
@@ -270,7 +270,7 @@ void Application::init_window_and_gl()
 	}
 }
 
-void Application::set_gl_version(int major, int minor)
+void Main::set_gl_version(int major, int minor)
 {
 	if (!is_running())
 	{
