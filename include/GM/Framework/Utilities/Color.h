@@ -3,6 +3,7 @@
 // Disclaimer: Based on clanDisplay's color class
 
 #include <glm/vec4.hpp>
+#include <string>
 #include <vector>
 
 namespace GM {
