@@ -33,6 +33,16 @@ public:
 
 	// FIXME: When GL comes...
 	static TextureFormat create_texture2d_format(bool generate_mipmap = true, unsigned int wrap_mode = /*GL_CLAMP_TO_EDGE*/ 1);
+	static TextureFormat *create_texture_format_from_string(
+		const std::string &min_filter,
+		const std::string &mag_filter,
+		const std::string &wrap_s,
+		const std::string &wrap_t,
+		// TODO: Add all other parameters TextureFormat can hold.
+		bool generate_mipmap);
+
+	static void string_to_parameter(const std::string &value, float &result);
+	static void string_to_parameter(const std::string &value, int &result);
 
 protected:
 	// TODO: A bit unclear a bout these, why should they be protected?

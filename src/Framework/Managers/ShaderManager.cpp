@@ -22,12 +22,14 @@ ShaderManager::~ShaderManager()
 
 ShaderId ShaderManager::get_or_create(const std::string &name)
 {
-	//First, test if the name has been cached.
+	// First, test if the name has been cached.
+	// FIXME: This call suggests there should be at least an internal get(name) method that only looks for cached shaders.
 	auto shader = get_or_create(name, "", "", "", "", "", "", false);
 	if (shader) {
 		return shader;
 	}
 
+	//If not cached, let's see if there is a template description for this name.
 	template_manager->get(name, [this, name, &shader](const ShaderTemplateManager::Template &t) {
 		shader = get_or_create(name, 
 			t.vertex_shader, 
@@ -38,6 +40,9 @@ ShaderId ShaderManager::get_or_create(const std::string &name)
 			t.compute_shader, 
 			t.rasterizer_discard);
 	});
+
+	if (!shader)
+		throw clan::Exception(clan::string_format("Failed to get or create the shader %1.", name));
 
 	return shader;
 }

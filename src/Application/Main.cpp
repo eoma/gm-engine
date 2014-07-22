@@ -193,21 +193,21 @@ void Main::clean_up() {
 	clean_up_sign();
 }
 
-void Main::on_title_changed(const std::string &old_value, const std::string &new_value) {
+void Main::on_title_changed(const std::string &/*old_value*/, const std::string &new_value) {
 	if (is_running())
 	{
 		glfwSetWindowTitle(window, new_value.c_str());
 	}
 }
 
-void Main::on_resolution_changed(const glm::uvec2 &old_value, const glm::uvec2 &new_value) {
+void Main::on_resolution_changed(const glm::uvec2 &/*old_value*/, const glm::uvec2 &new_value) {
 	if (is_running())
 	{
 		glfwSetWindowSize(window, new_value.x, new_value.y);
 	}
 }
 
-void Main::on_fullscreen_changed(const bool &old_value, const bool &new_value) {
+void Main::on_fullscreen_changed(const bool &/*old_value*/, const bool &new_value) {
 	// TODO: Update fullscreen state for GLFW
 	if (is_running())
 	{
