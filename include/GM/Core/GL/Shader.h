@@ -10,14 +10,14 @@ namespace Core {
 
 class Shader; typedef std::shared_ptr<Shader> ShaderPtr;
 
-struct ShaderUniformInfo
+struct ShaderVariableInfo
 {
 	std::string name;
 	GLenum type;
 	unsigned int size; // How many multiples of type are there? Relevant for array
 	int location; // be default -1
 
-	ShaderUniformInfo(const std::string &name, const GLenum type, const unsigned int size, const int location = -1) : name(name), type(type), size(size), location(location) {};
+	ShaderVariableInfo(const std::string &name, const GLenum type, const unsigned int size, const int location = -1) : name(name), type(type), size(size), location(location) {};
 };
 
 class Shader
@@ -31,13 +31,16 @@ public:
 
 	unsigned int get_handle() const { return handle; }
 
-	const std::vector<ShaderUniformInfo> &get_uniform_info() const { return uniform_info; }
-	void set_uniform_info(const std::vector<ShaderUniformInfo> &new_uniform_info);
+	const std::vector<ShaderVariableInfo> &get_uniform_info() const { return uniform_info; }
+	void set_uniform_info(const std::vector<ShaderVariableInfo> &new_uniform_info);
 
+	const std::vector<ShaderVariableInfo> &get_attribute_info() const { return attribute_info; }
+	void set_attribute_info(const std::vector<ShaderVariableInfo> &new_attribute_info);
 private:
 	unsigned int handle;
 
-	std::vector<ShaderUniformInfo> uniform_info;
+	std::vector<ShaderVariableInfo> attribute_info;
+	std::vector<ShaderVariableInfo> uniform_info;
 };
 
 } // namespace Core
