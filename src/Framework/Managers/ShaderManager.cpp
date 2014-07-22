@@ -1,10 +1,15 @@
 #include "GM/Framework/Managers/ShaderManager.h"
+
+#include "GM/Core/GL/Shader.h"
+#include "GM/Core/Utilities/ShaderFactory.h"
+
 #include "GM/Framework/Templates/ShaderTemplateManager.h"
 #include "GM/Framework/IO/TextIO.h"
+#include "GM/Framework/Utilities/Tools.h"
 
 #include <ClanLib/core.h>
 
-#include "GM/Framework/Utilities/Tools.h"
+#include <GL/gl3w.h>
 
 #include <algorithm>
 
@@ -20,7 +25,7 @@ ShaderManager::~ShaderManager()
 {
 }
 
-ShaderId ShaderManager::get_or_create(const std::string &name)
+Core::ShaderPtr ShaderManager::get_or_create(const std::string &name)
 {
 	// First, test if the name has been cached.
 	// FIXME: This call suggests there should be at least an internal get(name) method that only looks for cached shaders.
@@ -47,49 +52,49 @@ ShaderId ShaderManager::get_or_create(const std::string &name)
 	return shader;
 }
 
-ShaderId ShaderManager::get_or_create(const std::string &name, const std::string &vs_file, const std::string &fs_file, bool rasterizer_discard)
+Core::ShaderPtr ShaderManager::get_or_create(const std::string &name, const std::string &vs_file, const std::string &fs_file, bool rasterizer_discard)
 {
 	return get_or_create(name, vs_file, "", fs_file, "", "", "", rasterizer_discard);
 }
 
-ShaderId ShaderManager::get_or_create(const std::string &name, const std::string &vs_file, const std::string &gs_file, const std::string &fs_file, bool rasterizer_discard)
+Core::ShaderPtr ShaderManager::get_or_create(const std::string &name, const std::string &vs_file, const std::string &gs_file, const std::string &fs_file, bool rasterizer_discard)
 {
 	return get_or_create(name, vs_file, gs_file, fs_file, "", "", "", rasterizer_discard);
 }
 
-ShaderId ShaderManager::get_or_create(
+Core::ShaderPtr ShaderManager::get_or_create(
 	const std::string &name, const std::string &vs_file, const std::string &gs_file, const std::string &fs_file,
 	const std::string &tess_ctrl_file, const std::string &tess_eval_file, const std::string &compute_file, bool rasterizer_discard)
 {
 	
 	auto iter = name_to_shader.find(name);
-	bool is_name_cached = iter != name_to_shader.end();
+	bool is_name_cached = (iter != name_to_shader.end());
 
-	ShaderId id = 0;
+	Core::ShaderPtr shader = nullptr;
 
-	std::vector<std::set<ShaderId>> shader_id_sets;
+	std::vector<std::set<Core::ShaderPtr>> shader_sets;
 
-	if (!vs_file.empty()) shader_id_sets.push_back(file_to_shader_deps[vs_file]);
-	if (!gs_file.empty()) shader_id_sets.push_back(file_to_shader_deps[gs_file]);
-	if (!fs_file.empty()) shader_id_sets.push_back(file_to_shader_deps[fs_file]);
+	if (!vs_file.empty()) shader_sets.push_back(file_to_shader_deps[vs_file]);
+	if (!gs_file.empty()) shader_sets.push_back(file_to_shader_deps[gs_file]);
+	if (!fs_file.empty()) shader_sets.push_back(file_to_shader_deps[fs_file]);
 	// TODO: Expand to support tesselation and compute shaders
 
 	// If no shader files were specified (only the name), then we have nothing more to do here other than returning
 	// the result of the name to shader relation.
-	if (shader_id_sets.empty())
+	if (shader_sets.empty())
 	{
 		if (is_name_cached) return iter->second;
-		else return 0; // FIXME: Change to nullptr when ShaderId is replaced with Core::Shader
+		else return nullptr;
 	}
 
-	std::set<ShaderId> singular_shader = general_set_intersection(shader_id_sets);
+	std::set<Core::ShaderPtr> singular_shader = general_set_intersection(shader_sets);
 
 	if (!singular_shader.empty()) // TODO: How to determine if it is indeed unique
 	{
-		id = *(singular_shader.begin());
+		shader = *(singular_shader.begin());
 	}
 
-	if (id == 0) // found no preexisting shader
+	if (shader == nullptr) // found no preexisting shader
 	{
 		if (is_name_cached) {
 			throw clan::Exception(clan::string_format("The name of the shader (%1) was cached, but its shader set did not match the one specified!", name));
@@ -99,19 +104,19 @@ ShaderId ShaderManager::get_or_create(
 
 		if (!vs_file.empty())
 		{
-			Core::ShaderSource res(vs_file, load_contents(vs_file), 0); //TODO: Replace with GL_VERTEX_SHADER
+			Core::ShaderSource res(vs_file, load_contents(vs_file), GL_VERTEX_SHADER);
 			shader_sources.push_back(res);
 		}
 
 		if (!gs_file.empty())
 		{
-			Core::ShaderSource res(gs_file, load_contents(gs_file), 1); //TODO: Replace with GL_GEOMETRY_SHADER
+			Core::ShaderSource res(gs_file, load_contents(gs_file), GL_GEOMETRY_SHADER);
 			shader_sources.push_back(res);
 		}
 
 		if (!fs_file.empty())
 		{
-			Core::ShaderSource res(fs_file, load_contents(fs_file), 2); //TODO: Replace with GL_FRAGMENT_SHADER
+			Core::ShaderSource res(fs_file, load_contents(fs_file), GL_FRAGMENT_SHADER);
 			shader_sources.push_back(res);
 		}
 		// TODO: Expand to support tesselation and compute shaders
@@ -119,13 +124,13 @@ ShaderId ShaderManager::get_or_create(
 		// TODO: What about errors?
 		// TODO: What about rasterizer_discard?
 		// TODO: Actual implementation of ShaderFactory
-		id = 1 /*Core::ShaderFactory::make_program(shader_sources)*/;
+		shader = Core::ShaderFactory::make_program(shader_sources);
 
-		name_to_shader[name] = id;
-		shader_to_name[id] = name;
+		name_to_shader[name] = shader;
+		shader_to_name[shader] = name;
 		for (const Core::ShaderSource &res : shader_sources) {
-			shader_to_file_deps[id].insert(res.name);
-			file_to_shader_deps[res.name].insert(id);
+			shader_to_file_deps[shader].insert(res.name);
+			file_to_shader_deps[res.name].insert(shader);
 			
 		}
 	}
@@ -133,19 +138,19 @@ ShaderId ShaderManager::get_or_create(
 	{
 		// Just to be safe, check that the name is what we expect
 		if (is_name_cached) {
-			if (iter->second != id) {
-				auto name_of_id = shader_to_name[id];
-				throw clan::Exception(clan::string_format("The name of the shader (%1) was cached, but its shader set did not match the one specified (%2)!", name, name_of_id));
+			if (iter->second != shader) {
+				auto name_of_shader = shader_to_name[shader];
+				throw clan::Exception(clan::string_format("The name of the shader (%1) was cached, but its shader set did not match the one specified (%2)!", name, name_of_shader));
 			}
 		}
 		// If the name was not cached, but we found an id, something is wrong...
 		else {
-			auto name_of_id = shader_to_name[id];
-			throw clan::Exception(clan::string_format("The name (%1) was not cached, but a shader is already associated with this combination of shader files (%2)!", name, name_of_id));
+			auto name_of_shader = shader_to_name[shader];
+			throw clan::Exception(clan::string_format("The name (%1) was not cached, but a shader is already associated with this combination of shader files (%2)!", name, name_of_shader));
 		}
 	}
 
-	return id;
+	return shader;
 }
 
 const std::string &ShaderManager::load_contents(const std::string &file_name)
