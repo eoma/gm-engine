@@ -86,6 +86,7 @@ TextureId TextureManager::get_or_create(const std::string &texture_name, const C
 {
 	// TODO: Implement cache lookup for this name and make sure it uses the same format as specified.
 	// TODO: Implement generating an empty texture based on format.
+	//auto texture = Core::TextureFactory::create(format);
 	throw clan::Exception("TextureId TextureManager::get_or_create(const std::string &texture_name, const Core::TextureFormat &format) is not yet implemented.");
 }
 
@@ -93,6 +94,7 @@ TextureId TextureManager::get_or_create(const std::string &texture_name, const R
 {
 	// TODO: Implement cache lookup for this name and make sure it uses the same image and format as specified.
 	// TODO: Implement generating a texture based on raw image data and format.
+	//auto texture = Core::TextureFactory::create(format, )
 	throw clan::Exception("TextureId TextureManager::get_or_create(const std::string &texture_name, const RawImage &image, const Core::TextureFormat &format) is not yet implemented.");
 }
 
