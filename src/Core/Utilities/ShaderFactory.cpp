@@ -49,6 +49,7 @@ ShaderPtr ShaderFactory::make_program(const std::vector<ShaderSource> &shader_so
 	}
 
 	shader->set_uniform_info(get_uniform_info(shader->get_handle()));
+	shader->set_attribute_info(get_attribute_info(shader->get_handle()));
 
 	return shader;
 }
@@ -87,9 +88,43 @@ unsigned int ShaderFactory::compile_shader(const ShaderSource &shader_source)
 	return shader_component;
 }
 
-std::vector<ShaderUniformInfo> ShaderFactory::get_uniform_info(const unsigned int program)
+std::vector<ShaderVariableInfo> ShaderFactory::get_attribute_info(const unsigned int program)
 {
-	std::vector<ShaderUniformInfo> uniform_infos;
+	std::vector<ShaderVariableInfo> attribute_infos;
+	std::vector<char> name_buffer;
+
+	int active_attributes = 0;
+	glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &active_attributes);
+	attribute_infos.reserve(active_attributes);
+	
+	int max_attribute_name_length = 0;
+	glGetProgramiv(program, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &max_attribute_name_length);
+	name_buffer.assign(max_attribute_name_length+1, '\0');
+
+	for (int i = 0; i < active_attributes; ++i)
+	{
+		int name_length = 0;
+		int size = 0;
+		GLenum type = 0;
+		
+glGetActiveAttrib(program, i, name_buffer.size(), &name_length, &size, &type, name_buffer.data());
+
+		std::string name(name_buffer.begin(), name_buffer.begin() + name_length);
+
+		//if (name.compare(0, 3, "gl_") != 0)
+		{
+			// We do not add uniform values that can not be modified by glUniform* og glProgramUniform*
+
+			attribute_infos.emplace_back(name, type, size, glGetAttribLocation(program, name.c_str()));
+		}
+	}
+
+	return attribute_infos;
+}
+
+std::vector<ShaderVariableInfo> ShaderFactory::get_uniform_info(const unsigned int program)
+{
+	std::vector<ShaderVariableInfo> uniform_infos;
 	std::vector<char> name_buffer;
 
 	int active_uniforms = 0;
@@ -120,6 +155,7 @@ glGetActiveUniform(program, i, name_buffer.size(), &name_length, &size, &type, n
 
 	return uniform_infos;
 }
+
 
 } // namespace Core
 } // namespace GM

@@ -17,7 +17,9 @@ public:
 private:
 	static unsigned int compile_shader(const ShaderSource &shader_source);
 
-	static std::vector<ShaderUniformInfo> get_uniform_info(const unsigned int program);
+	// These may be generalized using glGetProgramResource
+	static std::vector<ShaderVariableInfo> get_attribute_info(const unsigned int program);
+	static std::vector<ShaderVariableInfo> get_uniform_info(const unsigned int program);
 };
 
 } // namespace Core
