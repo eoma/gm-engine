@@ -46,7 +46,6 @@ const RawImage &TextureManager::get_or_create_image(const std::string &file_name
 TextureId TextureManager::get_or_create(const std::string &texture_name)
 {
 	// First, test if the name has been cached.
-	// TODO: Implement logic for looking up texture by name in cache.
 	auto texture = get(texture_name);
 
 	// If not cached, let's see if there is a template description for this name.
