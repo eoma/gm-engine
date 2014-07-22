@@ -74,6 +74,8 @@ public:
 	bool is_fullscreen() const { return fullscreen; }
 	bool is_running() const { return keep_running; }
 
+	void stop_running() { keep_running = false; }
+
 	clan::Signal<void()> &on_initialize() { return initialize_sign; }
 	clan::Signal<void(float)> &on_update() { return update_sign; }
 	clan::Signal<void()> &on_prepare() { return prepare_sign; }

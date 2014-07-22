@@ -13,11 +13,9 @@ bool mainTest() {
 
 	app.set_gl_version(3, 3);
 
-	auto keep_running = app.add<bool>("keep_running", false);
 	bool update_called = false;
-
 	auto update_slot = app.on_update().connect([&](float value) mutable {
-		keep_running = false;
+		app.stop_running();
 		update_called = true;
 	});
 

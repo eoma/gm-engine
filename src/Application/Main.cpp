@@ -148,7 +148,7 @@ void Main::run() {
 
 		if (glfwWindowShouldClose(window))
 		{
-			keep_running = false;
+			stop_running();
 		}
 	}
 
@@ -226,6 +226,7 @@ void Main::init_window_and_gl()
 	if (!glfwInit())
 	{
 		glfwTerminate();
+		// FIXME: Should probably just say stop_running() instead?
 		exit(EXIT_FAILURE);
 	}
 
@@ -249,6 +250,7 @@ void Main::init_window_and_gl()
 	if (!window)
 	{
 		glfwTerminate();
+		// FIXME: Should probably just say stop_running() instead?
 		exit(EXIT_FAILURE);
 	}
 
