@@ -16,6 +16,8 @@ public:
 
 private:
 	static unsigned int compile_shader(const ShaderSource &shader_source);
+
+	static std::vector<ShaderUniformInfo> get_uniform_info(const unsigned int program);
 };
 
 } // namespace Core
