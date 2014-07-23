@@ -12,9 +12,6 @@ BufferManager::BufferManager(unsigned int default_pool_size)
 
 BufferManager::~BufferManager()
 {
-	for (const PoolData &pool : pools) {
-		// TODO: Deallocate storage
-	}
 }
 
 BufferManager::BufferAllocation BufferManager::allocate(const unsigned int size, const BufferAllocationType type)
@@ -50,7 +47,7 @@ BufferManager::BufferAllocation BufferManager::allocate(const unsigned int size,
 
 	PoolData &pool = *iter;
 
-	allocation.name = pool.name;
+	allocation.buffer = pool.buffer;
 	allocation.allocated_size = size;
 	allocation.offset = pool.allocate(size);
 
@@ -59,20 +56,7 @@ BufferManager::BufferAllocation BufferManager::allocate(const unsigned int size,
 
 BufferManager::PoolData BufferManager::create_pool(unsigned int size, unsigned int content_type, unsigned int use_type)
 {
-	PoolData pool;
-
-	// Generate buffer, Core::make_buffer?
-	pool.name = 1;
-
-	pool.total_size = size;
-	pool.content_type = content_type;
-	pool.use_type = use_type;
-
-	//
-	// TODO: Do something to allocate storage
-	//
-
-	return pool;
+	return PoolData(std::make_shared<Core::BufferObject>(size, content_type, use_type));
 }
 
 } // namespace Framework

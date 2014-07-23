@@ -1,5 +1,9 @@
 #pragma once
 
+#include "../../Core/GL/BufferObject.h"
+
+#include <GL/gl3w.h>
+
 #include <vector>
 
 namespace GM {
@@ -16,7 +20,7 @@ public:
 
 	struct BufferAllocation
 	{
-		unsigned int name;
+		Core::BufferObjectPtr buffer;
 		unsigned int allocated_size;
 		unsigned int offset;
 	};
@@ -29,13 +33,10 @@ public:
 private:
 	struct PoolData
 	{
-		unsigned int name;
-		unsigned int total_size;
+		Core::BufferObjectPtr buffer;
 		unsigned int allocated;
-		unsigned int content_type; // 
-		unsigned int use_type; // draw, read or copy; static, dynamic or stream
 
-		unsigned int get_unused_size() const { return total_size - allocated; };
+		unsigned int get_unused_size() const { return buffer->get_size() - allocated; };
 
 		bool has_space_for(const unsigned int size) const { return size <= get_unused_size(); };
 
@@ -49,24 +50,13 @@ private:
 			return offset;
 		}
 
-		PoolData()
-		: name(0)
-		, total_size(0)
+		PoolData(const Core::BufferObjectPtr &buffer)
+		: buffer(buffer)
 		, allocated(0)
-		, content_type(0)
-		, use_type(0)
 		{
+			// Test if buffer is nullptr?
 		}
 	};
-
-//FIXME: Remove when gl is introduced
-#ifndef GL_ARRAY_BUFFER
-#	define GL_ARRAY_BUFFER 1
-#endif
-#ifndef GL_STATIC_DRAW
-#	define GL_STATIC_DRAW 1
-#endif
-
 
 private:
 
