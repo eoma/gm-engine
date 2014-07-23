@@ -77,7 +77,7 @@ bool mainTest() {
 	});
 
 	auto update_slot = app.on_update().connect([&](float value) mutable {
-		keep_running = false;
+		app.stop_running();
 		update_called = true;
 	});
 
