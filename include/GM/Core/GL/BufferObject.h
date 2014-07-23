@@ -12,7 +12,7 @@ class BufferObject; typedef std::shared_ptr<BufferObject> BufferObjectPtr;
 class BufferObject
 {
 public:
-	BufferObject(const unsigned int primary_type = GL_ARRAY_BUFFER);
+	BufferObject(const unsigned int size, const unsigned int primary_type = GL_ARRAY_BUFFER, unsigned int usage = GL_STATIC_DRAW);
 	~BufferObject();
 
 	// Bind as primary type
@@ -29,7 +29,11 @@ public:
 	// What is the buffer currently bound as?
 	unsigned int get_current_type() const { return primary_type; }
 
+	unsigned int get_usage() const { return usage; }
+
 	unsigned int get_handle() const { return handle; }
+
+	unsigned int get_size() const { return size; }
 
 private:
 	// Primary type
@@ -38,7 +42,11 @@ private:
 	// Wht the buffer is currently bound as
 	unsigned int current_type;
 
+	unsigned int usage;
+
 	unsigned int handle;
+
+	unsigned int size;
 
 };
 
