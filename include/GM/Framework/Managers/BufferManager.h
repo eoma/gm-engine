@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../Core/GL/BufferObject.h"
+#include "../../Core/Utilities/BufferAllocation.h"
 
 #include <GL/gl3w.h>
 
@@ -18,17 +19,10 @@ public:
 		UNIQUE_BUFFER // Mainly used where you cannot share it. Relevant when you want TFB and such
 	};
 
-	struct BufferAllocation
-	{
-		Core::BufferObjectPtr buffer;
-		unsigned int allocated_size;
-		unsigned int offset;
-	};
-
 	BufferManager(unsigned int default_pool_size = 32 * (1<<20));
 	~BufferManager();
 
-	BufferAllocation allocate(const unsigned int size, const BufferAllocationType type = SHARED_BUFFER);
+	Core::BufferAllocation allocate(const unsigned int size, const BufferAllocationType type = SHARED_BUFFER);
 
 private:
 	struct PoolData

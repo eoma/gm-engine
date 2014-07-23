@@ -14,9 +14,9 @@ BufferManager::~BufferManager()
 {
 }
 
-BufferManager::BufferAllocation BufferManager::allocate(const unsigned int size, const BufferAllocationType type)
+Core::BufferAllocation BufferManager::allocate(const unsigned int size, const BufferAllocationType type)
 {
-	BufferAllocation allocation;
+	Core::BufferAllocation allocation;
 	std::vector<PoolData>::iterator iter;
 
 	if (type == SHARED_BUFFER) // we have the freedom to allocate where it seems fit
