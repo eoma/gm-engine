@@ -8,7 +8,10 @@
 #include <GLFW/glfw3.h>
 
 #include <ClanLib/core.h>
+
 #include <glm/glm.hpp>
+
+#include <memory>
 #include <string>
 
 namespace GM {
@@ -25,6 +28,8 @@ namespace Framework {
 }
 
 namespace Application {
+
+class Main; typedef std::shared_ptr<Main> MainPtr;
 
 class Main : public Framework::PropertyContainer<>
 {
@@ -55,10 +60,31 @@ public:
 	};
 
 public:
-	Main(const std::string &title, Main::Flags flags = Flags::GM_FRAMEWORK_ALL_DEFAULTS, Main::ErrorFlags error_flags = GM_ERROR_ALL_CHECKS, unsigned int width = 800, unsigned int height = 640, bool fullscreen = false);
+	/**
+	 * Constructs a window
+	 *
+	 * @param title the window title
+	 * @param flags what part of the framework do you want to be constructed by default?
+	 * @param error_flags what errors do you want to catch?
+	 * @param width the initial window width
+	 * @param height the initial window height
+	 * @param fullscreen whether or not to start in fullscreen
+	 * @param visible whether to construct a visible window
+	 * @param construct_context whether to construct window and GL contex at object creation
+	 */
+	Main(const std::string &title, Main::Flags flags = Flags::GM_FRAMEWORK_ALL_DEFAULTS, Main::ErrorFlags error_flags = GM_ERROR_ALL_CHECKS, unsigned int width = 800, unsigned int height = 640, bool fullscreen = false, bool visible = true, bool construct_context = true);
 	virtual ~Main();
 
-	void run();
+	static MainPtr create_with_no_context(const std::string &title, Main::Flags flags = Flags::GM_FRAMEWORK_ALL_DEFAULTS, Main::ErrorFlags error_flags = GM_ERROR_ALL_CHECKS);
+	static MainPtr create_with_gl_version(const std::string &title, unsigned int major, unsigned int minor, bool visible = true, bool construct_context = true, Main::Flags flags = Flags::GM_FRAMEWORK_ALL_DEFAULTS, Main::ErrorFlags error_flags = GM_ERROR_ALL_CHECKS);
+
+	bool is_context_setup() const { return window != nullptr; };
+
+	// These methods are useful if the context has not been created at object creation
+	void construct_window_and_gl();
+	void destruct_window_and_gl();
+
+	void run(bool destruct_window_and_gl_on_exit = false);
 
 	glm::ivec2 get_gl_version() const { return gl_version; }
 	int get_gl_version_major() const { return gl_version.x; }
@@ -68,12 +94,22 @@ public:
 	void set_gl_version(int major, int minor);
 
 	const std::string &get_title() const { return title; }
+	void set_title(const std::string &new_title) { title = new_title; }
+
 	glm::uvec2 get_resolution() const { return resolution; }
+	void set_resolution(const glm::uvec2 &new_resolution) { resolution = new_resolution; }
+	void set_resolution(const unsigned int width, const unsigned int height) { resolution = glm::uvec2(width, height); }
+
 	unsigned int get_width() const { return resolution.get().x; }
 	unsigned int get_height() const { return resolution.get().y; }
-	bool is_fullscreen() const { return fullscreen; }
-	bool is_running() const { return keep_running; }
 
+	bool is_fullscreen() const { return fullscreen; }
+	void set_fullscreen(bool new_fullscreen) { fullscreen = new_fullscreen; }
+
+	bool is_visible() const { return visible; }
+	void set_visible(bool new_visible) { visible = new_visible; }
+
+	bool is_running() const { return keep_running; }
 	void stop_running() { keep_running = false; }
 
 	clan::Signal<void()> &on_initialize() { return initialize_sign; }
@@ -120,8 +156,6 @@ protected:
 	void render();
 	void clean_up();
 
-	void init_window_and_gl();
-
 protected:
 	GLFWwindow *window;
 
@@ -139,6 +173,7 @@ protected:
 	Framework::Property<std::string> title;
 	Framework::Property<glm::uvec2> resolution;
 	Framework::Property<bool> fullscreen;
+	Framework::Property<bool> visible;
 	Framework::Property<bool> keep_running;
 
 	glm::ivec2 gl_version;
@@ -166,6 +201,7 @@ protected:
 	void on_title_changed(const std::string &old_value, const std::string &new_value);
 	void on_resolution_changed(const glm::uvec2 &old_value, const glm::uvec2 &new_value);
 	void on_fullscreen_changed(const bool &old_value, const bool &new_value);
+	void on_visible_changed(const bool &old_value, const bool &new_value);
 };
 
 } // namespace Application

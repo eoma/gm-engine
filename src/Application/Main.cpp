@@ -18,7 +18,7 @@
 namespace GM {
 namespace Application {
 
-	Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_flags, unsigned int width, unsigned int height, bool fullscreen)
+	Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_flags, unsigned int width, unsigned int height, bool fullscreen, bool visible, bool construct_window)
 : Framework::PropertyContainer<>()
 , window(nullptr)
 , error_flags(error_flags)
@@ -34,6 +34,7 @@ namespace Application {
 , title(add<std::string>("title", title))
 , resolution(add<glm::uvec2>("width", glm::uvec2(width, height)))
 , fullscreen(add<bool>("fullscreen", fullscreen))
+, visible(add<bool>("visible", visible))
 , keep_running(add<bool>("keep_running", false))
 
 #ifdef __APPLE__
@@ -54,6 +55,7 @@ namespace Application {
 	slots.connect(this->title.value_changed(), this, &Main::on_title_changed);
 	slots.connect(this->resolution.value_changed(), this, &Main::on_resolution_changed);
 	slots.connect(this->fullscreen.value_changed(), this, &Main::on_fullscreen_changed);
+	slots.connect(this->visible.value_changed(), this, &Main::on_visible_changed);
 
 	if (flags & GM_FRAMEWORK_SCENE_SYSTEM)
 	{
@@ -91,13 +93,38 @@ namespace Application {
 	{
 		vao_manager = std::make_shared<Framework::VaoManager>();
 	}
+
+	if (construct_window)
+	{
+		construct_window_and_gl();
+	}
 }
 
 Main::~Main()
 {
+	destruct_window_and_gl();
 }
 
-void Main::run() {
+MainPtr Main::create_with_no_context(const std::string &title, Main::Flags flags, Main::ErrorFlags error_flags)
+{
+	return std::make_shared<Main>(title, flags, error_flags, 800, 640, false, true, false);
+}
+
+MainPtr Main::create_with_gl_version(const std::string &title, unsigned int major, unsigned int minor, bool visible, bool construct_context, Main::Flags flags, Main::ErrorFlags error_flags)
+{
+	auto app = std::make_shared<Main>(title, flags, error_flags, 800, 640, false, visible, false);
+	app->set_gl_version(major, minor);
+
+	if (construct_context)
+	{
+		app->construct_window_and_gl();
+	}
+
+	return app;
+}
+
+void Main::run(bool destruct_window_and_gl_on_exit)
+{
 
 	//Test if we should check for null systems
 	if (error_flags & GM_ERROR_NULL_SYSTEM)
@@ -131,7 +158,7 @@ void Main::run() {
 		}
 	}
 
-	init_window_and_gl();
+	construct_window_and_gl();
 	
 	keep_running = true;
 
@@ -154,80 +181,111 @@ void Main::run() {
 
 	clean_up();
 
-	glfwDestroyWindow(window);
-	glfwTerminate();
-	// TODO: destroy context, window
+	if (destruct_window_and_gl_on_exit)
+	{
+		destruct_window_and_gl();
+	}
 }
 
-void Main::initialize() {
+void Main::initialize()
+{
 	initialize_sign();
 }
-void Main::update() {
+
+void Main::update()
+{
 
 	game_time.update();
 	auto elapsed_time = game_time.get_time_elapsed();
 
-	if (has_entity_manager()) {
+	if (has_entity_manager())
+	{
 		entity_manager->update(elapsed_time);
 	}
 
 	update_sign(elapsed_time);
 }
-void Main::prepare() {
 
-	if (has_scene_system()) {
+void Main::prepare()
+{
+
+	if (has_scene_system())
+	{
 		scene_system->prepare();
 	}
 
 	prepare_sign();
 }
-void Main::render() {
 
-	if (has_render_system()) {
+void Main::render()
+{
+
+	if (has_render_system())
+	{
 		render_system->render();
 	}
 
 	render_sign();
 }
-void Main::clean_up() {
+
+void Main::clean_up()
+{
 	clean_up_sign();
 }
 
-void Main::on_title_changed(const std::string &/*old_value*/, const std::string &new_value) {
-	if (is_running())
+void Main::on_title_changed(const std::string &/*old_value*/, const std::string &new_value)
+{
+	if (is_context_setup())
 	{
 		glfwSetWindowTitle(window, new_value.c_str());
 	}
 }
 
-void Main::on_resolution_changed(const glm::uvec2 &/*old_value*/, const glm::uvec2 &new_value) {
-	if (is_running())
+void Main::on_resolution_changed(const glm::uvec2 &/*old_value*/, const glm::uvec2 &new_value)
+{
+	if (is_context_setup())
 	{
 		glfwSetWindowSize(window, new_value.x, new_value.y);
 	}
 }
 
-void Main::on_fullscreen_changed(const bool &/*old_value*/, const bool &new_value) {
+void Main::on_fullscreen_changed(const bool &/*old_value*/, const bool &new_value)
+{
 	// TODO: Update fullscreen state for GLFW
-	if (is_running())
+	if (is_context_setup())
 	{
 		
 	}
 }
 
-void Main::init_window_and_gl()
+void Main::on_visible_changed(const bool &/*old*value*/, const bool &visible)
 {
-	glfwSetErrorCallback([](int error_code, const char * error_string){
-		std::cerr << "GLFW received error code " 
-			<< std::hex << std::showbase << error_code
-			<< " and error message: " << error_string << std::endl;
-	});
+	if (is_context_setup())
+	{
+		if (visible)
+		{
+			glfwShowWindow(window);
+		}
+		else
+		{
+			glfwHideWindow(window);
+		}
+	}
+}
+
+void Main::construct_window_and_gl()
+{
+	if (is_running() || is_context_setup())
+	{
+		// Should not be possible to construct multiple windows and contexts in same object
+		return;
+	}
 
 	if (!glfwInit())
 	{
+		// Failed to initialize 
 		glfwTerminate();
-		// FIXME: Should probably just say stop_running() instead?
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("Unable to initialize glfw!");
 	}
 
 	GLFWmonitor *fullscreen_monitor = nullptr;
@@ -240,6 +298,7 @@ void Main::init_window_and_gl()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_version.y);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_VISIBLE, visible);
 
 	window = glfwCreateWindow(
 		resolution.get().x, resolution.get().y,
@@ -250,26 +309,40 @@ void Main::init_window_and_gl()
 	if (!window)
 	{
 		glfwTerminate();
-		// FIXME: Should probably just say stop_running() instead?
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("Unable to create window or OpenGL context!");
 	}
+
+	glfwSetWindowUserPointer(window, this);
 
 	glfwMakeContextCurrent(window);
 
 	gl3wInit();
 
-	std::cerr << "VENDOR: " << glGetString(GL_VENDOR) << std::endl;
-	std::cerr << "VERSION: " << glGetString(GL_VERSION) << std::endl;
-	std::cerr << "RENDERER: " << glGetString(GL_RENDERER) << std::endl;
+	std::clog << "VENDOR: " << glGetString(GL_VENDOR) << std::endl;
+	std::clog << "VERSION: " << glGetString(GL_VERSION) << std::endl;
+	std::clog << "RENDERER: " << glGetString(GL_RENDERER) << std::endl;
 
 	glm::ivec2 context_gl_version;
 	glGetIntegerv(GL_MAJOR_VERSION, &context_gl_version.x);
 	glGetIntegerv(GL_MINOR_VERSION, &context_gl_version.y);
 
 	if (gl_version != context_gl_version) {
-		std::cerr << "Requested GL version: " << glm::to_string(gl_version) << std::endl;
-		std::cerr << "Got GL version: " << glm::to_string(context_gl_version) << std::endl;
+		std::clog << "Requested GL version: " << gl_version.x << "." << gl_version.y << std::endl;
+		std::clog << "Got GL version: " << context_gl_version.x << "." << context_gl_version.y << std::endl;
 	}
+}
+
+void Main::destruct_window_and_gl()
+{
+	if (is_running() || !is_context_setup())
+	{
+		// throw exception?
+		return;
+	}
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+	window = nullptr;
 }
 
 void Main::set_gl_version(int major, int minor)
