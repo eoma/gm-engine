@@ -1,11 +1,8 @@
 #include "GM/Core/Utilities/VaoLayout.h"
 
-#include <algorithm>
+#include <GL/gl3w.h>
 
-// FIXME: Remove when introducing GL
-#ifndef GL_ARRAY_BUFFER
-#	define GL_ARRAY_BUFFER 1
-#endif
+#include <algorithm>
 
 namespace GM {
 namespace Core {
