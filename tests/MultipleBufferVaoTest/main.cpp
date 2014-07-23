@@ -41,7 +41,7 @@ bool mainTest() {
 		glm::vec3 pos;
 	};
 
-	VertexArrayObjectPtr vao1(nullptr), vao2(nullptr);
+	VertexArrayObjectPtr vao1(nullptr), vao2(nullptr), vao3(nullptr);
 
 	// Setup vao1
 	{
@@ -67,6 +67,27 @@ bool mainTest() {
 		;
 
 		vao1 = vao_manager->get_vao_for(layout1);
+	}
+
+	// Setup vao3
+	{
+		std::vector<MyVertex> data(10, {glm::vec3(0.f,0.f,1.f), glm::vec3(1.f,0.f,0.f)});
+		std::vector<unsigned short> indices(3*data.size(), 0);
+
+		auto vertex_buffer = buffer_manager->allocate(data.size()*sizeof(MyVertex));
+		auto index_buffer = buffer_manager->allocate(indices.size()*sizeof(unsigned short));
+
+		VaoLayout layout3; // Almost same as vao1 and vao2, except for no instances 
+		layout3
+			.for_buffer(vertex_buffer.buffer)
+				.use_as(GL_ARRAY_BUFFER)
+					.bind(NORMAL, 3, GL_FLOAT, false, sizeof(MyVertex), offsetof(MyVertex, normal))
+					.bind(POSITION, 3, GL_FLOAT, false, sizeof(MyVertex))
+			.for_buffer(index_buffer.buffer)
+				.use_as(GL_ELEMENT_ARRAY_BUFFER)
+		;
+
+		vao3 = vao_manager->get_vao_for(layout3);
 	}
 
 	// Setup vao2
@@ -99,8 +120,10 @@ bool mainTest() {
 	{
 		throw std::runtime_error("Expected vao1 and vao2 to be equal");
 	}
-
-	// Register vao as material? It 
+	else if (vao3 == nullptr || vao1 == vao3 || vao2 == vao3)
+	{
+		throw std::runtime_error("Expected vao3 to be different from vao1 and vao2");
+	}
 
 	return true;
 }
