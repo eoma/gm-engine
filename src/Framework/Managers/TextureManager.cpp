@@ -134,5 +134,15 @@ Core::TextureFormat *TextureManager::get_or_create_format(const std::string &for
 	return format;
 }
 
+void TextureManager::add_templates(const std::string &template_filename)
+{
+	template_manager->add_templates(template_filename);
+}
+
+void TextureManager::add_format_templates(const std::string &template_filename)
+{
+	format_template_manager->add_templates(template_filename);
+}
+
 } // namespace Framework
 } // namespace GM

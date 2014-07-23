@@ -16,11 +16,11 @@ TextureTemplateParser::TextureTemplateParser()
 {
 }
 
-void TextureTemplateParser::parse_templates(const std::string &data/*, std::function<void(const TemplateManager::Template &)> func*/)
+void TextureTemplateParser::parse_templates(const std::string &data, std::function<void(const TextureTemplateManager::Template &)> func)
 {
-	/*if (func == nullptr)
+	if (func == nullptr)
 		throw Exception("Func callback is required to use TemplateParser's parse_templates!");
-		*/
+		
 	auto json_data = JsonValue::from_json(data);
 
 	if (!json_data.is_array())
@@ -28,7 +28,7 @@ void TextureTemplateParser::parse_templates(const std::string &data/*, std::func
 
 	for (size_t i = 0; i < json_data.get_size(); i++)
 	{
-		//TemplateManager::Template t;
+		TextureTemplateManager::Template t;
 
 		auto json_entry = json_data[i];
 		if (!json_entry.is_object())
@@ -41,7 +41,7 @@ void TextureTemplateParser::parse_templates(const std::string &data/*, std::func
 			throw Exception("texture is required");
 		if (!it->second.is_string())
 			throw Exception("texture must be a string");
-		//t.name = it->second.to_string();
+		t.name = it->second.to_string();
 
 		//		std::cout << t.name << std::endl;
 
@@ -50,15 +50,15 @@ void TextureTemplateParser::parse_templates(const std::string &data/*, std::func
 			throw Exception("image is required");
 		if (!it->second.is_string())
 			throw Exception("image must be a string");
-		//t.image = it->second.to_string();
+		t.image = it->second.to_string();
 
 		it = json_members.find("format");
 		if (it == json_members.end())
 			throw Exception("format is required");
 		if (!it->second.is_string())
 			throw Exception("format must be a string");
-		//t.format = it->second.to_string();
+		t.format = it->second.to_string();
 
-		//func(t);
+		func(t);
 	}
 }

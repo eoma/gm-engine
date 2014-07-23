@@ -50,10 +50,10 @@ void TextureFormatTemplateManager::apply_requirement(const std::string &template
 }
 
 void TextureFormatTemplateManager::add_templates(const std::string &template_filename) {
-	/*TextureFormatTemplateParser::parse_templates(
+	TextureFormatTemplateParser::parse_templates(
 		TextIO::load_contents(template_filename),
 		[this](const TextureFormatTemplateManager::Template &t)
 	{
 		templates.push_back(t);
-	});*/
+	});
 }

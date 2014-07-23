@@ -39,6 +39,9 @@ public:
 		const std::string &wrap_t,
 		// TODO: Add all other parameters TextureFormat can hold.
 		bool generate_mipmap);
+
+	void add_templates(const std::string &template_filename);
+	void add_format_templates(const std::string &template_filename);
 private:
 	ITextureIOPtr texture_io;
 
