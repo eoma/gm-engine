@@ -1,14 +1,18 @@
 #pragma once
 
+#include <memory>
+
 namespace GM {
 namespace Core {
 
+class BufferObject; typedef std::shared_ptr<BufferObject> BufferObjectPtr;
+
 struct BufferUse
 {
-	unsigned int name;
+	BufferObjectPtr buffer;
 	unsigned int type;
 
-	BufferUse() : name(0), type(0) {};
+	BufferUse() : buffer(nullptr), type(0) {};
 
 	static int compare(const BufferUse &current, const BufferUse &other);
 };

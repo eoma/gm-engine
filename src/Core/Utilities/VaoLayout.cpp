@@ -11,7 +11,7 @@ namespace GM {
 namespace Core {
 
 VaoLayout::VaoLayout()
-: active_buffer(0)
+: active_buffer(nullptr)
 , active_type(0)
 , definitions()
 , used_buffers()
@@ -22,21 +22,21 @@ VaoLayout::~VaoLayout()
 {
 }
 
-VaoLayout &VaoLayout::for_buffer(const unsigned int buffer_name)
+VaoLayout &VaoLayout::for_buffer(const BufferObjectPtr &buffer)
 {
-	if (buffer_name == 0)
+	if (buffer == nullptr)
 	{
 		throw std::runtime_error("Can not bind to buffer 0");
 	}
 
-	active_buffer = buffer_name;
+	active_buffer = buffer;
 	active_type = 0;
 
 	return *this;
 }
 
 VaoLayout &VaoLayout::use_as(const unsigned int buffer_type) {
-	if (active_buffer == 0 || buffer_type == 0)
+	if (active_buffer == nullptr || buffer_type == 0)
 	{
 		throw std::runtime_error("Can't use a 0-buffer or a buffer bound as nothing");
 	}
@@ -48,7 +48,7 @@ VaoLayout &VaoLayout::use_as(const unsigned int buffer_type) {
 	if (active_type == GL_ARRAY_BUFFER) // We can use multiple vertex buffers for vertex attributes
 	{
 		BufferUse buffer_use;
-		buffer_use.name = active_buffer;
+		buffer_use.buffer = active_buffer;
 		buffer_use.type = active_type;
 
 		auto iter = std::find(used_buffers.begin(), used_buffers.end(), buffer_use);
@@ -68,7 +68,7 @@ VaoLayout &VaoLayout::use_as(const unsigned int buffer_type) {
 		if (iter == used_buffers.end())
 		{
 			BufferUse buffer_use;
-			buffer_use.name = active_buffer;
+			buffer_use.buffer = active_buffer;
 			buffer_use.type = active_type;
 
 			used_buffers.push_back(buffer_use);
@@ -99,7 +99,7 @@ VaoLayout &VaoLayout::bind(
 
 	BufferVertexAttribDefinition def;
 
-	def.buffer_name = active_buffer;
+	def.buffer = active_buffer;
 	def.index = index;
 	def.size_per_index = size_per_index;
 	def.data_type = data_type;

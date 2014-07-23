@@ -3,17 +3,20 @@
 #include "BufferVertexAttribDefinition.h"
 #include "BufferUse.h"
 
+#include <memory>
 #include <vector>
 
 namespace GM {
 namespace Core {
+
+class BufferObject; typedef std::shared_ptr<BufferObject> BufferObjectPtr;
 
 class VaoLayout {
 public:
 	VaoLayout();
 	~VaoLayout();
 
-	VaoLayout &for_buffer(const unsigned int buffer_name);
+	VaoLayout &for_buffer(const BufferObjectPtr &buffer);
 	VaoLayout &use_as(const unsigned int buffer_type);
 
 	// Specify vertex attributes
@@ -36,7 +39,7 @@ public:
 	bool operator< (const VaoLayout &other) const;
 
 private:
-	unsigned int active_buffer;
+	BufferObjectPtr active_buffer;
 	unsigned int active_type;
 
 	// The definitions are sorted
