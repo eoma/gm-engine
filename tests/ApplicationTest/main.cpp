@@ -9,17 +9,15 @@ using namespace GM;
 using namespace Application;
 
 bool mainTest() {
-	Main app("test");
-
-	app.set_gl_version(3, 3);
+	auto app = Main::create_with_gl_version("test", 3, 3);
 
 	bool update_called = false;
-	auto update_slot = app.on_update().connect([&](float value) mutable {
-		app.stop_running();
+	auto update_slot = app->on_update().connect([&](float /*value*/) mutable {
+		app->stop_running();
 		update_called = true;
 	});
 
-	app.run();
+	app->run();
 
 	if (!update_called)
 	{

@@ -1,31 +1,29 @@
 #include <cstdlib>
+#include <GM/Core/GL/BufferObject.h>
 #include <GM/Core/Utilities/VaoLayout.h>
+
+#include <GM/Application/Main.h>
 
 #include <memory>
 
 using namespace GM;
 using namespace Core;
-
-// FIXME: Remove when GL is introduced
-#ifndef GL_ARRAY_BUFFER
-#	define GL_ARRAY_BUFFER 1
-#endif
-
-#ifndef GL_ELEMENT_ARRAY_BUFFER
-#	define GL_ELEMENT_ARRAY_BUFFER 2
-#endif
+using namespace Application;
 
 #define POSITION 0
 #define NORMAL 1
 #define INDEX 2
 
 bool mainTest() {
+	auto app = Main::create_with_gl_version("VaoLayoutTest", 3, 3);
+
+	auto buffer = std::make_shared<BufferObject>(1000);
 
 	{
 		VaoLayout layout;
 
 		layout
-			.for_buffer(1)
+			.for_buffer(buffer)
 				.use_as(GL_ARRAY_BUFFER)
 					.bind(POSITION, 3, 1, false, 7)
 					.bind(NORMAL, 4, 1, false, 7)
@@ -55,7 +53,7 @@ bool mainTest() {
 		bool exception_thrown = false;
 
 		try {
-			layout.for_buffer(0);
+			layout.for_buffer(nullptr);
 		} catch (std::runtime_error e) {
 			exception_thrown = true;
 		}
@@ -71,7 +69,7 @@ bool mainTest() {
 		bool exception_thrown = false;
 
 		try {
-			layout.for_buffer(1)
+			layout.for_buffer(buffer)
 				.use_as(GL_ELEMENT_ARRAY_BUFFER)
 					.bind(1, 2, 3, false, 0, 0 ,0);
 		} catch (std::runtime_error e) {
