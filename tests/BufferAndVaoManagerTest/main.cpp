@@ -26,9 +26,8 @@ using namespace Application;
 
 bool mainTest() {
 	auto app = Main::create_with_gl_version("BufferAndVaoManagerTest", 3, 3);
-
-	auto buffer_manager = std::make_shared<BufferManager>();
-	auto vao_manager = std::make_shared<VaoManager>();
+	auto buffer_manager = app->get_buffer_manager();
+	auto vao_manager = app->get_vao_manager();
 
 	struct MyInterlacedVertex
 	{
