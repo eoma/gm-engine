@@ -96,7 +96,7 @@ bool mainTest() {
 				//.bind_interlaced(divisor, arg<glm::vec3>(INSTANCE_POSITION), arg<float>(INSTANCE_SCALE))
 	;
 
-	unsigned int vao = vao_manager->get_vao_for(layout);
+	auto vao = vao_manager->get_vao_for(layout);
 
 	// Register vao as material? It 
 
