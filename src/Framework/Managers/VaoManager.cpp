@@ -1,9 +1,8 @@
 #include "GM/Framework/Managers/VaoManager.h"
 
-// FIXME: remove when intriducing gl
-#ifndef GL_ARRAY_BUFFER
-#define GL_ARRAY_BUFFER 1
-#endif
+#include "GM/Core/GL/VertexArrayObject.h"
+
+#include <GL/gl3w.h>
 
 namespace GM {
 namespace Framework {
@@ -17,31 +16,25 @@ VaoManager::VaoManager()
 
 VaoManager::~VaoManager()
 {
-	// clean up
-	for (auto &layout_and_vao : vaos) 
-	{
-		// Release vao stored in layoutAndVao.second
-	}
 }
 
-unsigned int VaoManager::get_vao_for(const VaoLayout &layout)
+Core::VertexArrayObjectPtr VaoManager::get_vao_for(const VaoLayout &layout)
 {
 	auto iter = vaos.find(layout);
 
 	if (iter == vaos.end())
 	{
-		unsigned int vao = build_vao(layout);
+		auto vao = build_vao(layout);
 		iter = vaos.insert(std::make_pair(layout, vao)).first;
 	}
 
 	return iter->second;
 }
 
-unsigned int VaoManager::build_vao(const VaoLayout &layout)
+Core::VertexArrayObjectPtr VaoManager::build_vao(const VaoLayout &layout)
 {
-	unsigned int vao = 0;
-
-	// glGenVertexArrays(&vao, 0); or something similar
+	auto vao = std::make_shared<VertexArrayObject>();
+	vao->bind();
 
 	for (const BufferUse &used_buffer : layout.get_used_buffers())
 	{
@@ -56,6 +49,8 @@ unsigned int VaoManager::build_vao(const VaoLayout &layout)
 		// activate def.buffer_name
 		// bind vertex attrib with all arguments in def
 	}
+
+	vao->unbind();
 
 	return vao;
 }
