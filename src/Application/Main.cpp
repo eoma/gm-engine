@@ -14,6 +14,7 @@
 #include <glm/ext.hpp>
 
 #include <iostream>
+#include <sstream>
 
 namespace GM {
 namespace Application {
@@ -300,6 +301,11 @@ void Main::construct_window_and_gl()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_VISIBLE, visible);
 
+	if (error_flags & ErrorFlags::GM_ERROR_GL_DEBUG_OUTPUT)
+	{
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+	}
+
 	window = glfwCreateWindow(
 		resolution.get().x, resolution.get().y,
 		title.get().c_str(),
@@ -317,6 +323,12 @@ void Main::construct_window_and_gl()
 	glfwMakeContextCurrent(window);
 
 	gl3wInit();
+
+	if (error_flags & ErrorFlags::GM_ERROR_GL_DEBUG_OUTPUT)
+	{
+		glDebugMessageCallback(gl_debug_callback, NULL);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	}
 
 	std::clog << "VENDOR: " << glGetString(GL_VENDOR) << std::endl;
 	std::clog << "VERSION: " << glGetString(GL_VERSION) << std::endl;
@@ -358,6 +370,119 @@ void Main::set_gl_version(int major, int minor)
 	{
 		throw std::runtime_error("You should not set GL version while run() is running");
 	}
+}
+
+
+void Main::gl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam) {
+    std::string error = gl_format_debug_output(source, type, id, severity, message);
+    std::cout << error << std::endl;
+}
+
+std::string Main::gl_format_debug_output(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg) {
+    std::stringstream stringStream;
+    std::string sourceString;
+    std::string typeString;
+    std::string severityString;
+ 
+    // The AMD variant of this extension provides a less detailed classification of the error,
+    // which is why some arguments might be "Unknown".
+    switch (source) {
+        //case GL_DEBUG_CATEGORY_API_ERROR_AMD:
+        case GL_DEBUG_SOURCE_API: {
+            sourceString = "API";
+            break;
+        }
+        //case GL_DEBUG_CATEGORY_APPLICATION_AMD:
+        case GL_DEBUG_SOURCE_APPLICATION: {
+            sourceString = "Application";
+            break;
+        }
+        //case GL_DEBUG_CATEGORY_WINDOW_SYSTEM_AMD:
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM: {
+            sourceString = "Window System";
+            break;
+        }
+        //case GL_DEBUG_CATEGORY_SHADER_COMPILER_AMD:
+        case GL_DEBUG_SOURCE_SHADER_COMPILER: {
+            sourceString = "Shader Compiler";
+            break;
+        }
+        case GL_DEBUG_SOURCE_THIRD_PARTY: {
+            sourceString = "Third Party";
+            break;
+        }
+        //case GL_DEBUG_CATEGORY_OTHER_AMD:
+        case GL_DEBUG_SOURCE_OTHER: {
+            sourceString = "Other";
+            break;
+        }
+        default: {
+            sourceString = "Unknown";
+            break;
+        }
+    }
+ 
+    switch (type) {
+        case GL_DEBUG_TYPE_ERROR: {
+            typeString = "Error";
+            break;
+        }
+        //case GL_DEBUG_CATEGORY_DEPRECATION_AMD:
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: {
+            typeString = "Deprecated Behavior";
+            break;
+        }
+        //case GL_DEBUG_CATEGORY_UNDEFINED_BEHAVIOR_AMD:
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR: {
+            typeString = "Undefined Behavior";
+            break;
+        }
+        case GL_DEBUG_TYPE_PORTABILITY_ARB: {
+            typeString = "Portability";
+            break;
+        }
+        //case GL_DEBUG_CATEGORY_PERFORMANCE_AMD:
+        case GL_DEBUG_TYPE_PERFORMANCE: {
+            typeString = "Performance";
+            break;
+        }
+        //case GL_DEBUG_CATEGORY_OTHER_AMD:
+        case GL_DEBUG_TYPE_OTHER: {
+            typeString = "Other";
+            break;
+        }
+        default: {
+            typeString = "Unknown";
+            break;
+        }
+    }
+ 
+    switch (severity) {
+        case GL_DEBUG_SEVERITY_HIGH: {
+            severityString = "High";
+            break;
+        }
+        case GL_DEBUG_SEVERITY_MEDIUM: {
+            severityString = "Medium";
+            break;
+        }
+        case GL_DEBUG_SEVERITY_LOW: {
+            severityString = "Low";
+            break;
+        }
+        default: {
+            severityString = "Unknown";
+            break;
+        }
+    }
+ 
+    stringStream << "OpenGL Error: " << msg;
+    stringStream << " [Source = " << sourceString;
+    stringStream << ", Type = " << typeString;
+    stringStream << ", Severity = " << severityString;
+    stringStream << ", ID = " << id << "]";
+ 
+    return stringStream.str();
 }
 
 } // namespace Application
