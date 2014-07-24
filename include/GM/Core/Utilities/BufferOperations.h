@@ -1,8 +1,5 @@
 #pragma once
 
-#include "../GL/BufferObject.h"
-#include "BufferAllocation.h"
-
 #include "../../Framework/Utilities/Tools.h"
 
 #include <GL/gl3w.h>
@@ -17,23 +14,20 @@ namespace Core {
 class BufferOperations
 {
 public:
-	static void upload_unsafe(const BufferObjectPtr &buffer,
+	static void upload_unsafe(const GLenum target,
 		std::function<void(void *destination, size_t size)> upload_function,
-		GLintptr offset = 0, GLsizeiptr size = 0);
-
-	static void upload_unsafe(const BufferAllocation &buffer_allocation,
-		std::function<void(void *destination, size_t size)> upload_function);
+		GLsizeiptr length, GLintptr offset = 0);
 
 	template<class... DataStructures>
-	static void upload(const BufferObjectPtr &buffer, GLintptr offset,
-		GLsizeiptr size, const std::vector<DataStructures>&... data_structures)
+	static void upload(const GLenum target,	GLsizeiptr length, GLintptr offset,
+		const std::vector<DataStructures>&... data_structures)
 	{
 		size_t data_size = Framework::total_size(data_structures...);
 
-		if (data_size > size)
+		if (data_size > length)
 		{
 			std::stringstream ss;
-			ss << "Total size of data structures (" << data_size << ") is bigger than requested upload size (" << size << ")";
+			ss << "Total size of data structures (" << data_size << ") is bigger than requested upload size (" << length << ")";
 			throw std::runtime_error(ss.str());
 		}
 
@@ -41,19 +35,7 @@ public:
 			copy_func(destination, data_structures...);
 		};
 
-		upload_unsafe(buffer, upload_function, offset, data_size);
-	}
-	
-	template<class... DataStructures>
-	static void upload(const BufferObjectPtr &buffer, const std::vector<DataStructures>&... data_structures)
-	{
-		upload(buffer, 0, buffer->get_size(), data_structures...);
-	}
-
-	template<class... DataStructures>
-	static void upload(const BufferAllocation &buffer_allocation, const std::vector<DataStructures>&... data_structures)
-	{
-		upload(buffer_allocation.buffer, buffer_allocation.offset, buffer_allocation.allocated_size, data_structures...);
+		upload_unsafe(target, upload_function, data_size, offset);
 	}
 
 private:
@@ -62,11 +44,7 @@ private:
 	static void copy_func(void *destination, const std::vector<Single>& single);
 
 	template <class Head, class... Tail>
-	static void copy_func(void *destination, const std::vector<Head>& head, const std::vector<Tail>&... tail)
-	{
-		copy_func(destination, head);
-		copy_func(destination + Framework::total_size(head), tail...);
-	}
+	static void copy_func(void *destination, const Head& head, const Tail&... tail);
 };
 
 //
@@ -80,6 +58,12 @@ void BufferOperations::copy_func(void *destination, const std::vector<Single>& s
 	std::copy(single.begin(), single.end(), destination_with_type);
 }
 
+template <class Head, class... Tail>
+void BufferOperations::copy_func(void *destination, const Head& head, const Tail&... tail)
+{
+	copy_func(destination, head);
+	copy_func(destination + Framework::total_size(head), tail...);
+}
 
 } // namespace Core
 } // namespace GM
