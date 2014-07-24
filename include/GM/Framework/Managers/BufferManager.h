@@ -2,6 +2,9 @@
 
 #include "../../Core/GL/BufferObject.h"
 #include "../../Core/Utilities/BufferAllocation.h"
+#include "../../Core/Utilities/BufferOperations.h"
+
+#include "../Utilities/Tools.h"
 
 #include <GL/gl3w.h>
 
@@ -23,6 +26,13 @@ public:
 	~BufferManager();
 
 	Core::BufferAllocation allocate(const unsigned int size, const BufferAllocationType type = SHARED_BUFFER);
+
+	// Allocates count*sizeof(DataStructure)
+	template <class DataStructure>
+	Core::BufferAllocation allocate(const unsigned int count, const BufferAllocationType type = SHARED_BUFFER);
+
+	template <class... DataStructures>
+	Core::BufferAllocation allocate_and_upload(const std::vector<DataStructures>&... data_structures);
 
 private:
 	struct PoolData
@@ -60,6 +70,26 @@ private:
 	unsigned int default_pool_size;
 
 	std::vector<PoolData> pools;
+};
+
+//
+// Implementations
+//
+
+template <class DataStructure>
+Core::BufferAllocation BufferManager::allocate(const unsigned int count, const BufferAllocationType type)
+{
+	return allocate(sizeof(DataStructure)*count, type);
+}
+
+template <class... DataStructures>
+Core::BufferAllocation BufferManager::allocate_and_upload(const std::vector<DataStructures>&... data_structures)
+{
+	Core::BufferAllocation allocation = allocate(total_size(data_structures...));
+
+	Core::BufferOperations::upload(allocation, data_structures...);
+
+	return allocation;
 };
 
 } // namespace Framework
