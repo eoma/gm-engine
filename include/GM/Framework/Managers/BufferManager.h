@@ -36,7 +36,7 @@ public:
 	{
 		Core::BufferAllocation allocation = allocate(total_size(data_structures...));
 
-		Core::BufferOperations::upload(allocation, data_structures...);
+		allocation.upload(data_structures...);
 
 		return allocation;
 	}
