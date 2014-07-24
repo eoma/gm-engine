@@ -53,12 +53,12 @@ bool mainTest() {
 
 	// Buffer should be allocated before we start our VAO definition, 
 	auto vertex_buffer = buffer_manager->allocate<MyInterlacedVertex>(data.size());
-	BufferOperations::upload(vertex_buffer, data);
+	vertex_buffer.upload(data);
 	
 	auto index_buffer = buffer_manager->allocate_and_upload(indices);
 
 	auto instance_buffer = buffer_manager->allocate(total_size(instances), BufferManager::UNIQUE_BUFFER);
-	BufferOperations::upload(instance_buffer, instances);
+	instance_buffer.upload(instances);
 	
 
 	//auto all_buffer = buffer_manager->allocate(
