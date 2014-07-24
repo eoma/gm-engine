@@ -1,7 +1,9 @@
 #include <cstdlib>
+#include <GM/Core/Utilities/BufferOperations.h>
 #include <GM/Core/Utilities/VaoLayout.h>
 #include <GM/Framework/Managers/BufferManager.h>
 #include <GM/Framework/Managers/VaoManager.h>
+#include <GM/Framework/Utilities/Tools.h>
 
 #include <GM/Application/Main.h>
 
@@ -50,36 +52,25 @@ bool mainTest() {
 	std::vector<MyInstance> instances(2000, {glm::vec3(0.f, 0.f, 0.f), 1.f});
 
 	// Buffer should be allocated before we start our VAO definition, 
-	auto vertex_buffer = buffer_manager->allocate(data.size()*sizeof(MyInterlacedVertex));
-	// Maybe direct upload?
-	// auto vertex_buffer = buffer_manager->allocate_and_upload(data);
-	// or auto vertex_buffer = buffer_manager->allocate_and_upload(data, indices, instances) (variadic based on std::vector)
-	auto index_buffer = buffer_manager->allocate(indices.size()*sizeof(unsigned short));
-	// Or buffer allocations that are packed or at least in the same buffer. Requires variadic templates and tuples.
-	// BufferAllocation vertex_buffer, index_buffer;
-	// std::tie(vertex_buffer, index_buffer) = buffer_manager->allocate_multiple(data.size()*..., indices.size()*...);
+	auto vertex_buffer = buffer_manager->allocate<MyInterlacedVertex>(data.size());
+	BufferOperations::upload(vertex_buffer, data);
+	
+	auto index_buffer = buffer_manager->allocate_and_upload(indices);
 
-	auto instance_buffer = buffer_manager->allocate(instances.size()*sizeof(MyInstance), BufferManager::UNIQUE_BUFFER);
+	auto instance_buffer = buffer_manager->allocate(total_size(instances), BufferManager::UNIQUE_BUFFER);
+	BufferOperations::upload(instance_buffer, instances);
+	
 
-	// alternatively try to push it all into one buffer, total_size() must be a variadic template on std::vector
 	//auto all_buffer = buffer_manager->allocate(
 	//	total_sizeof(data, indices, instances)
 	//);
 
-	// Do stuff with allocated
-	//vertex_buffer->upload([&](void *destination, size_t size){
- 	//	assert(data.size()*sizeof(MyInterlacedVertex) <= size);
-	//	memcpy(destination, data.ptr(), data.ptr()*sizeof(MyInterlacedVertex));
-	//});
-
-	// or if we make a variadic template based on std::vector
-	//vertex_buffer->upload(data, indices, instances);
-	// uploads first data, then indices, then instances, with correct offsets
+	// Do stuff with all_buffer
+	//Core::BufferOperations::upload(data, indices, instances);
 
 	VaoLayout layout;
 	layout
-		.for_buffer(vertex_buffer.buffer) // VaoLayout should support BufferAllocation?
-		//.for_buffer(vertex_buffer)
+		.for_buffer(vertex_buffer) // VaoLayout supports BufferAllocation
 			.use_as(GL_ARRAY_BUFFER)
 				.bind(POSITION, 3, GL_FLOAT, false, sizeof(MyInterlacedVertex))
 				// offsetof will be unsafe if using dynamic data structures (like a struct with std::vector)
@@ -87,7 +78,7 @@ bool mainTest() {
 				.bind(NORMAL, 3, GL_FLOAT, false, sizeof(MyInterlacedVertex), offsetof(MyInterlacedVertex, normal))
 		.for_buffer(index_buffer.buffer)
 			.use_as(GL_ELEMENT_ARRAY_BUFFER)
-		.for_buffer(instance_buffer.buffer)
+		.for_buffer(instance_buffer)
 			.use_as(GL_ARRAY_BUFFER)
 				.bind(INSTANCE_POSITION, 3, GL_FLOAT, false, sizeof(MyInstance), 0, 1)
 				.bind(INSTANCE_SCALE, 1, GL_FLOAT, false, sizeof(MyInstance), offsetof(MyInstance, scale), 1)
