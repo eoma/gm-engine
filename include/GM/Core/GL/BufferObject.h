@@ -1,8 +1,11 @@
 #pragma once
 
+#include "../Utilities/BufferOperations.h"
+
 #include "GL/gl3w.h"
 
 #include <memory>
+#include <vector>
 
 namespace GM {
 namespace Core {
@@ -27,13 +30,26 @@ public:
 	unsigned int get_primary_type() const { return primary_type; }
 
 	// What is the buffer currently bound as?
-	unsigned int get_current_type() const { return primary_type; }
+	unsigned int get_current_type() const { return current_type; }
 
 	unsigned int get_usage() const { return usage; }
 
 	unsigned int get_handle() const { return handle; }
 
 	unsigned int get_size() const { return size; }
+
+	template<class... DataStructure>
+	void upload(unsigned int length, unsigned int offset, const std::vector<DataStructure>&... data_structure_collections)
+	{
+		if (current_type == 0) bind(); // may be unsafe?
+		BufferOperations::upload(current_type, length, offset, data_structure_collections...);
+	}
+
+	template<class... DataStructure>
+	void upload(const std::vector<DataStructure>&... data_structure_collections)
+	{
+		upload(size, 0, data_structure_collections...);
+	}
 
 private:
 	// Primary type
