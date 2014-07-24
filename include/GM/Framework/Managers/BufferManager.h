@@ -32,7 +32,14 @@ public:
 	Core::BufferAllocation allocate(const unsigned int count, const BufferAllocationType type = SHARED_BUFFER);
 
 	template <class... DataStructures>
-	Core::BufferAllocation allocate_and_upload(const std::vector<DataStructures>&... data_structures);
+	Core::BufferAllocation allocate_and_upload(const std::vector<DataStructures>&... data_structures)
+	{
+		Core::BufferAllocation allocation = allocate(total_size(data_structures...));
+
+		Core::BufferOperations::upload(allocation, data_structures...);
+
+		return allocation;
+	}
 
 private:
 	struct PoolData
@@ -81,16 +88,6 @@ Core::BufferAllocation BufferManager::allocate(const unsigned int count, const B
 {
 	return allocate(sizeof(DataStructure)*count, type);
 }
-
-template <class... DataStructures>
-Core::BufferAllocation BufferManager::allocate_and_upload(const std::vector<DataStructures>&... data_structures)
-{
-	Core::BufferAllocation allocation = allocate(total_size(data_structures...));
-
-	Core::BufferOperations::upload(allocation, data_structures...);
-
-	return allocation;
-};
 
 } // namespace Framework
 } // namespace GM

@@ -26,13 +26,35 @@ public:
 
 	template<class... DataStructures>
 	static void upload(const BufferObjectPtr &buffer, GLintptr offset,
-		GLsizeiptr size, const std::vector<DataStructures>&... data_structures);
+		GLsizeiptr size, const std::vector<DataStructures>&... data_structures)
+	{
+		size_t data_size = Framework::total_size(data_structures...);
+
+		if (data_size > size)
+		{
+			std::stringstream ss;
+			ss << "Total size of data structures (" << data_size << ") is bigger than requested upload size (" << size << ")";
+			throw std::runtime_error(ss.str());
+		}
+
+		auto upload_function = [data_structures...] (void *destination, size_t /*mapped_size*/) {
+			copy_func(destination, data_structures...);
+		};
+
+		upload_unsafe(buffer, upload_function, offset, data_size);
+	}
 	
 	template<class... DataStructures>
-	static void upload(const BufferObjectPtr &buffer, const std::vector<DataStructures>&... data_structures);
+	static void upload(const BufferObjectPtr &buffer, const std::vector<DataStructures>&... data_structures)
+	{
+		upload(buffer, 0, buffer->get_size(), data_structures...);
+	}
 
 	template<class... DataStructures>
-	static void upload(const BufferAllocation &buffer_allocation, const std::vector<DataStructures>&... data_structures);
+	static void upload(const BufferAllocation &buffer_allocation, const std::vector<DataStructures>&... data_structures)
+	{
+		upload(buffer_allocation.buffer, buffer_allocation.offset, buffer_allocation.allocated_size, data_structures...);
+	}
 
 private:
 
@@ -40,43 +62,16 @@ private:
 	static void copy_func(void *destination, const std::vector<Single>& single);
 
 	template <class Head, class... Tail>
-	static void copy_func(void *destination, const std::vector<Head>& head, const std::vector<Tail>&... tail);
-	
+	static void copy_func(void *destination, const std::vector<Head>& head, const std::vector<Tail>&... tail)
+	{
+		copy_func(destination, head);
+		copy_func(destination + Framework::total_size(head), tail...);
+	}
 };
 
 //
 // Implementations
 //
-
-template<class... DataStructures>
-void BufferOperations::upload(const BufferObjectPtr &buffer, GLintptr offset, GLsizeiptr size, const std::vector<DataStructures>&... data_structures)
-{
-	size_t data_size = Framework::total_size(data_structures...);
-
-	if (data_size > size)
-	{
-		std::stringstream ss;
-		ss << "Total size of data structures (" << data_size << ") is bigger than requested upload size (" << size << ")";
-		throw std::runtime_error(ss.str());
-	}
-
-	upload_unsafe(buffer, [&](void *destination, size_t mapped_size) {
-		copy_func(destination, data_structures...);
-	},
-	offset, data_size);
-}
-
-template<class... DataStructures>
-void BufferOperations::upload(const BufferObjectPtr &buffer, const std::vector<DataStructures>&... data_structures)
-{
-	upload(buffer, 0, buffer->get_size(), data_structures...);
-}
-
-template<class... DataStructures>
-void BufferOperations::upload(const BufferAllocation &buffer_allocation, const std::vector<DataStructures>&... data_structures)
-{
-	upload(buffer_allocation.buffer, buffer_allocation.offset, buffer_allocation.allocated_size, data_structures...);
-}
 
 template <class Single>
 void BufferOperations::copy_func(void *destination, const std::vector<Single>& single)
@@ -85,12 +80,6 @@ void BufferOperations::copy_func(void *destination, const std::vector<Single>& s
 	std::copy(single.begin(), single.end(), destination_with_type);
 }
 
-template <class Head, class... Tail>
-void BufferOperations::copy_func(void *destination, const std::vector<Head>& head, const std::vector<Tail>&... tail)
-{
-	copy_func(destination, head);
-	copy_func(destination + Framework::total_size(head), tail...);
-}
 
 } // namespace Core
 } // namespace GM
