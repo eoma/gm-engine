@@ -151,7 +151,7 @@ public:
 
 public:
 	// Debug functions, taken from https://lva.cg.tuwien.ac.at/cgue/wiki/doku.php?id=students:debugcontext
-	static void gl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam);
+	static void APIENTRY gl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam);
 
 	static std::string gl_format_debug_output(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg);
 
