@@ -32,6 +32,10 @@ VaoLayout &VaoLayout::for_buffer(const BufferObjectPtr &buffer)
 	return *this;
 }
 
+VaoLayout &VaoLayout::for_buffer(const BufferAllocation &buffer_allocation)
+{
+	return for_buffer(buffer_allocation.buffer);
+}
 VaoLayout &VaoLayout::use_as(const unsigned int buffer_type) {
 	if (active_buffer == nullptr || buffer_type == 0)
 	{

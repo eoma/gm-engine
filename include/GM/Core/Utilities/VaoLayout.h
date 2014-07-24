@@ -2,6 +2,7 @@
 
 #include "BufferVertexAttribDefinition.h"
 #include "BufferUse.h"
+#include "BufferAllocation.h"
 
 #include <memory>
 #include <vector>
@@ -17,6 +18,7 @@ public:
 	~VaoLayout();
 
 	VaoLayout &for_buffer(const BufferObjectPtr &buffer);
+	VaoLayout &for_buffer(const BufferAllocation &buffer);
 	VaoLayout &use_as(const unsigned int buffer_type);
 
 	// Specify vertex attributes
