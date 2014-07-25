@@ -23,7 +23,7 @@ VaoLayout &VaoLayout::for_buffer(const BufferObjectPtr &buffer)
 {
 	if (buffer == nullptr)
 	{
-		throw std::runtime_error("Can not bind to buffer 0");
+		throw clan::Exception("Can not bind to buffer 0");
 	}
 
 	active_buffer = buffer;
@@ -39,7 +39,7 @@ VaoLayout &VaoLayout::for_buffer(const BufferAllocation &buffer_allocation)
 VaoLayout &VaoLayout::use_as(const unsigned int buffer_type) {
 	if (active_buffer == nullptr || buffer_type == 0)
 	{
-		throw std::runtime_error("Can't use a 0-buffer or a buffer bound as nothing");
+		throw clan::Exception("Can't use a 0-buffer or a buffer bound as nothing");
 	}
 
 	active_type = buffer_type;
@@ -95,7 +95,7 @@ VaoLayout &VaoLayout::bind(
 	if (active_type != GL_ARRAY_BUFFER)
 	{
 		// Silently ignore or throw exception?
-		throw std::runtime_error("Can only bind vertex attributes if buffer is GL_ARRAY_BUFFER!");
+		throw clan::Exception("Can only bind vertex attributes if buffer is GL_ARRAY_BUFFER!");
 	}
 
 	BufferVertexAttribDefinition def;

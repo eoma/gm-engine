@@ -20,7 +20,7 @@ std::string TextIO::load_contents(const std::string &template_filename)
 {
 	if (!clan::FileHelp::file_exists(template_filename))
 	{
-		throw std::runtime_error(string_format("Text file %1 does not exist!", template_filename));
+		throw clan::Exception(string_format("Text file %1 does not exist!", template_filename));
 	}
 
 	return File::read_text(template_filename);

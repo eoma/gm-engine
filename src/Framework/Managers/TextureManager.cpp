@@ -27,14 +27,14 @@ const RawImage &TextureManager::get_or_create_image(const std::string &file_name
 	{
 		// TODO: check if file exists. Catch eventual exceptions. Check if image is empty
 		if (!clan::FileHelp::file_exists(file_name)) {
-			throw std::runtime_error("Texture does not exist!");
+			throw clan::Exception("Texture does not exist!");
 		}
 
 		RawImage image = texture_io->load(file_name);
 
 		if (image.get_data().empty() || image.get_width() < 1 || image.get_height() < 1)
 		{
-			throw std::runtime_error("The texture was not successfully loaded!");
+			throw clan::Exception("The texture was not successfully loaded!");
 		}
 
 		iter = loaded_images.insert(std::make_pair(file_name, image)).first;

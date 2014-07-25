@@ -118,11 +118,11 @@ bool mainTest() {
 
 	if (vao1 == nullptr || vao2 == nullptr || vao1 != vao2)
 	{
-		throw std::runtime_error("Expected vao1 and vao2 to be equal");
+		throw clan::Exception("Expected vao1 and vao2 to be equal");
 	}
 	else if (vao3 == nullptr || vao1 == vao3 || vao2 == vao3)
 	{
-		throw std::runtime_error("Expected vao3 to be different from vao1 and vao2");
+		throw clan::Exception("Expected vao3 to be different from vao1 and vao2");
 	}
 
 	return true;

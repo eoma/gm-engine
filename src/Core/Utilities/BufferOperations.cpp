@@ -12,9 +12,8 @@ void BufferOperations::upload_unsafe(const GLenum target,
 	void *destination = glMapBufferRange(target, offset, length,
 		GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
 
-	if (destination == nullptr)
-	{
-		throw std::runtime_error("Unable to map buffer range!");
+	if (destination == nullptr) {
+		throw clan::Exception("Unable to map buffer range!");
 	}
 
 
