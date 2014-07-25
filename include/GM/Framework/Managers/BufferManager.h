@@ -34,7 +34,7 @@ public:
 	template <class... DataStructures>
 	Core::BufferAllocation allocate_and_upload(const std::vector<DataStructures>&... data_structures)
 	{
-		Core::BufferAllocation allocation = allocate(total_size(data_structures...));
+		Core::BufferAllocation allocation = allocate(Core::total_size(data_structures...));
 
 		allocation.upload(data_structures...);
 
