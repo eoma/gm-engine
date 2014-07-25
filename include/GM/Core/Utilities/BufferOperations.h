@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Framework/Utilities/Tools.h"
+#include "Tools.h"
 
 #include <GL/gl3w.h>
 
@@ -22,7 +22,7 @@ public:
 	static void upload(const GLenum target,	GLsizeiptr length, GLintptr offset,
 		const std::vector<DataStructures>&... data_structures)
 	{
-		size_t data_size = Framework::total_size(data_structures...);
+		size_t data_size = total_size(data_structures...);
 
 		if (data_size > length)
 		{
@@ -62,7 +62,7 @@ template <class Head, class... Tail>
 void BufferOperations::copy_func(void *destination, const Head& head, const Tail&... tail)
 {
 	copy_func(destination, head);
-	copy_func(destination + Framework::total_size(head), tail...);
+	copy_func(destination + total_size(head), tail...);
 }
 
 } // namespace Core
