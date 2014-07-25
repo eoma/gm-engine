@@ -4,6 +4,11 @@
 #include "BufferUse.h"
 #include "BufferAllocation.h"
 
+#include "VertexAttribute.h"
+#include "VaoArg.h"
+
+#include <glm/glm.hpp>
+
 #include <memory>
 #include <vector>
 
@@ -12,7 +17,8 @@ namespace Core {
 
 class BufferObject; typedef std::shared_ptr<BufferObject> BufferObjectPtr;
 
-class VaoLayout {
+class VaoLayout
+{
 public:
 	VaoLayout();
 	~VaoLayout();
@@ -24,15 +30,34 @@ public:
 	// Specify vertex attributes
 	VaoLayout &bind(
 		const unsigned int index,
-		const unsigned int size_per_index,
+		const unsigned int num_of_type,
 		const unsigned int data_type,
 		const bool normalized,
 		const unsigned int stride = 0,
 		const unsigned int offset = 0,
 		const unsigned int divisor = 0);
 
-	// It is possible to make specialized versions of bind
-	// for specific types, for example mat4, vec{2,3,4}.
+	template<class Data>
+	VaoLayout &bind(const unsigned int index, const unsigned int stride = 0, const unsigned int offset = 0, const unsigned int divisor = 0)
+	{
+		VertexAttribute attrib = VaoArg<Data>(index);
+		return bind(attrib.index, attrib.num_of_type, attrib.type, attrib.normalized, stride, offset, divisor);
+	}
+
+
+	template<class... Datas>
+	VaoLayout &bind_interleaved(const VaoArg<Datas>&... interleaved_attribs)
+	{
+		return bind_interleaved(0, 0, {interleaved_attribs...});
+	}
+
+	template<class... Datas>
+	VaoLayout &bind_interleaved(const unsigned int offset, const unsigned int divisor, const VaoArg<Datas>&... interleaved_attribs)
+	{
+		return bind_interleaved(offset, divisor, {interleaved_attribs...});
+	}
+	
+	VaoLayout &bind_interleaved(const unsigned int offset, const unsigned int divisor, const std::vector<VertexAttribute> &interleaved_attribs);
 
 	// Relevant for VaoManager.
 	const std::vector<BufferVertexAttribDefinition> &get_definitions() const;

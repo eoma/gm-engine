@@ -82,7 +82,7 @@ VaoLayout &VaoLayout::use_as(const unsigned int buffer_type) {
 
 VaoLayout &VaoLayout::bind(
 	const unsigned int index,
-	const unsigned int size_per_index,
+	const unsigned int num_of_type,
 	const unsigned int data_type,
 	const bool normalized,
 	const unsigned int stride,
@@ -102,7 +102,7 @@ VaoLayout &VaoLayout::bind(
 
 	def.buffer = active_buffer;
 	def.index = index;
-	def.size_per_index = size_per_index;
+	def.size_per_index = num_of_type;
 	def.data_type = data_type;
 	def.normalized = normalized;
 	def.stride = stride;
@@ -114,6 +114,29 @@ VaoLayout &VaoLayout::bind(
 		// No such definitions exists
 		definitions.push_back(def);
 		std::sort(definitions.begin(), definitions.end());
+	}
+
+	return *this;
+}
+
+VaoLayout &VaoLayout::bind_interleaved(const unsigned int offset, const unsigned int divisor, const std::vector<VertexAttribute> &interleaved_attribs)
+{
+	unsigned int stride = 0;
+
+	for (const auto& vertex : interleaved_attribs)
+	{
+		stride += vertex.repeat * vertex.num_of_type * vertex.type_size;
+	}
+
+	unsigned init_offset = offset;
+
+	for (const auto& vertex : interleaved_attribs)
+	{
+		for (unsigned int i = 0; i < vertex.repeat; ++i)
+		{
+			bind(vertex.index + i, vertex.num_of_type, vertex.type, vertex.normalized, stride, init_offset, divisor);
+			init_offset += vertex.num_of_type * vertex.type_size;
+		}
 	}
 
 	return *this;
