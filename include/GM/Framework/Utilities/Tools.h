@@ -47,29 +47,5 @@ namespace GM {
 			return std::set<T>(result.begin(), result.end());
 		}
 
-		template <class Single>
-		size_t total_sizeof_impl(size_t accumulated, const std::vector<Single> &data);
-
-		template <class First, class... Rest>
-		size_t total_sizeof_impl(size_t accumulated, const std::vector<First> &first, const Rest&... rest);
-
-		template <class... DataStructures>
-		size_t total_size(const DataStructures&... data_structures)
-		{
-			return total_sizeof_impl(0, data_structures...);
-		}
-
-		
-		template <class First, class... Rest>
-		size_t total_sizeof_impl(size_t accumulated, const std::vector<First> &first, const Rest&... rest)
-		{
-			return total_sizeof(accumulated + sizeof(First)*first.size(), rest...);
-		}
-
-		template <class Single>
-		size_t total_sizeof_impl(size_t accumulated, const std::vector<Single> &single)
-		{
-			return accumulated + sizeof(Single)*single.size();
-		}
 	}
 }
