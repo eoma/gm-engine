@@ -104,11 +104,10 @@ bool mainTest() {
 		layout2
 			.for_buffer(instance_buffer.buffer)
 				.use_as(GL_ARRAY_BUFFER)
-					.bind(INSTANCE_POSITION, 3, GL_FLOAT, false, sizeof(MyInstance), 0, 1)
+					.bind<glm::vec3>(INSTANCE_POSITION, sizeof(MyInstance), 0, 1)
 			.for_buffer(vertex_buffer.buffer) // VaoLayout should support BufferAllocation?
 				.use_as(GL_ARRAY_BUFFER)
-					.bind(NORMAL, 3, GL_FLOAT, false, sizeof(MyVertex), offsetof(MyVertex, normal))
-					.bind(POSITION, 3, GL_FLOAT, false, sizeof(MyVertex))
+					.bind_interleaved(VaoArg<glm::vec3>(POSITION), VaoArg<glm::vec3>(NORMAL))
 			.for_buffer(index_buffer.buffer)
 				.use_as(GL_ELEMENT_ARRAY_BUFFER)
 		;
