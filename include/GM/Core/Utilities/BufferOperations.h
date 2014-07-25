@@ -26,7 +26,7 @@ public:
 		size_t data_size = total_size(data_structures...);
 
 		if (data_size > length) {
-			throw clan::Exception(clan::string_format("Total size of data structures (%1) is bigger than requested upload size (%2).", data_size, length));
+			throw clan::Exception(clan::string_format("Total size of data structures (%1) is bigger than requested upload size (%2).", data_size, (long long int)length));
 		}
 
 		auto upload_function = [data_structures...] (void *destination, size_t /*mapped_size*/) {
