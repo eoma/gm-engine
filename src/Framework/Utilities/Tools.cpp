@@ -27,7 +27,7 @@ std::string GM::Framework::find_path_in_hierarchy(const std::string &start_path,
 	}
 
 	if (!found) {
-		throw std::runtime_error("Unable to find path");
+		throw clan::Exception("Unable to find path");
 	}
 	
 	return path;

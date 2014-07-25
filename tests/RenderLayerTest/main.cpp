@@ -47,13 +47,13 @@ bool mainTest() {
 	auto renderable1 = entity1->add_component(std::make_shared<RenderableTest>(entity1, render_system, (1<<0) + (1<<2)));
 
 	if (render_system->get_bucket(0).size() != 1 || render_system->get_bucket(2).size() != 1) {
-		throw std::runtime_error("A renderable registered in layers 0 and 2 is not present in one of these");
+		throw clan::Exception("A renderable registered in layers 0 and 2 is not present in one of these");
 	}
 
 	auto renderable2 = entity2->add_component(std::make_shared<Renderable>(entity2, render_system, 1<<1));
 
 	if (!(render_system->get_bucket(1).size() == 1 && render_system->get_bucket(1)[0] == renderable2.get())) {
-		throw std::runtime_error("A renderable registered in layer 1 (for entity2) is not present");
+		throw clan::Exception("A renderable registered in layer 1 (for entity2) is not present");
 	}
 
 	// Clean up
@@ -66,7 +66,7 @@ bool mainTest() {
 	// Check that the render system is indeed empty
 	for (int i = 0; i < std::numeric_limits<unsigned int>::digits; ++i) {
 		if (render_system->get_bucket(i).size() != 0) {
-			throw std::runtime_error("RenderSystem should not contain any renderables when the only renderable has been removed");
+			throw clan::Exception("RenderSystem should not contain any renderables when the only renderable has been removed");
 		}
 	}
 

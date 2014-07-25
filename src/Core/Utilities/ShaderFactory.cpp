@@ -1,5 +1,7 @@
 #include "GM/Core/Utilities/ShaderFactory.h"
 
+#include <ClanLib/core.h>
+
 #include <GL/gl3w.h>
 
 #include <iostream>
@@ -41,7 +43,7 @@ ShaderPtr ShaderFactory::make_program(const std::vector<ShaderSource> &shader_so
 	}
 
 	if(linked == GL_FALSE)
-		throw std::runtime_error("Failed to compile shader program!");
+		throw clan::Exception("Failed to compile shader program!");
 
 	for (auto component : components)
 	{

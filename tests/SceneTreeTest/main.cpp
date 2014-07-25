@@ -49,7 +49,7 @@ bool mainTest() {
 	scene_system->prepare();
 
 	if (!child1changed || !child2changed) {
-		throw std::runtime_error("Child 1 and child 2 should have been changed when preparing scene graph after parent has changed.");
+		throw clan::Exception("Child 1 and child 2 should have been changed when preparing scene graph after parent has changed.");
 	}
 
 	return true;

@@ -15,19 +15,19 @@ bool mainTest() {
 	auto entity2 = entity_manager->create_entity("two");
 
 	if (entity1->get_id() == entity2->get_id()) {
-		throw std::runtime_error("Entity id's must be different!");
+		throw clan::Exception("Entity id's must be different!");
 	}
 
 	auto removedEntity1 = entity_manager->remove_entity(entity1->get_id(), true);
 
 	if (removedEntity1 == nullptr) {
-		throw std::runtime_error("The attempt at removing an entity should have been successful.");
+		throw clan::Exception("The attempt at removing an entity should have been successful.");
 	}
 
 	removedEntity1 = entity_manager->remove_entity(entity1->get_id(), true);
 
 	if (removedEntity1 != nullptr) {
-		throw std::runtime_error("The attempt at double removing an entity should have been unsuccessful");
+		throw clan::Exception("The attempt at double removing an entity should have been unsuccessful");
 	}
 
 	return true;

@@ -2,11 +2,12 @@
 
 #include "Tools.h"
 
+#include <ClanLib/core.h>
+
 #include <GL/gl3w.h>
 
 #include <functional>
 #include <memory>
-#include <sstream>
 
 namespace GM {
 namespace Core {
@@ -24,11 +25,8 @@ public:
 	{
 		size_t data_size = total_size(data_structures...);
 
-		if (data_size > length)
-		{
-			std::stringstream ss;
-			ss << "Total size of data structures (" << data_size << ") is bigger than requested upload size (" << length << ")";
-			throw std::runtime_error(ss.str());
+		if (data_size > length) {
+			throw clan::Exception(clan::string_format("Total size of data structures (%1) is bigger than requested upload size (%2).", data_size, length));
 		}
 
 		auto upload_function = [data_structures...] (void *destination, size_t /*mapped_size*/) {

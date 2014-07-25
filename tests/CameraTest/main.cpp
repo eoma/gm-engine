@@ -41,7 +41,7 @@ bool mainTest() {
 	transform1->update_world_matrix();
 
 	if (!changed) {
-		throw std::runtime_error("View matrix should have been automatically updated when world matrix got updated.");
+		throw clan::Exception("View matrix should have been automatically updated when world matrix got updated.");
 	}
 
 	auto transform2 = entity2->create_component<Transform>(scene_system);
@@ -50,7 +50,7 @@ bool mainTest() {
 	// THis tests the sorting of camera depth
 	auto &cameras = render_system->get_cameras(0);
 	if (cameras[0] != camera2.get() || cameras[1] != camera1.get()) {
-		throw std::runtime_error("Cameras are not in expected order in render layer!");
+		throw clan::Exception("Cameras are not in expected order in render layer!");
 	}
 
 	return true;

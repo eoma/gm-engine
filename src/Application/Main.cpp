@@ -131,31 +131,31 @@ void Main::run(bool destruct_window_and_gl_on_exit)
 	if (error_flags & GM_ERROR_NULL_SYSTEM)
 	{
 		if (!has_scene_system()) {
-			throw std::runtime_error("Must have scene system in order to run!");
+			throw clan::Exception("Must have scene system in order to run!");
 		}
 
 		if (!has_render_system()) {
-			throw std::runtime_error("Must have render system in order to run!");
+			throw clan::Exception("Must have render system in order to run!");
 		}
 
 		if (!has_entity_manager()) {
-			throw std::runtime_error("Must have entity manager in order to run!");
+			throw clan::Exception("Must have entity manager in order to run!");
 		}
 
 		if (!has_buffer_manager()) {
-			throw std::runtime_error("Must have buffer manager in order to run!");
+			throw clan::Exception("Must have buffer manager in order to run!");
 		}
 
 		if (!has_shader_manager()) {
-			throw std::runtime_error("Must have shader manager in order to run!");
+			throw clan::Exception("Must have shader manager in order to run!");
 		}
 
 		if (!has_texture_manager()) {
-			throw std::runtime_error("Must have texture manager in order to run!");
+			throw clan::Exception("Must have texture manager in order to run!");
 		}
 
 		if (!has_vao_manager()) {
-			throw std::runtime_error("Must have vao manager in order to run!");
+			throw clan::Exception("Must have vao manager in order to run!");
 		}
 	}
 
@@ -286,7 +286,7 @@ void Main::construct_window_and_gl()
 	{
 		// Failed to initialize 
 		glfwTerminate();
-		throw std::runtime_error("Unable to initialize glfw!");
+		throw clan::Exception("Unable to initialize glfw!");
 	}
 
 	GLFWmonitor *fullscreen_monitor = nullptr;
@@ -315,7 +315,7 @@ void Main::construct_window_and_gl()
 	if (!window)
 	{
 		glfwTerminate();
-		throw std::runtime_error("Unable to create window or OpenGL context!");
+		throw clan::Exception("Unable to create window or OpenGL context!");
 	}
 
 	glfwSetWindowUserPointer(window, this);
@@ -368,7 +368,7 @@ void Main::set_gl_version(int major, int minor)
 	}
 	else
 	{
-		throw std::runtime_error("You should not set GL version while run() is running");
+		throw clan::Exception("You should not set GL version while run() is running");
 	}
 }
 

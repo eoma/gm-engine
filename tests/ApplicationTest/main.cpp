@@ -21,7 +21,7 @@ bool mainTest() {
 
 	if (!update_called)
 	{
-		throw std::runtime_error("Applications' update signal were not invoked");
+		throw clan::Exception("Applications' update signal were not invoked");
 	}
 
 	return true;

@@ -36,7 +36,7 @@ RawImage SoilTextureIO::load(const unsigned char * const undecoded_image, const 
 
 	if (decoded_data == nullptr)
 	{
-		throw std::runtime_error("Unable to decode image!");
+		throw clan::Exception("Unable to decode image!");
 	}
 
 	RawImage image(decoded_data, width, height, num_channels);

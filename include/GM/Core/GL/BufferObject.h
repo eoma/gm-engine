@@ -55,7 +55,7 @@ private:
 	// Primary type
 	unsigned int primary_type;
 
-	// Wht the buffer is currently bound as
+	// What the buffer is currently bound as
 	unsigned int current_type;
 
 	unsigned int usage;

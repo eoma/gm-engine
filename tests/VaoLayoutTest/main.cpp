@@ -38,12 +38,13 @@ bool mainTest() {
 
 		try {
 			layout.use_as(GL_ARRAY_BUFFER);
-		} catch (std::runtime_error e) {
+		}
+		catch (clan::Exception &e) {
 			exception_thrown = true;
 		}
 
 		if (!exception_thrown) {
-			throw std::runtime_error("Expected exception to be thrown");
+			throw clan::Exception("Expected exception to be thrown");
 		}
 	}
 
@@ -54,12 +55,13 @@ bool mainTest() {
 
 		try {
 			layout.for_buffer(nullptr);
-		} catch (std::runtime_error e) {
+		}
+		catch (clan::Exception &e) {
 			exception_thrown = true;
 		}
 
 		if (!exception_thrown) {
-			throw std::runtime_error("Expected exception to be thrown");
+			throw clan::Exception("Expected exception to be thrown");
 		}
 	}
 
@@ -72,12 +74,13 @@ bool mainTest() {
 			layout.for_buffer(buffer)
 				.use_as(GL_ELEMENT_ARRAY_BUFFER)
 					.bind(1, 2, 3, false, 0, 0 ,0);
-		} catch (std::runtime_error e) {
+		}
+		catch (clan::Exception &e) {
 			exception_thrown = true;
 		}
 
 		if (!exception_thrown) {
-			throw std::runtime_error("Expected exception to be thrown");
+			throw clan::Exception("Expected exception to be thrown");
 		}
 	}
 
