@@ -1,6 +1,6 @@
 #include "GM/Framework/Managers/VaoManager.h"
 
-#include "GM/Core/GL/VertexArrayObject.h"
+#include "GM/Core/Utilities/VaoFactory.h"
 
 #include <GL/gl3w.h>
 
@@ -33,26 +33,7 @@ Core::VertexArrayObjectPtr VaoManager::get_vao_for(const VaoLayout &layout)
 
 Core::VertexArrayObjectPtr VaoManager::build_vao(const VaoLayout &layout)
 {
-	auto vao = std::make_shared<VertexArrayObject>();
-	vao->bind();
-
-	for (const BufferUse &used_buffer : layout.get_used_buffers())
-	{
-		if (used_buffer.type != GL_ARRAY_BUFFER)
-		{
-			// activate used_buffer.name with type used_buffer.type
-		}
-	}
-
-	for (const BufferVertexAttribDefinition &def : layout.get_definitions())
-	{
-		// activate def.buffer_name
-		// bind vertex attrib with all arguments in def
-	}
-
-	vao->unbind();
-
-	return vao;
+	return Core::VaoFactory::create(layout);
 }
 
 } // namespace Framework
