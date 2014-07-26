@@ -17,14 +17,6 @@ if ( Headers OR Sources )
 		glfw
 		${GLFW_LIBRARIES}
 		${CMAKE_DL_LIBS}) # or something else
-	
-	include_directories(
-	  ${CMAKE_SOURCE_DIR}/include/
-	  ${CMAKE_SOURCE_DIR}/depends/ClanLib/Include/
-	  ${CMAKE_SOURCE_DIR}/depends/glm/include/
-	  ${CMAKE_SOURCE_DIR}/depends/gl3w/include/
-	  ${CMAKE_SOURCE_DIR}/depends/glfw/include/
-	)
 
 	set_target_properties(${NAME} PROPERTIES
 		FOLDER "Tests"
