@@ -1,7 +1,6 @@
-
+#include "GM/Framework/Systems/RenderSystem.h"
 #include "GM/Framework/Components/Camera.h"
 #include "GM/Framework/Components/IRenderable.h"
-#include "GM/Framework/Systems/RenderSystem.h"
 
 #include <algorithm>
 
