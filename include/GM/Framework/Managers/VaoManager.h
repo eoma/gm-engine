@@ -29,5 +29,7 @@ private:
 
 };
 
+typedef std::shared_ptr<VaoManager> VaoManagerPtr;
+
 } // namespace Framework
 } // namespace GM

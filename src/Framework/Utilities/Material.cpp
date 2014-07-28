@@ -1,10 +1,10 @@
-#include "GM/Framework/Components/Material.h"
+#include "GM/Framework/Utilities/Material.h"
 
 namespace GM {
 namespace Framework {
 
-Material::Material(const EntityPtr &owner, const Core::ShaderPtr &shader, const std::string &name)
-: Component<Material>(owner, name)
+Material::Material(const Core::ShaderPtr &shader, const std::string &name)
+: name(name)
 , shader(shader)
 , property_uniform_pairs()
 {

@@ -2,7 +2,7 @@
 #include <GM/Framework/Templates/MaterialTemplateParser.h>
 #include <GM/Framework/IO/TextIO.h>
 
-#include <GM/Framework/Components/Material.h>
+#include <GM/Framework/Utilities/Material.h>
 
 #include <ClanLib/core.h>
 

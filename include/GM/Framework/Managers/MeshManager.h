@@ -7,17 +7,17 @@ namespace GM {
 
 		class Mesh; typedef std::shared_ptr<Mesh> MeshPtr;
 
-		class MeshSystem {
+		class MeshManager {
 		public:
-			MeshSystem();
-			~MeshSystem();
+			MeshManager();
+			~MeshManager();
 
 		public:
 
 		private:
 		};
 
-		typedef std::shared_ptr<MeshSystem> MeshSystemPtr;
+		typedef std::shared_ptr<MeshManager> MeshManagerPtr;
 
 	} // namespace Framework
 } // namespace GM

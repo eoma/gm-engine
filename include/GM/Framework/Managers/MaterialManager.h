@@ -7,17 +7,17 @@ namespace Framework {
 
 	class Material; typedef std::shared_ptr<Material> MaterialPtr;
 
-class MaterialSystem {
+class MaterialManager {
 public:
-	MaterialSystem();
-	~MaterialSystem();
+	MaterialManager();
+	~MaterialManager();
 
 public:
 
 private:
 };
 
-typedef std::shared_ptr<MaterialSystem> MaterialSystemPtr;
+typedef std::shared_ptr<MaterialManager> MaterialManagerPtr;
 
 } // namespace Framework
 } // namespace GM

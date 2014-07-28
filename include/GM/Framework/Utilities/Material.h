@@ -1,8 +1,6 @@
 #pragma once
 
-#include "../DefinitionsComponentNames.h"
-#include "../Entity.h"
-#include "../Totem/Component.h"
+#include "../Totem/PropertyContainer.h"
 
 #include <memory>
 
@@ -18,14 +16,13 @@ namespace Framework {
 class IProperty; typedef std::shared_ptr<IProperty> IPropertyPtr;
 
 
-class Material : public Component<Material>
+class Material : public PropertyContainer<>
 {
 public:
-	Material(const EntityPtr &owner, const Core::ShaderPtr &shader, const std::string &name = std::string());
+	Material(const Core::ShaderPtr &shader, const std::string &name = std::string());
 	virtual ~Material() {};
 
-	std::string get_type() const override { return get_static_type(); };
-
+	const std::string &get_name() const { return name; }
 	Core::ShaderPtr &get_shader() { return shader; }
 
 	// Care must be used when updating textures
@@ -37,24 +34,22 @@ public:
 	// Convenience
 	void add_texture(const std::string &name, const Core::TexturePtr &value);
 
-protected:
+private:
+	std::string name;
 	Core::ShaderPtr shader;
 
 	// Stores pairs of properties and the corresponding uniform location
 	std::vector<std::pair<IPropertyPtr, unsigned int>> property_uniform_pairs;
-
-private:
-	static std::string get_static_type() { return COMPONENT_MATERIAL; };
 };
 
 template <class T>
 void Material::add_uniform(const std::string &name, const T &default_value)
 {
-	// query shader for name, type, fetch uniform location
+	// FIXME: query shader for name, type, fetch uniform location
 	//
 	unsigned int uniform_location = 0;
 
-	auto prop = std::make_shared<Property<T>>(owner->add<T>(name, default_value));
+	auto prop = std::make_shared<Property<T>>(add<T>(name, default_value));
 
 	property_uniform_pairs.push_back(std::make_pair(prop, uniform_location));
 }
