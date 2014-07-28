@@ -25,20 +25,33 @@ public:
 	BufferManager(unsigned int default_pool_size = 32 * (1<<20));
 	~BufferManager();
 
+	// Just allocates size in a buffer
 	Core::BufferAllocation allocate(const unsigned int size, const BufferAllocationType type = SHARED_BUFFER);
 
-	// Allocates count*sizeof(DataStructure)
+	// Allocates at least count*sizeof(DataStructure) and aligns the buffer offset
+	// to size of the DataStructure
 	template <class DataStructure>
 	Core::BufferAllocation allocate(const unsigned int count, const BufferAllocationType type = SHARED_BUFFER);
 
-	template <class... DataStructures>
-	Core::BufferAllocation allocate_and_upload(const std::vector<DataStructures>&... data_structures)
+	// Will align.
+	template <class DataStructure>
+	Core::BufferAllocation allocate_and_upload(const std::vector<DataStructure> data_structure)
 	{
-		Core::BufferAllocation allocation = allocate(Core::total_size(data_structures...));
+		return allocate_and_upload_multiple(data_structure)[0];
+	}
 
-		allocation.upload(data_structures...);
+	template <class... DataStructures>
+	std::vector<Core::BufferAllocation> allocate_and_upload_multiple(const std::vector<DataStructures>&... data_structures)
+	{
+		Core::BufferAllocation allocation = allocate(Core::total_size_plus_one(data_structures...));
 
-		return allocation;
+		std::vector<Core::BufferAllocation> buffer_allocations;
+		buffer_allocations.reserve(sizeof...(data_structures));
+
+		align_and_upload(buffer_allocations, allocation.offset, allocation.buffer,
+			data_structures...);
+
+		return buffer_allocations;
 	}
 
 private:
@@ -70,6 +83,35 @@ private:
 	};
 
 private:
+	template<class DataStructure>
+	void align_and_upload(std::vector<Core::BufferAllocation> &allocations, 
+		const unsigned int usable_offset, const Core::BufferObjectPtr &buffer,
+		const std::vector<DataStructure>& data_structure)
+	{
+		Core::BufferAllocation allocation;
+		allocation.buffer = buffer;
+		allocation.allocated_size = Core::total_size(data_structure);
+		allocation.offset = usable_offset;
+
+		if (allocation.offset % sizeof(DataStructure) != 0) // pad the offset
+		{
+			allocation.offset += sizeof(DataStructure) - (allocation.offset % sizeof(DataStructure));
+		}
+
+		allocation.upload(data_structure);
+		allocations.push_back(allocation);
+	}
+
+	template<class FirstDataStructure, class... RestDataStructures>
+	void align_and_upload(std::vector<Core::BufferAllocation> &allocations,
+		const unsigned int usable_offset, const Core::BufferObjectPtr &buffer,
+		const std::vector<FirstDataStructure> first_data_structure,
+		const std::vector<RestDataStructures>&... rest_data_structures)
+	{
+		align_and_upload(allocations, usable_offset, buffer, first_data_structure);
+		const auto &last = allocations.back();
+		align_and_upload(allocations, last.offset + last.allocated_size, buffer, rest_data_structures...);
+	}
 
 	PoolData create_pool(unsigned int size, unsigned int content_type = GL_ARRAY_BUFFER, unsigned int use_type = GL_STATIC_DRAW);
 
@@ -86,7 +128,16 @@ private:
 template <class DataStructure>
 Core::BufferAllocation BufferManager::allocate(const unsigned int count, const BufferAllocationType type)
 {
-	return allocate(sizeof(DataStructure)*count, type);
+	Core::BufferAllocation allocation = allocate(sizeof(DataStructure)*(count+1), type);
+
+	if (allocation.offset % sizeof(DataStructure) != 0)
+	{
+		unsigned int padding = sizeof(DataStructure) - (allocation.offset % sizeof(DataStructure));
+		allocation.offset += padding;
+		allocation.allocated_size -= padding;
+	}
+
+	return allocation;
 }
 
 } // namespace Framework
