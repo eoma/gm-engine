@@ -1,0 +1,61 @@
+#include "GM/Core/GL/Draw.h"
+
+namespace GM {
+namespace Core {
+
+void Draw::draw(const DrawCommand &command)
+{
+	if (command.is_indexed)
+	{
+		unsigned int index_type_size = 0;
+		if (command.index_type == GL_UNSIGNED_BYTE)
+		{
+			index_type_size = 1;
+		}
+		else if (command.index_type == GL_UNSIGNED_SHORT)
+		{
+			index_type_size = 2;
+		}
+		else if (command.index_type == GL_UNSIGNED_INT)
+		{
+			index_type_size = 4;
+		}
+
+		if (command.base_vertex == 0 && command.base_instance == 0 && command.instance_count == 0)
+		{
+			glDrawElements(command.mode,
+				command.count,
+				command.index_type,
+				reinterpret_cast<void*>(command.first * index_type_size));
+		}
+		else
+		{
+			glDrawElementsInstancedBaseVertexBaseInstance(command.mode,
+				command.count,
+				command.index_type,
+				reinterpret_cast<void*>(command.first * index_type_size),
+				command.instance_count,
+				command.base_vertex,
+				command.base_instance);
+		}
+	}
+	else
+	{
+		if (command.base_vertex == 0 && command.base_instance == 0 && command.instance_count == 0)
+		{
+			glDrawArrays(command.mode, command.first, command.count);
+		}
+		else
+		{
+			// Draw using DrawArrays*
+			glDrawArraysInstancedBaseInstance(command.mode,
+				command.first,
+				command.count,
+				command.instance_count,
+				command.base_instance);
+		}
+	}
+}
+
+} // namespace Core
+} // namespace GM
