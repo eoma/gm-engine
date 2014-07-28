@@ -1,9 +1,9 @@
-#include "GM/Core/GL/Draw.h"
+#include "GM/Core/GL/Render.h"
 
 namespace GM {
 namespace Core {
 
-void Draw::draw(const DrawCommand &command)
+void Render::render(const RenderCommand &command)
 {
 	if (command.is_indexed)
 	{
@@ -47,7 +47,7 @@ void Draw::draw(const DrawCommand &command)
 		}
 		else
 		{
-			// Draw using DrawArrays*
+			// Render using RenderArrays*
 			glDrawArraysInstancedBaseInstance(command.mode,
 				command.first,
 				command.count,
