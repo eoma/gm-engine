@@ -5,7 +5,7 @@
 namespace GM {
 namespace Core {
 
-struct DrawElementsIndirectCommand
+struct RenderElementsIndirectCommand
 {
 	unsigned int count; // How many elements should rendered, or how many indices should we read
 	unsigned int instance_count; // how many instances of the should be drawn?
@@ -16,7 +16,7 @@ struct DrawElementsIndirectCommand
 	unsigned int base_instance; // same functionality as base vertex. Set to 0 (zero) if gl version < 4.2.
 };
 
-struct DrawArraysIndirectCommand
+struct RenderArraysIndirectCommand
 {
 	unsigned int count; // How many elements should rendered, or how many indices should we read
 	unsigned int instance_count; // how many instances of should be drawn?
@@ -24,15 +24,15 @@ struct DrawArraysIndirectCommand
 	unsigned int base_instance; // Set to 0 if gl version < 4.2
 };
 
-class DrawCommand
+class RenderCommand
 {
 public:
-	DrawCommand(bool is_indexed, unsigned int count, unsigned int instance_count, unsigned int first, unsigned int base_vertex = 0, unsigned int base_instance = 0);
+	RenderCommand(bool is_indexed, unsigned int count, unsigned int instance_count, unsigned int first, unsigned int base_vertex = 0, unsigned int base_instance = 0);
 
-	operator DrawElementsIndirectCommand() const;
-	operator DrawArraysIndirectCommand() const;
+	operator RenderElementsIndirectCommand() const;
+	operator RenderArraysIndirectCommand() const;
 
-	// whether or not this is a DrawArrays or DrawElements command
+	// whether or not this is a RenderArrays or RenderElements command
 	bool is_indexed; 
 
 	// The draw mode, eg GL_POINTS, GL_LINE_STRIP, etc.

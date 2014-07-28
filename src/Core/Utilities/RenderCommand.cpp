@@ -1,9 +1,9 @@
-#include "GM/Core/Utilities/DrawCommand.h"
+#include "GM/Core/Utilities/RenderCommand.h"
 
 namespace GM {
 namespace Core {
 
-DrawCommand::DrawCommand(bool is_indexed, unsigned int count, unsigned int instance_count, unsigned int first, unsigned int base_vertex, unsigned int base_instance)
+RenderCommand::RenderCommand(bool is_indexed, unsigned int count, unsigned int instance_count, unsigned int first, unsigned int base_vertex, unsigned int base_instance)
 : is_indexed(is_indexed)
 , mode(GL_TRIANGLE_STRIP)
 , index_type(GL_UNSIGNED_INT)
@@ -16,11 +16,11 @@ DrawCommand::DrawCommand(bool is_indexed, unsigned int count, unsigned int insta
 
 }
 
-DrawCommand::operator DrawElementsIndirectCommand() const
+RenderCommand::operator RenderElementsIndirectCommand() const
 {
-	// maybe perform a check that the command is indeed a DrawElements command?
+	// maybe perform a check that the command is indeed a RenderElements command?
 
-	DrawElementsIndirectCommand command;
+	RenderElementsIndirectCommand command;
 	command.count = count;
 	command.instance_count = instance_count;
 	command.first_index = first;
@@ -30,11 +30,11 @@ DrawCommand::operator DrawElementsIndirectCommand() const
 	return command;
 }
 
-DrawCommand::operator DrawArraysIndirectCommand() const
+RenderCommand::operator RenderArraysIndirectCommand() const
 {
-	// maybe perform a check that the command is indeed a DrawArrays command?
+	// maybe perform a check that the command is indeed a RenderArrays command?
 
-	DrawArraysIndirectCommand command;
+	RenderArraysIndirectCommand command;
 	command.count = count;
 	command.instance_count = instance_count;
 	command.first = first;
