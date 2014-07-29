@@ -1,6 +1,13 @@
 #include "GM/Framework/Systems/RenderSystem.h"
 #include "GM/Framework/Components/Camera.h"
 #include "GM/Framework/Components/IRenderable.h"
+#include "GM/Framework/Utilities/Material.h"
+#include "GM/Framework/Utilities/Mesh.h"
+
+#include "GM/Core/GL/Render.h"
+#include "GM/Core/GL/Shader.h"
+#include "GM/Core/GL/VertexArrayObject.h"
+#include "GM/Core/Utilities/RenderCommand.h"
 
 #include <algorithm>
 
@@ -98,15 +105,77 @@ const std::vector<Camera*> &RenderSystem::get_cameras(const unsigned int layer_i
 }
 
 void RenderSystem::render() {
+
+	MaterialPtr active_material = nullptr;
+	MeshPtr active_mesh = nullptr;
+
+	Core::VertexArrayObjectPtr active_vao = nullptr;
+	Core::ShaderPtr active_shader = nullptr;
+	
+
 	for (unsigned int layer = 0; layer < buckets.size(); ++layer) {
 		const auto &bucket = buckets[layer];
 		const auto &cameras = cameras_in_layers[layer];
 
+		Core::RenderCommand command;
+
 		// Draw from depth zero and up
 		for (Camera *camera : cameras)	{
 			for (IRenderable *renderable : bucket) {
-				renderable->render(camera);
+				if (active_mesh != renderable->get_mesh())
+				{
+					active_mesh = renderable->get_mesh();
+
+					if (active_mesh == nullptr)
+					{
+						continue; // Jump to next renderable
+					}
+
+					if (active_vao != active_mesh->get_vao())
+					{
+						active_vao = active_mesh->get_vao();
+						active_vao->bind();
+					}
+
+					command = active_mesh->get_render_command();
+				}
+
+				if (active_material != renderable->get_material())
+				{
+					// unbind previous?
+					active_material = renderable->get_material();
+
+					if (active_material == nullptr)
+					{
+						continue; // Jump to next renderable
+					}
+
+					if (active_shader != active_material->get_shader())
+					{
+						active_shader = active_material->get_shader();
+					}
+
+					// update uniforms
+				}
+
+				if (renderable->has_custom_render()) {
+					renderable->custom_render(camera);
+				}
+				else
+				{
+					Core::Render::render(command);
+				}
 			}
 		}
+	}
+
+	if (active_shader != nullptr)
+	{
+		active_shader->unbind();
+	}
+
+	if (active_vao != nullptr)
+	{
+		active_vao->unbind();
 	}
 }
