@@ -27,6 +27,7 @@ struct RenderArraysIndirectCommand
 class RenderCommand
 {
 public:
+	RenderCommand();
 	RenderCommand(bool is_indexed, unsigned int count, unsigned int instance_count, unsigned int first, unsigned int base_vertex = 0, unsigned int base_instance = 0);
 
 	operator RenderElementsIndirectCommand() const;

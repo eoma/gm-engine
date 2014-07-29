@@ -3,6 +3,19 @@
 namespace GM {
 namespace Core {
 
+RenderCommand::RenderCommand()
+: is_indexed(false)
+, mode(GL_TRIANGLE_STRIP)
+, index_type(GL_UNSIGNED_INT)
+, count(0)
+, instance_count(0)
+, first(0)
+, base_vertex(0)
+, base_instance(0)
+{
+
+}
+
 RenderCommand::RenderCommand(bool is_indexed, unsigned int count, unsigned int instance_count, unsigned int first, unsigned int base_vertex, unsigned int base_instance)
 : is_indexed(is_indexed)
 , mode(GL_TRIANGLE_STRIP)
