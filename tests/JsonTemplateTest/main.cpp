@@ -8,6 +8,8 @@
 #include <GM/Framework/Systems/SceneSystem.h>
 #include <GM/Framework/Components/Transform.h>
 #include <GM/Framework/Components/Renderable.h>
+#include <GM/Framework/Managers/MaterialManager.h>
+#include <GM/Framework/Managers/MeshManager.h>
 #include <GM/Framework/Utilities/ComponentSerializer.h>
 #include <GM/Framework/Utilities/Tools.h>
 
@@ -19,8 +21,9 @@ using namespace Framework;
 class MyComponentSerializer {
 public:
 
-	MyComponentSerializer(const EntityManagerPtr &entity_manager, const SceneSystemPtr &scene_system, const RenderSystemPtr &render_system)
+	MyComponentSerializer(const EntityManagerPtr &entity_manager, const SceneSystemPtr &scene_system, const RenderSystemPtr &render_system, const MaterialManagerPtr& material_manager, const MeshManagerPtr mesh_manager)
 		: scene_system(scene_system), render_system(render_system)
+		, material_manager(material_manager), mesh_manager(mesh_manager)
 	{
 		slots.connect(
 			entity_manager->register_component_serializer_signal(),
@@ -32,7 +35,7 @@ public:
 			owner->create_component<Transform>(scene_system);
 		}
 		else if (type == Renderable::get_static_type()) {
-			owner->create_component<Renderable>(render_system);
+			owner->create_component<Renderable>(render_system, material_manager, mesh_manager);
 		}
 		//etc
 	}
@@ -40,6 +43,9 @@ public:
 private:
 	SceneSystemPtr scene_system;
 	RenderSystemPtr render_system;
+
+	MaterialManagerPtr material_manager;
+	MeshManagerPtr mesh_manager;
 
 	clan::SlotContainer slots;
 };
@@ -70,8 +76,10 @@ bool mainTest() {
 	auto render_system = std::make_shared<RenderSystem>();
 	auto scene_system = std::make_shared<SceneSystem>();
 	auto entity_manager = std::make_shared<EntityManager>();
+	auto material_manager = std::make_shared<MaterialManager>();
+	auto mesh_manager = std::make_shared<MeshManager>();
 
-	auto my_component_serializer = std::make_shared<MyComponentSerializer>(entity_manager, scene_system, render_system);
+	auto my_component_serializer = std::make_shared<MyComponentSerializer>(entity_manager, scene_system, render_system, material_manager, mesh_manager);
 
 	auto path = clan::System::get_exe_path();
 	std::cout << "Base path: " << path << std::endl;

@@ -9,7 +9,14 @@ file(GLOB_RECURSE Sources ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
 if ( Headers OR Sources )
 	#add_excutable(${NAME} main.cpp)
 	add_executable(${NAME} ${Headers} ${Sources})
-	target_link_libraries(${NAME} Framework) # or something else
+	target_link_libraries(${NAME}
+		Framework
+		Core
+		glfw
+		gl3w
+		SOIL2
+		${GLFW_LIBRARIES}
+		${CMAKE_DL_LIBS}) # or something else
 
 	set_target_properties(${NAME} PROPERTIES
 		FOLDER "Tests"

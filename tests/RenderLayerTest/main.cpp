@@ -16,24 +16,33 @@ public:
 };
 	virtual ~RenderableTest() {
 		render_system->remove_renderable(this);
-	};
+	}
 
-	virtual std::string get_type() const override { return "RenderableTest"; };
+	virtual std::string get_type() const override { return "RenderableTest"; }
 
-	virtual glm::mat4 get_world_matrix() const override { return glm::mat4(); };	
-	virtual glm::mat4 get_object_matrix() const override { return glm::mat4(); };
+	virtual glm::mat4 get_world_matrix() const override { return glm::mat4(); }	
+	virtual glm::mat4 get_object_matrix() const override { return glm::mat4(); }
 
-	virtual bool is_culled() const override { return false; };
-	virtual bool is_invisible() const override { return false; };
+	virtual bool is_culled() const override { return false; }
+	virtual bool is_invisible() const override { return false; }
 
-	virtual void render(Camera * /*camera*/) override {};
+	virtual bool has_custom_render() const override { return false; };
 
-	virtual unsigned int get_render_layers() const override { return render_layers; };
+	virtual void custom_render(Camera * /*camera*/) override {}
+
+	virtual unsigned int get_render_layers() const override { return render_layers; }
+
+	virtual const MaterialPtr &get_material() const override { return material; };
+
+	virtual const MeshPtr &get_mesh() const override { return mesh; };
 
 private:
 	RenderSystemPtr render_system;
 
 	unsigned int render_layers;
+
+	MaterialPtr material;
+	MeshPtr mesh;
 };
 
 bool mainTest() {
@@ -50,7 +59,7 @@ bool mainTest() {
 		throw clan::Exception("A renderable registered in layers 0 and 2 is not present in one of these");
 	}
 
-	auto renderable2 = entity2->add_component(std::make_shared<Renderable>(entity2, render_system, 1<<1));
+	auto renderable2 = entity2->add_component(std::make_shared<Renderable>(entity2, render_system, nullptr, nullptr, 1<<1));
 
 	if (!(render_system->get_bucket(1).size() == 1 && render_system->get_bucket(1)[0] == renderable2.get())) {
 		throw clan::Exception("A renderable registered in layer 1 (for entity2) is not present");
