@@ -18,6 +18,9 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 
 	culled_property = owner->add(PROPERTY_CULLED, false);
 	visible_property = owner->add(PROPERTY_VISIBLE, false);
+
+	material_name_property = owner->add(PROPERTY_MATERIAL_NAME, std::string());
+	mesh_name_property = owner->add(PROPERTY_MESH_NAME, std::string());
 }
 
 Renderable::~Renderable() {

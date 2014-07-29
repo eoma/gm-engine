@@ -42,6 +42,9 @@ private:
 
 	Property<bool> culled_property;
 	Property<bool> visible_property;
+
+	Property<std::string> material_name_property;
+	Property<std::string> mesh_name_property;
 };
 
 } // namespace Framework
