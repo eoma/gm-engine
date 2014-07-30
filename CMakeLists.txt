@@ -81,9 +81,11 @@ add_subdirectory(depends/assimp)
 set_target_properties(assimp
 	PROPERTIES
 	FOLDER "Dependencies")
-set_target_properties(zlibstatic
-	PROPERTIES
-	FOLDER "Dependencies")
+if (TARGET zlibstatic)
+	set_target_properties(zlibstatic
+		PROPERTIES
+		FOLDER "Dependencies")
+endif()
 
 add_subdirectory(src)
 
