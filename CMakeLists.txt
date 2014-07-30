@@ -77,6 +77,13 @@ set_target_properties(glfw
 
 add_subdirectory(depends/ClanLib)
 add_subdirectory(depends/SOIL2)
+add_subdirectory(depends/assimp)
+set_target_properties(assimp
+	PROPERTIES
+	FOLDER "Dependencies")
+set_target_properties(zlibstatic
+	PROPERTIES
+	FOLDER "Dependencies")
 
 add_subdirectory(src)
 
