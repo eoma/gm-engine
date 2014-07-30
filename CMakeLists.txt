@@ -89,5 +89,7 @@ endif()
 
 add_subdirectory(src)
 
+add_subdirectory(samples)
+
 enable_testing()
 add_subdirectory(tests)
