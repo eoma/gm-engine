@@ -5,6 +5,8 @@
 
 #include "GM/Framework/EntityManager.h"
 #include "GM/Framework/Managers/BufferManager.h"
+#include "GM/Framework/Managers/MaterialManager.h"
+#include "GM/Framework/Managers/MeshManager.h"
 #include "GM/Framework/Managers/ShaderManager.h"
 #include "GM/Framework/Managers/TextureManager.h"
 #include "GM/Framework/Managers/VaoManager.h"
@@ -83,6 +85,16 @@ namespace Application {
 		shader_manager = std::make_shared<Framework::ShaderManager>();
 	}
 	
+	if (flags & GM_FRAMEWORK_MATERIAL_MANAGER)
+	{
+		material_manager = std::make_shared<Framework::MaterialManager>(shader_manager);
+	}
+
+	if (flags & GM_FRAMEWORK_MESH_MANAGER)
+	{
+		mesh_manager = std::make_shared<Framework::MeshManager>();
+	}
+
 	if (flags & GM_FRAMEWORK_TEXTURE_MANAGER)
 	{
 		texture_manager = std::make_shared<Framework::TextureManager>(
@@ -144,6 +156,14 @@ void Main::run(bool destruct_window_and_gl_on_exit)
 
 		if (!has_buffer_manager()) {
 			throw clan::Exception("Must have buffer manager in order to run!");
+		}
+
+		if (!has_material_manager()) {
+			throw clan::Exception("Must have material manager in order to run!");
+		}
+
+		if (!has_mesh_manager()) {
+			throw clan::Exception("Must have mesh manager in order to run!");
 		}
 
 		if (!has_shader_manager()) {

@@ -32,13 +32,13 @@ public:
 
 	virtual unsigned int get_render_layers() const override { return render_layers; }
 
-	virtual const MaterialPtr &get_material() const override { return nullptr; }
+	virtual const MaterialPtr &get_material() const override { return material; }
 
-	virtual const MeshPtr &get_mesh() const override { return nullptr; }
+	virtual const MeshPtr &get_mesh() const override { return mesh; }
 
 	virtual bool has_custom_render() const override { return false; }
 
-	virtual void custom_render(Camera *camera) override {};
+	virtual void custom_render(Camera * /*camera*/) override {};
 public:
 	static std::string get_static_type() { return COMPONENT_RENDERABLE; }
 

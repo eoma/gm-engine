@@ -111,7 +111,6 @@ void RenderSystem::render() {
 
 	Core::VertexArrayObjectPtr active_vao = nullptr;
 	Core::ShaderPtr active_shader = nullptr;
-	
 
 	for (unsigned int layer = 0; layer < buckets.size(); ++layer) {
 		const auto &bucket = buckets[layer];
@@ -153,6 +152,7 @@ void RenderSystem::render() {
 					if (active_shader != active_material->get_shader())
 					{
 						active_shader = active_material->get_shader();
+						active_shader->bind();
 					}
 
 					// update uniforms

@@ -26,7 +26,7 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 
 	material_name_property = owner->add(PROPERTY_MATERIAL_NAME, std::string());
 	slots.connect(material_name_property.value_changed(),
-		[&](const std::string &/*old_material_name*/, const std::string &new_material_name) mutable
+		[this](const std::string &/*old_material_name*/, const std::string &new_material_name) mutable
 		{
 			if (new_material_name.empty())
 			{
@@ -34,13 +34,13 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 			}
 			else
 			{
-				material = material_manager->get(new_material_name);
+				material = this->material_manager->get(new_material_name);
 			}
 		});
 
 	mesh_name_property = owner->add(PROPERTY_MESH_NAME, std::string());
 	slots.connect(mesh_name_property.value_changed(),
-		[&](const std::string &/*old_mesh_name*/, const std::string &new_mesh_name) mutable
+		[this](const std::string &/*old_mesh_name*/, const std::string &new_mesh_name) mutable
 		{
 			if (new_mesh_name.empty())
 			{
@@ -48,7 +48,7 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 			}
 			else
 			{
-				mesh = mesh_manager->get(new_mesh_name);
+				mesh = this->mesh_manager->get(new_mesh_name);
 			}
 		});
 }
