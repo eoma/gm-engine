@@ -41,7 +41,7 @@ void Render::render(const RenderCommand &command)
 	}
 	else
 	{
-		if (command.base_vertex == 0 && command.base_instance == 0 && command.instance_count == 0)
+		if (command.base_instance == 0 && command.instance_count == 0)
 		{
 			glDrawArrays(command.mode, command.first, command.count);
 		}
