@@ -33,7 +33,7 @@ namespace GM {
 
 			void add_templates(const std::string &template_filename);
 
-			void get(const std::string &template_name, const MaterialPtr &material, std::function<void(const MaterialTemplateManager::Template &)> func);
+			void get(const std::string &template_name, std::function<MaterialPtr(const MaterialTemplateManager::Template &)> func);
 
 			
 

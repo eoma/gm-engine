@@ -55,5 +55,7 @@ private:
 	ShaderTemplateManagerPtr template_manager;
 };
 
+typedef std::shared_ptr<ShaderManager> ShaderManagerPtr;
+
 } // namespace Framework
 } // namespace GM

@@ -8,6 +8,7 @@
 #include <GM/Framework/Systems/SceneSystem.h>
 #include <GM/Framework/Components/Transform.h>
 #include <GM/Framework/Components/Renderable.h>
+#include <GM/Framework/Managers/ShaderManager.h>
 #include <GM/Framework/Managers/MaterialManager.h>
 #include <GM/Framework/Managers/MeshManager.h>
 #include <GM/Framework/Utilities/ComponentSerializer.h>
@@ -76,7 +77,8 @@ bool mainTest() {
 	auto render_system = std::make_shared<RenderSystem>();
 	auto scene_system = std::make_shared<SceneSystem>();
 	auto entity_manager = std::make_shared<EntityManager>();
-	auto material_manager = std::make_shared<MaterialManager>();
+	auto shader_manager = std::make_shared<ShaderManager>();
+	auto material_manager = std::make_shared<MaterialManager>(shader_manager);
 	auto mesh_manager = std::make_shared<MeshManager>();
 
 	auto my_component_serializer = std::make_shared<MyComponentSerializer>(entity_manager, scene_system, render_system, material_manager, mesh_manager);

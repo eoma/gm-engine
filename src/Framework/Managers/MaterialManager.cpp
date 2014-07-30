@@ -1,12 +1,18 @@
 #include "GM/Framework/Managers/MaterialManager.h"
-
+#include "GM/Framework/Managers/ShaderManager.h"
+#include "GM/Framework/Utilities/Material.h"
+#include "GM/Framework/Templates/MaterialTemplateManager.h"
+#include "GM/Framework/IO/TextIO.h"
+#include "GM/Core/GL/Shader.h"
 #include "ClanLib/core.h"
 
 namespace GM {
 namespace Framework {
 
-MaterialManager::MaterialManager() {
-
+MaterialManager::MaterialManager(const ShaderManagerPtr &shader_manager) 
+: shader_manager(shader_manager)
+{
+	template_manager = MaterialTemplateManagerPtr(new MaterialTemplateManager());
 }
 
 MaterialManager::~MaterialManager() {
@@ -44,6 +50,48 @@ MaterialPtr MaterialManager::get(const std::string &name) const
 	}
 
 	return material;
+}
+
+MaterialPtr MaterialManager::get_or_create(const std::string &name)
+{
+	// First, test if the name has been cached.
+	// FIXME: This call suggests there should be at least an internal get(name) method that only looks for cached shaders.
+	auto material = get(name);
+	if (material) {
+		return material;
+	}
+
+	//If not cached, let's see if there is a template description for this name.
+	template_manager->get(name, [this, name, &material](const MaterialTemplateManager::Template &t) {
+		material = get_or_create(name, t.shader);
+		return material;
+	});
+
+	if (!material)
+		throw clan::Exception(clan::string_format("Failed to get or create the material %1.", name));
+
+	return material;
+}
+
+MaterialPtr MaterialManager::get_or_create(const std::string& name, const std::string& shader_name)
+{
+	auto material = get(name);
+	if (material) {
+		//if (material->get_shader()->get_name() != shader_name) {
+		//	throw Exception(string_format(
+		//		"The shader of material %1 did not match the material and shader name (%2) combination asked for", 
+		//		name, shader_name));
+		//}
+		return material;
+	}
+
+	auto shader = shader_manager->get_or_create(shader_name);
+	return MaterialPtr(new Material(shader, name));
+}
+
+void MaterialManager::add_templates(const std::string &template_filename)
+{
+	template_manager->add_templates(template_filename);
 }
 
 } // namespace Framework

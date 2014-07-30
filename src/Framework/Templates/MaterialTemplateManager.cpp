@@ -18,7 +18,10 @@ MaterialTemplateManager::MaterialTemplateManager() {
 
 }
 
-void MaterialTemplateManager::get(const std::string &template_name, const MaterialPtr &material, std::function<void(const MaterialTemplateManager::Template &)> func) {
+void MaterialTemplateManager::get(const std::string &template_name, std::function<MaterialPtr(const MaterialTemplateManager::Template &)> func) {
+	if (func == nullptr)
+		return;
+
 	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
 	{
 		if (StringHelp::compare(template_name, it_template->name, true) == 0)
@@ -27,17 +30,16 @@ void MaterialTemplateManager::get(const std::string &template_name, const Materi
 			{
 				apply_requirement((*it_require), (*it_template));
 			}
-			///////////
-			// TESTME:
-			// FIXME: Make sure that it's OK to set the properties for the material here before we run the func callback
-			// FIXME: If Material relies on a value_changed() based scheme for testing validity and such up against the bound shader, etc
-			// FIXME: then the Material actually have to set it's shader first, meaning the func should be called here, then set the properties.
-			///////////
+
+			auto material = func((*it_template));
+
 			for (auto it_require = it_template->requires.begin(); it_require != it_template->requires.end(); ++it_require)
 			{
 				apply_properties((*it_require), material);
 			}
-			if(func) func((*it_template));
+
+			apply_properties(it_template->name, material);
+			
 
 			return;
 		}
