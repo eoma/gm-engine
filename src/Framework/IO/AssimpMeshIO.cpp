@@ -1,5 +1,5 @@
 #include "GM/Framework/IO/AssimpMeshIO.h"
-
+#include <assimp/Importer.hpp>
 #include <ClanLib/core.h>
 
 #include <cctype>

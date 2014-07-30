@@ -8,6 +8,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/depends/SOIL2/include
 	${CMAKE_SOURCE_DIR}/depends/gl3w/include
 	${CMAKE_SOURCE_DIR}/depends/glfw/include
+	${CMAKE_SOURCE_DIR}/depends/assimp/include
 )
 
 add_definitions(-DGLM_FORCE_RADIANS)
