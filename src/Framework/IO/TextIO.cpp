@@ -16,12 +16,12 @@ TextIO::TextIO()
 {
 }
 
-std::string TextIO::load_contents(const std::string &template_filename)
+std::string TextIO::load_contents(const std::string &filename)
 {
-	if (!clan::FileHelp::file_exists(template_filename))
+	if (!clan::FileHelp::file_exists(filename))
 	{
-		throw clan::Exception(string_format("Text file %1 does not exist!", template_filename));
+		throw clan::Exception(string_format("Text file %1 does not exist!", filename));
 	}
 
-	return File::read_text(template_filename);
+	return File::read_text(filename);
 }

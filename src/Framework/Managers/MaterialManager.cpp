@@ -86,7 +86,9 @@ MaterialPtr MaterialManager::get_or_create(const std::string& name, const std::s
 	}
 
 	auto shader = shader_manager->get_or_create(shader_name);
-	return MaterialPtr(new Material(shader, name));
+	material = MaterialPtr(new Material(shader, name));
+	add(name, material);
+	return material;
 }
 
 void MaterialManager::add_templates(const std::string &template_filename)

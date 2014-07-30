@@ -22,6 +22,7 @@ public:
 	virtual ~Camera();
 
 	std::string get_type() const override { return get_static_type(); };
+	static std::string get_static_type() { return COMPONENT_CAMERA; };
 
 	unsigned int get_render_layers() const { return render_layers; };
 	unsigned int get_depth() const { return depth; };
@@ -37,7 +38,6 @@ public:
 private:
 	void recalculate_view_matrix(const glm::mat4 &old_world, const glm::mat4 &new_world);
 
-	static std::string get_static_type() { return COMPONENT_CAMERA; };
 private:
 	clan::SlotContainer slots;
 

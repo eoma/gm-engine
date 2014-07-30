@@ -11,7 +11,7 @@ namespace GM {
 		public:
 			TextIO();
 
-			static std::string load_contents(const std::string &template_filename);
+			static std::string load_contents(const std::string &filename);
 		};
 		typedef std::shared_ptr<TextIO> TextIOPtr;
 	}

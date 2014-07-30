@@ -24,6 +24,8 @@ public:
 	ShaderManager();
 	~ShaderManager();
 
+	void set_glsl_path(const std::string &glsl_path) { this->glsl_path = glsl_path; }
+
 	Core::ShaderPtr get_or_create(const std::string &name);
 	Core::ShaderPtr get_or_create(const std::string &name, const std::string &vs_file, const std::string &fs_file, bool rasterizer_discard);
 	Core::ShaderPtr get_or_create(const std::string &name, const std::string &vs_file, const std::string &gs_file, const std::string &fs_file, bool rasterizer_discard);
@@ -52,6 +54,7 @@ private:
 	std::unordered_map<std::string, Core::ShaderPtr> name_to_shader;
 	std::unordered_map<Core::ShaderPtr, std::string> shader_to_name;
 
+	std::string glsl_path;
 	ShaderTemplateManagerPtr template_manager;
 };
 

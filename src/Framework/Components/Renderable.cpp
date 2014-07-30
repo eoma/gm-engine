@@ -34,7 +34,7 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 			}
 			else
 			{
-				material = this->material_manager->get(new_material_name);
+				material = this->material_manager->get_or_create(new_material_name);
 			}
 		});
 

@@ -1,0 +1,16 @@
+[
+    {
+    	"entity": "triangle",
+    	"components": [ "Renderable", "Camera" ],
+		"properties": [
+			{
+				"name": "MeshName",
+				"value": "triangle"
+			},
+			{
+				"name": "MaterialName",
+				"value": "red_diffuse"
+			}
+		]
+    }
+]
