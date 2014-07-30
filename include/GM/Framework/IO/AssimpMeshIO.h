@@ -2,6 +2,10 @@
 
 #include "IMeshIO.h"
 
+namespace Assimp {
+	class Importer;
+}
+
 namespace GM {
 namespace Framework {
 
@@ -11,6 +15,9 @@ public:
 	virtual ~AssimpMeshIO();
 
 	Core::VaoLayout load(const std::string &file_name) override;
+
+private:
+	Assimp::Importer *importer;
 };
 
 } // namespace Framework
