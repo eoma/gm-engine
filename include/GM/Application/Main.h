@@ -22,6 +22,8 @@ namespace Framework {
 
 	class EntityManager; typedef std::shared_ptr<EntityManager> EntityManagerPtr;
 	class BufferManager; typedef std::shared_ptr<BufferManager> BufferManagerPtr;
+	class MaterialManager; typedef std::shared_ptr<MaterialManager> MaterialManagerPtr;
+	class MeshManager; typedef std::shared_ptr<MeshManager> MeshManagerPtr;
 	class ShaderManager; typedef std::shared_ptr<ShaderManager> ShaderManagerPtr;
 	class TextureManager; typedef std::shared_ptr<TextureManager> TextureManagerPtr;
 	class VaoManager; typedef std::shared_ptr<VaoManager> VaoManagerPtr;
@@ -41,9 +43,11 @@ public:
 		GM_FRAMEWORK_RENDER_SYSTEM = (1 << 1),
 		GM_FRAMEWORK_ENTITY_MANAGER = (1 << 2),
 		GM_FRAMEWORK_BUFFER_MANAGER = (1 << 3),
-		GM_FRAMEWORK_SHADER_MANAGER = (1 << 4),
-		GM_FRAMEWORK_TEXTURE_MANAGER = (1 << 5),
-		GM_FRAMEWORK_VAO_MANAGER = (1 << 6),
+		GM_FRAMEWORK_MATERIAL_MANAGER = (1 << 4),
+		GM_FRAMEWORK_MESH_MANAGER = (1 << 5),
+		GM_FRAMEWORK_SHADER_MANAGER = (1 << 6),
+		GM_FRAMEWORK_TEXTURE_MANAGER = (1 << 7),
+		GM_FRAMEWORK_VAO_MANAGER = (1 << 8),
 
 		GM_FRAMEWORK_NO_DEFAULTS = 0,
 		GM_FRAMEWORK_ALL_DEFAULTS = ((1<<30) - 1)
@@ -137,6 +141,14 @@ public:
 	const Framework::BufferManagerPtr &get_buffer_manager() const { return buffer_manager; }
 	void set_buffer_manager(const Framework::BufferManagerPtr &buffer_manager) { this->buffer_manager = buffer_manager; }
 
+	bool has_material_manager() const { return material_manager != nullptr; }
+	const Framework::MaterialManagerPtr &get_material_manager() const { return material_manager; }
+	void set_material_manager(const Framework::MaterialManagerPtr &material_manager) { this->material_manager = material_manager; }
+
+	bool has_mesh_manager() const { return mesh_manager != nullptr; }
+	const Framework::MeshManagerPtr &get_mesh_manager() const { return mesh_manager; }
+	void set_mesh_manager(const Framework::MeshManagerPtr &mesh_manager) { this->mesh_manager = mesh_manager; }
+
 	bool has_shader_manager() const { return shader_manager != nullptr; }
 	const Framework::ShaderManagerPtr &get_shader_manager() const { return shader_manager; }
 	void set_shader_manager(const Framework::ShaderManagerPtr &shader_manager) { this->shader_manager = shader_manager; }
@@ -172,6 +184,8 @@ protected:
 
 	Framework::EntityManagerPtr entity_manager;
 	Framework::BufferManagerPtr buffer_manager;
+	Framework::MaterialManagerPtr material_manager;
+	Framework::MeshManagerPtr mesh_manager;
 	Framework::ShaderManagerPtr shader_manager;
 	Framework::TextureManagerPtr texture_manager;
 	Framework::VaoManagerPtr vao_manager;
