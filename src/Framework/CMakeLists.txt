@@ -35,5 +35,6 @@ endforeach()
 
 add_library(${NAME} STATIC ${Headers} ${Sources})
 target_link_libraries(${NAME} clanCore)
+target_link_libraries(${NAME} assimp)
 
 set_target_properties(${NAME} PROPERTIES FOLDER "GM")

@@ -2,8 +2,6 @@
 
 #include "ITextureIO.h"
 
-#include <SOIL2.h>
-
 namespace GM {
 namespace Framework {
 

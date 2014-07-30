@@ -1,5 +1,5 @@
 #include "GM/Framework/IO/SoilTextureIO.h"
-
+#include <SOIL2.h>
 #include <ClanLib/core.h>
 
 #include <cctype>
