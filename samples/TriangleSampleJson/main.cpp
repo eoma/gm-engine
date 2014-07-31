@@ -88,12 +88,12 @@ bool mainTest() {
 	auto entity = entity_manager->create_entity("entity");
 	entity_manager->apply("triangle", entity);
 
-	unsigned int num_renders = 1*30;
-	unsigned int count = 0;
+	float max_run_time = 1.f;
+	float run_time = 0.f;
 
-	auto update_slot = app->on_update().connect([&](float /*value*/) mutable {
-		++count;
-		if (count >= num_renders)
+	auto update_slot = app->on_update().connect([&](float dt) mutable {
+		run_time += dt;
+		if (run_time > max_run_time)
 		{
 			app->stop_running();
 		}
