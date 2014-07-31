@@ -25,11 +25,39 @@ ShaderManager::~ShaderManager()
 {
 }
 
+bool ShaderManager::contains(const std::string &name) const
+{
+	return (name_to_shader.end() != name_to_shader.find(name));
+}
+
+void ShaderManager::add(const std::string &name, const Core::ShaderPtr &shader)
+{
+	if (!contains(name))
+	{
+		// maybe check that shader is not a nullptr?
+		name_to_shader.insert(std::make_pair(name, shader));
+	}
+	else
+	{
+		// throw exception?
+	}
+}
+
+Core::ShaderPtr ShaderManager::get(const std::string &name) const
+{
+	Core::ShaderPtr shader = nullptr;
+	auto iter = name_to_shader.find(name);
+	if (iter != name_to_shader.end())
+	{
+		shader = iter->second;
+	}
+	return shader;
+}
+
 Core::ShaderPtr ShaderManager::get_or_create(const std::string &name)
 {
 	// First, test if the name has been cached.
-	// FIXME: This call suggests there should be at least an internal get(name) method that only looks for cached shaders.
-	auto shader = get_or_create(name, "", "", "", "", "", "", false);
+	auto shader = get(name);
 	if (shader) {
 		return shader;
 	}

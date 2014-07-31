@@ -26,6 +26,13 @@ public:
 
 	void set_glsl_path(const std::string &glsl_path) { this->glsl_path = glsl_path; }
 
+	bool contains(const std::string& name) const;
+
+	// Great for custom made shaders
+	void add(const std::string &name, const Core::ShaderPtr &shader);
+
+	Core::ShaderPtr get(const std::string &name) const;
+
 	Core::ShaderPtr get_or_create(const std::string &name);
 	Core::ShaderPtr get_or_create(const std::string &name, const std::string &vs_file, const std::string &fs_file, bool rasterizer_discard);
 	Core::ShaderPtr get_or_create(const std::string &name, const std::string &vs_file, const std::string &gs_file, const std::string &fs_file, bool rasterizer_discard);
