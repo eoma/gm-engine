@@ -1,13 +1,13 @@
 [
-    {
-    	"shader": "default",
-		"vertex_shader": "pass_through.vs",
-    	"fragment_shader": "pass_through.fs"
-    },
 	{
-    	"shader": "diffuse",
-    	"requires": [ "default" ],
+		"shader": "default",
+		"vertex_shader": "pass_through.vs",
+		"fragment_shader": "pass_through.fs"
+	},
+	{
+		"shader": "diffuse",
+		"requires": [ "default" ],
 		"vertex_shader": "diffuse.vs",
 		"fragment_shader": "diffuse.fs"
-    }
+	}
 ]

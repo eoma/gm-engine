@@ -1,6 +1,6 @@
 [
 	{
-    	"material": "red_diffuse",
-    	"shader": "diffuse"
-    }
+		"material": "red_diffuse",
+		"shader": "diffuse"
+	}
 ]
