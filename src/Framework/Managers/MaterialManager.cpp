@@ -55,7 +55,6 @@ MaterialPtr MaterialManager::get(const std::string &name) const
 MaterialPtr MaterialManager::get_or_create(const std::string &name)
 {
 	// First, test if the name has been cached.
-	// FIXME: This call suggests there should be at least an internal get(name) method that only looks for cached shaders.
 	auto material = get(name);
 	if (material) {
 		return material;
