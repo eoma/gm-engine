@@ -153,10 +153,13 @@ void RenderSystem::render() {
 					{
 						active_shader = active_material->get_shader();
 						active_shader->bind();
+						// Update camera uniforms?
 					}
 
-					// update uniforms
+					active_material->update_uniforms();
 				}
+
+				renderable->update_uniforms();
 
 				if (renderable->has_custom_render()) {
 					renderable->custom_render(camera);
