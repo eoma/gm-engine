@@ -95,7 +95,8 @@ void create_red_material(const MainPtr &app)
 		return;
 	}
 	auto material = app->get_material_manager()->get_or_create("red_diffuse", "diffuse");
-	material->add_uniform<glm::vec3>("diffuse", glm::vec3(1.f, 0.f, 0.f));
+	auto diffuse = material->add<glm::vec3>("diffuse", glm::vec3());
+	diffuse = glm::vec3(1.f, 0.f, 0.f);
 }
 
 bool mainTest() {
@@ -114,12 +115,12 @@ bool mainTest() {
 
 	// Create our entity and add components so that it is possible to render
 	auto entity = entity_manager->create_entity("entity");
-	entity->create_component<Framework::Renderable>(render_system, material_manager, mesh_manager);
+	auto renderable = entity->create_component<Framework::Renderable>(render_system, material_manager, mesh_manager);
 	entity->create_component<Framework::Camera>(render_system);
 
 	// Set up what resources our renderable is supposed to use
-	entity->get<std::string>("MeshName") = "triangle";
-	entity->get<std::string>("MaterialName") = "red_diffuse";
+	renderable->set_mesh("triangle");
+	renderable->set_material("red_diffuse");
 
 	// Set some run time limits
 	float max_run_time = 1.0f;
@@ -127,6 +128,7 @@ bool mainTest() {
 
 	auto update_slot = app->on_update().connect([&](float dt) mutable {
 		run_time += dt;
+
 		if (run_time > max_run_time)
 		{
 			app->stop_running();
