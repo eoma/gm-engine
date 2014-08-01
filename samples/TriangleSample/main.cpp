@@ -77,8 +77,9 @@ void create_shader(const MainPtr &app)
 		Core::ShaderSource("fragment",
 			s("#version 330\n") + 
 			s("out vec3 color;\n") +
+			s("uniform vec3 diffuse = vec3(0, 0, 0);") +
 			s("void main() {\n") +
-			s("    color = vec3(1,0,0);\n") + 
+			s("    color = diffuse;\n") +
 			s("}\n")
 			,
 			GL_FRAGMENT_SHADER)
@@ -94,6 +95,7 @@ void create_red_material(const MainPtr &app)
 		return;
 	}
 	auto material = app->get_material_manager()->get_or_create("red_diffuse", "diffuse");
+	material->add_uniform<glm::vec3>("diffuse", glm::vec3(1.f, 0.f, 0.f));
 }
 
 bool mainTest() {
