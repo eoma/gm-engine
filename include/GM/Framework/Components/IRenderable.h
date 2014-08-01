@@ -45,6 +45,8 @@ public:
 	virtual const MaterialPtr &get_material() const = 0;
 
 	virtual const MeshPtr &get_mesh() const = 0;
+
+	virtual void update_uniforms() = 0;
 };
 
 } // namespace Framework
