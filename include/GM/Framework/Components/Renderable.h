@@ -97,8 +97,10 @@ void Renderable::add_uniform(const std::shared_ptr<IProperty> &prop, const unsig
 			Core::update_uniform(program, uniform_location, prop_with_type->get());
 		});
 	}
-
-	// Maybe return bool if succesful (is of same type as Value)?
+	else
+	{
+		throw clan::Exception(clan::string_format("Property (%1) is to be added as uniform, but is of wrong type!", prop->get_name()));
+	}
 }
 
 } // namespace Framework
