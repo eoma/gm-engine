@@ -49,7 +49,7 @@ bool mainTest() {
 			GL_FRAGMENT_SHADER),
 	});
 
-	for (const auto &info : shader->get_attribute_info())
+	for (const auto &info : shader->get_attribute_infos())
 	{
 		std::cout << "Attribute: " << info.name << std::endl;
 		std::cout << "Type: " << std::hex << std::showbase << info.type << std::dec << std::endl;
@@ -61,7 +61,7 @@ bool mainTest() {
 
 	std::cout << "-----" << std::endl << std::endl;
 
-	for (const auto &info : shader->get_uniform_info())
+	for (const auto &info : shader->get_uniform_infos())
 	{
 		std::cout << "Uniform: " << info.name << std::endl;
 		std::cout << "Type: " << std::hex << std::showbase << info.type << std::dec << std::endl;
