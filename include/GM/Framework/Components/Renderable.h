@@ -34,8 +34,10 @@ public:
 
 	virtual unsigned int get_render_layers() const override { return render_layers; }
 
+	void set_material(const std::string& material_name) { material_name_property = material_name; }
 	virtual const MaterialPtr &get_material() const override { return material; }
 
+	void set_mesh(const std::string &mesh_name) { mesh_name_property = mesh_name; }
 	virtual const MeshPtr &get_mesh() const override { return mesh; }
 
 	virtual bool has_custom_render() const override { return false; }
