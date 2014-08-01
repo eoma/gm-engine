@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../GL/Texture.h"
+
 #include <glm/glm.hpp>
 
 #include <memory>
@@ -38,7 +40,7 @@ void update_uniform(unsigned int program, int location, const glm::mat3& data);
 void update_uniform(unsigned int program, int location, const glm::mat4& data);
 
 // Textures
-
+void update_uniform(unsigned int program, int location, const TexturePtr &data);
 
 } // namespace Core
 } // namespace GM
