@@ -1,7 +1,7 @@
 [
-    {
-    	"entity": "Test",
-    	"components": [ "Transform" ],
+	{
+		"entity": "Test",
+		"components": [ "Transform" ],
 		"properties": [
 			{
 				"name": "Position",
@@ -9,13 +9,13 @@
 				"type": "vec3"
 			}
 		]
-    },
+	},
 	{
-    	"entity": "Test2",
-    	"components": [ "Renderable" ]
-    },
+		"entity": "Test2",
+		"components": [ "Renderable" ]
+	},
 	{
-    	"entity": "Test3",
+		"entity": "Test3",
 		"requires": [ "Test", "Test2" ]
-    }
+	}
 ]
