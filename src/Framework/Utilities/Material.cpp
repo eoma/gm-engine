@@ -20,95 +20,142 @@ Material::Material(const Core::ShaderPtr &shader, const std::string &name)
 	for (const Core::ShaderVariableInfo &info : shader->get_uniform_infos())
 	{
 		unused_uniforms.push_back(info.name);
+
+		switch (info.type)
+		{
+		case GL_BYTE:
+			{
+				add_sleeping_uniform<char>(info.name, 0, shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_UNSIGNED_BYTE:
+			{
+				add_sleeping_uniform<unsigned char>(info.name, 0, shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_SHORT:
+			{
+				add_sleeping_uniform<short>(info.name, 0, shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_UNSIGNED_SHORT:
+			{
+				add_sleeping_uniform<unsigned short>(info.name, 0, shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_INT:
+			{
+				add_sleeping_uniform<int>(info.name, 0, shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_UNSIGNED_INT:
+			{
+				add_sleeping_uniform<unsigned int>(info.name, 0, shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_FLOAT:
+			{
+				add_sleeping_uniform<float>(info.name, 0, shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_FLOAT_VEC2:
+			{
+				add_sleeping_uniform<glm::vec2>(info.name, glm::vec2(), shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_INT_VEC2:
+			{
+				add_sleeping_uniform<glm::ivec2>(info.name, glm::ivec2(), shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_UNSIGNED_INT_VEC2:
+			{
+				add_sleeping_uniform<glm::uvec2>(info.name, glm::uvec2(), shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_FLOAT_VEC3:
+			{
+				add_sleeping_uniform<glm::vec3>(info.name, glm::vec3(), shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_INT_VEC3:
+			{
+				add_sleeping_uniform<glm::ivec3>(info.name, glm::ivec3(), shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_UNSIGNED_INT_VEC3:
+			{
+				add_sleeping_uniform<glm::uvec3>(info.name, glm::uvec3(), shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_FLOAT_VEC4:
+			{
+				add_sleeping_uniform<glm::vec4>(info.name, glm::vec4(), shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_INT_VEC4:
+			{
+				add_sleeping_uniform<glm::ivec4>(info.name, glm::ivec4(), shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_UNSIGNED_INT_VEC4:
+			{
+				add_sleeping_uniform<glm::uvec4>(info.name, glm::uvec4(), shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_FLOAT_MAT2:
+			{
+				add_sleeping_uniform<glm::mat2>(info.name, glm::mat2(), shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_FLOAT_MAT3:
+			{
+				add_sleeping_uniform<glm::mat3>(info.name, glm::mat3(), shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_FLOAT_MAT4:
+			{
+				add_sleeping_uniform<glm::mat4>(info.name, glm::mat4(), shader->get_handle(), info.location);
+				break;
+			}
+
+		case GL_SAMPLER_2D:
+		case GL_SAMPLER_CUBE:
+			{
+				add_sleeping_uniform<Core::TexturePtr>(info.name, nullptr, shader->get_handle(), info.location);
+				break;
+			}
+
+		default:
+			{
+				clan::StringFormat message("Uknown/unhandled type (%1) for uniform (%2) with length (%3)");
+				message.set_arg(1, info.type);
+				message.set_arg(2, info.name);
+				message.set_arg(3, info.size);
+
+				std::cerr << message.get_result();
+				break;
+			}
+		}
 	}
-
-	property_added_slot = sign_PropertyAdded.connect([&](IPropertyPtr property) {
-		if (IProperty::is_type<char>(property)) {
-			auto p = get<char>(property->get_name());
-			add_uniform<char>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<unsigned char>(property)) {
-			auto p = get<unsigned char>(property->get_name());
-			add_uniform<unsigned char>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<short>(property)) {
-			auto p = get<short>(property->get_name());
-			add_uniform<short>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<unsigned short>(property)) {
-			auto p = get<unsigned short>(property->get_name());
-			add_uniform<unsigned short>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<int>(property)) {
-			auto p = get<int>(property->get_name());
-			add_uniform<int>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<unsigned int>(property)) {
-			auto p = get<unsigned int>(property->get_name());
-			add_uniform<unsigned int>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<float>(property)) {
-			auto p = get<float>(property->get_name());
-			add_uniform<float>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<glm::vec2>(property)) {
-			auto p = get<glm::vec2>(property->get_name());
-			add_uniform<glm::vec2>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<glm::ivec2>(property)) {
-			auto p = get<glm::vec2>(property->get_name());
-			add_uniform<glm::vec2>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<glm::uvec2>(property)) {
-			auto p = get<glm::vec2>(property->get_name());
-			add_uniform<glm::vec2>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<glm::vec3>(property)) {
-			auto p = get<glm::vec3>(property->get_name());
-			add_uniform<glm::vec3>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<glm::ivec3>(property)) {
-			auto p = get<glm::vec3>(property->get_name());
-			add_uniform<glm::vec3>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<glm::uvec3>(property)) {
-			auto p = get<glm::vec3>(property->get_name());
-			add_uniform<glm::vec3>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<glm::vec4>(property)) {
-			auto p = get<glm::vec4>(property->get_name());
-			add_uniform<glm::vec4>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<glm::ivec4>(property)) {
-			auto p = get<glm::vec4>(property->get_name());
-			add_uniform<glm::vec4>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<glm::uvec4>(property)) {
-			auto p = get<glm::vec4>(property->get_name());
-			add_uniform<glm::vec4>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<glm::mat2>(property)) {
-			auto p = get<glm::mat2>(property->get_name());
-			add_uniform<glm::mat2>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<glm::mat3>(property)) {
-			auto p = get<glm::mat3>(property->get_name());
-			add_uniform<glm::mat3>(p.get_name(), p.get());
-		}
-		else if (IProperty::is_type<glm::mat4>(property)) {
-			auto p = get<glm::mat4>(property->get_name());
-			add_uniform<glm::mat4>(p.get_name(), p.get());
-		}
-		/*else if (IProperty::is_type<Core::Texture>(property)) {
-			auto p = get<Core::Texture>(property->get_name());
-			add_uniform<Core::Texture>(p.get_name(), p.get());
-		}*/
-	});
-}
-
-void Material::add_texture(const std::string &name, const Core::TexturePtr &texture)
-{
-	add_uniform<Core::TexturePtr>(name, texture);
 }
 
 } // namespace Framework
