@@ -2,7 +2,13 @@
 
 #include "../Totem/PropertyContainer.h"
 
+#include "../../Core/GL/Shader.h"
+#include "../../Core/Utilities/UniformOperations.h"
+
+#include <algorithm>
+#include <iostream>
 #include <memory>
+#include <vector>
 
 namespace GM {
 
@@ -25,25 +31,32 @@ public:
 	const std::string &get_name() const { return name; }
 	Core::ShaderPtr &get_shader() { return shader; }
 
-	// Care must be used when updating textures
-	const std::vector<std::pair<IPropertyPtr, int>> &get_property_uniform_pairs() const { return property_uniform_pairs; };
-
 	template<class T>
 	void add_uniform(const std::string &name, const T &default_value);
 
 	// Convenience
 	void add_texture(const std::string &name, const Core::TexturePtr &value);
 
+	void update_uniforms() { update_uniforms_signal(); }
+
+	const std::vector<std::string> &get_unused_uniforms() const { return unused_uniforms; }
+
 private:
 	template<class T>
-	void add_uniform(const std::string &name, const T &default_value, int uniform_location);
+	void add_uniform(const std::string &name, const T &default_value, const unsigned int program, const int uniform_location);
 
 private:
 	std::string name;
 	Core::ShaderPtr shader;
 
-	// Stores pairs of properties and the corresponding uniform location
-	std::vector<std::pair<IPropertyPtr, int>> property_uniform_pairs;
+	// Uniforms directly used by this material
+	std::vector<std::string> used_uniforms;
+
+	// Uniforms _not_ used by this material
+	std::vector<std::string> unused_uniforms;
+
+	clan::Signal<void()> update_uniforms_signal;
+	clan::SlotContainer update_uniform_slots;
 };
 
 //
@@ -53,21 +66,36 @@ private:
 template <class T>
 void Material::add_uniform(const std::string &name, const T &default_value)
 {
-	// FIXME: query shader for name, type, fetch uniform location
-	//
-
 	if (!has_property(name)) {
-		int uniform_location = 0;
-		add_uniform<T>(name, default_value, uniform_location);
+		if (!shader->contains_uniform(name))
+		{
+			std::cout << "Shader does not contain uniform " << name << std::endl;
+			return;
+		}
+
+		Core::ShaderVariableInfo info = shader->get_uniform_info(name);
+		add_uniform<T>(name, default_value, shader->get_handle(), info.location);
+	}
+	else
+	{
+		std::cout << "Material already contains uniform " << name << std::endl;
 	}
 }
 
 template <class T>
-void Material::add_uniform(const std::string &name, const T &default_value, const int uniform_location)
+void Material::add_uniform(const std::string &name, const T &default_value, const unsigned int program, const int uniform_location)
 {
-	auto prop = std::make_shared<Property<T>>(add<T>(name, default_value));
+	auto prop = add<T>(name, default_value);
 
-	property_uniform_pairs.push_back(std::make_pair(prop, uniform_location));
+	update_uniform_slots.connect(update_uniforms_signal, [program, uniform_location, prop]() {
+		Core::update_uniform(program, uniform_location, prop.get());
+	});
+
+	auto found_uniform = std::find(unused_uniforms.begin(), unused_uniforms.end(), name);
+	used_uniforms.push_back(*found_uniform);
+	unused_uniforms.erase(found_uniform);
+
+	//property_uniform_pairs.push_back(std::make_pair(prop, uniform_location));
 }
 
 } // namespace Framework
