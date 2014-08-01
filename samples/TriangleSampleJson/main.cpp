@@ -48,8 +48,14 @@ private:
 	clan::SlotContainer slots;
 };
 
-void create_triangle_mesh(const MainPtr &app) {
-	std::vector<glm::vec3> vertices{
+void create_triangle_mesh(const MainPtr &app)
+{
+	if (app->get_mesh_manager()->contains("triangle"))
+	{
+		return;
+	}
+
+	std::vector<glm::vec3> vertices {
 			{ -1.0f, -1.0f, 0.0f },
 			{ 1.0f, -1.0f, 0.0f },
 			{ 0.0f, 1.0f, 0.0f },
@@ -60,9 +66,9 @@ void create_triangle_mesh(const MainPtr &app) {
 	Core::VaoLayout vao_layout;
 	vao_layout
 		.for_buffer(buffer_allocation)
-		.use_as(GL_ARRAY_BUFFER)
-		.bind<glm::vec3>(POSITION)
-		;
+			.use_as(GL_ARRAY_BUFFER)
+				.bind<glm::vec3>(POSITION)
+	;
 
 	Core::RenderCommand render_command(false, vertices.size(), 0, buffer_allocation.offset / sizeof(glm::vec3));
 
@@ -72,22 +78,30 @@ void create_triangle_mesh(const MainPtr &app) {
 
 bool mainTest() {
 	auto app = Main::create_with_gl_version("test", 3, 3);
+
 	auto entity_manager = app->get_entity_manager();
 	auto component_serializer = std::make_shared<MyComponentSerializer>(app);
 
+	// Set up resource data path locations
 	auto json_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/json/samples/triangle");
 	auto glsl_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/glsl/samples/triangle");
 
+	// Set up resource data
 	entity_manager->add_templates(json_path + "/entity_templates.json");
 	app->get_material_manager()->add_templates(json_path + "/material_templates.json");
 	app->get_shader_manager()->add_templates(json_path + "/shader_templates.json");
 	app->get_shader_manager()->set_glsl_path(glsl_path);
 
+	// Set up resources
 	create_triangle_mesh(app);
 
+	// Create our entity
 	auto entity = entity_manager->create_entity("entity");
+
+	// Apply the entity template "triangle", defined in entity_templates.json
 	entity_manager->apply("triangle", entity);
 
+	// Set some run time limits
 	float max_run_time = 1.f;
 	float run_time = 0.f;
 
@@ -99,6 +113,7 @@ bool mainTest() {
 		}
 	});
 
+	// Start rendering
 	app->run();
 
 	return true;

@@ -119,7 +119,7 @@ bool mainTest() {
 	entity->get<std::string>("MeshName") = "triangle";
 	entity->get<std::string>("MaterialName") = "red_diffuse";
 
-	// Set som run time limits
+	// Set some run time limits
 	float max_run_time = 1.0f;
 	float run_time = 0.f;
 
