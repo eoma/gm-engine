@@ -5,9 +5,14 @@
 #include "GM/Framework/Managers/MaterialManager.h"
 #include "GM/Framework/Managers/MeshManager.h"
 #include "GM/Framework/Systems/RenderSystem.h"
-#include "GM/Core/GL/Render.h"
+#include "GM/Framework/Utilities/Material.h"
 
-using namespace GM::Framework;
+#include "GM/Core/GL/Render.h"
+#include "GM/Core/GL/Shader.h"
+
+
+namespace GM {
+namespace Framework {
 
 Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_system, const MaterialManagerPtr material_manager, const MeshManagerPtr mesh_manager, const unsigned int render_layers, const std::string &name)
 : Component<Renderable>(owner, name)
@@ -26,15 +31,18 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 
 	material_name_property = owner->add(PROPERTY_MATERIAL_NAME, std::string());
 	slots.connect(material_name_property.value_changed(),
-		[this](const std::string &/*old_material_name*/, const std::string &new_material_name) mutable
+		[this](const std::string &/*old_material_name*/, const std::string &new_material_name)
 		{
+			this->update_uniform_slots = clan::SlotContainer();
+			this->new_uniform_listener_slot = clan::Slot();
 			if (new_material_name.empty())
 			{
-				material = nullptr;
+				this->material = nullptr;
 			}
 			else
 			{
-				material = this->material_manager->get_or_create(new_material_name);
+				this->material = this->material_manager->get_or_create(new_material_name);
+				this->set_up_uniforms();
 			}
 		});
 
@@ -53,6 +61,169 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 		});
 }
 
-Renderable::~Renderable() {
+Renderable::~Renderable()
+{
 	render_system->remove_renderable(this);
 }
+
+void Renderable::set_up_uniforms()
+{
+	for (const auto &pair : owner->get_properties())
+	{
+		add_uniform_listener(pair.second);
+	}
+
+	new_uniform_listener_slot = owner->property_added().connect(this, &Renderable::add_uniform_listener);
+}
+
+void Renderable::add_uniform_listener(const std::shared_ptr<IProperty> &prop)
+{
+	const std::vector<std::string> &unused_uniforms = material->get_unused_uniforms();
+
+	if (std::find(unused_uniforms.begin(), unused_uniforms.end(), prop->get_name()) == unused_uniforms.end())
+	{
+		return;
+	}
+
+	const Core::ShaderVariableInfo info = material->get_shader()->get_uniform_info(prop->get_name());
+
+	Core::ShaderPtr shader = material->get_shader();
+
+	switch (info.type)
+	{
+	case GL_BYTE:
+		{
+			add_uniform<char>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_UNSIGNED_BYTE:
+		{
+			add_uniform<unsigned char>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_SHORT:
+		{
+			add_uniform<short>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_UNSIGNED_SHORT:
+		{
+			add_uniform<unsigned short>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_INT:
+		{
+			add_uniform<int>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_UNSIGNED_INT:
+		{
+			add_uniform<unsigned int>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_FLOAT:
+		{
+			add_uniform<float>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_FLOAT_VEC2:
+		{
+			add_uniform<glm::vec2>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_INT_VEC2:
+		{
+			add_uniform<glm::ivec2>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_UNSIGNED_INT_VEC2:
+		{
+			add_uniform<glm::uvec2>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_FLOAT_VEC3:
+		{
+			add_uniform<glm::vec3>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_INT_VEC3:
+		{
+			add_uniform<glm::ivec3>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_UNSIGNED_INT_VEC3:
+		{
+			add_uniform<glm::uvec3>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_FLOAT_VEC4:
+		{
+			add_uniform<glm::vec4>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_INT_VEC4:
+		{
+			add_uniform<glm::ivec4>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_UNSIGNED_INT_VEC4:
+		{
+			add_uniform<glm::uvec4>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_FLOAT_MAT2:
+		{
+			add_uniform<glm::mat2>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_FLOAT_MAT3:
+		{
+			add_uniform<glm::mat3>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_FLOAT_MAT4:
+		{
+			add_uniform<glm::mat4>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	case GL_SAMPLER_2D:
+	case GL_SAMPLER_CUBE:
+		{
+			add_uniform<Core::TexturePtr>(prop, shader->get_handle(), info.location);
+			break;
+		}
+
+	default:
+		{
+			clan::StringFormat message("Uknown/unhandled type (%1) for uniform (%2) with length (%3)");
+			message.set_arg(1, info.type);
+			message.set_arg(2, info.name);
+			message.set_arg(3, info.size);
+
+			std::cerr << message.get_result();
+			break;
+		}
+	}
+}
+
+} // namespace Framework
+} // namespace GM

@@ -5,6 +5,8 @@
 
 #include "../Totem/Component.h"
 
+#include "GM/Core/Utilities/UniformOperations.h"
+
 #include <memory>
 #include <string>
 
@@ -38,9 +40,20 @@ public:
 
 	virtual bool has_custom_render() const override { return false; }
 
-	virtual void custom_render(Camera * /*camera*/) override {};
+	virtual void custom_render(Camera * /*camera*/) override {}
+
+	virtual void update_uniforms() override { update_uniforms_signal(); }
+
 public:
 	static std::string get_static_type() { return COMPONENT_RENDERABLE; }
+
+private:
+	void set_up_uniforms();
+
+	void add_uniform_listener(const std::shared_ptr<IProperty> &prop);
+
+	template<class Value>
+	void add_uniform(const std::shared_ptr<IProperty> &prop, const unsigned int program, const int uniform_location);
 
 private:
 	RenderSystemPtr render_system;
@@ -63,7 +76,28 @@ private:
 
 	MaterialPtr material;
 	MeshPtr mesh;
+
+	clan::Signal<void()> update_uniforms_signal;
+	clan::Slot new_uniform_listener_slot;
+	clan::SlotContainer update_uniform_slots;
 };
+
+//
+// Implementations
+//
+
+template<class Value>
+void Renderable::add_uniform(const std::shared_ptr<IProperty> &prop, const unsigned int program, const int uniform_location)
+{
+	if (IProperty::is_type<Value>(prop)) {
+		auto prop_with_type = std::static_pointer_cast<Property<Value>>(prop);
+		update_uniform_slots.connect(update_uniforms_signal, [program, uniform_location, prop_with_type]() {
+			Core::update_uniform(program, uniform_location, prop_with_type->get());
+		});
+	}
+
+	// Maybe return bool if succesful (is of same type as Value)?
+}
 
 } // namespace Framework
 } // namesoace GM
