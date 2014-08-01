@@ -50,8 +50,8 @@ ShaderPtr ShaderFactory::make_program(const std::vector<ShaderSource> &shader_so
 		glDeleteShader(component);
 	}
 
-	shader->set_uniform_info(get_uniform_info(shader->get_handle()));
-	shader->set_attribute_info(get_attribute_info(shader->get_handle()));
+	shader->set_uniform_infos(get_uniform_infos(shader->get_handle()));
+	shader->set_attribute_infos(get_attribute_infos(shader->get_handle()));
 
 	return shader;
 }
@@ -90,7 +90,7 @@ unsigned int ShaderFactory::compile_shader(const ShaderSource &shader_source)
 	return shader_component;
 }
 
-std::vector<ShaderVariableInfo> ShaderFactory::get_attribute_info(const unsigned int program)
+std::vector<ShaderVariableInfo> ShaderFactory::get_attribute_infos(const unsigned int program)
 {
 	std::vector<ShaderVariableInfo> attribute_infos;
 	std::vector<char> name_buffer;
@@ -124,7 +124,7 @@ glGetActiveAttrib(program, i, name_buffer.size(), &name_length, &size, &type, na
 	return attribute_infos;
 }
 
-std::vector<ShaderVariableInfo> ShaderFactory::get_uniform_info(const unsigned int program)
+std::vector<ShaderVariableInfo> ShaderFactory::get_uniform_infos(const unsigned int program)
 {
 	std::vector<ShaderVariableInfo> uniform_infos;
 	std::vector<char> name_buffer;
