@@ -69,17 +69,16 @@ void create_quad_mesh(const MainPtr &app)
 			{ { -1.0f, 1.0f, 0.0f },	{ 0, 1 } }
 	};
 
-	auto buffer_allocation = app->get_buffer_manager()->allocate(quad.size() * sizeof(MyVertex));
+	auto buffer_allocation = app->get_buffer_manager()->allocate_and_upload(quad);
 
 	Core::VaoLayout vao_layout;
 	vao_layout
 		.for_buffer(buffer_allocation)
 			.use_as(GL_ARRAY_BUFFER)
-				.bind<glm::vec3>(POSITION)
-				.bind<glm::vec2>(TEXCOORD)
+				.bind_interleaved(Core::VaoArg<glm::vec3>(POSITION), Core::VaoArg<glm::vec2>(TEXCOORD))
 	;
 
-	auto render_command = Core::RenderCommand(false, quad.size(), 0, buffer_allocation.offset / sizeof(glm::vec3));
+	auto render_command = Core::RenderCommand(false, quad.size(), 0, buffer_allocation.offset / sizeof(MyVertex));
 
 	auto mesh = std::make_shared<Framework::Mesh>("quad", render_command, vao_layout, app->get_vao_manager());
 	app->get_mesh_manager()->add(mesh->get_name(), mesh);

@@ -1,5 +1,7 @@
 #include "GM/Framework/Managers/MeshManager.h"
-
+#include "GM/Framework/Templates/MeshTemplateManager.h"
+#include <GM/Framework/IO/IMeshIO.h>
+#include <GM/Framework/Utilities/Mesh.h>
 #include "ClanLib/core.h"
 
 #include <algorithm>
@@ -7,8 +9,10 @@
 namespace GM {
 namespace Framework {
 
-MeshManager::MeshManager() {
-
+MeshManager::MeshManager(const BufferManagerPtr &buffer_manager, const VaoManagerPtr &vao_manager, const IMeshIOPtr &mesh_io)
+: buffer_manager(buffer_manager), vao_manager(vao_manager), mesh_io(mesh_io)
+{
+	template_manager = MeshTemplateManagerPtr(new MeshTemplateManager());
 }
 
 MeshManager::~MeshManager() {
@@ -42,6 +46,39 @@ MeshPtr MeshManager::get(const std::string &name) const
 	if (iter != meshes.end())
 	{
 		mesh = iter->second;
+	}
+
+	return mesh;
+}
+
+MeshPtr MeshManager::get_or_create(const std::string &name) {
+	// First, test if the name has been cached.
+	auto mesh = get(name);
+	if (mesh) {
+		return mesh;
+	}
+
+	//If not cached, let's see if there is a template description for this name.
+	template_manager->get(name, [this, name, &mesh](const MeshTemplateManager::Template &t) {
+		mesh = get_or_create(name, t.filename, t.mesh_index);
+	});
+
+	return mesh;
+}
+
+MeshPtr MeshManager::get_or_create(const std::string &name, const std::string &filename, int mesh_index) {
+	// First, test if the name has been cached.
+	auto mesh = get(name);
+	if (mesh) {
+		return mesh;
+	}
+
+	mesh = mesh_io->load(name, mesh_path + "/" + filename, mesh_index, buffer_manager, vao_manager);
+	if (mesh) {
+		add(mesh->get_name(), mesh);
+	}
+	else {
+		throw clan::Exception(clan::string_format("Failed to get or create the mesh %1.", name));
 	}
 
 	return mesh;

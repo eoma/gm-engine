@@ -12,6 +12,7 @@
 #include "GM/Framework/Managers/VaoManager.h"
 
 #include "GM/Framework/IO/SoilTextureIO.h"
+#include "GM/Framework/IO/AssimpMeshIO.h"
 
 #include <glm/ext.hpp>
 
@@ -97,14 +98,16 @@ namespace Application {
 		material_manager = std::make_shared<Framework::MaterialManager>(shader_manager, texture_manager);
 	}
 
-	if (flags & GM_FRAMEWORK_MESH_MANAGER)
-	{
-		mesh_manager = std::make_shared<Framework::MeshManager>();
-	}
-
 	if (flags & GM_FRAMEWORK_VAO_MANAGER)
 	{
 		vao_manager = std::make_shared<Framework::VaoManager>();
+	}
+
+	if (flags & GM_FRAMEWORK_MESH_MANAGER)
+	{
+		mesh_manager = std::make_shared<Framework::MeshManager>(buffer_manager, vao_manager,
+			std::make_shared<Framework::AssimpMeshIO>()
+			);
 	}
 
 	if (construct_window)

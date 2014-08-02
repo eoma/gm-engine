@@ -11,10 +11,13 @@
 #include <GM/Framework/Managers/ShaderManager.h>
 #include <GM/Framework/Managers/TextureManager.h>
 #include <GM/Framework/Managers/MaterialManager.h>
+#include <GM/Framework/Managers/BufferManager.h>
+#include <GM/Framework/Managers/VaoManager.h>
 #include <GM/Framework/Managers/MeshManager.h>
 #include <GM/Framework/Utilities/ComponentSerializer.h>
 #include <GM/Framework/Utilities/Tools.h>
-#include "GM/Framework/IO/SoilTextureIO.h"
+#include <GM/Framework/IO/SoilTextureIO.h>
+#include <GM/Framework/IO/AssimpMeshIO.h>
 
 #include <memory>
 
@@ -81,8 +84,10 @@ bool mainTest() {
 	auto entity_manager = std::make_shared<EntityManager>();
 	auto shader_manager = std::make_shared<ShaderManager>();
 	auto texture_manager = std::make_shared<TextureManager>(std::make_shared<Framework::SoilTextureIO>());
+	auto buffer_manager = std::make_shared<BufferManager>();
+	auto vao_manager = std::make_shared<VaoManager>();
 	auto material_manager = std::make_shared<MaterialManager>(shader_manager, texture_manager);
-	auto mesh_manager = std::make_shared<MeshManager>();
+	auto mesh_manager = std::make_shared<MeshManager>(buffer_manager, vao_manager, std::make_shared<Framework::AssimpMeshIO>());
 
 	auto my_component_serializer = std::make_shared<MyComponentSerializer>(entity_manager, scene_system, render_system, material_manager, mesh_manager);
 
