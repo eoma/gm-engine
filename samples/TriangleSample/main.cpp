@@ -94,9 +94,13 @@ void create_red_material(const MainPtr &app)
 	{
 		return;
 	}
+
 	auto material = app->get_material_manager()->get_or_create("red_diffuse", "diffuse");
-	auto diffuse = material->add<glm::vec3>("diffuse", glm::vec3());
-	diffuse = glm::vec3(1.f, 0.f, 0.f);
+	if (material->has_property("diffuse"))
+	{
+		auto diffuse = material->get<glm::vec3>("diffuse");
+		diffuse = glm::vec3(1.f, 0.f, 0.f);
+	}
 }
 
 bool mainTest() {
