@@ -28,6 +28,8 @@ namespace GM {
 
 			MeshPtr get_or_create(const std::string &name);
 			MeshPtr get_or_create(const std::string &name, const std::string &filename, int mesh_index);
+
+			void add_templates(const std::string &template_filename);
 		public:
 
 		private:

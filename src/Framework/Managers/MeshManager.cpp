@@ -84,5 +84,10 @@ MeshPtr MeshManager::get_or_create(const std::string &name, const std::string &f
 	return mesh;
 }
 
+void MeshManager::add_templates(const std::string &template_filename)
+{
+	template_manager->add_templates(template_filename);
+}
+
 } // namespace Framework
 } // namespace GM
