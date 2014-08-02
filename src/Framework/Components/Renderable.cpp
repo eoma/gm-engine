@@ -56,8 +56,7 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 			}
 			else
 			{
-				// TODO: Make this a get_or_create once we have Mesh Template Manager going
-				mesh = this->mesh_manager->get(new_mesh_name);
+				mesh = this->mesh_manager->get_or_create(new_mesh_name);
 			}
 		});
 }

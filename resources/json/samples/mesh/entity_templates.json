@@ -1,0 +1,16 @@
+[
+	{
+		"entity": "spaceship",
+		"components": [ "Renderable", "Camera" ],
+		"properties": [
+			{
+				"name": "MeshName",
+				"value": "spaceship"
+			},
+			{
+				"name": "MaterialName",
+				"value": "red_diffuse"
+			}
+		]
+	}
+]

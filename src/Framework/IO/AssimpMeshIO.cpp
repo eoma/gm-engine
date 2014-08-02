@@ -37,11 +37,10 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 {
 	auto scene = importer->ReadFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality);
 
-	if (scene->mNumMeshes >= mesh_index)
+	if (scene->mNumMeshes <= mesh_index)
 		throw clan::Exception(clan::string_format("The mesh index (%1) was out of bounds for mesh %2.", mesh_index, mesh_name));
 
-	auto mesh_actual_index = scene->mRootNode->mMeshes[mesh_index];
-	auto scene_mesh = scene->mMeshes[mesh_actual_index];
+	auto scene_mesh = scene->mMeshes[mesh_index];
 
 	struct MyVertex {
 		glm::vec3 position;
