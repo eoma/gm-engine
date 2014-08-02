@@ -110,7 +110,7 @@ void PropertySerializer::create_and_add_property(PropertyContainer<> &container,
 		{
 			std::string result;
 			from_string(value, result);
-			Property<std::string> property = container.add<std::string>(name, result);
+			Property<std::string> property = container.add<std::string>(name + "_name", result);
 			property.set(result);
 			break;
 		}

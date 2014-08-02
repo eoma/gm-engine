@@ -3,6 +3,8 @@
 #include "GM/Framework/Templates/TextureFormatTemplateManager.h"
 #include "GM/Framework/IO/ITextureIO.h"
 
+#include "GM/Core/GL/Texture.h"
+
 #include <ClanLib/core.h>
 
 namespace GM {
@@ -26,11 +28,11 @@ const RawImage &TextureManager::get_or_create_image(const std::string &file_name
 	if (iter == loaded_images.end())
 	{
 		// TODO: check if file exists. Catch eventual exceptions. Check if image is empty
-		if (!clan::FileHelp::file_exists(file_name)) {
+		if (!clan::FileHelp::file_exists(texture_path + "/" + file_name)) {
 			throw clan::Exception("Texture does not exist!");
 		}
 
-		RawImage image = texture_io->load(file_name);
+		RawImage image = texture_io->load(texture_path + "/" + file_name);
 
 		if (image.get_data().empty() || image.get_width() < 1 || image.get_height() < 1)
 		{
@@ -43,7 +45,7 @@ const RawImage &TextureManager::get_or_create_image(const std::string &file_name
 	return iter->second;
 }
 
-TextureId TextureManager::get_or_create(const std::string &texture_name)
+Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name)
 {
 	// First, test if the name has been cached.
 	auto texture = get(texture_name);
@@ -82,23 +84,23 @@ TextureId TextureManager::get_or_create(const std::string &texture_name)
 	return texture;
 }
 
-TextureId TextureManager::get_or_create(const std::string &texture_name, const Core::TextureFormat &format)
+Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, const Core::TextureFormat &format)
 {
 	// TODO: Implement cache lookup for this name and make sure it uses the same format as specified.
 	// TODO: Implement generating an empty texture based on format.
 	//auto texture = Core::TextureFactory::create(format);
-	throw clan::Exception("TextureId TextureManager::get_or_create(const std::string &texture_name, const Core::TextureFormat &format) is not yet implemented.");
+	throw clan::Exception("Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, const Core::TextureFormat &format) is not yet implemented.");
 }
 
-TextureId TextureManager::get_or_create(const std::string &texture_name, const RawImage &image, const Core::TextureFormat &format)
+Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, const RawImage &image, const Core::TextureFormat &format)
 {
 	// TODO: Implement cache lookup for this name and make sure it uses the same image and format as specified.
 	// TODO: Implement generating a texture based on raw image data and format.
 	//auto texture = Core::TextureFactory::create(format, )
-	throw clan::Exception("TextureId TextureManager::get_or_create(const std::string &texture_name, const RawImage &image, const Core::TextureFormat &format) is not yet implemented.");
+	throw clan::Exception("Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, const RawImage &image, const Core::TextureFormat &format) is not yet implemented.");
 }
 
-TextureId TextureManager::get(const std::string &texture_name)
+Core::TexturePtr TextureManager::get(const std::string &texture_name)
 {
 	auto iter = name_to_texture.find(texture_name);
 	if (iter == name_to_texture.end())

@@ -9,8 +9,8 @@
 namespace GM {
 namespace Framework {
 
-MaterialManager::MaterialManager(const ShaderManagerPtr &shader_manager) 
-: shader_manager(shader_manager)
+MaterialManager::MaterialManager(const ShaderManagerPtr &shader_manager, const TextureManagerPtr &texture_manager)
+: shader_manager(shader_manager), texture_manager(texture_manager)
 {
 	template_manager = MaterialTemplateManagerPtr(new MaterialTemplateManager());
 }
@@ -85,7 +85,7 @@ MaterialPtr MaterialManager::get_or_create(const std::string& name, const std::s
 	}
 
 	auto shader = shader_manager->get_or_create(shader_name);
-	material = MaterialPtr(new Material(shader, name));
+	material = MaterialPtr(new Material(texture_manager, shader, name));
 	add(name, material);
 	return material;
 }

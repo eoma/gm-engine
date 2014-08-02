@@ -1,0 +1,18 @@
+[
+	{
+		"material": "diffuse",
+		"shader": "diffuse",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [1, 1, 1],
+				"type": "vec3"
+			},
+			{
+				"name": "diffuse_map",
+				"value": "floor",
+				"type": "texture"
+			}
+		]
+	}
+]

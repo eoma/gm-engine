@@ -20,12 +20,12 @@ namespace Core {
 namespace Framework {
 
 class IProperty; typedef std::shared_ptr<IProperty> IPropertyPtr;
-
+class TextureManager; typedef std::shared_ptr<TextureManager> TextureManagerPtr;
 
 class Material : public PropertyContainer<>
 {
 public:
-	Material(const Core::ShaderPtr &shader, const std::string &name = std::string());
+	Material(const TextureManagerPtr &texture_manager, const Core::ShaderPtr &shader, const std::string &name = std::string());
 	virtual ~Material() {};
 
 	const std::string &get_name() const { return name; }
@@ -43,6 +43,7 @@ private:
 private:
 	std::string name;
 	Core::ShaderPtr shader;
+	TextureManagerPtr texture_manager;
 
 	// Uniforms directly used by this material
 	std::vector<std::string> used_uniforms;

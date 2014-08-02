@@ -1,0 +1,16 @@
+[
+	{
+		"entity": "quad",
+		"components": [ "Renderable", "Camera" ],
+		"properties": [
+			{
+				"name": "MeshName",
+				"value": "quad"
+			},
+			{
+				"name": "MaterialName",
+				"value": "diffuse"
+			}
+		]
+	}
+]

@@ -10,10 +10,11 @@ namespace Framework {
 	class Material; typedef std::shared_ptr<Material> MaterialPtr;
 	class MaterialTemplateManager; typedef std::shared_ptr<MaterialTemplateManager> MaterialTemplateManagerPtr;
 	class ShaderManager; typedef std::shared_ptr<ShaderManager> ShaderManagerPtr;
+	class TextureManager; typedef std::shared_ptr<TextureManager> TextureManagerPtr;
 
 class MaterialManager {
 public:
-	MaterialManager(const ShaderManagerPtr &shader_manager);
+	MaterialManager(const ShaderManagerPtr &shader_manager, const TextureManagerPtr &texture_manager);
 	~MaterialManager();
 
 	bool contains(const std::string &name) const;
@@ -32,6 +33,7 @@ private:
 
 	MaterialTemplateManagerPtr template_manager;
 	ShaderManagerPtr shader_manager;
+	TextureManagerPtr texture_manager;
 };
 
 typedef std::shared_ptr<MaterialManager> MaterialManagerPtr;

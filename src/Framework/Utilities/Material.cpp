@@ -1,5 +1,5 @@
 #include "GM/Framework/Utilities/Material.h"
-
+#include "GM/Framework/Managers/TextureManager.h"
 #include "GM/Core/GL/Shader.h"
 
 #include <glm/glm.hpp>
@@ -9,9 +9,10 @@
 namespace GM {
 namespace Framework {
 
-Material::Material(const Core::ShaderPtr &shader, const std::string &name)
+	Material::Material(const TextureManagerPtr &texture_manager, const Core::ShaderPtr &shader, const std::string &name)
 : name(name)
 , shader(shader)
+, texture_manager(texture_manager)
 , used_uniforms()
 , unused_uniforms()
 {
@@ -154,8 +155,24 @@ Material::Material(const Core::ShaderPtr &shader, const std::string &name)
 				std::cerr << message.get_result();
 				break;
 			}
-		}
+		};
 	}
+
+	property_added_slot = sign_PropertyAdded.connect([&](IPropertyPtr p) {
+		if (IProperty::is_type<std::string>(p)) {
+			auto texture_property_name = p->get_name().substr(0, p->get_name().find_last_of("_name") - 4);
+			auto property = get<std::string>(p->get_name());
+			
+			// make sure this texture actually exist on this material
+			if (has_property(texture_property_name)) {
+				auto texture_property = get<Core::TexturePtr>(texture_property_name);
+				texture_property = texture_manager->get_or_create(property.get());
+			}
+			else {
+				throw clan::Exception(clan::string_format("Failed to find a texture property with name %1 on material %2", texture_property_name, get_name()));
+			}
+		}
+	});
 }
 
 } // namespace Framework

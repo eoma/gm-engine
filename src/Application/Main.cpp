@@ -85,21 +85,21 @@ namespace Application {
 		shader_manager = std::make_shared<Framework::ShaderManager>();
 	}
 	
+	if (flags & GM_FRAMEWORK_TEXTURE_MANAGER)
+	{
+		texture_manager = std::make_shared<Framework::TextureManager>(
+			std::make_shared<Framework::SoilTextureIO>()
+			);
+	}
+
 	if (flags & GM_FRAMEWORK_MATERIAL_MANAGER)
 	{
-		material_manager = std::make_shared<Framework::MaterialManager>(shader_manager);
+		material_manager = std::make_shared<Framework::MaterialManager>(shader_manager, texture_manager);
 	}
 
 	if (flags & GM_FRAMEWORK_MESH_MANAGER)
 	{
 		mesh_manager = std::make_shared<Framework::MeshManager>();
-	}
-
-	if (flags & GM_FRAMEWORK_TEXTURE_MANAGER)
-	{
-		texture_manager = std::make_shared<Framework::TextureManager>(
-			std::make_shared<Framework::SoilTextureIO>()
-		);
 	}
 
 	if (flags & GM_FRAMEWORK_VAO_MANAGER)
