@@ -57,21 +57,19 @@ void create_quad_mesh(const MainPtr &app)
 		return;
 	}
 
-	std::vector<glm::vec3> vertices {
-			{ -1.0f, -1.0f, 0.0f },
-			{ 1.0f, -1.0f, 0.0f },
-			{ 1.0f, 1.0f, 0.0f },
-			{ -1.0f, 1.0f, 0.0f }
-	};
-	std::vector<glm::vec2> texcoords{
-			{ 0, 0 },
-			{ 1, 0 },
-			{ 1, 1 },
-			{ 0, 1 }
+	struct MyVertex {
+		glm::vec3 position;
+		glm::vec2 texcoord;
 	};
 
-	auto buffer_allocation = app->get_buffer_manager()->allocate_and_upload(vertices);
-	auto texcoord_allocation = app->get_buffer_manager()->allocate_and_upload(texcoords);
+	std::vector<MyVertex> quad{
+			{ { -1.0f, -1.0f, 0.0f },	{ 0, 0 } },
+			{ { 1.0f, -1.0f, 0.0f },	{ 1, 0 } },
+			{ { 1.0f, 1.0f, 0.0f },		{ 1, 1 } },
+			{ { -1.0f, 1.0f, 0.0f },	{ 0, 1 } }
+	};
+
+	auto buffer_allocation = app->get_buffer_manager()->allocate(quad.size() * sizeof(MyVertex));
 
 	Core::VaoLayout vao_layout;
 	vao_layout
@@ -81,7 +79,7 @@ void create_quad_mesh(const MainPtr &app)
 				.bind<glm::vec2>(TEXCOORD)
 	;
 
-	auto render_command = Core::RenderCommand(false, vertices.size() + texcoords.size(), 0, buffer_allocation.offset / sizeof(glm::vec3));
+	auto render_command = Core::RenderCommand(false, quad.size(), 0, buffer_allocation.offset / sizeof(glm::vec3));
 
 	auto mesh = std::make_shared<Framework::Mesh>("quad", render_command, vao_layout, app->get_vao_manager());
 	app->get_mesh_manager()->add(mesh->get_name(), mesh);
