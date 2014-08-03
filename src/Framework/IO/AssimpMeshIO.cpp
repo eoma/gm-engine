@@ -35,7 +35,7 @@ AssimpMeshIO::~AssimpMeshIO()
 
 MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file_name, int mesh_index, const BufferManagerPtr &buffer_manager, const VaoManagerPtr &vao_manager)
 {
-	auto scene = importer->ReadFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality);
+	auto scene = importer->ReadFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
 
 	if (scene->mNumMeshes <= mesh_index)
 		throw clan::Exception(clan::string_format("The mesh index (%1) was out of bounds for mesh %2.", mesh_index, mesh_name));
@@ -45,8 +45,8 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 	struct MyVertex {
 		glm::vec3 position;
 		glm::vec3 normal;
-		//glm::vec2 texcoord;
-		MyVertex(glm::vec3 position, glm::vec3 normal, glm::vec2 texcoord) : position(position), normal(normal)/*, texcoord(texcoord)*/ {}
+		glm::vec2 texcoord;
+		MyVertex(glm::vec3 position, glm::vec3 normal, glm::vec2 texcoord) : position(position), normal(normal), texcoord(texcoord) {}
 	};
 	std::vector<MyVertex> vertices;
 	std::vector<unsigned int> indices;
@@ -62,7 +62,7 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 
 	for (unsigned int i = 0; i < scene_mesh->mNumVertices; i++) {
 		auto position = scene_mesh->mVertices[i];
-		auto normal = scene_mesh->mNormals[i];
+		auto normal = scene_mesh->HasNormals() ? scene_mesh->mNormals[i] : aiVector3D(1, 1, 1);
 		auto texcoord = scene_mesh->mTextureCoords[0][i];
 
 		vertices.push_back(MyVertex(
@@ -72,19 +72,22 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 		));
 	}
 
-	auto buffer_allocation = buffer_manager->allocate_and_upload(vertices);
+	auto vertex_allocation = buffer_manager->allocate_and_upload(vertices);
 	auto index_allocation = buffer_manager->allocate_and_upload(indices);
 
 	Core::VaoLayout vao_layout;
 	vao_layout
-		.for_buffer(buffer_allocation)
+		.for_buffer(vertex_allocation)
 			.use_as(GL_ARRAY_BUFFER)
-				.bind_interleaved(Core::VaoArg<glm::vec3>(POSITION), Core::VaoArg<glm::vec3>(NORMAL)/*, Core::VaoArg<glm::vec2>(TEXCOORD)*/)
+				.bind_interleaved(Core::VaoArg<glm::vec3>(POSITION), Core::VaoArg<glm::vec3>(NORMAL), Core::VaoArg<glm::vec2>(TEXCOORD))
 		.for_buffer(index_allocation)
 			.use_as(GL_ELEMENT_ARRAY_BUFFER)
 	;
 
-	auto render_command = Core::RenderCommand(true, vertices.size(), 0, index_allocation.offset / sizeof(unsigned int), buffer_allocation.offset / sizeof(MyVertex));
+	//auto render_command = Core::RenderCommand(true, vertices.size(), 0, index_allocation.offset / sizeof(unsigned int), buffer_allocation.offset / sizeof(MyVertex));
+	Core::RenderCommand render_command;
+	render_command.set_indices(index_allocation, indices);
+	render_command.set_vertices(vertex_allocation, vertices);
 
 	return std::make_shared<Mesh>(mesh_name, render_command, vao_layout, vao_manager);
 }

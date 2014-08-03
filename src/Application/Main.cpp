@@ -399,6 +399,11 @@ void Main::set_gl_version(int major, int minor)
 void Main::gl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam) {
     std::string error = gl_format_debug_output(source, type, id, severity, message);
     std::cout << error << std::endl;
+
+#ifdef _MSC_VER
+	if (type == GL_DEBUG_TYPE_ERROR_ARB || type == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB || type == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB || severity == GL_DEBUG_SEVERITY_HIGH_ARB)
+		__debugbreak();
+#endif
 }
 
 std::string Main::gl_format_debug_output(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg) {

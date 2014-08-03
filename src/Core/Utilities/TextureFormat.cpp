@@ -56,9 +56,9 @@ void TextureFormat::string_to_parameter(const std::string &value, float &result)
 
 void TextureFormat::string_to_parameter(const std::string &value, int &result)
 {
-	if (value == "linear_mipmap_linear") result = /*GL_LINEAR_MIPMAP_LINEAR*/1;
-	else if (value == "linear") result = /*GL_LINEAR*/2;
-	else if (value == "clamp_to_edge") result = /*GL_CLAMP_TO_EDGE*/3;
+	if (value == "linear_mipmap_linear") result = GL_LINEAR_MIPMAP_LINEAR;
+	else if (value == "linear") result = GL_LINEAR;
+	else if (value == "clamp_to_edge") result = GL_CLAMP_TO_EDGE;
 	else
 		throw clan::Exception(clan::string_format("The int parameter (%1) was not supported in TextureFormat when deserializing from string!", value));
 }
@@ -85,30 +85,30 @@ TextureFormat *TextureFormat::create_texture_format_from_string(
 	bool generate_mipmap)
 {
 	// FIXME: Uncomment when GL comes
-	TextureFormat *format = new TextureFormat(/*GL_TEXTURE_2D*/ 1);
+	TextureFormat *format = new TextureFormat(GL_TEXTURE_2D);
 
 	if (!min_filter.empty()) {
 		int result;
 		string_to_parameter(min_filter, result);
-		//format->set_parameter(GL_TEXTURE_MIN_FILTER, result);
+		format->set_parameter(GL_TEXTURE_MIN_FILTER, result);
 	}
 
 	if (!mag_filter.empty()) {
 		int result;
 		string_to_parameter(mag_filter, result);
-		//format->set_parameter(GL_TEXTURE_MAG_FILTER, result);
+		format->set_parameter(GL_TEXTURE_MAG_FILTER, result);
 	}
 
 	if (!wrap_s.empty()) {
 		int result;
 		string_to_parameter(wrap_s, result);
-		//format->set_parameter(GL_TEXTURE_WRAP_S, result);
+		format->set_parameter(GL_TEXTURE_WRAP_S, result);
 	}
 
 	if (!wrap_t.empty()) {
 		int result;
 		string_to_parameter(wrap_t, result);
-		//format->set_parameter(GL_TEXTURE_WRAP_T, result);
+		format->set_parameter(GL_TEXTURE_WRAP_T, result);
 	}
 
 	format->set_generate_mipmap(generate_mipmap);

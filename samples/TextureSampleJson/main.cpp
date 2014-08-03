@@ -62,23 +62,24 @@ void create_quad_mesh(const MainPtr &app)
 		glm::vec2 texcoord;
 	};
 
-	std::vector<MyVertex> quad{
-			{ { -1.0f, -1.0f, 0.0f },	{ 0, 0 } },
-			{ { 1.0f, -1.0f, 0.0f },	{ 1, 0 } },
-			{ { 1.0f, 1.0f, 0.0f },		{ 1, 1 } },
-			{ { -1.0f, 1.0f, 0.0f },	{ 0, 1 } }
+	std::vector<MyVertex> vertices{
+			{ { -0.5f, -0.5f, 0.0f },	{ 0, 0 } },
+			{ { 0.5f, -0.5f, 0.0f },	{ 1, 0 } },
+			{ { -0.5f, 0.5f, 0.0f },	{ 0, 1 } },
+			{ { 0.5f, 0.5f, 0.0f },		{ 1, 1 } }
 	};
 
-	auto buffer_allocation = app->get_buffer_manager()->allocate_and_upload(quad);
+	auto vertex_allocation = app->get_buffer_manager()->allocate_and_upload(vertices);
 
 	Core::VaoLayout vao_layout;
 	vao_layout
-		.for_buffer(buffer_allocation)
+		.for_buffer(vertex_allocation)
 			.use_as(GL_ARRAY_BUFFER)
 				.bind_interleaved(Core::VaoArg<glm::vec3>(POSITION), Core::VaoArg<glm::vec2>(TEXCOORD))
 	;
 
-	auto render_command = Core::RenderCommand(false, quad.size(), 0, buffer_allocation.offset / sizeof(MyVertex));
+	Core::RenderCommand render_command;
+	render_command.set_vertices(vertex_allocation, vertices);
 
 	auto mesh = std::make_shared<Framework::Mesh>("quad", render_command, vao_layout, app->get_vao_manager());
 	app->get_mesh_manager()->add(mesh->get_name(), mesh);
@@ -114,7 +115,7 @@ bool mainTest() {
 	entity_manager->apply("quad", entity);
 
 	// Set some run time limits
-	float max_run_time = 1.f;
+	float max_run_time = 2.f;
 	float run_time = 0.f;
 
 	auto update_slot = app->on_update().connect([&](float dt) mutable {
