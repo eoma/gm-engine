@@ -8,6 +8,7 @@
 #include "GM/Framework/EntityManager.h"
 #include "GM/Framework/Components/Renderable.h"
 #include "GM/Framework/Components/Camera.h"
+#include "GM/Framework/Components/Transform.h"
 #include "GM/Framework/Managers/BufferManager.h"
 #include "GM/Framework/Managers/MaterialManager.h"
 #include "GM/Framework/Managers/MeshManager.h"
@@ -66,6 +67,9 @@ public:
 		else if (type == Framework::Renderable::get_static_type()) {
 			owner->create_component<Framework::Renderable>(app->get_render_system(), app->get_material_manager(), app->get_mesh_manager());
 		}
+		else if (type == Framework::Transform::get_static_type()) {
+			owner->create_component<Framework::Transform>(app->get_scene_system());
+		}
 		else if (type == IdleRotationComponent::get_static_type()) {
 			owner->create_component<IdleRotationComponent>();
 		}
@@ -103,7 +107,7 @@ bool mainTest() {
 	entity_manager->apply("spaceship", spaceship);
 
 	// Set some run time limits
-	float max_run_time = 10.f;
+	float max_run_time = 3.f;
 	float run_time = 0.f;
 
 	auto update_slot = app->on_update().connect([&](float dt) mutable {

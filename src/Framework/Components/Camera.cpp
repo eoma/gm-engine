@@ -19,6 +19,7 @@ Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, uns
 	view_matrix_property = owner->add<glm::mat4>(PROPERTY_VIEW_MATRIX, glm::mat4());
 	projection_matrix_property = owner->add<glm::mat4>(PROPERTY_PROJECTION_MATRIX, glm::mat4());
 	world_matrix_property = owner->add<glm::mat4>(PROPERTY_WORLD_MATRIX, glm::mat4());
+	recalculate_view_matrix(world_matrix_property.get(), world_matrix_property.get());
 
 	slots.connect(world_matrix_property.value_changed(), this, &Camera::recalculate_view_matrix);
 

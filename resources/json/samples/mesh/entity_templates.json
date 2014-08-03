@@ -13,7 +13,7 @@
 			},
 			{
 				"name": "Position",
-				"value": [0,0,-10],
+				"value": [0,0,-100],
 				"type": "vec3"
 			}
 		]
