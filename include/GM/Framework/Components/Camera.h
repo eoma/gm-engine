@@ -32,6 +32,9 @@ public:
 
 	bool is_projection_matrix_dirty() const { return projection_matrix_property.is_dirty(); };
 	const glm::mat4 &get_projection_matrix() const { return projection_matrix_property; };
+	void set_projection(float fov, float width, float height, float near_clipping, float far_clipping);
+	void set_projection(const glm::uvec2 &resolution);
+	void set_projection(float width, float height);
 
 	void clear_dirty();
 
@@ -52,6 +55,10 @@ private:
 	Property<glm::mat4> projection_matrix_property;
 	Property<glm::mat4> view_matrix_property;
 	Property<glm::mat4> world_matrix_property;
+
+	Property<float> fov_property;
+	Property<float> near_clipping_property;
+	Property<float> far_clipping_property;
 };
 
 } // namespace Framework

@@ -22,6 +22,7 @@ Transform::Transform(const EntityPtr &owner, const SceneSystemPtr &scene_system,
 
 	object_matrix_property = owner->add(PROPERTY_OBJECT_MATRIX, glm::mat4());
 	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4());
+	normal_matrix_property = owner->add(PROPERTY_NORMAL_MATRIX, glm::mat3());
 
 	scene_system->add(this);
 }
@@ -115,8 +116,8 @@ void Transform::update_object_matrix() {
 }
 
 glm::mat4 Transform::make_object_matrix() const {
-	glm::mat4 translation;
-	translation[3] = glm::vec4(position_property.get(), 1);
+	glm::mat4 translation = glm::translate(position_property.get());
+	//translation[3] = glm::vec4(position_property.get(), 1);
 
 	glm::mat4 rotation = glm::toMat4(orientation_property.get());
 
@@ -140,3 +141,4 @@ glm::mat4 Transform::make_world_matrix() const {
 
 	return thisWorld;
 }
+

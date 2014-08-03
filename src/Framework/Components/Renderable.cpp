@@ -10,6 +10,7 @@
 #include "GM/Core/GL/Render.h"
 #include "GM/Core/GL/Shader.h"
 
+#include <glm/ext.hpp>
 
 namespace GM {
 namespace Framework {
@@ -25,6 +26,7 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 
 	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4());
 	object_matrix_property = owner->add(PROPERTY_OBJECT_MATRIX, glm::mat4());
+	normal_matrix_property = owner->add(PROPERTY_NORMAL_MATRIX, glm::mat3());
 
 	culled_property = owner->add(PROPERTY_CULLED, false);
 	visible_property = owner->add(PROPERTY_VISIBLE, false);
@@ -226,13 +228,28 @@ void Renderable::add_uniform_listener(const std::shared_ptr<IProperty> &prop)
 }
 
 void Renderable::update_uniforms(Camera *camera) { 
-	if (material->has_property(PROPERTY_PROJECTION_MATRIX))
+	if (material->has_property(PROPERTY_PROJECTION_MATRIX)) {
 		material->get<glm::mat4>(PROPERTY_PROJECTION_MATRIX) = camera->get_projection_matrix();
+	}
 
-	if (material->has_property(PROPERTY_VIEW_MATRIX))
+	if (material->has_property(PROPERTY_VIEW_MATRIX)) {
 		material->get<glm::mat4>(PROPERTY_VIEW_MATRIX) = camera->get_view_matrix();
+	}
+
+	// Let's only actually update the normal matrix value based on world and view matrix if the shader use it.
+	if (material->has_property(PROPERTY_NORMAL_MATRIX)) {
+		update_normal_matrix(camera->get_view_matrix());
+	}
 
 	update_uniforms_signal(); 
+}
+
+void Renderable::update_normal_matrix(const glm::mat4 &view_matrix) {
+	normal_matrix_property = make_normal_matrix(view_matrix);
+}
+
+glm::mat3 Renderable::make_normal_matrix(const glm::mat4 &view_matrix) const {
+	return glm::inverseTranspose(glm::mat3(view_matrix * world_matrix_property.get()));
 }
 
 } // namespace Framework

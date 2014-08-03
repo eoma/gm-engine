@@ -20,6 +20,20 @@
 	},
 	{
 		"entity": "camera",
-		"components": [ "Camera", "Transform" ]
+		"components": [ "Camera", "Transform" ],
+		"properties": [
+			{
+				"name": "FOV",
+				"value": 65
+			},
+			{
+				"name": "NearClipping",
+				"value": 0.1
+			},
+			{
+				"name": "FarClipping",
+				"value": 1000
+			}
+		]
 	}
 ]

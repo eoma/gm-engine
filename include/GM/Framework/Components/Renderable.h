@@ -46,6 +46,8 @@ public:
 
 	virtual void update_uniforms(Camera *camera) override; //{ update_uniforms_signal(camera); }
 
+	void update_normal_matrix(const glm::mat4 &view_matrix);
+
 public:
 	static std::string get_static_type() { return COMPONENT_RENDERABLE; }
 
@@ -57,6 +59,8 @@ private:
 	template<class Value>
 	void add_uniform(const std::shared_ptr<IProperty> &prop, const unsigned int program, const int uniform_location);
 
+	glm::mat3 make_normal_matrix(const glm::mat4 &view_matrix) const;
+
 private:
 	RenderSystemPtr render_system;
 
@@ -67,6 +71,7 @@ private:
 
 	Property<glm::mat4> world_matrix_property;
 	Property<glm::mat4> object_matrix_property;
+	Property<glm::mat3> normal_matrix_property;
 
 	Property<bool> culled_property;
 	Property<bool> visible_property;

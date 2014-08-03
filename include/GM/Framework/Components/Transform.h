@@ -108,6 +108,7 @@ private:
 
 	Property<glm::mat4> object_matrix_property;
 	Property<glm::mat4> world_matrix_property;
+	Property<glm::mat3> normal_matrix_property;
 };
 
 } // namespace Framework

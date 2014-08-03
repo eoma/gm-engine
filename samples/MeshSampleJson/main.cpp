@@ -106,8 +106,13 @@ bool mainTest() {
 	entity_manager->apply("camera", camera);
 	entity_manager->apply("spaceship", spaceship);
 
+	// Set up the projection for the camera
+	if (camera->has_component<Framework::Camera>()) {
+		camera->get_component<Framework::Camera>()->set_projection(app->get_resolution());
+	}
+
 	// Set some run time limits
-	float max_run_time = 3.f;
+	float max_run_time = 1.5f;
 	float run_time = 0.f;
 
 	auto update_slot = app->on_update().connect([&](float dt) mutable {

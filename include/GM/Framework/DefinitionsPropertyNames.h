@@ -14,6 +14,10 @@
 // Camera
 #define PROPERTY_PROJECTION_MATRIX	"ProjectionMatrix"	// glm::mat4
 #define PROPERTY_VIEW_MATRIX		"ViewMatrix"		// glm::mat4
+#define PROPERTY_NORMAL_MATRIX		"NormalMatrix"		// glm::mat3
+#define PROPERTY_FOV				"FOV"				// float
+#define PROPERTY_NEAR_CLIPPING		"NearClipping"		// float
+#define PROPERTY_FAR_CLIPPING		"FarClipping"		// float
 
 // Material
 #define PROPERTY_MATERIAL_NAME		"MaterialName"		// std::string
