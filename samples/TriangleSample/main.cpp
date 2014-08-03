@@ -48,7 +48,8 @@ void create_triangle_mesh(const MainPtr &app)
 				.bind<glm::vec3>(POSITION)
 	;
 
-	Core::RenderCommand render_command(false, vertices.size(), 0, buffer_allocation.offset / sizeof(glm::vec3));
+	Core::RenderCommand render_command;
+	render_command.set_vertices(buffer_allocation, vertices);
 
 	auto mesh = std::make_shared<Framework::Mesh>("triangle", render_command, vao_layout, app->get_vao_manager());
 	app->get_mesh_manager()->add(mesh->get_name(), mesh);
