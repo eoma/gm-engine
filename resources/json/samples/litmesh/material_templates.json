@@ -1,0 +1,13 @@
+[
+	{
+		"material": "red_diffuse",
+		"shader": "diffuse",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [1, 0, 0],
+				"type": "vec3"
+			}
+		]
+	}
+]

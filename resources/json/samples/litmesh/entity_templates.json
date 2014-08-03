@@ -1,0 +1,44 @@
+[
+	{
+		"entity": "spaceship",
+		"components": [ "Renderable", "Transform", "IdleRotation" ],
+		"properties": [
+			{
+				"name": "MeshName",
+				"value": "spaceship"
+			},
+			{
+				"name": "MaterialName",
+				"value": "red_diffuse"
+			},
+			{
+				"name": "Position",
+				"value": [0,0,0],
+				"type": "vec3"
+			}
+		]
+	},
+	{
+		"entity": "camera",
+		"components": [ "Camera", "Transform" ],
+		"properties": [
+			{
+				"name": "FOV",
+				"value": 45
+			},
+			{
+				"name": "NearClipping",
+				"value": 0.1
+			},
+			{
+				"name": "FarClipping",
+				"value": 10000
+			},
+			{
+				"name": "Position",
+				"value": [0,0,1000],
+				"type": "vec3"
+			}
+		]
+	}
+]

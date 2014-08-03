@@ -31,6 +31,10 @@ Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, uns
 	slots.connect(world_matrix_property.value_changed(), this, &Camera::recalculate_view_matrix);
 
 	render_system->add_camera(this);
+
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
 }
 
 Camera::~Camera() {

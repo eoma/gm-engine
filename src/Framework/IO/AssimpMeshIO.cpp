@@ -49,6 +49,7 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 		MyVertex(glm::vec3 position, glm::vec3 normal, glm::vec2 texcoord) : position(position), normal(normal), texcoord(texcoord) {}
 	};
 	std::vector<MyVertex> vertices;
+	std::vector<unsigned int> indices;
 
 	for (unsigned int i = 0; i < scene_mesh->mNumFaces; i++) {
 		auto face = scene_mesh->mFaces[i];
@@ -62,19 +63,24 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 				glm::vec3(normal.x, normal.y, normal.z), 
 				glm::vec2(texcoord.x, texcoord.y)
 			));
+
+			indices.push_back(face.mIndices[j]);
 		}
 	}
 
 	auto buffer_allocation = buffer_manager->allocate_and_upload(vertices);
+	auto index_allocation = buffer_manager->allocate_and_upload(indices);
 
 	Core::VaoLayout vao_layout;
 	vao_layout
 		.for_buffer(buffer_allocation)
 			.use_as(GL_ARRAY_BUFFER)
 				.bind_interleaved(Core::VaoArg<glm::vec3>(POSITION), Core::VaoArg<glm::vec3>(NORMAL), Core::VaoArg<glm::vec2>(TEXCOORD))
+		.for_buffer(index_allocation)
+			.use_as(GL_ELEMENT_ARRAY_BUFFER)
 	;
 
-	auto render_command = Core::RenderCommand(false, vertices.size(), 0, buffer_allocation.offset / sizeof(MyVertex));
+	auto render_command = Core::RenderCommand(true, vertices.size(), 0, buffer_allocation.offset / sizeof(MyVertex));
 
 	return std::make_shared<Mesh>(mesh_name, render_command, vao_layout, vao_manager);
 }
