@@ -9,6 +9,7 @@ class Texture; typedef std::shared_ptr<Texture> TexturePtr;
 
 class Texture
 {
+public:
 	Texture(unsigned int type);
 	~Texture();
 
