@@ -56,5 +56,20 @@ RenderCommand::operator RenderArraysIndirectCommand() const
 	return command;
 }
 
+void RenderCommand::set_indices(const BufferAllocation &index_buffer, const std::vector<unsigned char> &indices)
+{
+	set_indices(index_buffer, indices, GL_UNSIGNED_BYTE);
+}
+
+void RenderCommand::set_indices(const BufferAllocation &index_buffer, const std::vector<unsigned short> &indices)
+{
+	set_indices(index_buffer, indices, GL_UNSIGNED_SHORT);
+}
+
+void RenderCommand::set_indices(const BufferAllocation &index_buffer, const std::vector<unsigned int> &indices)
+{
+	set_indices(index_buffer, indices, GL_UNSIGNED_INT);
+}
+
 } // namespace Core
 } // namespace GM
