@@ -37,9 +37,7 @@ Camera::~Camera() {
 }
 
 void Camera::recalculate_view_matrix(const glm::mat4& /* old_world */, const glm::mat4 &new_world) {
-	//view_matrix_property = glm::inverse(new_world);
-	//view_matrix_property = glm::lookAt(glm::vec3(new_world[3]), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
-	view_matrix_property = glm::lookAt(glm::vec3(0, 0, 1000), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	view_matrix_property = glm::inverse(new_world);
 }
 
 void Camera::clear_dirty() {

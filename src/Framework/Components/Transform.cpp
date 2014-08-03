@@ -17,8 +17,8 @@ Transform::Transform(const EntityPtr &owner, const SceneSystemPtr &scene_system,
 , parent(nullptr)
 {
 	position_property = owner->add(PROPERTY_POSITION, glm::vec3());
-	scale_property = owner->add(PROPERTY_SCALE, glm::vec3());
-	orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat());
+	scale_property = owner->add(PROPERTY_SCALE, glm::vec3(1));
+	orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat(glm::vec3(0,0,-1)));
 
 	object_matrix_property = owner->add(PROPERTY_OBJECT_MATRIX, glm::mat4(1));
 	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4(1));

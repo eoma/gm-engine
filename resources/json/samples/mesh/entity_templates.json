@@ -1,7 +1,7 @@
 [
 	{
 		"entity": "spaceship",
-		"components": [ "Renderable", "Transform" ],
+		"components": [ "Renderable", "Transform", "IdleRotation" ],
 		"properties": [
 			{
 				"name": "MeshName",
@@ -33,6 +33,11 @@
 			{
 				"name": "FarClipping",
 				"value": 10000
+			},
+			{
+				"name": "Position",
+				"value": [0,0,1000],
+				"type": "vec3"
 			}
 		]
 	}
