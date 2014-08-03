@@ -53,6 +53,9 @@ private:
 	std::vector<std::string> unused_uniforms;
 	std::map<std::string, clan::Slot> unused_first_write_slots;
 
+	// We need to track textures for proper texture binding
+	std::vector<Property<Core::TexturePtr>> textures;
+
 	clan::Signal<void()> update_uniforms_signal;
 	clan::SlotContainer update_uniform_slots;
 	clan::Slot property_added_slot;

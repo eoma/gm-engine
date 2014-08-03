@@ -167,6 +167,7 @@ namespace Framework {
 			if (has_property(texture_property_name)) {
 				auto texture_property = get<Core::TexturePtr>(texture_property_name);
 				texture_property = texture_manager->get_or_create(property.get());
+				textures.push_back(texture_property);
 			}
 			/*else {
 				throw clan::Exception(clan::string_format("Failed to find a texture property with name %1 on material %2", texture_property_name, get_name()));
