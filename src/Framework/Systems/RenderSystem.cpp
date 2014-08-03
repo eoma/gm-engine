@@ -120,6 +120,8 @@ void RenderSystem::render() {
 
 		// Draw from depth zero and up
 		for (Camera *camera : cameras)	{
+			camera->clear_buffer();
+
 			for (IRenderable *renderable : bucket) {
 				if (active_mesh != renderable->get_mesh())
 				{

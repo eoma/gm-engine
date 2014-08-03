@@ -6,6 +6,7 @@
 #include "GM/Framework/Systems/RenderSystem.h"
 
 #include <glm/ext.hpp>
+#include <GL/gl3w.h>
 
 using namespace GM::Framework;
 
@@ -43,6 +44,10 @@ void Camera::recalculate_view_matrix(const glm::mat4& /* old_world */, const glm
 void Camera::clear_dirty() {
 	view_matrix_property.clear_dirty();
 	projection_matrix_property.clear_dirty();
+}
+
+void Camera::clear_buffer() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Camera::set_projection(float fov, float width, float height, float near_clipping, float far_clipping) {

@@ -38,6 +38,8 @@ public:
 
 	void clear_dirty();
 
+	void clear_buffer();
+
 private:
 	void recalculate_view_matrix(const glm::mat4 &old_world, const glm::mat4 &new_world);
 
