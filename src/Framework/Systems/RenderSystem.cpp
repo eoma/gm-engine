@@ -159,7 +159,7 @@ void RenderSystem::render() {
 					active_material->update_uniforms();
 				}
 
-				renderable->update_uniforms();
+				renderable->update_uniforms(camera);
 
 				if (renderable->has_custom_render()) {
 					renderable->custom_render(camera);

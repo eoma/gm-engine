@@ -4,6 +4,7 @@
 
 #include "GM/Framework/Entity.h"
 
+#include "GM/Framework/DefinitionsPropertyNames.h"
 #include "GM/Framework/EntityManager.h"
 #include "GM/Framework/Components/Renderable.h"
 #include "GM/Framework/Components/Camera.h"
@@ -23,9 +24,32 @@
 #include <cstdlib>
 
 #define POSITION 0
+#define COMPONENT_IDLE_ROTATION "IdleRotation"
 
 using namespace GM;
 using namespace Application;
+
+class IdleRotationComponent : public Framework::Component < IdleRotationComponent >
+{
+public:
+	IdleRotationComponent(const Framework::EntityPtr &owner, const std::string &name = std::string())
+		: Framework::Component< IdleRotationComponent >(owner, name)
+	{
+		orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat());
+	}
+
+	std::string get_type() const override { return get_static_type(); }
+
+	void update(float elapsed_time) {
+		orientation_property = glm::rotate(orientation_property.get(), elapsed_time, glm::vec3(0, 1, 0));
+	}
+
+public:
+	static std::string get_static_type() { return COMPONENT_IDLE_ROTATION; }
+
+private:
+	Framework::Property<glm::quat> orientation_property;
+};
 
 class MyComponentSerializer {
 public:
@@ -41,6 +65,9 @@ public:
 		}
 		else if (type == Framework::Renderable::get_static_type()) {
 			owner->create_component<Framework::Renderable>(app->get_render_system(), app->get_material_manager(), app->get_mesh_manager());
+		}
+		else if (type == IdleRotationComponent::get_static_type()) {
+			owner->create_component<IdleRotationComponent>();
 		}
 	}
 private:
@@ -67,14 +94,16 @@ bool mainTest() {
 	app->get_mesh_manager()->add_templates(json_path + "/mesh_templates.json");
 	app->get_mesh_manager()->set_mesh_path(mesh_path);
 
-	// Create our entity
-	auto entity = entity_manager->create_entity("entity");
+	// Create our entities
+	auto camera = entity_manager->create_entity("camera");
+	auto spaceship = entity_manager->create_entity("spaceship");
 
-	// Apply the entity template "spaceship", defined in entity_templates.json
-	entity_manager->apply("spaceship", entity);
+	// Apply an entity template, as defined in entity_templates.json
+	entity_manager->apply("camera", camera);
+	entity_manager->apply("spaceship", spaceship);
 
 	// Set some run time limits
-	float max_run_time = 1.f;
+	float max_run_time = 10.f;
 	float run_time = 0.f;
 
 	auto update_slot = app->on_update().connect([&](float dt) mutable {

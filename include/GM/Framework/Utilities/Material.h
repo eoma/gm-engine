@@ -21,6 +21,7 @@ namespace Framework {
 
 class IProperty; typedef std::shared_ptr<IProperty> IPropertyPtr;
 class TextureManager; typedef std::shared_ptr<TextureManager> TextureManagerPtr;
+class Camera;
 
 class Material : public PropertyContainer<>
 {

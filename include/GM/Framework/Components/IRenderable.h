@@ -46,7 +46,7 @@ public:
 
 	virtual const MeshPtr &get_mesh() const = 0;
 
-	virtual void update_uniforms() = 0;
+	virtual void update_uniforms(Camera *camera) = 0;
 };
 
 } // namespace Framework

@@ -36,7 +36,7 @@ public:
 
 	virtual const MeshPtr &get_mesh() const override { return mesh; };
 
-	virtual void update_uniforms() override {}
+	virtual void update_uniforms(Camera * /*camera*/) override {}
 
 private:
 	RenderSystemPtr render_system;

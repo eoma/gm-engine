@@ -44,7 +44,7 @@ public:
 
 	virtual void custom_render(Camera * /*camera*/) override {}
 
-	virtual void update_uniforms() override { update_uniforms_signal(); }
+	virtual void update_uniforms(Camera *camera) override; //{ update_uniforms_signal(camera); }
 
 public:
 	static std::string get_static_type() { return COMPONENT_RENDERABLE; }

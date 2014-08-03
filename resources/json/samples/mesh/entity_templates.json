@@ -1,7 +1,7 @@
 [
 	{
 		"entity": "spaceship",
-		"components": [ "Renderable", "Camera" ],
+		"components": [ "Renderable", "Transform", "IdleRotation" ],
 		"properties": [
 			{
 				"name": "MeshName",
@@ -10,7 +10,16 @@
 			{
 				"name": "MaterialName",
 				"value": "red_diffuse"
+			},
+			{
+				"name": "Position",
+				"value": [0,0,-10],
+				"type": "vec3"
 			}
 		]
+	},
+	{
+		"entity": "camera",
+		"components": [ "Camera", "Transform" ]
 	}
 ]

@@ -225,5 +225,15 @@ void Renderable::add_uniform_listener(const std::shared_ptr<IProperty> &prop)
 	}
 }
 
+void Renderable::update_uniforms(Camera *camera) { 
+	if (material->has_property(PROPERTY_PROJECTION_MATRIX))
+		material->get<glm::mat4>(PROPERTY_PROJECTION_MATRIX) = camera->get_projection_matrix();
+
+	if (material->has_property(PROPERTY_VIEW_MATRIX))
+		material->get<glm::mat4>(PROPERTY_VIEW_MATRIX) = camera->get_view_matrix();
+
+	update_uniforms_signal(); 
+}
+
 } // namespace Framework
 } // namespace GM
