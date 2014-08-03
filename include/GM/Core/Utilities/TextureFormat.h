@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <GL/gl3w.h>
+
 namespace GM {
 namespace Core {
 
@@ -32,7 +34,7 @@ public:
 	// Static convenience functions dealing with creation of formats
 
 	// FIXME: When GL comes...
-	static TextureFormat create_texture2d_format(bool generate_mipmap = true, unsigned int wrap_mode = /*GL_CLAMP_TO_EDGE*/ 1);
+	static TextureFormat create_texture2d_format(bool generate_mipmap = true, unsigned int wrap_mode = GL_CLAMP_TO_EDGE);
 	static TextureFormat *create_texture_format_from_string(
 		const std::string &min_filter,
 		const std::string &mag_filter,

@@ -1,4 +1,5 @@
 #include "GM/Core/Utilities/TextureFormat.h"
+
 #include <ClanLib/core.h>
 #include <algorithm>
 
@@ -64,14 +65,12 @@ void TextureFormat::string_to_parameter(const std::string &value, int &result)
 
 TextureFormat TextureFormat::create_texture2d_format(bool generate_mipmap, unsigned int wrap_mode)
 {
-	// FIXME: Uncomment when GL comes
-	TextureFormat format(/*GL_TEXTURE_2D*/ 1);
+	TextureFormat format(GL_TEXTURE_2D);
 
-	// FIXME: uncomment when GL comes
-	//format.set_parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//format.set_parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//format.set_parameter(GL_TEXTURE_WRAP_S, wrap_mode);
-	//format.set_parameter(GL_TEXTURE_WRAP_T, wrap_mode);
+	format.set_parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	format.set_parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	format.set_parameter(GL_TEXTURE_WRAP_S, wrap_mode);
+	format.set_parameter(GL_TEXTURE_WRAP_T, wrap_mode);
 
 	format.set_generate_mipmap(generate_mipmap);
 
