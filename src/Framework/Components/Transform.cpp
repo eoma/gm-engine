@@ -20,9 +20,9 @@ Transform::Transform(const EntityPtr &owner, const SceneSystemPtr &scene_system,
 	scale_property = owner->add(PROPERTY_SCALE, glm::vec3());
 	orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat());
 
-	object_matrix_property = owner->add(PROPERTY_OBJECT_MATRIX, glm::mat4());
-	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4());
-	normal_matrix_property = owner->add(PROPERTY_NORMAL_MATRIX, glm::mat3());
+	object_matrix_property = owner->add(PROPERTY_OBJECT_MATRIX, glm::mat4(1));
+	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4(1));
+	normal_matrix_property = owner->add(PROPERTY_NORMAL_MATRIX, glm::mat3(1));
 
 	scene_system->add(this);
 }

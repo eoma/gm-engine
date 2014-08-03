@@ -24,9 +24,9 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 {
 	render_system->add_renderable(this);
 
-	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4());
-	object_matrix_property = owner->add(PROPERTY_OBJECT_MATRIX, glm::mat4());
-	normal_matrix_property = owner->add(PROPERTY_NORMAL_MATRIX, glm::mat3());
+	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4(1));
+	object_matrix_property = owner->add(PROPERTY_OBJECT_MATRIX, glm::mat4(1));
+	normal_matrix_property = owner->add(PROPERTY_NORMAL_MATRIX, glm::mat3(1));
 
 	culled_property = owner->add(PROPERTY_CULLED, false);
 	visible_property = owner->add(PROPERTY_VISIBLE, false);

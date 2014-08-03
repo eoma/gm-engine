@@ -19,9 +19,9 @@ Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, uns
 	near_clipping_property = owner->add<float>(PROPERTY_NEAR_CLIPPING, 0.1f);
 	far_clipping_property = owner->add<float>(PROPERTY_FAR_CLIPPING, 1000.0f);
 
-	view_matrix_property = owner->add<glm::mat4>(PROPERTY_VIEW_MATRIX, glm::mat4());
-	projection_matrix_property = owner->add<glm::mat4>(PROPERTY_PROJECTION_MATRIX, glm::mat4());
-	world_matrix_property = owner->add<glm::mat4>(PROPERTY_WORLD_MATRIX, glm::mat4());
+	view_matrix_property = owner->add<glm::mat4>(PROPERTY_VIEW_MATRIX, glm::mat4(1));
+	projection_matrix_property = owner->add<glm::mat4>(PROPERTY_PROJECTION_MATRIX, glm::mat4(1));
+	world_matrix_property = owner->add<glm::mat4>(PROPERTY_WORLD_MATRIX, glm::mat4(1));
 	
 	// Calculate default view and projections
 	recalculate_view_matrix(world_matrix_property.get(), world_matrix_property.get());
@@ -37,7 +37,9 @@ Camera::~Camera() {
 }
 
 void Camera::recalculate_view_matrix(const glm::mat4& /* old_world */, const glm::mat4 &new_world) {
-	view_matrix_property = glm::inverse(new_world);
+	//view_matrix_property = glm::inverse(new_world);
+	//view_matrix_property = glm::lookAt(glm::vec3(new_world[3]), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
+	view_matrix_property = glm::lookAt(glm::vec3(0, 0, 1000), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 }
 
 void Camera::clear_dirty() {

@@ -1,7 +1,7 @@
 [
 	{
 		"entity": "spaceship",
-		"components": [ "Renderable", "Transform", "IdleRotation" ],
+		"components": [ "Renderable", "Transform" ],
 		"properties": [
 			{
 				"name": "MeshName",
@@ -13,7 +13,7 @@
 			},
 			{
 				"name": "Position",
-				"value": [0,0,-100],
+				"value": [0,0,0],
 				"type": "vec3"
 			}
 		]
@@ -24,7 +24,7 @@
 		"properties": [
 			{
 				"name": "FOV",
-				"value": 65
+				"value": 45
 			},
 			{
 				"name": "NearClipping",
@@ -32,7 +32,7 @@
 			},
 			{
 				"name": "FarClipping",
-				"value": 1000
+				"value": 10000
 			}
 		]
 	}
