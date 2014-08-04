@@ -5,7 +5,7 @@
 
 layout(location = POSITION) in vec3 position;
 layout(location = NORMAL) in vec3 normal;
-layout(location = TEXCOORD) in vec3 texcoord;
+layout(location = TEXCOORD) in vec2 texcoord;
 
 uniform mat4 WorldMatrix;		// object_to_world
 uniform mat4 ViewMatrix;		// world_to_view

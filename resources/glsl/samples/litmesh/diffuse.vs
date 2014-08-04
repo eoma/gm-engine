@@ -5,7 +5,7 @@
 
 layout(location = POSITION) in vec3 position;
 layout(location = NORMAL) in vec3 normal;
-layout(location = TEXCOORD) in vec3 texcoord;
+layout(location = TEXCOORD) in vec2 texcoord;
 
 out vec3 normal_in_viewspace;
 
