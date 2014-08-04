@@ -112,7 +112,7 @@ bool mainTest() {
 	}
 
 	// Set some run time limits
-	float max_run_time = 5.f;
+	float max_run_time = 7.5f;
 	float run_time = 0.f;
 
 	auto update_slot = app->on_update().connect([&](float dt) mutable {

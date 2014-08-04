@@ -86,6 +86,7 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 
 	//auto render_command = Core::RenderCommand(true, vertices.size(), 0, index_allocation.offset / sizeof(unsigned int), buffer_allocation.offset / sizeof(MyVertex));
 	Core::RenderCommand render_command;
+	render_command.set_draw_mode(GL_TRIANGLES);
 	render_command.set_indices(index_allocation, indices);
 	render_command.set_vertices(vertex_allocation, vertices);
 
