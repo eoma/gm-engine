@@ -158,6 +158,7 @@ void RenderSystem::render() {
 						// Update camera uniforms?
 					}
 
+					active_material->bind_textures();
 					active_material->update_uniforms();
 				}
 

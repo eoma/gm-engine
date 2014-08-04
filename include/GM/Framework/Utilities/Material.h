@@ -33,6 +33,7 @@ public:
 	Core::ShaderPtr &get_shader() { return shader; }
 
 	void update_uniforms() { update_uniforms_signal(); }
+	void bind_textures() const;
 
 	const std::vector<std::string> &get_unused_uniforms() const { return unused_uniforms; }
 
@@ -54,7 +55,13 @@ private:
 	std::map<std::string, clan::Slot> unused_first_write_slots;
 
 	// We need to track textures for proper texture binding
-	std::vector<Property<Core::TexturePtr>> textures;
+	struct Texture {
+		Property<Core::TexturePtr> texture;
+		unsigned int program;
+		int location;
+		Texture(const Property<Core::TexturePtr> &texture, unsigned int program, int location) : texture(texture), program(program), location(location) {}
+	};
+	std::vector<Texture> textures;
 
 	clan::Signal<void()> update_uniforms_signal;
 	clan::SlotContainer update_uniform_slots;

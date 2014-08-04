@@ -1,6 +1,7 @@
 #include "GM/Framework/Utilities/Material.h"
 #include "GM/Framework/Managers/TextureManager.h"
 #include "GM/Core/GL/Shader.h"
+#include "GM/Core/GL/Texture.h"
 
 #include <glm/glm.hpp>
 
@@ -158,7 +159,7 @@ namespace Framework {
 		};
 	}
 
-	property_added_slot = sign_PropertyAdded.connect([&](IPropertyPtr p) {
+	property_added_slot = sign_PropertyAdded.connect([this](IPropertyPtr p) {
 		if (IProperty::is_type<std::string>(p)) {
 			auto texture_property_name = p->get_name().substr(0, p->get_name().find_last_of("_name") - 4);
 			auto property = get<std::string>(p->get_name());
@@ -166,14 +167,29 @@ namespace Framework {
 			// make sure this texture actually exist on this material
 			if (has_property(texture_property_name)) {
 				auto texture_property = get<Core::TexturePtr>(texture_property_name);
-				texture_property = texture_manager->get_or_create(property.get());
-				textures.push_back(texture_property);
+				texture_property = this->texture_manager->get_or_create(property.get());
+
+				auto info = this->shader->get_uniform_info(texture_property_name);
+				textures.push_back(Texture(texture_property, this->shader->get_handle(), info.location));
 			}
+			// FIXME: If we throw here, we can't set a texture in json/from code when the shader don't support it... might be overkill?
 			/*else {
 				throw clan::Exception(clan::string_format("Failed to find a texture property with name %1 on material %2", texture_property_name, get_name()));
 			}*/
 		}
 	});
+}
+
+void Material::bind_textures() const {
+	for (int i = 0; i < (int)textures.size(); i++) {
+		auto &texture = textures[i];
+
+		// FIXME: Should this perhaps be set inside bind, and let bind accept the texture unit?
+		glActiveTexture(GL_TEXTURE0 + i);
+		texture.texture.get()->bind();
+
+		Core::update_uniform(texture.program, texture.location, texture.texture, i);
+	}
 }
 
 } // namespace Framework
