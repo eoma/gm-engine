@@ -22,6 +22,7 @@ namespace Framework {
 class IProperty; typedef std::shared_ptr<IProperty> IPropertyPtr;
 class TextureManager; typedef std::shared_ptr<TextureManager> TextureManagerPtr;
 class Camera;
+class Light;
 
 class Material : public PropertyContainer<>
 {
@@ -32,7 +33,7 @@ public:
 	const std::string &get_name() const { return name; }
 	Core::ShaderPtr &get_shader() { return shader; }
 
-	void update_uniforms() { update_uniforms_signal(); }
+	void update_uniforms(Camera * camera, const std::vector<Light *> &lights);// { update_uniforms_signal(); }
 	void bind_textures() const;
 
 	const std::vector<std::string> &get_unused_uniforms() const { return unused_uniforms; }

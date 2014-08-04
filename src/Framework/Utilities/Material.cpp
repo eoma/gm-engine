@@ -1,5 +1,6 @@
 #include "GM/Framework/Utilities/Material.h"
 #include "GM/Framework/Managers/TextureManager.h"
+#include "GM/Framework/Components/Light.h"
 #include "GM/Core/GL/Shader.h"
 #include "GM/Core/GL/Texture.h"
 
@@ -190,6 +191,40 @@ void Material::bind_textures() const {
 
 		Core::update_uniform(texture.program, texture.location, texture.texture, i);
 	}
+}
+
+void Material::update_uniforms(Camera * camera, const std::vector<Light *> &lights) {
+	if (has_property("light_count")) {
+		get<int>("light_count") = (int)lights.size();
+
+		for (unsigned int i = 0; i < lights.size(); i++) {
+			auto light_in_array_name = clan::string_format("light[%1]", i);
+			auto light_position_in_viewspace_name = clan::string_format("%1.position_in_viewspace", light_in_array_name);
+			if (has_property(light_position_in_viewspace_name)) {
+				auto light_radius_name = clan::string_format("%1.radius", light_in_array_name);
+				auto light_material_color_diffuse_name = clan::string_format("%1.material_color_diffuse", light_in_array_name);
+				auto light_material_color_specular_name = clan::string_format("%1.material_color_specular", light_in_array_name);
+				auto light_material_color_ambient_name = clan::string_format("%1.material_color_ambient", light_in_array_name);
+
+				auto light = lights[i];
+				get<glm::vec3>(light_position_in_viewspace_name) = light->get_position_in_viewspace(camera);
+
+				if (has_property(light_radius_name)) {
+					get<float>(light_radius_name) = light->get_radius();
+				}
+				if (has_property(light_material_color_diffuse_name)) {
+					get<glm::vec3>(light_material_color_diffuse_name) = light->get_material_color_diffuse();
+				}
+				if (has_property(light_material_color_specular_name)) {
+					get<glm::vec3>(light_material_color_specular_name) = light->get_material_color_specular();
+				}
+				if (has_property(light_material_color_ambient_name)) {
+					get<glm::vec3>(light_material_color_ambient_name) = light->get_material_color_ambient();
+				}
+			}
+		}
+	}
+	update_uniforms_signal(); 
 }
 
 } // namespace Framework

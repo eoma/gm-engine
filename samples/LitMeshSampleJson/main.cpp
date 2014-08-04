@@ -6,9 +6,12 @@
 
 #include "GM/Framework/DefinitionsPropertyNames.h"
 #include "GM/Framework/EntityManager.h"
+
 #include "GM/Framework/Components/Renderable.h"
 #include "GM/Framework/Components/Camera.h"
 #include "GM/Framework/Components/Transform.h"
+#include "GM/Framework/Components/Light.h"
+
 #include "GM/Framework/Managers/BufferManager.h"
 #include "GM/Framework/Managers/MaterialManager.h"
 #include "GM/Framework/Managers/MeshManager.h"
@@ -70,6 +73,9 @@ public:
 		else if (type == Framework::Transform::get_static_type()) {
 			owner->create_component<Framework::Transform>(app->get_scene_system());
 		}
+		else if (type == Framework::Light::get_static_type()) {
+			owner->create_component<Framework::Light>(app->get_render_system());
+		}
 		else if (type == IdleRotationComponent::get_static_type()) {
 			owner->create_component<IdleRotationComponent>();
 		}
@@ -101,10 +107,12 @@ bool mainTest() {
 	// Create our entities
 	auto camera = entity_manager->create_entity("camera");
 	auto spaceship = entity_manager->create_entity("spaceship");
+	auto light = entity_manager->create_entity("light");
 
 	// Apply an entity template, as defined in entity_templates.json
 	entity_manager->apply("camera", camera);
 	entity_manager->apply("spaceship", spaceship);
+	entity_manager->apply("light", light);
 
 	// Set up the projection for the camera
 	if (camera->has_component<Framework::Camera>()) {

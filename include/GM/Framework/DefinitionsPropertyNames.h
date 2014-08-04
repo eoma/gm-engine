@@ -24,3 +24,9 @@
 
 // Mesh
 #define PROPERTY_MESH_NAME			"MeshName"			// std::string
+
+// Light
+#define PROPERTY_RADIUS				"Radius"			// float
+#define PROPERTY_MATERIAL_COLOR_DIFFUSE		"MaterialColorDiffuse" // glm::vec3
+#define PROPERTY_MATERIAL_COLOR_SPECULAR	"MaterialColorSpecular" // glm::vec3
+#define PROPERTY_MATERIAL_COLOR_AMBIENT		"MaterialColorAmbient" // glm::vec3

@@ -36,7 +36,37 @@
 			},
 			{
 				"name": "Position",
-				"value": [0,0,1000],
+				"value": [0,400,1000],
+				"type": "vec3"
+			}
+		]
+	},
+	{
+		"entity": "light",
+		"components": [ "Light", "Transform" ],
+		"properties": [
+			{
+				"name": "Position",
+				"value": [0,100,0],
+				"type": "vec3"
+			},
+			{
+				"name": "Radius",
+				"value": 100.0
+			},
+			{
+				"name": "MaterialColorDiffuse",
+				"value": [1,1,1],
+				"type": "vec3"
+			},
+			{
+				"name": "MaterialColorSpecular",
+				"value": [1,1,1],
+				"type": "vec3"
+			},
+			{
+				"name": "MaterialColorAmbient",
+				"value": [1,1,1],
 				"type": "vec3"
 			}
 		]

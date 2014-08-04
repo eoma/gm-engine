@@ -81,6 +81,20 @@ void RenderSystem::remove_camera(Camera *camera) {
 	}
 }
 
+void RenderSystem::add_light(Light *light) {
+	auto iter = std::find(lights.begin(), lights.end(), light);
+	if (iter == lights.end()) {
+		lights.push_back(light);
+	}
+}
+
+void RenderSystem::remove_light(Light *light) {
+	auto iter = std::find(lights.begin(), lights.end(), light);
+	if (iter == lights.end()) {
+		lights.erase(iter);
+	}
+}
+
 std::vector<unsigned int> RenderSystem::bit_index_maker(const unsigned int bits) {
 	typedef std::numeric_limits<unsigned int> UnsignedIntLimits;
 
@@ -158,8 +172,9 @@ void RenderSystem::render() {
 						// Update camera uniforms?
 					}
 
+					// FIXME: bind textures every frame?
 					active_material->bind_textures();
-					active_material->update_uniforms();
+					active_material->update_uniforms(camera, lights);
 				}
 
 				renderable->update_uniforms(camera);
