@@ -42,53 +42,94 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 
 	auto scene_mesh = scene->mMeshes[mesh_index];
 
-	struct MyVertex {
-		glm::vec3 position;
-		glm::vec3 normal;
-		glm::vec2 texcoord;
-		MyVertex(glm::vec3 position, glm::vec3 normal, glm::vec2 texcoord) : position(position), normal(normal), texcoord(texcoord) {}
-	};
-	std::vector<MyVertex> vertices;
-	std::vector<unsigned int> indices;
+	unsigned int stride = 0;
+	std::vector<Core::VertexAttribute> interleaved_spec;
+	Core::VaoLayout vao_layout;
+	Core::RenderCommand render_command;
+
+	//
+	// Set up vertices
+	//
+
+	// Set up the interleaved vertex attributes
+	if (scene_mesh->HasPositions())
+	{
+		stride += sizeof(glm::vec3);
+		interleaved_spec.push_back(Core::VaoArg<glm::vec3>(POSITION));
+	}
+	if (scene_mesh->HasNormals())
+	{
+		stride += sizeof(glm::vec3);
+		interleaved_spec.push_back(Core::VaoArg<glm::vec3>(NORMAL));
+	}
+	if (scene_mesh->HasTextureCoords(0))
+	{
+		stride += sizeof(glm::vec2);
+		interleaved_spec.push_back(Core::VaoArg<glm::vec2>(TEXCOORD));
+	}
+
+	std::vector<float> vertices;
+	vertices.reserve(scene_mesh->mNumVertices * stride / sizeof(float)); // This is how many floats we have
+
+	for (unsigned int i = 0; i < scene_mesh->mNumVertices; i++) {
+		// This may be made into a lambda for BuffeOperations::unsafe_upload
+		if (scene_mesh->HasPositions())
+		{
+			auto position = scene_mesh->mVertices[i];
+			vertices.push_back(position.x);
+			vertices.push_back(position.y);
+			vertices.push_back(position.z);
+		}
+
+		if (scene_mesh->HasNormals())
+		{
+			auto normal = scene_mesh->mNormals[i];
+			vertices.push_back(normal.x);
+			vertices.push_back(normal.y);
+			vertices.push_back(normal.z);
+		}
+
+		if (scene_mesh->HasTextureCoords(0))
+		{
+			auto texcoord = scene_mesh->mTextureCoords[0][i];
+			vertices.push_back(texcoord.x);
+			vertices.push_back(texcoord.y);
+		}
+	}
+
+	auto vertex_allocation = buffer_manager->allocate(vertices.size()*stride, stride);
+	vertex_allocation.upload(vertices);
+
+	vao_layout
+		.for_buffer(vertex_allocation)
+			.use_as(GL_ARRAY_BUFFER)
+				.bind_interleaved(0, 0, interleaved_spec);
+	
+	render_command.set_draw_mode(GL_TRIANGLES);
+	render_command.set_vertices(vertex_allocation, vertices);
+
+	//
+	// Set up indices
+	//
 
 	if (scene_mesh->HasFaces()) {
+		std::vector<unsigned int> indices;
+
 		for (unsigned int i = 0; i < scene_mesh->mNumFaces; i++) {
 			auto face = scene_mesh->mFaces[i];
 			for (unsigned int j = 0; j < face.mNumIndices; j++) {
 				indices.push_back(face.mIndices[j]);
 			}
 		}
+
+		auto index_allocation = buffer_manager->allocate_and_upload(indices);
+
+		vao_layout
+			.for_buffer(index_allocation)
+				.use_as(GL_ELEMENT_ARRAY_BUFFER);
+
+		render_command.set_indices(index_allocation, indices);
 	}
-
-	for (unsigned int i = 0; i < scene_mesh->mNumVertices; i++) {
-		auto position = scene_mesh->mVertices[i];
-		auto normal = scene_mesh->HasNormals() ? scene_mesh->mNormals[i] : aiVector3D(1, 1, 1);
-		auto texcoord = scene_mesh->mTextureCoords[0][i];
-
-		vertices.push_back(MyVertex(
-			glm::vec3(position.x, position.y, position.z),
-			glm::vec3(normal.x, normal.y, normal.z),
-			glm::vec2(texcoord.x, texcoord.y)
-		));
-	}
-
-	auto vertex_allocation = buffer_manager->allocate_and_upload(vertices);
-	auto index_allocation = buffer_manager->allocate_and_upload(indices);
-
-	Core::VaoLayout vao_layout;
-	vao_layout
-		.for_buffer(vertex_allocation)
-			.use_as(GL_ARRAY_BUFFER)
-				.bind_interleaved(Core::VaoArg<glm::vec3>(POSITION), Core::VaoArg<glm::vec3>(NORMAL), Core::VaoArg<glm::vec2>(TEXCOORD))
-		.for_buffer(index_allocation)
-			.use_as(GL_ELEMENT_ARRAY_BUFFER)
-	;
-
-	//auto render_command = Core::RenderCommand(true, vertices.size(), 0, index_allocation.offset / sizeof(unsigned int), buffer_allocation.offset / sizeof(MyVertex));
-	Core::RenderCommand render_command;
-	render_command.set_draw_mode(GL_TRIANGLES);
-	render_command.set_indices(index_allocation, indices);
-	render_command.set_vertices(vertex_allocation, vertices);
 
 	return std::make_shared<Mesh>(mesh_name, render_command, vao_layout, vao_manager);
 }
