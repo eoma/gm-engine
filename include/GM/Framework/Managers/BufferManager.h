@@ -28,7 +28,10 @@ public:
 	// Just allocates size in a buffer
 	Core::BufferAllocation allocate(const unsigned int size, const BufferAllocationType type = SHARED_BUFFER);
 
-	// Allocates at least count*sizeof(DataStructure) and aligns the buffer offset
+	// Allocates size, will align according to alignment
+	Core::BufferAllocation allocate(const unsigned int size, const unsigned int alignment, const BufferAllocationType type = SHARED_BUFFER);
+
+	// Allocates least count*sizeof(DataStructure) and aligns the buffer offset
 	// to size of the DataStructure
 	template <class DataStructure>
 	Core::BufferAllocation allocate(const unsigned int count, const BufferAllocationType type = SHARED_BUFFER);
@@ -128,16 +131,7 @@ private:
 template <class DataStructure>
 Core::BufferAllocation BufferManager::allocate(const unsigned int count, const BufferAllocationType type)
 {
-	Core::BufferAllocation allocation = allocate(sizeof(DataStructure)*(count+1), type);
-
-	if (allocation.offset % sizeof(DataStructure) != 0)
-	{
-		unsigned int padding = sizeof(DataStructure) - (allocation.offset % sizeof(DataStructure));
-		allocation.offset += padding;
-		allocation.allocated_size -= padding;
-	}
-
-	return allocation;
+	return allocate(sizeof(DataStructure)*count, sizeof(DataStructure), type);
 }
 
 } // namespace Framework

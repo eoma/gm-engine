@@ -16,6 +16,11 @@ BufferManager::~BufferManager()
 
 Core::BufferAllocation BufferManager::allocate(const unsigned int size, const BufferAllocationType type)
 {
+	return allocate(size, 0, type);
+}
+
+Core::BufferAllocation BufferManager::allocate(const unsigned int size, const unsigned int alignment, const BufferAllocationType type)
+{
 	Core::BufferAllocation allocation;
 	std::vector<PoolData>::iterator iter;
 
@@ -23,7 +28,7 @@ Core::BufferAllocation BufferManager::allocate(const unsigned int size, const Bu
 	{
 		// Locate a a pool with enough vacant size
 		iter = std::find_if(pools.begin(), pools.end(), 
-			[size](const PoolData &pool) { return pool.has_space_for(size); }
+			[size, alignment](const PoolData &pool) { return pool.has_space_for(size + alignment); }
 		);
 
 		if (iter == pools.end()) // Must allocate new pool
@@ -49,7 +54,14 @@ Core::BufferAllocation BufferManager::allocate(const unsigned int size, const Bu
 
 	allocation.buffer = pool.buffer;
 	allocation.allocated_size = size;
-	allocation.offset = pool.allocate(size);
+
+	if (alignment != 0 && (pool.allocated % alignment) != 0) {
+		unsigned int padding = alignment - (pool.allocated % alignment);
+		allocation.offset = pool.allocate(size + padding);
+		allocation.offset += padding;
+	} else {
+		allocation.offset = pool.allocate(size);
+	}
 
 	return allocation;
 }
