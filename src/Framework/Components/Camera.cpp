@@ -5,6 +5,8 @@
 
 #include "GM/Framework/Systems/RenderSystem.h"
 
+#include "GM/Core/GL/FramebufferObject.h"
+
 #include <glm/ext.hpp>
 #include <GL/gl3w.h>
 
@@ -15,6 +17,7 @@ Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, uns
 , render_system(render_system)
 , render_layers(render_layers)
 , depth(depth)
+, framebuffer(nullptr)
 {
 	fov_property = owner->add<float>(PROPERTY_FOV, 60.0f);
 	near_clipping_property = owner->add<float>(PROPERTY_NEAR_CLIPPING, 0.1f);

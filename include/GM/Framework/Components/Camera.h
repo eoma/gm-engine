@@ -10,6 +10,11 @@
 #include <memory>
 
 namespace GM {
+
+namespace Core {
+class FramebufferObject; typedef std::shared_ptr<FramebufferObject> FramebufferObjectPtr;
+}
+
 namespace Framework {
 
 class Camera; typedef std::shared_ptr<Camera> CameraPtr;
@@ -26,6 +31,10 @@ public:
 
 	unsigned int get_render_layers() const { return render_layers; };
 	unsigned int get_depth() const { return depth; };
+
+	bool has_framebuffer() const { return framebuffer != nullptr; }
+	Core::FramebufferObjectPtr get_framebuffer() const { return framebuffer; }
+	void set_framebuffer(const Core::FramebufferObjectPtr &new_framebuffer) { framebuffer = new_framebuffer; }
 
 	bool is_view_matrix_dirty() const { return view_matrix_property.is_dirty(); };
 	const glm::mat4 &get_view_matrix() const { return view_matrix_property; };
@@ -53,6 +62,8 @@ private:
 
 	// Depth determines the order in the render layer, deth 0 gets rendered first, and so on.
 	unsigned int depth;
+
+	Core::FramebufferObjectPtr framebuffer;
 
 	Property<glm::mat4> projection_matrix_property;
 	Property<glm::mat4> view_matrix_property;
