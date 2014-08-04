@@ -39,8 +39,12 @@ public:
 	template<class Vertex>
 	void set_vertices(const BufferAllocation &vertex_buffer, const std::vector<Vertex> &vertices);
 
+	void set_vertices(const BufferAllocation &vertex_buffer, const unsigned int count, const unsigned int vertex_size);
+
 	template<class Instance>
 	void set_instances(const BufferAllocation &instance_buffer, const std::vector<Instance> &instances);
+
+	void set_instances(const BufferAllocation &instance_buffer, const unsigned int count, const unsigned int instance_size);
 
 	void set_indices(const BufferAllocation &index_buffer, const std::vector<unsigned char> &indices);
 	void set_indices(const BufferAllocation &index_buffer, const std::vector<unsigned short> &indices);
@@ -77,30 +81,13 @@ public:
 template<class Vertex>	
 void RenderCommand::set_vertices(const BufferAllocation &vertex_buffer, const std::vector<Vertex> &vertices)
 {
-	if (vertex_buffer.offset % sizeof(Vertex) != 0)
-	{
-		throw clan::Exception("Vertex buffer's offset is not aligned with the size of the vertex object");
-	}
-
-	if (!is_indexed)
-	{
-		count = vertices.size();
-		first = vertex_buffer.offset / sizeof(Vertex);
-	} else {
-		base_vertex = vertex_buffer.offset / sizeof(Vertex);
-	}
+	set_vertices(vertex_buffer, vertices.count(), sizeof(Vertex));
 }
 
 template<class Instance>
 void RenderCommand::set_instances(const BufferAllocation &instance_buffer, const std::vector<Instance> &instances)
 {
-	if (instance_buffer.offset % sizeof(Instance) != 0)
-	{
-		throw clan::Exception("Instance buffer's offset is not aligned with the size of the instance object");
-	}
-
-	instance_count = instances.size();
-	base_instance = instance_buffer.offset / sizeof(Instance);
+	set_vertices(instance_buffer, instances.count(), sizeof(Instance));
 }
 
 template<class IndexType>
