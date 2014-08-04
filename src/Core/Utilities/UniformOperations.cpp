@@ -116,12 +116,12 @@ void update_uniform(unsigned int program, int location, const glm::mat4 &data)
 // Textures
 //
 
-void update_uniform(unsigned int program, int location, const Core::TexturePtr &data)
+void update_uniform(unsigned int program, int location, const TexturePtr &data)
 {
 	//glProgramUniform1i(program, location, 0);
 }
 
-void update_uniform(unsigned int program, int location, const Core::TexturePtr &data, int texture_unit)
+void update_uniform(unsigned int program, int location, const TexturePtr &data, int texture_unit)
 {
 	glProgramUniform1i(program, location, texture_unit);
 }
