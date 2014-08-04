@@ -18,10 +18,5 @@ uniform mat3 NormalMatrix;		// normal_to_view
 void main() {
 	position_in_viewspace = ViewMatrix * WorldMatrix * vec4(position, 1.0);
 	normal_in_viewspace = NormalMatrix * normal;
-<<<<<<< .mine
 	gl_Position = ProjectionMatrix * position_in_viewspace;
 }
-=======
-}
-
->>>>>>> .theirs
