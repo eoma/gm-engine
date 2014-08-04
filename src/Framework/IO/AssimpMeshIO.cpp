@@ -106,7 +106,7 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 				.bind_interleaved(0, 0, interleaved_spec);
 	
 	render_command.set_draw_mode(GL_TRIANGLES);
-	render_command.set_vertices(vertex_allocation, vertices);
+	render_command.set_vertices(vertex_allocation, scene_mesh->mNumVertices, stride);
 
 	//
 	// Set up indices
