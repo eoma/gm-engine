@@ -150,7 +150,7 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 		render_command.set_indices(index_allocation, indices);
 	}
 
-	return std::make_shared<Mesh>(mesh_name, render_command, vao_layout, vao_manager);
+	return std::make_shared<Mesh>(render_command, vao_layout, vao_manager, mesh_name);
 }
 
 } // namespace Framework

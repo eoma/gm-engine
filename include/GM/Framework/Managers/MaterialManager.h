@@ -19,7 +19,7 @@ public:
 
 	bool contains(const std::string &name) const;
 
-	void add(const std::string& name, const MaterialPtr &material);
+	void add(const MaterialPtr &material);
 
 	MaterialPtr get(const std::string& name) const;
 	MaterialPtr get_or_create(const std::string& name);

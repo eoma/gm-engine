@@ -27,7 +27,7 @@ class Light;
 class Material : public PropertyContainer<>
 {
 public:
-	Material(const TextureManagerPtr &texture_manager, const Core::ShaderPtr &shader, const std::string &name = std::string());
+	Material(const TextureManagerPtr &texture_manager, const Core::ShaderPtr &shader, const std::string &name);
 	virtual ~Material() {};
 
 	const std::string &get_name() const { return name; }

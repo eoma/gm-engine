@@ -24,16 +24,16 @@ bool MeshManager::contains(const std::string &name) const
 	return (meshes.end() != meshes.find(name));
 }
 
-void MeshManager::add(const std::string &name, const MeshPtr &mesh)
+void MeshManager::add(const MeshPtr &mesh)
 {
-	if (!contains(name))
+	if (!contains(mesh->get_name()))
 	{
-		meshes.insert(std::make_pair(name, mesh));
+		meshes.insert(std::make_pair(mesh->get_name(), mesh));
 	}
 	else
 	{
 		clan::StringFormat message = clan::StringFormat("Mesh manager already contains a mesh by name (%1)");
-		message.set_arg(1, name);
+		message.set_arg(1, mesh->get_name());
 		throw clan::Exception(message.get_result());
 	}
 }
@@ -73,9 +73,9 @@ MeshPtr MeshManager::get_or_create(const std::string &name, const std::string &f
 		return mesh;
 	}
 
-	mesh = mesh_io->load(name, mesh_path + "/" + filename, mesh_index, buffer_manager, vao_manager);
+	mesh = mesh_io->load(mesh_path + "/" + filename, name, mesh_index, buffer_manager, vao_manager);
 	if (mesh) {
-		add(mesh->get_name(), mesh);
+		add(mesh);
 	}
 	else {
 		throw clan::Exception(clan::string_format("Failed to get or create the mesh %1.", name));

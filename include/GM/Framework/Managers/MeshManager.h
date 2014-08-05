@@ -22,7 +22,7 @@ namespace GM {
 
 			bool contains(const std::string &name) const;
 
-			void add(const std::string &name, const MeshPtr &mesh);
+			void add(const MeshPtr &mesh);
 
 			MeshPtr get(const std::string &name) const;
 

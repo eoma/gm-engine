@@ -24,17 +24,17 @@ bool MaterialManager::contains(const std::string &name) const
 	return (materials.end() !=  materials.find(name));
 }
 
-void MaterialManager::add(const std::string &name, const MaterialPtr &material)
+void MaterialManager::add(const MaterialPtr &material)
 {
-	auto iter = materials.find(name);
+	auto iter = materials.find(material->get_name());
 	if (iter == materials.end())
 	{
-		materials.insert(std::make_pair(name, material));
+		materials.insert(std::make_pair(material->get_name(), material));
 	}
 	else
 	{
 		clan::StringFormat message = clan::StringFormat("Material manager already contains a material by name (%1)");
-		message.set_arg(1, name);
+		message.set_arg(1, material->get_name());
 		throw clan::Exception(message.get_result());
 	}
 }
@@ -86,7 +86,7 @@ MaterialPtr MaterialManager::get_or_create(const std::string& name, const std::s
 
 	auto shader = shader_manager->get_or_create(shader_name);
 	material = MaterialPtr(new Material(texture_manager, shader, name));
-	add(name, material);
+	add(material);
 	return material;
 }
 

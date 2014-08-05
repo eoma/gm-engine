@@ -3,7 +3,7 @@
 namespace GM {
 namespace Framework {
 
-	Mesh::Mesh(const std::string &name, const Core::RenderCommand &render_command, const Core::VaoLayout &vao_layout, const VaoManagerPtr &vao_manager)
+	Mesh::Mesh(const Core::RenderCommand &render_command, const Core::VaoLayout &vao_layout, const VaoManagerPtr &vao_manager, const std::string &name)
 		: name(name)
 		, render_command(render_command)
 {

@@ -15,7 +15,7 @@ namespace Framework {
 class Mesh
 {
 public:
-	Mesh(const std::string &name, const Core::RenderCommand& render_command, const Core::VaoLayout &vao_layout, const VaoManagerPtr &vao_manager);
+	Mesh(const Core::RenderCommand& render_command, const Core::VaoLayout &vao_layout, const VaoManagerPtr &vao_manager, const std::string &name);
 	virtual ~Mesh() {};
 
 	const std::string &get_name() const { return name; }
