@@ -1,7 +1,7 @@
 #include "GM/Framework/Managers/TextureManager.h"
 #include "GM/Framework/Templates/TextureTemplateManager.h"
 #include "GM/Framework/Templates/TextureFormatTemplateManager.h"
-#include "GM/Framework/IO/ITextureIO.h"
+#include "GM/Framework/IO/IImageIO.h"
 
 #include "GM/Core/GL/Texture.h"
 #include "GM/Core/Utilities/TextureFactory.h"
@@ -11,8 +11,8 @@
 namespace GM {
 namespace Framework {
 
-TextureManager::TextureManager(const ITextureIOPtr &texture_io)
-: texture_io(texture_io)
+TextureManager::TextureManager(const IImageIOPtr &image_io)
+: image_io(image_io)
 , loaded_images()
 {
 	template_manager = TextureTemplateManagerPtr(new TextureTemplateManager());
@@ -34,7 +34,7 @@ const RawImage &TextureManager::get_or_create_image(const std::string &file_name
 			throw clan::Exception("Texture does not exist!");
 		}
 
-		RawImage image = texture_io->load(texture_path + "/" + file_name);
+		RawImage image = image_io->load(texture_path + "/" + file_name);
 
 		if (image.get_data().empty() || image.get_width() < 1 || image.get_height() < 1)
 		{

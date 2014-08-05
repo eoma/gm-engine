@@ -8,13 +8,13 @@
 namespace GM {
 namespace Framework {
 
-class ITextureIO {
+class IImageIO {
 public:
-	virtual ~ITextureIO() {};
+	virtual ~IImageIO() {};
 
 	/**
 	 * Load image from file.
-	 * Should basically load a file and call ITextureIO::load(pointer to start, size))
+	 * Should basically load a file and call IImageIO::load(pointer to start, size))
 	 */
 	virtual RawImage load(const std::string &file_name) = 0;
 

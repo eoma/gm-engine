@@ -1,14 +1,14 @@
 #pragma once
 
-#include "ITextureIO.h"
+#include "IImageIO.h"
 
 namespace GM {
 namespace Framework {
 
-class SoilTextureIO : public ITextureIO {
+class SoilImageIO : public IImageIO {
 public:
-	SoilTextureIO();
-	virtual ~SoilTextureIO();
+	SoilImageIO();
+	virtual ~SoilImageIO();
 
 	RawImage load(const std::string &file_name) override;
 	RawImage load(const std::vector<unsigned char> &undecoded_image) override;

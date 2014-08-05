@@ -11,7 +11,7 @@
 #include "GM/Framework/Managers/TextureManager.h"
 #include "GM/Framework/Managers/VaoManager.h"
 
-#include "GM/Framework/IO/SoilTextureIO.h"
+#include "GM/Framework/IO/SoilImageIO.h"
 #include "GM/Framework/IO/AssimpMeshIO.h"
 
 #include <glm/ext.hpp>
@@ -89,7 +89,7 @@ namespace Application {
 	if (flags & GM_FRAMEWORK_TEXTURE_MANAGER)
 	{
 		texture_manager = std::make_shared<Framework::TextureManager>(
-			std::make_shared<Framework::SoilTextureIO>()
+			std::make_shared<Framework::SoilImageIO>()
 			);
 	}
 

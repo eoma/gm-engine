@@ -15,14 +15,14 @@ namespace Core {
 }
 namespace Framework {
 
-class ITextureIO; typedef std::shared_ptr<ITextureIO> ITextureIOPtr;
+class IImageIO; typedef std::shared_ptr<IImageIO> IImageIOPtr;
 class TextureTemplateManager; typedef std::shared_ptr<TextureTemplateManager> TextureTemplateManagerPtr;
 class TextureFormatTemplateManager; typedef std::shared_ptr<TextureFormatTemplateManager> TextureFormatTemplateManagerPtr;
 
 class TextureManager
 {
 public:
-	TextureManager(const ITextureIOPtr &texture_io);
+	TextureManager(const IImageIOPtr &image_io);
 	~TextureManager();
 
 	void set_texture_path(const std::string &texture_path) { this->texture_path = texture_path; }
@@ -61,7 +61,7 @@ public:
 	void add_templates(const std::string &template_filename);
 	void add_format_templates(const std::string &template_filename);
 private:
-	ITextureIOPtr texture_io;
+	IImageIOPtr image_io;
 
 	std::map<std::string, RawImage> loaded_images;
 

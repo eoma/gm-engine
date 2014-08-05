@@ -27,9 +27,9 @@
 #include "IO/AssimpMeshIO.h"
 
 #include "IO/IMeshIO.h"
-#include "IO/ITextureIO.h"
+#include "IO/IImageIO.h"
 
-#include "IO/SoilTextureIO.h"
+#include "IO/SoilImageIO.h"
 
 #include "IO/TextIO.h"
 

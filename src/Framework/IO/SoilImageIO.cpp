@@ -1,4 +1,4 @@
-#include "GM/Framework/IO/SoilTextureIO.h"
+#include "GM/Framework/IO/SoilImageIO.h"
 #include <SOIL2.h>
 #include <ClanLib/core.h>
 
@@ -8,26 +8,26 @@
 namespace GM {
 namespace Framework {
 
-SoilTextureIO::SoilTextureIO()
+SoilImageIO::SoilImageIO()
 {
 }
 
-SoilTextureIO::~SoilTextureIO()
+SoilImageIO::~SoilImageIO()
 {
 }
 
-RawImage SoilTextureIO::load(const std::string &file_name)
+RawImage SoilImageIO::load(const std::string &file_name)
 {
 	clan::DataBuffer buffer = clan::File::read_bytes(file_name);
 	return load(buffer.get_data<unsigned char>(), buffer.get_size());
 }
 
-RawImage SoilTextureIO::load(const std::vector<unsigned char> &undecoded_image)
+RawImage SoilImageIO::load(const std::vector<unsigned char> &undecoded_image)
 {
 	return load(undecoded_image.data(), undecoded_image.size());
 }
 
-RawImage SoilTextureIO::load(const unsigned char * const undecoded_image, const unsigned int size)
+RawImage SoilImageIO::load(const unsigned char * const undecoded_image, const unsigned int size)
 {
 	int width;
 	int height;
@@ -46,7 +46,7 @@ RawImage SoilTextureIO::load(const unsigned char * const undecoded_image, const 
 	return image;
 }
 
-bool SoilTextureIO::save(const std::string &file_name, const RawImage &image)
+bool SoilImageIO::save(const std::string &file_name, const RawImage &image)
 {
 	bool successful = false;
 
