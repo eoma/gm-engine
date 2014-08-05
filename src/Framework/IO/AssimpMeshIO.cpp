@@ -34,6 +34,11 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 {
 	auto scene = importer->ReadFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
 
+	if (scene == nullptr)
+	{
+		throw clan::Exception(clan::string_format("Unable to locate (%1) for (%2)", file_name, mesh_name));
+	}
+
 	if (scene->mNumMeshes <= mesh_index)
 		throw clan::Exception(clan::string_format("The mesh index (%1) was out of bounds for mesh %2.", mesh_index, mesh_name));
 

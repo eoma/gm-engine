@@ -73,7 +73,7 @@ MeshPtr MeshManager::get_or_create(const std::string &name, const std::string &f
 		return mesh;
 	}
 
-	mesh = mesh_io->load(mesh_path + "/" + filename, name, mesh_index, buffer_manager, vao_manager);
+	mesh = mesh_io->load(name, mesh_path + "/" + filename, mesh_index, buffer_manager, vao_manager);
 	if (mesh) {
 		add(mesh);
 	}
