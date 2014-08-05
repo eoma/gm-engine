@@ -2,6 +2,6 @@
 	{
     	"texture": "floor",
     	"image": "floor.jpg",
-		"format": "texture2D"
+		"format": "texture2d"
     }
 ]

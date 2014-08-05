@@ -76,6 +76,27 @@ void TextureFormatTemplateParser::parse_templates(const std::string &data, std::
 			}
 		}
 
+		it = json_members.find("type");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_string())
+				throw Exception("type must be a string");
+			t.type = it->second.to_string();
+			if (t.type != "1d" &&
+				t.type != "2d" &&
+				t.type != "3d" &&
+				t.type != "rect" &&
+				t.type != "buffer" &&
+				t.type != "cube" &&
+				t.type != "1d_array" &&
+				t.type != "2d_array" &&
+				t.type != "cube_array" &&
+				t.type != "2d_multisample" &&
+				t.type != "2d_multisample_array") {
+				throw clan::Exception("type must be one of the following: 1d, 2d, 3d, rect, buffer, cube, 1d_array, 2d_array, cube_array, 2d_multisample, 2d_multisample_array");
+			}
+		}
+
 		it = json_members.find("min_filter");
 		if (it != json_members.end())
 		{
@@ -107,6 +128,135 @@ void TextureFormatTemplateParser::parse_templates(const std::string &data, std::
 				throw Exception("wrap_t must be a string");
 			t.wrap_t = it->second.to_string();
 		}
+
+		it = json_members.find("wrap_r");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_string())
+				throw Exception("wrap_r must be a string");
+			t.wrap_r = it->second.to_string();
+		}
+
+		it = json_members.find("depth_stencil_mode");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_string())
+				throw Exception("depth_stencil_mode must be a string");
+			t.depth_stencil_mode = it->second.to_string();
+		}
+
+		it = json_members.find("base_level");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_number())
+				throw Exception("base_level must be a number");
+			t.base_level = it->second.to_int();
+		}
+
+		it = json_members.find("compare_func");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_string())
+				throw Exception("compare_func must be a string");
+			t.compare_func = it->second.to_string();
+		}
+
+		it = json_members.find("compare_mode");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_string())
+				throw Exception("compare_mode must be a string");
+			t.compare_mode = it->second.to_string();
+		}
+
+		it = json_members.find("lod_bias");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_number())
+				throw Exception("lod_bias must be a number");
+			t.lod_bias = it->second.to_float();
+		}
+
+		it = json_members.find("min_lod");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_number())
+				throw Exception("min_lod must be a number");
+			t.min_lod = it->second.to_float();
+		}
+
+		it = json_members.find("max_lod");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_number())
+				throw Exception("max_lod must be a number");
+			t.max_lod = it->second.to_float();
+		}
+
+		it = json_members.find("max_level");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_number())
+				throw Exception("max_level must be a number");
+			t.max_level = it->second.to_int();
+		}
+
+		it = json_members.find("swizzle_r");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_string())
+				throw Exception("swizzle_r must be a string");
+			t.swizzle_r = it->second.to_string();
+		}
+
+		it = json_members.find("swizzle_g");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_string())
+				throw Exception("swizzle_g must be a string");
+			t.swizzle_g = it->second.to_string();
+		}
+
+		it = json_members.find("swizzle_b");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_string())
+				throw Exception("swizzle_b must be a string");
+			t.swizzle_b = it->second.to_string();
+		}
+
+		it = json_members.find("swizzle_a");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_string())
+				throw Exception("swizzle_a must be a string");
+			t.swizzle_a = it->second.to_string();
+		}
+
+		it = json_members.find("swizzle_rgba");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_string())
+				throw Exception("swizzle_rgba must be a string");
+			t.swizzle_rgba = it->second.to_string();
+		}
+
+		it = json_members.find("border_color");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_array() || it->second.get_items().size() != 4 || 
+				!it->second.get_items()[0].is_number() || 
+				!it->second.get_items()[1].is_number() || 
+				!it->second.get_items()[2].is_number() || 
+				!it->second.get_items()[3].is_number())
+				throw Exception("border_color must be an array of 4 numbers");
+
+			auto r = it->second.get_items()[0].to_float();
+			auto g = it->second.get_items()[1].to_float();
+			auto b = it->second.get_items()[2].to_float();
+			auto a = it->second.get_items()[3].to_float();
+			t.border_color = glm::vec4(r, g, b, a);
+		}
 		
 		it = json_members.find("generate_mipmap");
 		if (it != json_members.end())
@@ -115,8 +265,6 @@ void TextureFormatTemplateParser::parse_templates(const std::string &data, std::
 				throw Exception("generate_mipmap must be a boolean");
 			t.generate_mipmap = it->second.to_boolean();
 		}
-
-		// TODO: Add all remaining existing texture format parameters (as optional parameters)
 
 		func(t);
 	}

@@ -1,6 +1,7 @@
 [
 	{
-    	"format": "texture2D",
+    	"format": "texture2d",
+		"type": "2d",
     	"min_filter": "linear_mipmap_linear",
 		"mag_filter": "linear",
 		"wrap_s": "clamp_to_edge",
