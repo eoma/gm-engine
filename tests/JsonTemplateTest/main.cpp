@@ -16,7 +16,7 @@
 #include <GM/Framework/Managers/MeshManager.h>
 #include <GM/Framework/Utilities/ComponentSerializer.h>
 #include <GM/Framework/Utilities/Tools.h>
-#include <GM/Framework/IO/SoilTextureIO.h>
+#include <GM/Framework/IO/SoilImageIO.h>
 #include <GM/Framework/IO/AssimpMeshIO.h>
 
 #include <memory>
@@ -83,7 +83,7 @@ bool mainTest() {
 	auto scene_system = std::make_shared<SceneSystem>();
 	auto entity_manager = std::make_shared<EntityManager>();
 	auto shader_manager = std::make_shared<ShaderManager>();
-	auto texture_manager = std::make_shared<TextureManager>(std::make_shared<Framework::SoilTextureIO>());
+	auto texture_manager = std::make_shared<TextureManager>(std::make_shared<Framework::SoilImageIO>());
 	auto buffer_manager = std::make_shared<BufferManager>();
 	auto vao_manager = std::make_shared<VaoManager>();
 	auto material_manager = std::make_shared<MaterialManager>(shader_manager, texture_manager);
