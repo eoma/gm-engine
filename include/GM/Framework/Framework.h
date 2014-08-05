@@ -15,6 +15,8 @@
 // Components
 #include "Components/Camera.h"
 
+#include "Components/Light.h"
+
 #include "Components/IRenderable.h"
 
 #include "Components/Renderable.h"
