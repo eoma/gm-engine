@@ -3,6 +3,7 @@
 #include "GM/Framework/Managers/VaoManager.h"
 #include "GM/Framework/Utilities/Mesh.h"
 
+#include "GM/Core/Utilities/ShaderConstants.h"
 #include "GM/Core/Utilities/VaoLayout.h"
 #include "GM/Core/Utilities/RenderCommand.h"
 
@@ -15,10 +16,6 @@
 
 #include <cctype>
 #include <algorithm>
-
-#define POSITION 0
-#define NORMAL 1
-#define TEXCOORD 2
 
 namespace GM {
 namespace Framework {
@@ -55,17 +52,26 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 	if (scene_mesh->HasPositions())
 	{
 		stride += sizeof(glm::vec3);
-		interleaved_spec.push_back(Core::VaoArg<glm::vec3>(POSITION));
+		interleaved_spec.push_back(Core::VaoArg<glm::vec3>(Core::ShaderConstants::Position));
 	}
+
 	if (scene_mesh->HasNormals())
 	{
 		stride += sizeof(glm::vec3);
-		interleaved_spec.push_back(Core::VaoArg<glm::vec3>(NORMAL));
+		interleaved_spec.push_back(Core::VaoArg<glm::vec3>(Core::ShaderConstants::Normal));
 	}
+
 	if (scene_mesh->HasTextureCoords(0))
 	{
 		stride += sizeof(glm::vec2);
-		interleaved_spec.push_back(Core::VaoArg<glm::vec2>(TEXCOORD));
+		interleaved_spec.push_back(Core::VaoArg<glm::vec2>(Core::ShaderConstants::TexCoord));
+	}
+
+	if (scene_mesh->HasTangentsAndBitangents())
+	{
+		stride += 2*sizeof(glm::vec3);
+		interleaved_spec.push_back(Core::VaoArg<glm::vec3>(Core::ShaderConstants::Tangent));
+		interleaved_spec.push_back(Core::VaoArg<glm::vec3>(Core::ShaderConstants::Bitangent));
 	}
 
 	std::vector<float> vertices;
@@ -94,6 +100,19 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 			auto texcoord = scene_mesh->mTextureCoords[0][i];
 			vertices.push_back(texcoord.x);
 			vertices.push_back(texcoord.y);
+		}
+
+		if (scene_mesh->HasTangentsAndBitangents())
+		{
+			auto tangent = scene_mesh->mTangents[i];
+			vertices.push_back(tangent.x);
+			vertices.push_back(tangent.y);
+			vertices.push_back(tangent.z);
+
+			auto bitangent = scene_mesh->mBitangents[i];
+			vertices.push_back(bitangent.x);
+			vertices.push_back(bitangent.y);
+			vertices.push_back(bitangent.z);
 		}
 	}
 
