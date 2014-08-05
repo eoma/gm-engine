@@ -33,13 +33,15 @@ namespace GM {
 		public:
 
 		private:
-			std::string mesh_path;
-			IMeshIOPtr mesh_io;
-
-			std::map<std::string, MeshPtr> meshes;
 			BufferManagerPtr buffer_manager;
 			VaoManagerPtr vao_manager;
 			MeshTemplateManagerPtr template_manager;
+
+			IMeshIOPtr mesh_io;
+
+			std::string mesh_path;
+			std::map<std::string, MeshPtr> meshes;
+
 		};
 
 		typedef std::shared_ptr<MeshManager> MeshManagerPtr;
