@@ -36,11 +36,26 @@ public:
 
 	Core::TextureFormat *get_format(const std::string &format_name);
 	Core::TextureFormat *get_or_create_format(const std::string &format_name, 
-		const std::string &min_filter, 
-		const std::string &mag_filter, 
-		const std::string &wrap_s, 
+		const std::string &type,
+		const std::string &min_filter,
+		const std::string &mag_filter,
+		const std::string &wrap_s,
 		const std::string &wrap_t,
-		// TODO: Add all other parameters TextureFormat can hold.
+		const std::string &wrap_r,
+		const std::string &depth_stencil_mode,
+		int base_level,
+		const std::string &compare_func,
+		const std::string &compare_mode,
+		float lod_bias,
+		float min_lod,
+		float max_lod,
+		int max_level,
+		const std::string &swizzle_r,
+		const std::string &swizzle_g,
+		const std::string &swizzle_b,
+		const std::string &swizzle_a,
+		const std::string &swizzle_rgba,
+		const glm::vec4 &border_color,
 		bool generate_mipmap);
 
 	void add_templates(const std::string &template_filename);

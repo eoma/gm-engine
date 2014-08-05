@@ -63,10 +63,26 @@ Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name)
 			if (!format) {
 				format_template_manager->get(t.format, [this, &format](const TextureFormatTemplateManager::Template &t) {
 					format = get_or_create_format(t.name, 
+						t.type,
 						t.min_filter, 
 						t.mag_filter, 
 						t.wrap_s, 
 						t.wrap_t, 
+						t.wrap_r,
+						t.depth_stencil_mode,
+						t.base_level,
+						t.compare_func,
+						t.compare_mode,
+						t.lod_bias,
+						t.min_lod,
+						t.max_lod,
+						t.max_level,
+						t.swizzle_r,
+						t.swizzle_g,
+						t.swizzle_b,
+						t.swizzle_a,
+						t.swizzle_rgba,
+						t.border_color,
 						t.generate_mipmap);
 				});
 			}
@@ -146,17 +162,54 @@ Core::TextureFormat *TextureManager::get_format(const std::string &format_name)
 }
 
 Core::TextureFormat *TextureManager::get_or_create_format(const std::string &format_name,
+	const std::string &type,
 	const std::string &min_filter,
 	const std::string &mag_filter,
 	const std::string &wrap_s,
 	const std::string &wrap_t,
+	const std::string &wrap_r,
+	const std::string &depth_stencil_mode,
+	int base_level,
+	const std::string &compare_func,
+	const std::string &compare_mode,
+	float lod_bias,
+	float min_lod,
+	float max_lod,
+	int max_level,
+	const std::string &swizzle_r,
+	const std::string &swizzle_g,
+	const std::string &swizzle_b,
+	const std::string &swizzle_a,
+	const std::string &swizzle_rgba,
+	const glm::vec4 &border_color,
 	bool generate_mipmap)
 {
 	auto format = get_format(format_name);
 	if (format)
 		return format;
 
-	format = Core::TextureFormat::create_texture_format_from_string(min_filter, mag_filter, wrap_s, wrap_t, generate_mipmap);
+	format = Core::TextureFormat::create_texture_format_from_string(
+		type,
+		min_filter, 
+		mag_filter, 
+		wrap_s, 
+		wrap_t, 
+		wrap_r,
+		depth_stencil_mode,
+		base_level,
+		compare_func,
+		compare_mode,
+		lod_bias,
+		min_lod,
+		max_lod,
+		max_level,
+		swizzle_r,
+		swizzle_g,
+		swizzle_b,
+		swizzle_a,
+		swizzle_rgba,
+		border_color,
+		generate_mipmap);
 	name_to_texture_format[format_name] = format;
 	texture_format_to_name[format] = format_name;
 
