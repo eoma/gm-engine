@@ -1,7 +1,10 @@
 #version 330
-#define POSITION 0
-#define NORMAL 1
-#define TEXCOORD 2
+#define DIFFUSE		0
+#define POSITION	1
+#define NORMAL		2
+#define TEXCOORD	3
+#define TANGENT		4
+#define BITANGENT	5
 
 layout(location = POSITION) in vec3 position;
 layout(location = NORMAL) in vec3 normal;
