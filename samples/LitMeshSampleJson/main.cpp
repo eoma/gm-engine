@@ -2,25 +2,7 @@
 
 #include "GM/Core/Utilities/ShaderFactory.h"
 
-#include "GM/Framework/Entity.h"
-
-#include "GM/Framework/DefinitionsPropertyNames.h"
-#include "GM/Framework/EntityManager.h"
-
-#include "GM/Framework/Components/Renderable.h"
-#include "GM/Framework/Components/Camera.h"
-#include "GM/Framework/Components/Transform.h"
-#include "GM/Framework/Components/Light.h"
-
-#include "GM/Framework/Managers/BufferManager.h"
-#include "GM/Framework/Managers/MaterialManager.h"
-#include "GM/Framework/Managers/MeshManager.h"
-#include "GM/Framework/Managers/ShaderManager.h"
-#include "GM/Framework/Managers/VaoManager.h"
-
-#include "GM/Framework/Utilities/Material.h"
-#include "GM/Framework/Utilities/Mesh.h"
-#include <GM/Framework/Utilities/Tools.h>
+#include "GM/Framework/Framework.h"
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>

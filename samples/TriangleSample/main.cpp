@@ -1,27 +1,14 @@
 #include "GM/Application/Main.h"
 
+#include "GM/Core/Utilities/ShaderConstants.h"
 #include "GM/Core/Utilities/ShaderFactory.h"
 
-#include "GM/Framework/Entity.h"
-
-#include "GM/Framework/EntityManager.h"
-#include "GM/Framework/Components/Renderable.h"
-#include "GM/Framework/Components/Camera.h"
-#include "GM/Framework/Managers/BufferManager.h"
-#include "GM/Framework/Managers/MaterialManager.h"
-#include "GM/Framework/Managers/MeshManager.h"
-#include "GM/Framework/Managers/ShaderManager.h"
-#include "GM/Framework/Managers/VaoManager.h"
-
-#include "GM/Framework/Utilities/Material.h"
-#include "GM/Framework/Utilities/Mesh.h"
+#include "GM/Framework/Framework.h"
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
 #include <cstdlib>
-
-#define POSITION 0
 
 using namespace GM;
 using namespace Application;
@@ -45,7 +32,7 @@ void create_triangle_mesh(const MainPtr &app)
 	vao_layout
 		.for_buffer(buffer_allocation)
 			.use_as(GL_ARRAY_BUFFER)
-				.bind<glm::vec3>(POSITION)
+				.bind<glm::vec3>(Core::ShaderConstants::Position)
 	;
 
 	Core::RenderCommand render_command;
@@ -67,7 +54,7 @@ void create_shader(const MainPtr &app)
 	Core::ShaderPtr shader = Core::ShaderFactory::make_program({
 		Core::ShaderSource("vertex",
 			s("#version 330\n") +
-			s("#define POSITION 0\n") +
+			s("#define POSITION 1\n") +
 			s("layout(location = POSITION) in vec3 position;\n") +
 			s("void main() {\n") + 
 			s("    gl_Position = vec4(position, 1.0);\n") +
