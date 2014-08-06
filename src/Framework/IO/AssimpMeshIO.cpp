@@ -30,7 +30,7 @@ AssimpMeshIO::~AssimpMeshIO()
 	delete importer;
 }
 
-MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file_name, int mesh_index, const BufferManagerPtr &buffer_manager, const VaoManagerPtr &vao_manager)
+MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file_name, unsigned int mesh_index, const BufferManagerPtr &buffer_manager, const VaoManagerPtr &vao_manager)
 {
 	auto scene = importer->ReadFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_ConvertToLeftHanded);
 

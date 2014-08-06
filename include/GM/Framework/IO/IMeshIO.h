@@ -18,7 +18,7 @@ public:
 	/**
 	 * Load mesh from file.
 	 */
-	virtual MeshPtr load(const std::string &mesh_name, const std::string &file_name, int mesh_index, const BufferManagerPtr &buffer_manager, const VaoManagerPtr &vao_manager) = 0;
+	virtual MeshPtr load(const std::string &mesh_name, const std::string &file_name, unsigned int mesh_index, const BufferManagerPtr &buffer_manager, const VaoManagerPtr &vao_manager) = 0;
 };
 
 } // namespace Framework
