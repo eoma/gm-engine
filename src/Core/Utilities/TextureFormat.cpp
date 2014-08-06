@@ -201,6 +201,74 @@ TextureFormat *TextureFormat::create_texture_format_from_string(
 		format->set_parameter(GL_TEXTURE_WRAP_T, result);
 	}
 
+	if (!wrap_r.empty()) {
+		int result;
+		string_to_parameter(wrap_r, result);
+		format->set_parameter(GL_TEXTURE_WRAP_R, result);
+	}
+
+	if (!depth_stencil_mode.empty()) {
+		int result;
+		string_to_parameter(depth_stencil_mode, result);
+		format->set_parameter(GL_DEPTH_STENCIL_TEXTURE_MODE, result);
+	}
+
+	if (!compare_func.empty()) {
+		int result;
+		string_to_parameter(compare_func, result);
+		format->set_parameter(GL_TEXTURE_COMPARE_FUNC, result);
+	}
+
+	if (!compare_mode.empty()) {
+		int result;
+		string_to_parameter(compare_mode, result);
+		format->set_parameter(GL_TEXTURE_COMPARE_MODE, result);
+	}
+
+	if (!swizzle_r.empty()) {
+		int result;
+		string_to_parameter(swizzle_r, result);
+		format->set_parameter(GL_TEXTURE_SWIZZLE_R, result);
+	}
+
+	if (!swizzle_g.empty()) {
+		int result;
+		string_to_parameter(swizzle_g, result);
+		format->set_parameter(GL_TEXTURE_SWIZZLE_G, result);
+	}
+
+	if (!swizzle_b.empty()) {
+		int result;
+		string_to_parameter(swizzle_b, result);
+		format->set_parameter(GL_TEXTURE_SWIZZLE_B, result);
+	}
+
+	if (!swizzle_a.empty()) {
+		int result;
+		string_to_parameter(swizzle_a, result);
+		format->set_parameter(GL_TEXTURE_SWIZZLE_A, result);
+	}
+
+	if (!swizzle_rgba.empty()) {
+		auto rgba = clan::StringHelp::split_text(swizzle_rgba, " ", false);
+		if (rgba.size() == 4) {
+			for (unsigned int i = 0; i < rgba.size(); i++) {
+				int result;
+				string_to_parameter(rgba[i], result);
+				format->set_parameter(GL_TEXTURE_SWIZZLE_R+i, result);
+			}
+		}
+	}
+
+	format->set_parameter(GL_TEXTURE_BASE_LEVEL, base_level);
+	format->set_parameter(GL_TEXTURE_LOD_BIAS, lod_bias);
+	format->set_parameter(GL_TEXTURE_MIN_LOD, min_lod);
+	format->set_parameter(GL_TEXTURE_MAX_LOD, max_lod);
+	format->set_parameter(GL_TEXTURE_MAX_LEVEL, max_level);
+
+	// FIXME: TextureParameter should probably allow glm::vec4 as a value for simplicity...
+	//format->set_parameter(GL_TEXTURE_BORDER_COLOR, border_color);
+
 	format->set_generate_mipmap(generate_mipmap);
 
 	return format;
