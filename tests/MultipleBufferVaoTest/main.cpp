@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <GM/Core/Utilities/ShaderConstants.h>
 #include <GM/Core/Utilities/VaoLayout.h>
 #include <GM/Framework/Managers/BufferManager.h>
 #include <GM/Framework/Managers/VaoManager.h>
@@ -17,12 +18,6 @@ using namespace GM;
 using namespace Core;
 using namespace Framework;
 using namespace Application;
-
-#define POSITION 0
-#define NORMAL 1
-#define INDEX 2
-#define INSTANCE_POSITION 3
-#define INSTANCE_SCALE 4
 
 bool mainTest() {
 	auto app = Main::create_with_gl_version("MultipleBufferVaoTest", 3, 3);
@@ -49,21 +44,21 @@ bool mainTest() {
 		std::vector<unsigned short> indices(3*data.size(), 0);
 		std::vector<MyInstance> instances(2000, {glm::vec3(0.f, 0.f, 0.f)});
 
-		auto vertex_buffer = buffer_manager->allocate(data.size()*sizeof(MyVertex));
-		auto index_buffer = buffer_manager->allocate(indices.size()*sizeof(unsigned short));
-		auto instance_buffer = buffer_manager->allocate(instances.size()*sizeof(MyInstance));
+		auto vertex_buffer = buffer_manager->allocate(data.size()*sizeof(MyVertex), sizeof(MyVertex));
+		auto index_buffer = buffer_manager->allocate(indices.size()*sizeof(unsigned short), sizeof(unsigned short));
+		auto instance_buffer = buffer_manager->allocate(instances.size()*sizeof(MyInstance), sizeof(MyInstance));
 
 		VaoLayout layout1;
 		layout1
 			.for_buffer(vertex_buffer.buffer)
 				.use_as(GL_ARRAY_BUFFER)
-					.bind(POSITION, 3, GL_FLOAT, false, sizeof(MyVertex))
-					.bind(NORMAL, 3, GL_FLOAT, false, sizeof(MyVertex), offsetof(MyVertex, normal))
+					.bind(Core::ShaderConstants::Position, 3, GL_FLOAT, false, sizeof(MyVertex))
+					.bind(Core::ShaderConstants::Normal, 3, GL_FLOAT, false, sizeof(MyVertex), offsetof(MyVertex, normal))
 			.for_buffer(index_buffer.buffer)
 				.use_as(GL_ELEMENT_ARRAY_BUFFER)
 			.for_buffer(instance_buffer.buffer)
 				.use_as(GL_ARRAY_BUFFER)
-					.bind(INSTANCE_POSITION, 3, GL_FLOAT, false, sizeof(MyInstance), 0, 1)
+					.bind(Core::ShaderConstants::Offset, 3, GL_FLOAT, false, sizeof(MyInstance), 0, 1)
 		;
 
 		vao1 = vao_manager->get_vao_for(layout1);
@@ -74,15 +69,15 @@ bool mainTest() {
 		std::vector<MyVertex> data(10, {glm::vec3(0.f,0.f,1.f), glm::vec3(1.f,0.f,0.f)});
 		std::vector<unsigned short> indices(3*data.size(), 0);
 
-		auto vertex_buffer = buffer_manager->allocate(data.size()*sizeof(MyVertex));
-		auto index_buffer = buffer_manager->allocate(indices.size()*sizeof(unsigned short));
+		auto vertex_buffer = buffer_manager->allocate<MyVertex>(data.size());
+		auto index_buffer = buffer_manager->allocate<unsigned short>(indices.size());
 
 		VaoLayout layout3; // Almost same as vao1 and vao2, except for no instances 
 		layout3
 			.for_buffer(vertex_buffer.buffer)
 				.use_as(GL_ARRAY_BUFFER)
-					.bind(NORMAL, 3, GL_FLOAT, false, sizeof(MyVertex), offsetof(MyVertex, normal))
-					.bind(POSITION, 3, GL_FLOAT, false, sizeof(MyVertex))
+					.bind(Core::ShaderConstants::Normal, 3, GL_FLOAT, false, sizeof(MyVertex), offsetof(MyVertex, normal))
+					.bind(Core::ShaderConstants::Position, 3, GL_FLOAT, false, sizeof(MyVertex))
 			.for_buffer(index_buffer.buffer)
 				.use_as(GL_ELEMENT_ARRAY_BUFFER)
 		;
@@ -96,18 +91,18 @@ bool mainTest() {
 		std::vector<unsigned short> indices(3*data.size(), 0);
 		std::vector<MyInstance> instances(5, {glm::vec3(0.f, 1.f, 0.f)});
 
-		auto vertex_buffer = buffer_manager->allocate(data.size()*sizeof(MyVertex));
-		auto index_buffer = buffer_manager->allocate(indices.size()*sizeof(unsigned short));
-		auto instance_buffer = buffer_manager->allocate(instances.size()*sizeof(MyInstance));
+		auto vertex_buffer = buffer_manager->allocate(data.size()*sizeof(MyVertex), sizeof(MyVertex));
+		auto index_buffer = buffer_manager->allocate(indices.size()*sizeof(unsigned short), sizeof(unsigned short));
+		auto instance_buffer = buffer_manager->allocate<MyInstance>(instances.size());
 
 		VaoLayout layout2; // Slightly shuffled layout, but should be equal to vao1
 		layout2
 			.for_buffer(instance_buffer.buffer)
 				.use_as(GL_ARRAY_BUFFER)
-					.bind<glm::vec3>(INSTANCE_POSITION, sizeof(MyInstance), 0, 1)
+					.bind<glm::vec3>(Core::ShaderConstants::Offset, sizeof(MyInstance), 0, 1)
 			.for_buffer(vertex_buffer.buffer) // VaoLayout should support BufferAllocation?
 				.use_as(GL_ARRAY_BUFFER)
-					.bind_interleaved(VaoArg<glm::vec3>(POSITION), VaoArg<glm::vec3>(NORMAL))
+					.bind_interleaved(VaoArg<glm::vec3>(Core::ShaderConstants::Position), VaoArg<glm::vec3>(Core::ShaderConstants::Normal))
 			.for_buffer(index_buffer.buffer)
 				.use_as(GL_ELEMENT_ARRAY_BUFFER)
 		;

@@ -1,4 +1,5 @@
 #include <cstdlib>
+
 #include <GM/Core/Utilities/BufferOperations.h>
 #include <GM/Core/Utilities/VaoLayout.h>
 #include <GM/Framework/Managers/BufferManager.h>
@@ -57,7 +58,7 @@ bool mainTest() {
 	
 	auto index_buffer = buffer_manager->allocate_and_upload(indices);
 
-	auto instance_buffer = buffer_manager->allocate(total_size(instances), BufferManager::UNIQUE_BUFFER);
+	auto instance_buffer = buffer_manager->allocate<MyInstance>(instances.size(), GL_DYNAMIC_DRAW, BufferManager::UNIQUE_BUFFER);
 	instance_buffer.upload(instances);
 	
 

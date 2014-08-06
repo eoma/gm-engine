@@ -49,7 +49,7 @@ void create_triangle_mesh(const MainPtr &app)
 			{ 0.0f, 1.0f, 0.0f },
 	};
 
-	auto buffer_allocation = app->get_buffer_manager()->allocate_and_upload(vertices);
+	auto buffer_allocation = app->get_buffer_manager()->allocate_and_upload(vertices, GL_DYNAMIC_DRAW);
 
 	Core::VaoLayout vao_layout;
 	vao_layout
@@ -58,7 +58,8 @@ void create_triangle_mesh(const MainPtr &app)
 				.bind<glm::vec3>(Core::ShaderConstants::Position)
 	;
 
-	Core::RenderCommand render_command(false, vertices.size(), 0, buffer_allocation.offset / sizeof(glm::vec3));
+	Core::RenderCommand render_command;
+	render_command.set_vertices(buffer_allocation, vertices);
 
 	auto mesh = std::make_shared<Framework::Mesh>(render_command, vao_layout, app->get_vao_manager(), "triangle");
 	app->get_mesh_manager()->add(mesh);

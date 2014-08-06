@@ -26,7 +26,7 @@ void create_triangle_mesh(const MainPtr &app)
 		{0.0f,  1.0f, 0.0f},
 	};
 
-	auto buffer_allocation = app->get_buffer_manager()->allocate_and_upload(vertices);
+	auto buffer_allocation = app->get_buffer_manager()->allocate_and_upload(vertices, GL_DYNAMIC_DRAW);
 
 	Core::VaoLayout vao_layout;
 	vao_layout
