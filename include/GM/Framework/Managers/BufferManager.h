@@ -25,28 +25,31 @@ public:
 	BufferManager(unsigned int default_pool_size = 32 * (1<<20));
 	~BufferManager();
 
-	// Just allocates size in a buffer
-	Core::BufferAllocation allocate(const unsigned int size, const BufferAllocationType type = SHARED_BUFFER);
-
 	// Allocates size, will align according to alignment
-	Core::BufferAllocation allocate(const unsigned int size, const unsigned int alignment, const BufferAllocationType type = SHARED_BUFFER);
+	Core::BufferAllocation allocate(const unsigned int size, const unsigned int alignment, const GLenum usage = GL_DYNAMIC_DRAW, const BufferAllocationType allocation_type = SHARED_BUFFER);
 
 	// Allocates least count*sizeof(DataStructure) and aligns the buffer offset
 	// to size of the DataStructure
 	template <class DataStructure>
-	Core::BufferAllocation allocate(const unsigned int count, const BufferAllocationType type = SHARED_BUFFER);
+	Core::BufferAllocation allocate(const unsigned int count, const GLenum usage = GL_DYNAMIC_DRAW, const BufferAllocationType allocation_type = SHARED_BUFFER);
 
 	// Will align.
 	template <class DataStructure>
-	Core::BufferAllocation allocate_and_upload(const std::vector<DataStructure> data_structure)
+	Core::BufferAllocation allocate_and_upload(const std::vector<DataStructure> data_structure, const GLenum usage = GL_DYNAMIC_DRAW, const BufferAllocationType allocation_type = SHARED_BUFFER)
 	{
-		return allocate_and_upload_multiple(data_structure)[0];
+		return allocate_and_upload_multiple(usage, allocation_type, data_structure)[0];
 	}
 
 	template <class... DataStructures>
 	std::vector<Core::BufferAllocation> allocate_and_upload_multiple(const std::vector<DataStructures>&... data_structures)
 	{
-		Core::BufferAllocation allocation = allocate(Core::total_size_plus_one(data_structures...));
+		return allocate_and_upload_multiple(GL_DYNAMIC_DRAW, SHARED_BUFFER, data_structures...);
+	}
+
+	template <class... DataStructures>
+	std::vector<Core::BufferAllocation> allocate_and_upload_multiple(const GLenum usage, const BufferAllocationType allocation_type, const std::vector<DataStructures>&... data_structures)
+	{
+		Core::BufferAllocation allocation = allocate(Core::total_size_plus_one(data_structures...), 0, usage, allocation_type);
 
 		std::vector<Core::BufferAllocation> buffer_allocations;
 		buffer_allocations.reserve(sizeof...(data_structures));
@@ -65,6 +68,7 @@ private:
 
 		unsigned int get_unused_size() const { return buffer->get_size() - allocated; };
 
+		GLenum get_usage() const { return buffer->get_usage(); }
 		bool has_space_for(const unsigned int size) const { return size <= get_unused_size(); };
 
 		// Increases allocated by size and returns previous allocated as offset
@@ -116,7 +120,7 @@ private:
 		align_and_upload(allocations, last.offset + last.allocated_size, buffer, rest_data_structures...);
 	}
 
-	PoolData create_pool(unsigned int size, unsigned int content_type = GL_ARRAY_BUFFER, unsigned int use_type = GL_STATIC_DRAW);
+	PoolData create_pool(unsigned int size, unsigned int content_type = GL_ARRAY_BUFFER, GLenum usage = GL_STATIC_DRAW);
 
 private:
 	unsigned int default_pool_size;
@@ -129,9 +133,9 @@ private:
 //
 
 template <class DataStructure>
-Core::BufferAllocation BufferManager::allocate(const unsigned int count, const BufferAllocationType type)
+Core::BufferAllocation BufferManager::allocate(const unsigned int count, const GLenum usage, const BufferAllocationType allocation_type)
 {
-	return allocate(sizeof(DataStructure)*count, sizeof(DataStructure), type);
+	return allocate(sizeof(DataStructure)*count, sizeof(DataStructure), usage, allocation_type);
 }
 
 } // namespace Framework
