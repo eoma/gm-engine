@@ -3,12 +3,24 @@
 #include <cstddef>
 #include <vector>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include <algorithm>
+
 namespace GM {
 	namespace Core {
 		
 		//
 		// End user function declarations
 		//
+
+		// Lexicographical less than operator for glm::tvec4, for tvec{1,3} just copy and replace 4
+		template <typename T, glm::precision P>
+		bool operator< (const glm::detail::tvec4<T,P> &v0, const glm::detail::tvec4<T,P> &v1) {
+			return std::lexicographical_compare(glm::value_ptr(v0), glm::value_ptr(v0) + v0.length(),
+				glm::value_ptr(v1), glm::value_ptr(v1) + v1.length());
+		}
 
 		template <class... DataStructures>
 		size_t total_size(const DataStructures&... data_structures);
