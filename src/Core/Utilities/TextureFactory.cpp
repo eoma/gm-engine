@@ -4,6 +4,8 @@
 
 #include "ClanLib/core.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include <sstream>
 
 namespace GM {
@@ -16,31 +18,7 @@ TexturePtr TextureFactory::create(const TextureFormat &format, const std::vector
 
 	upload(texture, image_paths, file_fetcher);
 
-	for (const ITextureParameterPtr &param : format.get_parameters())
-	{
-		if (ITextureParameter::is_type<int>(param))
-		{
-			auto int_param = std::static_pointer_cast<TextureParameter<int>>(param);
-			glTexParameteri(format.get_type(), param->get_name(), int_param->get_param());
-		}
-		else if (ITextureParameter::is_type<float>(param))
-		{
-			auto float_param = std::static_pointer_cast<TextureParameter<float>>(param);
-			glTexParameterf(format.get_type(), param->get_name(), float_param->get_param());
-		}
-		else if (ITextureParameter::is_type<std::vector<int>>(param))
-		{
-			// Should perform checks on the required number of parameters
-			auto int_params = std::static_pointer_cast<TextureParameter<std::vector<int>>>(param);
-			glTexParameteriv(format.get_type(), param->get_name(), int_params->get_param().data());
-		}
-		else if (ITextureParameter::is_type<std::vector<float>>(param))
-		{
-			// Should perform checks on the required number of parameters
-			auto float_params = std::static_pointer_cast<TextureParameter<std::vector<float>>>(param);
-			glTexParameterfv(format.get_type(), param->get_name(), float_params->get_param().data());
-		}
-	}
+	set_parameters(texture, format);
 
 	if (format.is_generating_mipmap())
 	{
@@ -59,31 +37,7 @@ TexturePtr TextureFactory::create(const TextureFormat &format, int width, int he
 
 	upload_single_image(texture, width, height, texture_format, data_type, data_ptr);
 
-	for (const ITextureParameterPtr &param : format.get_parameters())
-	{
-		if (ITextureParameter::is_type<int>(param))
-		{
-			auto int_param = std::static_pointer_cast<TextureParameter<int>>(param);
-			glTexParameteri(format.get_type(), param->get_name(), int_param->get_param());
-		}
-		else if (ITextureParameter::is_type<float>(param))
-		{
-			auto float_param = std::static_pointer_cast<TextureParameter<float>>(param);
-			glTexParameterf(format.get_type(), param->get_name(), float_param->get_param());
-		}
-		else if (ITextureParameter::is_type<std::vector<int>>(param))
-		{
-			// Should perform checks on the required number of parameters
-			auto int_params = std::static_pointer_cast<TextureParameter<std::vector<int>>>(param);
-			glTexParameteriv(format.get_type(), param->get_name(), int_params->get_param().data());
-		}
-		else if (ITextureParameter::is_type<std::vector<float>>(param))
-		{
-			// Should perform checks on the required number of parameters
-			auto float_params = std::static_pointer_cast<TextureParameter<std::vector<float>>>(param);
-			glTexParameterfv(format.get_type(), param->get_name(), float_params->get_param().data());
-		}
-	}
+	set_parameters(texture, format);
 
 	if (format.is_generating_mipmap())
 	{
@@ -100,6 +54,20 @@ TexturePtr TextureFactory::create(const TextureFormat &format)
 	auto texture = std::make_shared<Texture>(format.get_type());
 	texture->bind();
 
+	set_parameters(texture, format);
+
+	if (format.is_generating_mipmap())
+	{
+		glGenerateMipmap(format.get_type());
+	}
+
+	texture->unbind();
+
+	return texture;
+}
+
+void TextureFactory::set_parameters(const TexturePtr &texture, const TextureFormat &format)
+{
 	for (const ITextureParameterPtr &param : format.get_parameters())
 	{
 		if (ITextureParameter::is_type<int>(param))
@@ -112,28 +80,17 @@ TexturePtr TextureFactory::create(const TextureFormat &format)
 			auto float_param = std::static_pointer_cast<TextureParameter<float>>(param);
 			glTexParameterf(format.get_type(), param->get_name(), float_param->get_param());
 		}
-		else if (ITextureParameter::is_type<std::vector<int>>(param))
+		else if (ITextureParameter::is_type<glm::ivec4>(param))
 		{
-			// Should perform checks on the required number of parameters
-			auto int_params = std::static_pointer_cast<TextureParameter<std::vector<int>>>(param);
-			glTexParameteriv(format.get_type(), param->get_name(), int_params->get_param().data());
+			auto int_params = std::static_pointer_cast<TextureParameter<glm::ivec4>>(param);
+			glTexParameteriv(format.get_type(), param->get_name(), glm::value_ptr(int_params->get_param()));
 		}
-		else if (ITextureParameter::is_type<std::vector<float>>(param))
+		else if (ITextureParameter::is_type<glm::vec4>(param))
 		{
-			// Should perform checks on the required number of parameters
-			auto float_params = std::static_pointer_cast<TextureParameter<std::vector<float>>>(param);
-			glTexParameterfv(format.get_type(), param->get_name(), float_params->get_param().data());
+			auto float_params = std::static_pointer_cast<TextureParameter<glm::vec4>>(param);
+			glTexParameterfv(format.get_type(), param->get_name(), glm::value_ptr(float_params->get_param()));
 		}
 	}
-
-	if (format.is_generating_mipmap())
-	{
-		glGenerateMipmap(format.get_type());
-	}
-
-	texture->unbind();
-
-	return texture;
 }
 
 void TextureFactory::upload(const TexturePtr &texture, const std::vector<std::string> &files, FileFetcherFunction &file_fetcher)

@@ -46,7 +46,9 @@ public:
 	static TexturePtr create(const TextureFormat &format);
 
 private:
-	static void upload(const TexturePtr& texture, const std::vector<std::string> &image_paths, FileFetcherFunction &file_fetcher);
+	static void set_parameters(const TexturePtr &texture, const TextureFormat &format);
+
+	static void upload(const TexturePtr &texture, const std::vector<std::string> &image_paths, FileFetcherFunction &file_fetcher);
 	static void upload_single_image(const GLenum target, const std::string &file_name, FileFetcherFunction &file_fetcher);
 
 	static void upload_single_image(const TexturePtr &texture, int width, int height, GLenum texture_format, GLenum data_type, std::shared_ptr<const std::vector<unsigned char>> data_ptr);
