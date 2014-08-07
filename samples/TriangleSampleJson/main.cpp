@@ -10,8 +10,6 @@
 
 #include <cstdlib>
 
-#define POSITION 0
-
 using namespace GM;
 using namespace Application;
 

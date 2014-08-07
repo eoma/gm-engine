@@ -1,5 +1,6 @@
 #include "GM/Application/Main.h"
 
+#include "GM/Core/Utilities/ShaderConstants.h"
 #include "GM/Core/Utilities/ShaderFactory.h"
 
 #include "GM/Framework/Framework.h"
@@ -8,9 +9,6 @@
 #include <glm/ext.hpp>
 
 #include <cstdlib>
-
-#define POSITION 0
-#define TEXCOORD 1
 
 using namespace GM;
 using namespace Application;
@@ -61,7 +59,9 @@ void create_quad_mesh(const MainPtr &app)
 	vao_layout
 		.for_buffer(vertex_allocation)
 			.use_as(GL_ARRAY_BUFFER)
-				.bind_interleaved(Core::VaoArg<glm::vec3>(POSITION), Core::VaoArg<glm::vec2>(TEXCOORD))
+				.bind_interleaved(
+					Core::VaoArg<glm::vec3>(Core::ShaderConstants::Position),
+					Core::VaoArg<glm::vec2>(Core::ShaderConstants::TexCoord))
 	;
 
 	Core::RenderCommand render_command;

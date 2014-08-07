@@ -9,7 +9,6 @@
 
 #include <cstdlib>
 
-#define POSITION 0
 #define COMPONENT_IDLE_ROTATION "IdleRotation"
 
 using namespace GM;
