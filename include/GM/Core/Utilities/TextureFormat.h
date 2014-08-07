@@ -34,7 +34,6 @@ public:
 public:
 	// Static convenience functions dealing with creation of formats
 
-	// FIXME: When GL comes...
 	static TextureFormat create_texture2d_format(bool generate_mipmap = true, unsigned int wrap_mode = GL_CLAMP_TO_EDGE);
 	static TextureFormat *create_texture_format_from_string(
 		const std::string &type,
@@ -74,8 +73,8 @@ protected:
 
 	void set_parameter(unsigned int param_name, float param) { set_parameter<float>(param_name, param); }
 	void set_parameter(unsigned int param_name, int param) { set_parameter<int>(param_name, param); }
-	void set_parameter(unsigned int param_name, std::vector<float> param) { set_parameter<std::vector<float>>(param_name, param); }
-	void set_parameter(unsigned int param_name, std::vector<int> param) { set_parameter<std::vector<int>>(param_name, param); }
+	void set_parameter(unsigned int param_name, glm::vec4 param) { set_parameter<glm::vec4>(param_name, param); }
+	void set_parameter(unsigned int param_name, glm::ivec4 param) { set_parameter<glm::ivec4>(param_name, param); }
 
 protected:
 	// texture format type
