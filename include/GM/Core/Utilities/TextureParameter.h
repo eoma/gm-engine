@@ -1,7 +1,9 @@
 #pragma once
 
 #include "ITextureParameter.h"
+#include "Tools.h"
 
+#include <glm/glm.hpp>
 #include <vector>
 
 namespace GM {
@@ -16,14 +18,14 @@ class TextureParameter;
 typedef TextureParameter<int> TextureParameterInt;
 typedef std::shared_ptr<TextureParameterInt> TextureParameterIntPtr;
 
-typedef TextureParameter<std::vector<int>> TextureParameterIntVector;
-typedef std::shared_ptr<TextureParameterIntVector> TextureParameterIntVectorPtr;
+typedef TextureParameter<glm::ivec4> TextureParameterIVec4;
+typedef std::shared_ptr<TextureParameterIVec4> TextureParameterIVec4Ptr;
 
 typedef TextureParameter<float> TextureParameterFloat;
 typedef std::shared_ptr<TextureParameterFloat> TextureParameterFloatPtr;
 
-typedef TextureParameter<std::vector<float>> TextureParameterFloatVector;
-typedef std::shared_ptr<TextureParameterFloatVector> TextureParameterFloatVectorPtr;
+typedef TextureParameter<glm::vec4> TextureParameterVec4;
+typedef std::shared_ptr<TextureParameterVec4> TextureParameterVec4Ptr;
 
 template<class T>
 class TextureParameter : public ITextureParameter
