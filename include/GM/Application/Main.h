@@ -167,6 +167,19 @@ public:
 
 	static std::string gl_format_debug_output(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg);
 
+	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+
+	static void cursor_position_callback(GLFWwindow* window, double screen_x, double screen_y);
+	static void cursor_enter_callback(GLFWwindow* window, int entered);
+
+	static void scroll_callback(GLFWwindow* window, double scroll_offset_x, double scroll_offset_y);
+
+	// Called when a key is pressed, repeated or released.
+	static void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+	// Triggered when a Unicode character is input. Useful in a text field.
+	static void keyboard_unicode_callback(GLFWwindow* window, unsigned int code_point);
+
 protected:
 	void initialize();
 	void update();

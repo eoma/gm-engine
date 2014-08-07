@@ -343,6 +343,14 @@ void Main::construct_window_and_gl()
 
 	glfwSetWindowUserPointer(window, this);
 
+	// Set callbacks for our window
+	glfwSetMouseButtonCallback(window, &Main::mouse_button_callback);
+	glfwSetCursorPosCallback(window, &Main::cursor_position_callback);
+	glfwSetCursorEnterCallback(window, &Main::cursor_enter_callback);
+	glfwSetScrollCallback(window, &Main::scroll_callback);
+	glfwSetKeyCallback(window, &Main::keyboard_callback);
+	glfwSetCharCallback(window, &Main::keyboard_unicode_callback);
+
 	glfwMakeContextCurrent(window);
 
 	gl3wInit();
@@ -511,6 +519,36 @@ std::string Main::gl_format_debug_output(GLenum source, GLenum type, GLuint id, 
     stringStream << ", ID = " << id << "]";
  
     return stringStream.str();
+}
+
+void Main::mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
+{
+	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+}
+
+void Main::cursor_position_callback(GLFWwindow *window, double screen_x, double screen_y)
+{
+	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+}
+
+void Main::cursor_enter_callback(GLFWwindow *window, int entered)
+{
+	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+}
+
+void Main::scroll_callback(GLFWwindow *window, double scroll_offset_x, double scroll_offset_y)
+{
+	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+}
+
+void Main::keyboard_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+}
+
+void Main::keyboard_unicode_callback(GLFWwindow *window, unsigned int code_point)
+{
+	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
 }
 
 } // namespace Application
