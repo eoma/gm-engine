@@ -266,8 +266,7 @@ TextureFormat *TextureFormat::create_texture_format_from_string(
 	format->set_parameter(GL_TEXTURE_MAX_LOD, max_lod);
 	format->set_parameter(GL_TEXTURE_MAX_LEVEL, max_level);
 
-	// FIXME: TextureParameter should probably allow glm::vec4 as a value for simplicity...
-	//format->set_parameter(GL_TEXTURE_BORDER_COLOR, border_color);
+	format->set_parameter(GL_TEXTURE_BORDER_COLOR, border_color);
 
 	format->set_generate_mipmap(generate_mipmap);
 
