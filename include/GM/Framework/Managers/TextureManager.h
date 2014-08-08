@@ -67,10 +67,6 @@ private:
 
 	std::map<RawImagePtr, std::vector<Core::TexturePtr>> image_to_texture_deps;
 
-	// Several equal, but different intializations, texture formats may be supplied
-	std::map<Core::TextureFormatPtr, Core::TexturePtr, std::owner_less<Core::TextureFormatPtr>> format_to_texture_id;
-	std::map<Core::TexturePtr, Core::TextureFormatPtr> texture_id_to_format;
-
 	//Associates a name with a texture.
 	std::unordered_map<std::string, Core::TexturePtr> name_to_texture;
 	std::unordered_map<Core::TexturePtr, std::string> texture_to_name;
