@@ -40,7 +40,7 @@ namespace GM {
 				glm::vec4 border_color;			// define the border values that should be used for border texels. Defaults to (0,0,0,0).
 				bool generate_mipmap;
 
-				//TODO: default constructor here should set up the default "built into code" shader template (passthrough).
+				//TODO: The default params should be aquired through a getter interface, or through a structure for simpler reuse and default-testing.
 				Template() : name("default"), type("2d"), requires(),
 					min_filter("nearest_mipmap_linear"),
 					mag_filter("linear"),

@@ -29,7 +29,6 @@ const RawImage &TextureManager::get_or_create_image(const std::string &file_name
 	auto iter = loaded_images.find(file_name);
 	if (iter == loaded_images.end())
 	{
-		// TODO: check if file exists. Catch eventual exceptions. Check if image is empty
 		if (!clan::FileHelp::file_exists(texture_path + "/" + file_name)) {
 			throw clan::Exception("Texture does not exist!");
 		}

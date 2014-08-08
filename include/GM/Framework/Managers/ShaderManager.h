@@ -39,7 +39,6 @@ public:
 	Core::ShaderPtr get_or_create(
 		const std::string &name, const std::string &vs_file, const std::string &gs_file, const std::string &fs_file, 
 		const std::string &tess_ctrl_file, const std::string &tess_eval_file, const std::string &compute_file, bool rasterizer_discard);
-	// TODO: Extend to all 4.3 spec types (tesselation and compute is missing, support Transform Feedback with diabled rasterization, etc
 
 	void add_templates(const std::string &template_filename);
 private:
