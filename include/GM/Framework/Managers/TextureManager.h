@@ -27,7 +27,7 @@ public:
 
 	void set_texture_path(const std::string &texture_path) { this->texture_path = texture_path; }
 
-	const RawImage &get_or_create_image(const std::string &file_name);
+	const RawImagePtr &get_or_create_image(const std::string &file_name);
 
 	Core::TexturePtr get(const std::string &texture_name);
 	Core::TexturePtr get_or_create(const std::string &texture_name);
@@ -63,9 +63,9 @@ public:
 private:
 	IImageIOPtr image_io;
 
-	std::map<std::string, RawImage> loaded_images;
+	std::map<std::string, RawImagePtr> loaded_images;
 
-	std::map<RawImage*, std::vector<Core::TexturePtr>> image_to_texture_deps;
+	std::map<RawImagePtr, std::vector<Core::TexturePtr>> image_to_texture_deps;
 
 	// TODO: still unclear
 	std::map<Core::TexturePtr, Core::TextureFormatPtr> texture_id_to_format;

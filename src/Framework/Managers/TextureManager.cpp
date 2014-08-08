@@ -21,10 +21,10 @@ TextureManager::TextureManager(const IImageIOPtr &image_io)
 
 TextureManager::~TextureManager()
 {
-	// FIXME: Need to clean up all TextureFormat instances and RawImage instances, or just rewrite them to be shared_ptrs!
+
 }
 
-const RawImage &TextureManager::get_or_create_image(const std::string &file_name)
+const RawImagePtr &TextureManager::get_or_create_image(const std::string &file_name)
 {
 	auto iter = loaded_images.find(file_name);
 	if (iter == loaded_images.end())
@@ -33,9 +33,9 @@ const RawImage &TextureManager::get_or_create_image(const std::string &file_name
 			throw clan::Exception("Texture does not exist!");
 		}
 
-		RawImage image = image_io->load(texture_path + "/" + file_name);
+		RawImagePtr image = std::make_shared<RawImage>(image_io->load(texture_path + "/" + file_name));
 
-		if (image.get_data().empty() || image.get_width() < 1 || image.get_height() < 1)
+		if (image->get_data().empty() || image->get_width() < 1 || image->get_height() < 1)
 		{
 			throw clan::Exception("The texture was not successfully loaded!");
 		}
@@ -87,7 +87,7 @@ Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name)
 			}
 
 			auto image = get_or_create_image(t.image);
-			texture = get_or_create(texture_name, image, *format);
+			texture = get_or_create(texture_name, *image, *format);
 		});
 	}
 
