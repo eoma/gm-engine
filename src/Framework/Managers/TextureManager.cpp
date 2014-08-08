@@ -151,7 +151,7 @@ Core::TexturePtr TextureManager::get(const std::string &texture_name)
 	return iter->second;
 }
 
-Core::TextureFormat *TextureManager::get_format(const std::string &format_name)
+Core::TextureFormatPtr TextureManager::get_format(const std::string &format_name)
 {
 	auto iter = name_to_texture_format.find(format_name);
 	if (iter == name_to_texture_format.end())
@@ -160,7 +160,7 @@ Core::TextureFormat *TextureManager::get_format(const std::string &format_name)
 	return iter->second;
 }
 
-Core::TextureFormat *TextureManager::get_or_create_format(const std::string &format_name,
+Core::TextureFormatPtr TextureManager::get_or_create_format(const std::string &format_name,
 	const std::string &type,
 	const std::string &min_filter,
 	const std::string &mag_filter,
