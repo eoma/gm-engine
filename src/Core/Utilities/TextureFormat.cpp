@@ -137,21 +137,21 @@ void TextureFormat::string_to_parameter(const std::string &value, int &result)
 		throw clan::Exception(clan::string_format("The int parameter (%1) was not supported in TextureFormat when deserializing from string!", value));
 }
 
-TextureFormat TextureFormat::create_texture2d_format(bool generate_mipmap, unsigned int wrap_mode)
+TextureFormatPtr TextureFormat::create_texture2d_format(bool generate_mipmap, unsigned int wrap_mode)
 {
-	TextureFormat format(GL_TEXTURE_2D);
+	TextureFormatPtr format(new TextureFormat(GL_TEXTURE_2D));
 
-	format.set_parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	format.set_parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	format.set_parameter(GL_TEXTURE_WRAP_S, wrap_mode);
-	format.set_parameter(GL_TEXTURE_WRAP_T, wrap_mode);
+	format->set_parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	format->set_parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	format->set_parameter(GL_TEXTURE_WRAP_S, wrap_mode);
+	format->set_parameter(GL_TEXTURE_WRAP_T, wrap_mode);
 
-	format.set_generate_mipmap(generate_mipmap);
+	format->set_generate_mipmap(generate_mipmap);
 
 	return format;
 }
 
-TextureFormat *TextureFormat::create_texture_format_from_string(
+TextureFormatPtr TextureFormat::create_texture_format_from_string(
 	const std::string &type,
 	const std::string &min_filter,
 	const std::string &mag_filter,
@@ -174,8 +174,7 @@ TextureFormat *TextureFormat::create_texture_format_from_string(
 	const glm::vec4 &border_color,
 	bool generate_mipmap)
 {
-	// FIXME: This should probably be rewritten to a shared_ptr to get managed destruction of memory...
-	TextureFormat *format = new TextureFormat(string_to_type(type));
+	TextureFormatPtr format(new TextureFormat(string_to_type(type)));
 
 	if (!min_filter.empty()) {
 		int result;
