@@ -116,12 +116,21 @@ public:
 	bool is_running() const { return keep_running; }
 	void stop_running() { keep_running = false; }
 
+public:
 	clan::Signal<void()> &on_initialize() { return initialize_sign; }
 	clan::Signal<void(float)> &on_update() { return update_sign; }
 	clan::Signal<void()> &on_prepare() { return prepare_sign; }
 	clan::Signal<void()> &on_render() { return render_sign; }
 	clan::Signal<void()> &on_clean_up() { return clean_up_sign; }
 
+	clan::Signal<void(int button, int action, int mods)> sign_mouse_button() const { return mouse_button_sign; }
+	clan::Signal<void(double screen_x, double screen_y)> sign_cursor_position_changed() const { return cursor_position_changed_sign; }
+	clan::Signal<void(bool entered)> sign_cursor_entered_window() const { return cursor_entered_window_sign; }
+	clan::Signal<void(double scroll_offset_x, double scroll_offset_y)> sign_scroll_wheel_changed() const { return scroll_wheel_changed_sign; }
+	clan::Signal<void(int key, int scancode, int action, int mods)> sign_keyboard() const { return keyboard_sign; }
+	clan::Signal<void(unsigned int code_point)> sign_keyboard_unicode() const { return keyboard_unicode_sign; }
+
+public:
 	// FIXME: All setters should probably ensure that the this-> version is nullptr and not already set...?
 	// FIXME: Else throw an exception?
 
@@ -170,6 +179,7 @@ protected:
 	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
 	static void cursor_position_callback(GLFWwindow* window, double screen_x, double screen_y);
+
 	static void cursor_enter_callback(GLFWwindow* window, int entered);
 
 	static void scroll_callback(GLFWwindow* window, double scroll_offset_x, double scroll_offset_y);
@@ -229,6 +239,24 @@ protected:
 
 	// Called when run() is finishing, before context destruction
 	clan::Signal<void(void)> clean_up_sign;
+
+	// Called when a mouse button is pressed
+	clan::Signal<void(int button, int action, int mods)> mouse_button_sign;
+
+	// Called when the cursor position changes
+	clan::Signal<void(double screen_x, double screen_y)> cursor_position_changed_sign;
+
+	// Called when the cursor enters or leaves a window
+	clan::Signal<void(bool entered)> cursor_entered_window_sign;
+
+	// Called when the scroll wheel changes
+	clan::Signal<void(double scroll_offset_x, double scroll_offset_y)> scroll_wheel_changed_sign;
+
+	// Called when a key is pressed, repeated or released.
+	clan::Signal<void(int key, int scancode, int action, int mods)> keyboard_sign;
+
+	// Triggered when a Unicode character is input. Useful in a text field.
+	clan::Signal<void(unsigned int code_point)> keyboard_unicode_sign;
 
 	// Property value changed listeners
 	void on_title_changed(const std::string &old_value, const std::string &new_value);

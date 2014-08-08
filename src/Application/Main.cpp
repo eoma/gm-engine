@@ -524,31 +524,37 @@ std::string Main::gl_format_debug_output(GLenum source, GLenum type, GLuint id, 
 void Main::mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 {
 	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+	current_main->mouse_button_sign(button, action, mods);
 }
 
 void Main::cursor_position_callback(GLFWwindow *window, double screen_x, double screen_y)
 {
 	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+	current_main->cursor_position_changed_sign(screen_x, screen_y);
 }
 
 void Main::cursor_enter_callback(GLFWwindow *window, int entered)
 {
 	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+	current_main->cursor_entered_window_sign(entered == GL_TRUE ? true : false);
 }
 
 void Main::scroll_callback(GLFWwindow *window, double scroll_offset_x, double scroll_offset_y)
 {
 	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+	current_main->scroll_wheel_changed_sign(scroll_offset_x, scroll_offset_y);
 }
 
 void Main::keyboard_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
 	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+	current_main->keyboard_sign(key, scancode, action, mods);
 }
 
 void Main::keyboard_unicode_callback(GLFWwindow *window, unsigned int code_point)
 {
 	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+	current_main->keyboard_unicode_sign(code_point);
 }
 
 } // namespace Application
