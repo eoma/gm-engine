@@ -6,6 +6,8 @@
 namespace GM {
 namespace Framework {
 
+class RawImage; typedef std::shared_ptr<RawImage> RawImagePtr;
+
 class RawImage {
 public:
 	RawImage() : dataptr(std::make_shared<std::vector<unsigned char>>()), width(0), height(0), num_channels(0) {};
