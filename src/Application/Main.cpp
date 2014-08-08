@@ -114,6 +114,9 @@ namespace Application {
 	{
 		construct_window_and_gl();
 	}
+
+	keyboard_state.resize(GLFW_KEY_LAST, false);
+	button_state.resize(GLFW_MOUSE_BUTTON_LAST, false);
 }
 
 Main::~Main()
@@ -548,6 +551,18 @@ void Main::scroll_callback(GLFWwindow *window, double scroll_offset_x, double sc
 void Main::keyboard_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
 	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+
+	// Update keyboard state bookkeeping
+	switch (action) {
+	case GLFW_PRESS:
+		current_main->keyboard_state[key] = true;
+		break;
+	case GLFW_RELEASE:
+		current_main->keyboard_state[key] = false;
+		break;
+	};
+
+	// Send out the signal
 	current_main->keyboard_sign(key, scancode, action, mods);
 }
 
@@ -555,6 +570,22 @@ void Main::keyboard_unicode_callback(GLFWwindow *window, unsigned int code_point
 {
 	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
 	current_main->keyboard_unicode_sign(code_point);
+}
+
+bool Main::is_key_down(unsigned int key) const {
+	if (key >= GLFW_KEY_LAST) {
+		throw clan::Exception("Key was out of bounds!");
+	}
+
+	return keyboard_state[key];
+}
+
+bool Main::is_button_down(unsigned int button) const {
+	if (button >= GLFW_MOUSE_BUTTON_LAST) {
+		throw clan::Exception("Button was out of bounds!");
+	}
+
+	return button_state[button];
 }
 
 } // namespace Application

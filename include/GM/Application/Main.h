@@ -116,6 +116,9 @@ public:
 	bool is_running() const { return keep_running; }
 	void stop_running() { keep_running = false; }
 
+	bool is_key_down(unsigned int key) const;
+	bool is_button_down(unsigned int button) const;
+
 public:
 	clan::Signal<void()> &on_initialize() { return initialize_sign; }
 	clan::Signal<void(float)> &on_update() { return update_sign; }
@@ -199,6 +202,8 @@ protected:
 
 protected:
 	GLFWwindow *window;
+	std::vector<bool> keyboard_state;
+	std::vector<bool> button_state;
 
 	Main::ErrorFlags error_flags;
 
