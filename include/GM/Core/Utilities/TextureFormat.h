@@ -11,6 +11,8 @@
 namespace GM {
 namespace Core {
 
+class TextureFormat; typedef std::shared_ptr<TextureFormat> TextureFormatPtr;
+
 /**
  * Texture format is just a container of parameters..
  * You should add specializations that derive from this container to make eg. 2D textures or cube maps
@@ -34,8 +36,8 @@ public:
 public:
 	// Static convenience functions dealing with creation of formats
 
-	static TextureFormat create_texture2d_format(bool generate_mipmap = true, unsigned int wrap_mode = GL_CLAMP_TO_EDGE);
-	static TextureFormat *create_texture_format_from_string(
+	static TextureFormatPtr create_texture2d_format(bool generate_mipmap = true, unsigned int wrap_mode = GL_CLAMP_TO_EDGE);
+	static TextureFormatPtr create_texture_format_from_string(
 		const std::string &type,
 		const std::string &min_filter,
 		const std::string &mag_filter,
