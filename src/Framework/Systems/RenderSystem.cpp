@@ -206,6 +206,8 @@ void RenderSystem::resize(int width, int height) {
 	//        Very useful when working with framebuffers that holds different buffer/viewport sizes.
 	glViewport(0, 0, width, height);
 
+	// FIXME: Cameras should probably be stored in a pure list as well as in buckets, so that we can iterate over them
+	//        without risking that a camera's projection is calculated more than once.
 	for (unsigned int layer = 0; layer < buckets.size(); ++layer) {
 		const auto &cameras = cameras_in_layers[layer];
 		for (Camera *camera : cameras)	{
