@@ -353,7 +353,7 @@ void Main::construct_window_and_gl()
 	glfwSetScrollCallback(window, &Main::scroll_callback);
 	glfwSetKeyCallback(window, &Main::keyboard_callback);
 	glfwSetCharCallback(window, &Main::keyboard_unicode_callback);
-	glfwSetWindowSizeCallback(window, &Main::window_size_callback);
+	glfwSetFramebufferSizeCallback(window, &Main::window_size_callback);
 
 	glfwMakeContextCurrent(window);
 
