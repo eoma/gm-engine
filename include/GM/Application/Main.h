@@ -132,6 +132,7 @@ public:
 	clan::Signal<void(double scroll_offset_x, double scroll_offset_y)> sign_scroll_wheel_changed() const { return scroll_wheel_changed_sign; }
 	clan::Signal<void(int key, int scancode, int action, int mods)> sign_keyboard() const { return keyboard_sign; }
 	clan::Signal<void(unsigned int code_point)> sign_keyboard_unicode() const { return keyboard_unicode_sign; }
+	clan::Signal<void(int width, int height)> sign_window_size() const { return window_size_sign; }
 
 public:
 	// FIXME: All setters should probably ensure that the this-> version is nullptr and not already set...?
@@ -192,6 +193,8 @@ protected:
 
 	// Triggered when a Unicode character is input. Useful in a text field.
 	static void keyboard_unicode_callback(GLFWwindow* window, unsigned int code_point);
+
+	static void window_size_callback(GLFWwindow* window, int width, int height);
 
 protected:
 	void initialize();
@@ -262,6 +265,8 @@ protected:
 
 	// Triggered when a Unicode character is input. Useful in a text field.
 	clan::Signal<void(unsigned int code_point)> keyboard_unicode_sign;
+
+	clan::Signal<void(int width, int height)> window_size_sign;
 
 	// Property value changed listeners
 	void on_title_changed(const std::string &old_value, const std::string &new_value);

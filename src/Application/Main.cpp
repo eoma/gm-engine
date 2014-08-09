@@ -353,6 +353,7 @@ void Main::construct_window_and_gl()
 	glfwSetScrollCallback(window, &Main::scroll_callback);
 	glfwSetKeyCallback(window, &Main::keyboard_callback);
 	glfwSetCharCallback(window, &Main::keyboard_unicode_callback);
+	glfwSetWindowSizeCallback(window, &Main::window_size_callback);
 
 	glfwMakeContextCurrent(window);
 
@@ -570,6 +571,12 @@ void Main::keyboard_unicode_callback(GLFWwindow *window, unsigned int code_point
 {
 	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
 	current_main->keyboard_unicode_sign(code_point);
+}
+
+void Main::window_size_callback(GLFWwindow* window, int width, int height)
+{
+	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+	current_main->window_size_sign(width, height);
 }
 
 bool Main::is_key_down(unsigned int key) const {
