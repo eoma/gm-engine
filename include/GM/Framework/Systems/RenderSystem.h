@@ -29,6 +29,8 @@ public:
 
 	void render();
 
+	void resize(int width, int height);
+
 	// The methods will throw an std::out_of_range exception if bcuket_index > 31
 	const std::vector<IRenderable*> &get_bucket(const unsigned int bucket_index);
 	const std::vector<Camera*> &get_cameras(const unsigned int layer_index);

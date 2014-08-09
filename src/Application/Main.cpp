@@ -576,6 +576,7 @@ void Main::keyboard_unicode_callback(GLFWwindow *window, unsigned int code_point
 void Main::window_size_callback(GLFWwindow* window, int width, int height)
 {
 	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+	if (current_main->has_render_system()) current_main->render_system->resize(width, height);
 	current_main->window_size_sign(width, height);
 }
 

@@ -200,3 +200,16 @@ void RenderSystem::render() {
 		active_vao->unbind();
 	}
 }
+
+void RenderSystem::resize(int width, int height) {
+	// FIXME: Should move this to Core::ViewportManager, that holds a push/pop functionality for pushing viewport sizes. 
+	//        Very useful when working with framebuffers that holds different buffer/viewport sizes.
+	glViewport(0, 0, width, height);
+
+	for (unsigned int layer = 0; layer < buckets.size(); ++layer) {
+		const auto &cameras = cameras_in_layers[layer];
+		for (Camera *camera : cameras)	{
+			camera->set_projection(width, height);
+		}
+	}
+}
