@@ -18,6 +18,7 @@
 #define PROPERTY_FOV				"FOV"				// float
 #define PROPERTY_NEAR_CLIPPING		"NearClipping"		// float
 #define PROPERTY_FAR_CLIPPING		"FarClipping"		// float
+#define PROPERTY_MAX_VERTICAL_ANGLE "MaxVerticalAngle"	// float
 
 // Material
 #define PROPERTY_MATERIAL_NAME		"MaterialName"		// std::string

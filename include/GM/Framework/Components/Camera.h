@@ -45,6 +45,8 @@ public:
 	void set_projection(const glm::uvec2 &resolution);
 	void set_projection(float width, float height);
 
+	float get_max_vertical_angle() const { return max_vertical_angle_property; }
+
 	void clear_dirty();
 
 	void clear_buffer();
@@ -72,6 +74,7 @@ private:
 	Property<float> fov_property;
 	Property<float> near_clipping_property;
 	Property<float> far_clipping_property;
+	Property<float> max_vertical_angle_property;
 };
 
 } // namespace Framework

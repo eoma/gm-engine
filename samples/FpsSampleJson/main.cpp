@@ -14,6 +14,10 @@
 using namespace GM;
 using namespace Application;
 
+float RadiansToDegrees(float radians) {
+	return radians * 180.0f / glm::pi<float>();
+}
+
 class IdleRotationComponent : public Framework::Component < IdleRotationComponent >
 {
 public:
@@ -108,14 +112,16 @@ bool mainTest() {
 		glm::angleAxis(0.0f, glm::vec3(1, 0, 0)) *
 		glm::angleAxis(0.0f, glm::vec3(0, 1, 0)) *
 		glm::angleAxis(0.0f, glm::vec3(0, 0, 1))));
+	auto camera_max_vertical_angle = spaceship->add<float>(PROPERTY_MAX_VERTICAL_ANGLE, 85.0f);
+	auto camera_world_matrix = spaceship->add(PROPERTY_WORLD_MATRIX, glm::mat4(1));
 
 	// Set some run time limits
 	float max_run_time = -1;
 	float run_time = 0.f;
 
 	float speed = 1000;
-	float pitch_sensitivity = 1.f;
-	float yaw_sensitivity = 1.f;
+	float pitch_sensitivity = 0.99f;
+	float yaw_sensitivity = 0.99f;
 	float cursor_deadroom = 0.01f;
 
 	app->hide_cursor();
@@ -130,23 +136,21 @@ bool mainTest() {
 
 		auto &mouse_position = app->get_mouse_position();
 		if (glm::abs(mouse_position.x) > cursor_deadroom || glm::abs(mouse_position.y) > cursor_deadroom) {
-			auto vertical = mouse_position.x * yaw_sensitivity;
-			auto horizontal = mouse_position.y * pitch_sensitivity;
+			auto vertical = mouse_position.x * pitch_sensitivity;
+			auto horizontal = mouse_position.y * yaw_sensitivity;
 
 			auto angle_x = glm::angleAxis(horizontal, glm::vec3(1, 0, 0));
 			auto angle_y = glm::angleAxis(-vertical, glm::vec3(0, 1, 0));
 
-			camera_orientation = glm::normalize( angle_x * camera_orientation.get() * angle_y );
+			
+
+			camera_orientation = glm::normalize( angle_y * camera_orientation.get() * angle_x );
+
+			auto euler_x = glm::eulerAngles(camera_orientation.get());
+
+			std::cout << "X: " << euler_x.x << ", " << euler_x.y << ", " << euler_x.z << std::endl;
 
 			app->reset_mouse_position();
-		}
-
-		auto move_z = 0.0f;
-		if (app->is_key_down(GLFW_KEY_W)) {
-			move_z = -1;
-		}
-		else if (app->is_key_down(GLFW_KEY_S)) {
-			move_z = 1;
 		}
 
 		auto move_x = 0.0f;
@@ -157,10 +161,36 @@ bool mainTest() {
 			move_x = 1;
 		}
 
+		auto move_y = 0.0f;
+		if (app->is_key_down(GLFW_KEY_Z)) {
+			move_y = -1;
+		}
+		else if (app->is_key_down(GLFW_KEY_X)) {
+			move_y = 1;
+		}
+
+		auto move_z = 0.0f;
+		if (app->is_key_down(GLFW_KEY_W)) {
+			move_z = -1;
+		}
+		else if (app->is_key_down(GLFW_KEY_S)) {
+			move_z = 1;
+		}
+
+		
+
+		auto x_axis = glm::vec3(camera_world_matrix.get()[0][0], camera_world_matrix.get()[0][1], camera_world_matrix.get()[0][2]);
+		auto y_axis = glm::vec3(camera_world_matrix.get()[1][0], camera_world_matrix.get()[1][1], camera_world_matrix.get()[1][2]);
+		auto z_axis = glm::vec3(camera_world_matrix.get()[2][0], camera_world_matrix.get()[2][1], camera_world_matrix.get()[2][2]);
+
+		auto forward = -z_axis;
+		auto fpforward = glm::cross(glm::vec3(0,1,0), x_axis);
+		fpforward = glm::normalize(-fpforward);
+
 		if (move_x != 0 || move_z != 0) {
 			auto strafe_dir = glm::normalize(camera_orientation.get() * glm::vec3(1, 0, 0));
 			auto forward_dir = glm::normalize(camera_orientation.get() * glm::vec3(0, 0, 1));
-			auto move_dir = glm::normalize(strafe_dir * move_x + forward_dir * move_z) * glm::vec3(1,0,1);
+			auto move_dir = glm::normalize(x_axis * move_x + glm::vec3(0,1,0) * move_y + fpforward * move_z);
 			camera_pos += move_dir * speed * dt;
 		}
 	});

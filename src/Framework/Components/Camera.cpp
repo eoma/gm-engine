@@ -22,6 +22,7 @@ Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, uns
 	fov_property = owner->add<float>(PROPERTY_FOV, 60.0f);
 	near_clipping_property = owner->add<float>(PROPERTY_NEAR_CLIPPING, 0.1f);
 	far_clipping_property = owner->add<float>(PROPERTY_FAR_CLIPPING, 1000.0f);
+	max_vertical_angle_property = owner->add<float>(PROPERTY_MAX_VERTICAL_ANGLE, 85.0f);
 
 	view_matrix_property = owner->add<glm::mat4>(PROPERTY_VIEW_MATRIX, glm::mat4(1));
 	projection_matrix_property = owner->add<glm::mat4>(PROPERTY_PROJECTION_MATRIX, glm::mat4(1));
