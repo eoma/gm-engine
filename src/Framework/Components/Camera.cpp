@@ -42,6 +42,11 @@ Camera::~Camera() {
 
 void Camera::recalculate_view_matrix(const glm::mat4& /* old_world */, const glm::mat4 &new_world) {
 	view_matrix_property = glm::inverse(new_world);
+	/*view_matrix_property = glm::lookAt(
+		glm::vec3(new_world[3].x, new_world[3].y, new_world[3].z), 
+		glm::vec3(new_world[3].x, new_world[3].y, new_world[3].z) - glm::normalize(glm::vec3(new_world[2].x, new_world[2].y, new_world[2].z)),
+		glm::normalize(glm::vec3(new_world[1].x, new_world[1].y, new_world[1].z))
+		);*/
 }
 
 void Camera::clear_dirty() {

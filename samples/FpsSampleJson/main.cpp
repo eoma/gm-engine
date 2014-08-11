@@ -20,7 +20,10 @@ public:
 	IdleRotationComponent(const Framework::EntityPtr &owner, const std::string &name = std::string())
 		: Framework::Component< IdleRotationComponent >(owner, name)
 	{
-		orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat());
+		orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat(
+			glm::angleAxis(0.0f, glm::vec3(1, 0, 0)) *
+			glm::angleAxis(0.0f, glm::vec3(0, 1, 0)) *
+			glm::angleAxis(0.0f, glm::vec3(0, 0, 1))));
 	}
 
 	std::string get_type() const override { return get_static_type(); }
@@ -118,7 +121,7 @@ bool mainTest() {
 
 		if (app->is_key_down(GLFW_KEY_W))
 		{
-			camera_pos += glm::vec3(0,0,1) * speed * dt;
+			camera_pos += glm::vec3(0,0,-1) * speed * dt;
 		}
 		else if (app->is_key_down(GLFW_KEY_A))
 		{
@@ -126,7 +129,7 @@ bool mainTest() {
 		}
 		else if (app->is_key_down(GLFW_KEY_S))
 		{
-			camera_pos += glm::vec3(0,0,-1) * speed * dt;
+			camera_pos += glm::vec3(0,0,1) * speed * dt;
 		}
 		else if (app->is_key_down(GLFW_KEY_D))
 		{

@@ -18,7 +18,10 @@ Transform::Transform(const EntityPtr &owner, const SceneSystemPtr &scene_system,
 {
 	position_property = owner->add(PROPERTY_POSITION, glm::vec3());
 	scale_property = owner->add(PROPERTY_SCALE, glm::vec3(1));
-	orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat(glm::vec3(0,0,1)));
+	orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat(
+		glm::angleAxis(0.0f, glm::vec3(1, 0, 0)) *
+		glm::angleAxis(0.0f, glm::vec3(0, 1, 0)) *
+		glm::angleAxis(0.0f, glm::vec3(0, 0, 1))));
 
 	object_matrix_property = owner->add(PROPERTY_OBJECT_MATRIX, glm::mat4(1));
 	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4(1));
@@ -119,7 +122,7 @@ glm::mat4 Transform::make_object_matrix() const {
 	glm::mat4 translation = glm::translate(position_property.get());
 	//translation[3] = glm::vec4(position_property.get(), 1);
 
-	glm::mat4 rotation = glm::toMat4(orientation_property.get());
+	glm::mat4 rotation = glm::toMat4(glm::normalize(orientation_property.get()));
 
 	glm::mat4 scale = glm::diagonal4x4(glm::vec4(scale_property.get(), 1));
 

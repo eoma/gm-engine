@@ -1,7 +1,7 @@
 [
 	{
 		"entity": "spaceship",
-		"components": [ "Renderable", "Transform", "IdleRotation" ],
+		"components": [ "Renderable", "Transform" ],
 		"properties": [
 			{
 				"name": "MeshName",
