@@ -613,5 +613,13 @@ void Main::reset_mouse_position() {
 	glfwSetCursorPos(window, (resolution.get().x / 2.0) + 1, resolution.get().y / 2.0);
 }
 
+void Main::show_cursor() {
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
+
+void Main::hide_cursor() {
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+}
+
 } // namespace Application
 } // namespace GM

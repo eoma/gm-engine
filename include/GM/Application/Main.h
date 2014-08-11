@@ -122,6 +122,9 @@ public:
 	const glm::vec2 &get_mouse_position() const;
 	void reset_mouse_position();
 
+	void show_cursor();
+	void hide_cursor();
+
 public:
 	clan::Signal<void()> &on_initialize() { return initialize_sign; }
 	clan::Signal<void(float)> &on_update() { return update_sign; }
