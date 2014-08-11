@@ -148,7 +148,7 @@ bool mainTest() {
 
 			auto euler_x = glm::eulerAngles(camera_orientation.get());
 
-			std::cout << "X: " << euler_x.x << ", " << euler_x.y << ", " << euler_x.z << std::endl;
+			std::cout << "X: " << RadiansToDegrees(euler_x.x) << ", " << RadiansToDegrees(euler_x.y) << ", " << RadiansToDegrees(euler_x.z) << std::endl;
 
 			app->reset_mouse_position();
 		}
