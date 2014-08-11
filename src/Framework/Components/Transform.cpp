@@ -122,7 +122,7 @@ glm::mat4 Transform::make_object_matrix() const {
 	glm::mat4 translation = glm::translate(position_property.get());
 	//translation[3] = glm::vec4(position_property.get(), 1);
 
-	glm::mat4 rotation = glm::toMat4(glm::normalize(orientation_property.get()));
+	glm::mat4 rotation = glm::toMat4(orientation_property.get());
 
 	glm::mat4 scale = glm::diagonal4x4(glm::vec4(scale_property.get(), 1));
 

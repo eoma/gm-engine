@@ -117,6 +117,7 @@ namespace Application {
 
 	keyboard_state.resize(GLFW_KEY_LAST, false);
 	button_state.resize(GLFW_MOUSE_BUTTON_LAST, false);
+	mouse_position = glm::vec2();
 }
 
 Main::~Main()
@@ -199,6 +200,7 @@ void Main::run(bool destruct_window_and_gl_on_exit)
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+		//glfwWaitEvents();
 
 		if (glfwWindowShouldClose(window))
 		{
@@ -216,6 +218,7 @@ void Main::run(bool destruct_window_and_gl_on_exit)
 
 void Main::initialize()
 {
+	reset_mouse_position();
 	initialize_sign();
 }
 
@@ -534,7 +537,12 @@ void Main::mouse_button_callback(GLFWwindow *window, int button, int action, int
 void Main::cursor_position_callback(GLFWwindow *window, double screen_x, double screen_y)
 {
 	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
-	current_main->cursor_position_changed_sign(screen_x, screen_y);
+	auto resolution = current_main->get_resolution();
+	auto ratio = resolution.x / (float)resolution.y;
+	auto x = ratio*(2 * screen_x / (float)resolution.x - 1);
+	auto y = 2 * -screen_y / (float)resolution.y + 1;
+	current_main->mouse_position = glm::vec2((float)x, (float)y);
+	current_main->cursor_position_changed_sign(x, y);
 }
 
 void Main::cursor_enter_callback(GLFWwindow *window, int entered)
@@ -576,6 +584,7 @@ void Main::keyboard_unicode_callback(GLFWwindow *window, unsigned int code_point
 void Main::window_size_callback(GLFWwindow* window, int width, int height)
 {
 	Main *current_main = static_cast<Main*>(glfwGetWindowUserPointer(window));
+	current_main->set_resolution(width, height);
 	if (current_main->has_render_system()) current_main->render_system->resize(width, height);
 	current_main->window_size_sign(width, height);
 }
@@ -594,6 +603,14 @@ bool Main::is_button_down(unsigned int button) const {
 	}
 
 	return button_state[button];
+}
+
+const glm::vec2 &Main::get_mouse_position() const {
+	return mouse_position;
+}
+
+void Main::reset_mouse_position() {
+	glfwSetCursorPos(window, (resolution.get().x / 2.0) + 1, resolution.get().y / 2.0);
 }
 
 } // namespace Application

@@ -119,6 +119,9 @@ public:
 	bool is_key_down(unsigned int key) const;
 	bool is_button_down(unsigned int button) const;
 
+	const glm::vec2 &get_mouse_position() const;
+	void reset_mouse_position();
+
 public:
 	clan::Signal<void()> &on_initialize() { return initialize_sign; }
 	clan::Signal<void(float)> &on_update() { return update_sign; }
@@ -207,6 +210,7 @@ protected:
 	GLFWwindow *window;
 	std::vector<bool> keyboard_state;
 	std::vector<bool> button_state;
+	glm::vec2 mouse_position;
 
 	Main::ErrorFlags error_flags;
 
