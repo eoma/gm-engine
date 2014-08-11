@@ -14,10 +14,6 @@
 using namespace GM;
 using namespace Application;
 
-float RadiansToDegrees(float radians) {
-	return radians * 180.0f / glm::pi<float>();
-}
-
 class IdleRotationComponent : public Framework::Component < IdleRotationComponent >
 {
 public:
@@ -107,13 +103,13 @@ bool mainTest() {
 		camera->get_component<Framework::Camera>()->set_projection(app->get_resolution());
 	}
 
-	auto camera_pos = spaceship->add<glm::vec3>(PROPERTY_POSITION, glm::vec3());
-	auto camera_orientation = spaceship->add(PROPERTY_ORIENTATION, glm::quat(
+	auto camera_pos = camera->add<glm::vec3>(PROPERTY_POSITION, glm::vec3());
+	auto camera_orientation = camera->add(PROPERTY_ORIENTATION, glm::quat(
 		glm::angleAxis(0.0f, glm::vec3(1, 0, 0)) *
 		glm::angleAxis(0.0f, glm::vec3(0, 1, 0)) *
 		glm::angleAxis(0.0f, glm::vec3(0, 0, 1))));
-	auto camera_max_vertical_angle = spaceship->add<float>(PROPERTY_MAX_VERTICAL_ANGLE, 85.0f);
-	auto camera_world_matrix = spaceship->add(PROPERTY_WORLD_MATRIX, glm::mat4(1));
+	auto camera_max_vertical_angle = camera->add<float>(PROPERTY_MAX_VERTICAL_ANGLE, 85.0f);
+	auto camera_world_matrix = camera->add(PROPERTY_WORLD_MATRIX, glm::mat4(1));
 
 	// Set some run time limits
 	float max_run_time = -1;
@@ -122,7 +118,9 @@ bool mainTest() {
 	float speed = 1000;
 	float pitch_sensitivity = 0.99f;
 	float yaw_sensitivity = 0.99f;
-	float cursor_deadroom = 0.01f;
+	float cursor_deadroom = 0.0125f;
+	float accum_horizontal = 0.0f;
+	float accum_vertical = 0.0f;
 
 	app->hide_cursor();
 
@@ -139,16 +137,27 @@ bool mainTest() {
 			auto vertical = mouse_position.x * pitch_sensitivity;
 			auto horizontal = mouse_position.y * yaw_sensitivity;
 
-			auto angle_x = glm::angleAxis(horizontal, glm::vec3(1, 0, 0));
-			auto angle_y = glm::angleAxis(-vertical, glm::vec3(0, 1, 0));
+			accum_vertical += vertical;
+			accum_horizontal += horizontal;
 
-			
+			if (glm::degrees(accum_horizontal) > camera_max_vertical_angle.get()) {
+				accum_horizontal = glm::radians(camera_max_vertical_angle.get());
+			}
+			else if (glm::degrees(accum_horizontal) < -camera_max_vertical_angle.get()) {
+				accum_horizontal = glm::radians(-camera_max_vertical_angle.get());
+			}
+			if (glm::degrees(accum_vertical) > 360.0f) {
+				accum_vertical -= glm::radians(360.0f);
+			}
+			else if (glm::degrees(accum_vertical) < 0.0f) {
+				accum_vertical += glm::radians(360.0f);
+			}
 
-			camera_orientation = glm::normalize( angle_y * camera_orientation.get() * angle_x );
+			auto angle_x = glm::angleAxis(accum_horizontal, glm::vec3(1, 0, 0));
+			auto angle_y = glm::angleAxis(-accum_vertical, glm::vec3(0, 1, 0));
 
-			auto euler_x = glm::eulerAngles(camera_orientation.get());
-
-			std::cout << "X: " << RadiansToDegrees(euler_x.x) << ", " << RadiansToDegrees(euler_x.y) << ", " << RadiansToDegrees(euler_x.z) << std::endl;
+			auto orientation = glm::normalize( angle_y * angle_x );
+			camera_orientation = orientation;
 
 			app->reset_mouse_position();
 		}
