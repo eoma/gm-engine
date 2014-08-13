@@ -62,48 +62,47 @@ void create_skybox_mesh(float s, const MainPtr &app)
 
 	struct MyVertex {
 		glm::vec3 position;
-		glm::vec3 texcoord;
 	};
 
 	Core::VaoLayout vao_layout;
 	Core::RenderCommand render_command;
 
 	std::vector<MyVertex> vertices {
-			//BACK
-			{ { s,-s,-s }, { 1, 1,-1 } },
-			{ { s, s,-s }, { 1,-1,-1 } },
-			{ {-s, s,-s }, {-1,-1,-1 } },
-			{ {-s,-s,-s }, {-1, 1,-1 } },
+			//X+
+			{ { s,-s,-s } },
+			{ { s,-s, s } },
+			{ { s, s, s } },
+			{ { s, s,-s } },
 			
-			//BOTTOM
-			{ {-s,-s,-s }, {-1,-1, 1 } },
-			{ {-s,-s, s }, {-1,-1,-1 } },
-			{ { s,-s, s }, { 1,-1,-1 } },
-			{ { s,-s,-s }, { 1,-1, 1 } },
+			//X-
+			{ {-s, s,-s } },
+			{ {-s, s, s } },
+			{ {-s,-s, s } },
+			{ {-s,-s,-s } },
 
-			//FRONT
-			{ {-s,-s, s }, {-1, 1, 1 } },
-			{ {-s, s, s }, {-1,-1, 1 } },
-			{ { s, s, s }, { 1,-1, 1 } },
-			{ { s,-s, s }, { 1, 1, 1 } },
+			//Y+
+			{ { s, s,-s } },
+			{ { s, s, s } },
+			{ {-s, s, s } },
+			{ {-s, s,-s } },
 
-			//LEFT
-			{ {-s, s,-s }, {-1,-1,-1 } },
-			{ {-s, s, s }, {-1,-1, 1 } },
-			{ {-s,-s, s }, {-1, 1, 1 } },
-			{ {-s,-s,-s }, {-1, 1,-1 } },
+			//Y-
+			{ {-s,-s,-s } },
+			{ {-s,-s, s } },
+			{ { s,-s, s } },
+			{ { s,-s,-s } },
 
-			//RIGHT
-			{ { s,-s,-s }, { 1, 1,-1 } },
-			{ { s,-s, s }, { 1, 1, 1 } },
-			{ { s, s, s }, { 1,-1, 1 } },
-			{ { s, s,-s }, { 1,-1,-1 } },
+			//Z+
+			{ { s,-s, s } },
+			{ {-s,-s, s } },
+			{ {-s, s, s } },
+			{ { s, s, s } },
 
-			//TOP
-			{ { s, s,-s }, { 1, 1, 1 } },
-			{ { s, s, s }, { 1, 1,-1 } },
-			{ {-s, s, s }, {-1, 1,-1 } },
-			{ {-s, s,-s }, {-1, 1, 1 } }
+			//Z-
+			{ { s, s,-s } },
+			{ {-s, s,-s } },
+			{ {-s,-s,-s } },
+			{ { s,-s,-s } }
 	};
 
 	std::vector<unsigned int> indices {
@@ -126,13 +125,12 @@ void create_skybox_mesh(float s, const MainPtr &app)
 		22, 23, 20
 	};
 
-	auto vertex_allocation = app->get_buffer_manager()->allocate_and_upload(vertices, GL_STATIC_DRAW);
+	auto vertex_allocation = app->get_buffer_manager()->allocate_and_upload(vertices, GL_DYNAMIC_DRAW);
 	vao_layout
 		.for_buffer(vertex_allocation)
 			.use_as(GL_ARRAY_BUFFER)
 				.bind_interleaved(
-					Core::VaoArg<glm::vec3>(Core::ShaderConstants::Position),
-					Core::VaoArg<glm::vec3>(Core::ShaderConstants::TexCoord));
+					Core::VaoArg<glm::vec3>(Core::ShaderConstants::Position));
 	render_command.set_vertices(vertex_allocation, vertices);
 
 	auto index_allocation = app->get_buffer_manager()->allocate_and_upload(indices);
@@ -157,6 +155,7 @@ bool mainTest() {
 	auto json_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/json/samples/fps");
 	auto glsl_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/glsl/samples/fps");
 	auto mesh_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/mesh/samples/mesh");
+	auto texture_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/textures/samples/fps");
 
 	// Set up resource data
 	entity_manager->add_templates(json_path + "/entity_templates.json");
@@ -165,14 +164,18 @@ bool mainTest() {
 	app->get_shader_manager()->set_glsl_path(glsl_path);
 	app->get_mesh_manager()->add_templates(json_path + "/mesh_templates.json");
 	app->get_mesh_manager()->set_mesh_path(mesh_path);
+	app->get_texture_manager()->add_templates(json_path + "/texture_templates.json");
+	app->get_texture_manager()->add_format_templates(json_path + "/texture_format_templates.json");
+	app->get_texture_manager()->set_texture_path(texture_path);
 
 	// Set up resources
 	create_fullscreen_quad_mesh(app);
-	create_skybox_mesh(1000, app);
+	create_skybox_mesh(49900, app);
 
 	// Create our entities
 	auto camera = entity_manager->create_entity("camera");
 	auto spaceship = entity_manager->create_entity("spaceship");
+	auto skybox = entity_manager->create_entity("skybox");
 #if STARFIELD
 	auto starfield = entity_manager->create_entity("starfield");
 #endif
@@ -180,6 +183,7 @@ bool mainTest() {
 	// Apply an entity template, as defined in entity_templates.json
 	entity_manager->apply("fps_camera", camera);
 	entity_manager->apply("spaceship", spaceship);
+	entity_manager->apply("skybox", skybox);
 #if STARFIELD
 	entity_manager->apply("starfield", starfield);
 #endif

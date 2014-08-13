@@ -2,7 +2,7 @@
 	{
     	"format": "textureCube",
 		"type": "cube",
-    	"min_filter": "linear_mipmap_linear",
+    	"min_filter": "linear",
 		"mag_filter": "linear",
 		"wrap_s": "clamp_to_edge",
 		"wrap_t": "clamp_to_edge",

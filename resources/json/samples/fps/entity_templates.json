@@ -32,7 +32,7 @@
 			},
 			{
 				"name": "FarClipping",
-				"value": 10000
+				"value": 100000
 			},
 			{
 				"name": "Position",

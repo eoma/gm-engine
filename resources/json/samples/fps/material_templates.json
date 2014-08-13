@@ -16,6 +16,13 @@
 	},
 	{
 		"material": "skybox",
-		"shader": "skybox"
+		"shader": "skybox",
+		"uniforms": [
+			{
+				"name": "cube_map",
+				"value": "nebulea",
+				"type": "texture"
+			}
+		]
 	}
 ]

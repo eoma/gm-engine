@@ -52,9 +52,9 @@ void TextureTemplateParser::parse_templates(const std::string &data, std::functi
 			t.images.push_back(it->second.to_string());
 		}
 		else if (it->second.is_array()) {
-			for (unsigned int j = 0; j < it->second.get_items().size(); j++) {
-				if (it->second.get_items()[i].is_string()) {
-					t.images.push_back(it->second.get_items()[i].to_string());
+			for (unsigned int j = 0; j < it->second.get_size(); j++) {
+				if (it->second[j].is_string()) {
+					t.images.push_back(it->second[j].to_string());
 				}
 				else {
 					throw Exception("image must be a string or an array of strings");

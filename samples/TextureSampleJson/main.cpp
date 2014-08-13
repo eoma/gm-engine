@@ -64,9 +64,9 @@ bool mainTest() {
 	entity_manager->add_templates(json_path + "/entity_templates.json");
 	app->get_material_manager()->add_templates(json_path + "/material_templates.json");
 	app->get_shader_manager()->add_templates(json_path + "/shader_templates.json");
+	app->get_shader_manager()->set_glsl_path(glsl_path);
 	app->get_texture_manager()->add_templates(json_path + "/texture_templates.json");
 	app->get_texture_manager()->add_format_templates(json_path + "/texture_format_templates.json");
-	app->get_shader_manager()->set_glsl_path(glsl_path);
 	app->get_texture_manager()->set_texture_path(texture_path);
 
 	// Set up resources
