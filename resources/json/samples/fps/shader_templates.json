@@ -13,5 +13,10 @@
 		"shader": "starfield",
 		"vertex_shader": "fullscreen_pass_through.vs",
 		"fragment_shader": "starfield.fs"
+	},
+	{
+		"shader": "skybox",
+		"vertex_shader": "skybox.vs",
+		"fragment_shader": "skybox.fs"
 	}
 ]

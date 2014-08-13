@@ -141,6 +141,8 @@ void create_skybox_mesh(float s, const MainPtr &app)
 			.use_as(GL_ELEMENT_ARRAY_BUFFER);
 	render_command.set_indices(index_allocation, indices);
 
+	render_command.set_draw_mode(GL_TRIANGLES);
+
 	auto mesh = std::make_shared<Framework::Mesh>(render_command, vao_layout, app->get_vao_manager(), "skybox");
 	app->get_mesh_manager()->add(mesh);
 }

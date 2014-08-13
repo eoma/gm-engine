@@ -48,9 +48,22 @@ void TextureTemplateParser::parse_templates(const std::string &data, std::functi
 		it = json_members.find("image");
 		if (it == json_members.end())
 			throw Exception("image is required");
-		if (!it->second.is_string())
-			throw Exception("image must be a string");
-		t.image = it->second.to_string();
+		if (it->second.is_string()) {
+			t.images.push_back(it->second.to_string());
+		}
+		else if (it->second.is_array()) {
+			for (unsigned int j = 0; j < it->second.get_items().size(); j++) {
+				if (it->second.get_items()[i].is_string()) {
+					t.images.push_back(it->second.get_items()[i].to_string());
+				}
+				else {
+					throw Exception("image must be a string or an array of strings");
+				}
+			}
+		}
+		else {
+			throw Exception("image must be a string or an array of strings");
+		}
 
 		it = json_members.find("format");
 		if (it == json_members.end())

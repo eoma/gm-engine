@@ -39,7 +39,11 @@ void TextureTemplateManager::apply_requirement(const std::string &template_name,
 	{
 		if (StringHelp::compare(template_name, it_template->name, true) == 0)
 		{
-			if (t.image.empty()) t.image = it_template->image;
+			if (t.images.empty()) { 
+				for (auto image_filename : it_template->images) {
+					t.images.push_back(image_filename);
+				}
+			}
 			if (t.format.empty()) t.format = it_template->format;
 			return;
 		}

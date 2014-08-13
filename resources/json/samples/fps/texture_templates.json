@@ -1,0 +1,7 @@
+[
+	{
+    	"texture": "floor",
+    	"image": [ "Nebulea_X-.png", "Nebulea_X+.png", "Nebulea_Y-.png", "Nebulea_Y+.png", "Nebulea_Z-.png", "Nebulea_Z+.png" ],
+		"format": "textureCube"
+    }
+]

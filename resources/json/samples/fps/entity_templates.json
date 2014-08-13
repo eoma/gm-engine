@@ -112,5 +112,24 @@
 				"type": "vec3"
 			}
 		]
+	},
+	{
+		"entity": "skybox",
+		"components": [ "Renderable", "Transform" ],
+		"properties": [
+			{
+				"name": "MeshName",
+				"value": "skybox"
+			},
+			{
+				"name": "MaterialName",
+				"value": "skybox"
+			},
+			{
+				"name": "Position",
+				"value": [0,0,0],
+				"type": "vec3"
+			}
+		]
 	}
 ]

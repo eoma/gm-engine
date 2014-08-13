@@ -86,8 +86,13 @@ Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name)
 				});
 			}
 
-			auto image = get_or_create_image(t.image);
-			texture = get_or_create(texture_name, *image, *format);
+			std::vector<RawImagePtr> images;
+			for (auto image_filename : t.images) {
+				auto image = get_or_create_image(image_filename);
+				images.push_back(image);
+			}
+
+			texture = get_or_create(texture_name, images, *format);
 		});
 	}
 
@@ -132,6 +137,37 @@ Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, 
 	else gl_texture_format = GL_RGB;
 
 	texture = Core::TextureFactory::create(format, (int)image.get_width(), (int)image.get_height(), gl_texture_format, (GLenum)GL_UNSIGNED_BYTE, image.get_dataptr());
+	if (!texture) {
+		throw clan::Exception(clan::string_format("Failed to get or create the texture %1.", texture_name));
+	}
+
+	name_to_texture[texture_name] = texture;
+	texture_to_name[texture] = texture_name;
+
+	return texture;
+}
+
+Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, const std::vector<RawImagePtr> &images, const Core::TextureFormat &format)
+{
+	// First, test if the name has been cached.
+	auto texture = get(texture_name);
+	if (texture) {
+		return texture;
+	}
+
+	if (images.size() > 1)
+		throw clan::Exception("Sending multiple rawimages to a texture creation is yet to be implemented in the texture factory for the way texture manager is set up right now...");
+
+	// Implement generating a texture based on raw image data and format.
+	GLenum gl_texture_format;
+	int channels = images[0]->get_num_channels();
+	if (channels == 1) gl_texture_format = GL_RED;
+	else if (channels == 2) gl_texture_format = GL_RG;
+	else if (channels == 3) gl_texture_format = GL_RGB;
+	else if (channels == 4) gl_texture_format = GL_RGBA;
+	else gl_texture_format = GL_RGB;
+
+	texture = Core::TextureFactory::create(format, (int)images[0]->get_width(), (int)images[0]->get_height(), gl_texture_format, (GLenum)GL_UNSIGNED_BYTE, images[0]->get_dataptr());
 	if (!texture) {
 		throw clan::Exception(clan::string_format("Failed to get or create the texture %1.", texture_name));
 	}

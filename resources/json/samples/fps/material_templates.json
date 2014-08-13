@@ -13,5 +13,9 @@
 	{
 		"material": "starfield",
 		"shader": "starfield"
+	},
+	{
+		"material": "skybox",
+		"shader": "skybox"
 	}
 ]

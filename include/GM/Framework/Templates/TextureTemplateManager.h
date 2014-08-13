@@ -16,10 +16,10 @@ namespace GM {
 			struct Template {
 				std::string name;
 				std::vector<std::string> requires;
-				std::string image;
+				std::vector<std::string> images;
 				std::string format;
 
-				Template() : name(), requires(), image(), format() {}
+				Template() : name(), requires(), images(), format() {}
 			};
 
 			void add_templates(const std::string &template_filename);
