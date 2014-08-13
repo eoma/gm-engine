@@ -9,10 +9,131 @@
 
 #include <cstdlib>
 
+#define COMPONENT_FPS_CONTROLLER "FPSController"
 #define COMPONENT_IDLE_ROTATION "IdleRotation"
+
+#define PROPERTY_CURSOR_DEADROOM "CursorDeadroom"
+#define PROPERTY_PITCH_SENSITIVITY "PitchSensitivity"
+#define PROPERTY_YAW_SENSITIVITY "YawSensitivity"
+#define PROPERTY_SPEED "Speed"
 
 using namespace GM;
 using namespace Application;
+
+class FPSControllerComponent : public Framework::Component < FPSControllerComponent >
+{
+public:
+	FPSControllerComponent(const Framework::EntityPtr &owner, const MainPtr &app, const std::string &name = std::string())
+		: Framework::Component< FPSControllerComponent >(owner, name), app(app.get())
+	{
+		position_property = owner->add(PROPERTY_POSITION, glm::vec3());
+		orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat(
+			glm::angleAxis(0.0f, glm::vec3(1, 0, 0)) *
+			glm::angleAxis(0.0f, glm::vec3(0, 1, 0)) *
+			glm::angleAxis(0.0f, glm::vec3(0, 0, 1))));
+
+		world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4(1));
+
+		cursor_deadroom_property = owner->add(PROPERTY_CURSOR_DEADROOM, 0.0125f);
+		pitch_sensitivity_property = owner->add(PROPERTY_PITCH_SENSITIVITY, 1.0f);
+		yaw_sensitivity_property = owner->add(PROPERTY_YAW_SENSITIVITY, 1.0f);
+		max_vertical_angle_property = owner->add<float>(PROPERTY_MAX_VERTICAL_ANGLE, 85.0f);
+		speed_property = owner->add<float>(PROPERTY_SPEED, 1000.0f);
+
+		accum_vertical = 0.0f;
+		accum_horizontal = 0.0f;
+	}
+
+	std::string get_type() const override { return get_static_type(); }
+
+	void update(float elapsed_time) {
+		auto &mouse_position = app->get_mouse_position();
+		if (glm::abs(mouse_position.x) > cursor_deadroom_property || glm::abs(mouse_position.y) > cursor_deadroom_property) {
+			auto vertical = mouse_position.x * pitch_sensitivity_property;
+			auto horizontal = mouse_position.y * yaw_sensitivity_property;
+
+			accum_vertical += vertical;
+			accum_horizontal += horizontal;
+
+			if (glm::degrees(accum_horizontal) > max_vertical_angle_property) {
+				accum_horizontal = glm::radians(max_vertical_angle_property.get());
+			}
+			else if (glm::degrees(accum_horizontal) < -max_vertical_angle_property) {
+				accum_horizontal = glm::radians(-max_vertical_angle_property.get());
+			}
+			if (glm::degrees(accum_vertical) > 360.0f) {
+				accum_vertical -= glm::radians(360.0f);
+			}
+			else if (glm::degrees(accum_vertical) < 0.0f) {
+				accum_vertical += glm::radians(360.0f);
+			}
+
+			auto angle_x = glm::angleAxis(accum_horizontal, glm::vec3(1, 0, 0));
+			auto angle_y = glm::angleAxis(-accum_vertical, glm::vec3(0, 1, 0));
+
+			orientation_property = glm::normalize(angle_y * angle_x);
+
+			app->reset_mouse_position();
+		}
+
+		auto move_x = 0.0f;
+		if (app->is_key_down(GLFW_KEY_A)) {
+			move_x = -1;
+		}
+		else if (app->is_key_down(GLFW_KEY_D)) {
+			move_x = 1;
+		}
+
+		auto move_y = 0.0f;
+		if (app->is_key_down(GLFW_KEY_Z)) {
+			move_y = -1;
+		}
+		else if (app->is_key_down(GLFW_KEY_X)) {
+			move_y = 1;
+		}
+
+		auto move_z = 0.0f;
+		if (app->is_key_down(GLFW_KEY_W)) {
+			move_z = -1;
+		}
+		else if (app->is_key_down(GLFW_KEY_S)) {
+			move_z = 1;
+		}
+
+		auto x_axis = glm::vec3(world_matrix_property.get()[0][0], world_matrix_property.get()[0][1], world_matrix_property.get()[0][2]);
+		auto y_axis = glm::vec3(world_matrix_property.get()[1][0], world_matrix_property.get()[1][1], world_matrix_property.get()[1][2]);
+		auto z_axis = glm::vec3(world_matrix_property.get()[2][0], world_matrix_property.get()[2][1], world_matrix_property.get()[2][2]);
+
+		auto forward = -z_axis;
+		auto fpforward = glm::cross(glm::vec3(0, 1, 0), x_axis);
+		fpforward = glm::normalize(-fpforward);
+
+		if (move_x != 0 || move_y != 0 || move_z != 0) {
+			auto strafe_dir = glm::normalize(orientation_property.get() * glm::vec3(1, 0, 0));
+			auto forward_dir = glm::normalize(orientation_property.get() * glm::vec3(0, 0, 1));
+			auto move_dir = glm::normalize(x_axis * move_x + glm::vec3(0, 1, 0) * move_y + fpforward * move_z);
+			position_property += move_dir * speed_property.get() * elapsed_time;
+		}
+	}
+
+public:
+	static std::string get_static_type() { return COMPONENT_FPS_CONTROLLER; }
+
+private:
+	Main *app;
+
+	Framework::Property<glm::vec3> position_property;
+	Framework::Property<glm::quat> orientation_property;
+	Framework::Property<glm::mat4> world_matrix_property;
+	Framework::Property<float> max_vertical_angle_property;
+	Framework::Property<float> cursor_deadroom_property;
+	Framework::Property<float> pitch_sensitivity_property;
+	Framework::Property<float> yaw_sensitivity_property;
+	Framework::Property<float> speed_property;
+
+	float accum_vertical;
+	float accum_horizontal;
+};
 
 class IdleRotationComponent : public Framework::Component < IdleRotationComponent >
 {
@@ -60,6 +181,9 @@ public:
 		else if (type == Framework::Light::get_static_type()) {
 			owner->create_component<Framework::Light>(app->get_render_system());
 		}
+		else if (type == FPSControllerComponent::get_static_type()) {
+			owner->create_component<FPSControllerComponent>(app);
+		}
 		else if (type == IdleRotationComponent::get_static_type()) {
 			owner->create_component<IdleRotationComponent>();
 		}
@@ -94,7 +218,7 @@ bool mainTest() {
 	auto light = entity_manager->create_entity("light");
 
 	// Apply an entity template, as defined in entity_templates.json
-	entity_manager->apply("camera", camera);
+	entity_manager->apply("fps_camera", camera);
 	entity_manager->apply("spaceship", spaceship);
 	entity_manager->apply("light", light);
 
@@ -103,26 +227,11 @@ bool mainTest() {
 		camera->get_component<Framework::Camera>()->set_projection(app->get_resolution());
 	}
 
-	auto camera_pos = camera->add<glm::vec3>(PROPERTY_POSITION, glm::vec3());
-	auto camera_orientation = camera->add(PROPERTY_ORIENTATION, glm::quat(
-		glm::angleAxis(0.0f, glm::vec3(1, 0, 0)) *
-		glm::angleAxis(0.0f, glm::vec3(0, 1, 0)) *
-		glm::angleAxis(0.0f, glm::vec3(0, 0, 1))));
-	auto camera_max_vertical_angle = camera->add<float>(PROPERTY_MAX_VERTICAL_ANGLE, 85.0f);
-	auto camera_world_matrix = camera->add(PROPERTY_WORLD_MATRIX, glm::mat4(1));
+	app->hide_cursor();
 
 	// Set some run time limits
 	float max_run_time = -1;
 	float run_time = 0.f;
-
-	float speed = 1000;
-	float pitch_sensitivity = 0.99f;
-	float yaw_sensitivity = 0.99f;
-	float cursor_deadroom = 0.0125f;
-	float accum_horizontal = 0.0f;
-	float accum_vertical = 0.0f;
-
-	app->hide_cursor();
 
 	auto update_slot = app->on_update().connect([&](float dt) mutable {
 		run_time += dt;
@@ -130,77 +239,6 @@ bool mainTest() {
 		{
 			app->stop_running();
 			return;
-		}
-
-		auto &mouse_position = app->get_mouse_position();
-		if (glm::abs(mouse_position.x) > cursor_deadroom || glm::abs(mouse_position.y) > cursor_deadroom) {
-			auto vertical = mouse_position.x * pitch_sensitivity;
-			auto horizontal = mouse_position.y * yaw_sensitivity;
-
-			accum_vertical += vertical;
-			accum_horizontal += horizontal;
-
-			if (glm::degrees(accum_horizontal) > camera_max_vertical_angle.get()) {
-				accum_horizontal = glm::radians(camera_max_vertical_angle.get());
-			}
-			else if (glm::degrees(accum_horizontal) < -camera_max_vertical_angle.get()) {
-				accum_horizontal = glm::radians(-camera_max_vertical_angle.get());
-			}
-			if (glm::degrees(accum_vertical) > 360.0f) {
-				accum_vertical -= glm::radians(360.0f);
-			}
-			else if (glm::degrees(accum_vertical) < 0.0f) {
-				accum_vertical += glm::radians(360.0f);
-			}
-
-			auto angle_x = glm::angleAxis(accum_horizontal, glm::vec3(1, 0, 0));
-			auto angle_y = glm::angleAxis(-accum_vertical, glm::vec3(0, 1, 0));
-
-			auto orientation = glm::normalize( angle_y * angle_x );
-			camera_orientation = orientation;
-
-			app->reset_mouse_position();
-		}
-
-		auto move_x = 0.0f;
-		if (app->is_key_down(GLFW_KEY_A)) {
-			move_x = -1;
-		}
-		else if (app->is_key_down(GLFW_KEY_D)) {
-			move_x = 1;
-		}
-
-		auto move_y = 0.0f;
-		if (app->is_key_down(GLFW_KEY_Z)) {
-			move_y = -1;
-		}
-		else if (app->is_key_down(GLFW_KEY_X)) {
-			move_y = 1;
-		}
-
-		auto move_z = 0.0f;
-		if (app->is_key_down(GLFW_KEY_W)) {
-			move_z = -1;
-		}
-		else if (app->is_key_down(GLFW_KEY_S)) {
-			move_z = 1;
-		}
-
-		
-
-		auto x_axis = glm::vec3(camera_world_matrix.get()[0][0], camera_world_matrix.get()[0][1], camera_world_matrix.get()[0][2]);
-		auto y_axis = glm::vec3(camera_world_matrix.get()[1][0], camera_world_matrix.get()[1][1], camera_world_matrix.get()[1][2]);
-		auto z_axis = glm::vec3(camera_world_matrix.get()[2][0], camera_world_matrix.get()[2][1], camera_world_matrix.get()[2][2]);
-
-		auto forward = -z_axis;
-		auto fpforward = glm::cross(glm::vec3(0,1,0), x_axis);
-		fpforward = glm::normalize(-fpforward);
-
-		if (move_x != 0 || move_z != 0) {
-			auto strafe_dir = glm::normalize(camera_orientation.get() * glm::vec3(1, 0, 0));
-			auto forward_dir = glm::normalize(camera_orientation.get() * glm::vec3(0, 0, 1));
-			auto move_dir = glm::normalize(x_axis * move_x + glm::vec3(0,1,0) * move_y + fpforward * move_z);
-			camera_pos += move_dir * speed * dt;
 		}
 	});
 
