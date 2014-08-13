@@ -3,6 +3,7 @@
 
 #include "GM/Samples/FpsController.h"
 #include "GM/Samples/IdleRotate.h"
+#include "GM/Samples/Starfield.h"
 
 using namespace GM;
 using namespace Samples;
@@ -19,5 +20,8 @@ void SamplesComponentSerializer::create_and_add_component(const Framework::Entit
 	}
 	else if (type == Samples::IdleRotationComponent::get_static_type()) {
 		owner->create_component<Samples::IdleRotationComponent>();
+	}
+	else if (type == Samples::StarfieldComponent::get_static_type()) {
+		owner->create_component<Samples::StarfieldComponent>(app);
 	}
 }

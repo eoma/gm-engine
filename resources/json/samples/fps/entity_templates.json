@@ -42,6 +42,29 @@
 		]
 	},
 	{
+		"entity": "fps_camera",
+		"requires": [ "camera" ],
+		"components": [ "FPSController" ],
+		"properties": [
+			{
+				"name": "CursorDeadroom",
+				"value": 0.0125
+			},
+			{
+				"name": "PitchSensitivity",
+				"value": 1.0
+			},
+			{
+				"name": "YawSensitivity",
+				"value": 1.0
+			},
+			{
+				"name": "Speed",
+				"value": 1000.0
+			}
+		]
+	},
+	{
 		"entity": "light",
 		"components": [ "Light", "Transform" ],
 		"properties": [
@@ -67,6 +90,25 @@
 			{
 				"name": "MaterialColorAmbient",
 				"value": [1,1,1],
+				"type": "vec3"
+			}
+		]
+	},
+	{
+		"entity": "starfield",
+		"components": [ "Renderable", "Transform", "Starfield" ],
+		"properties": [
+			{
+				"name": "MeshName",
+				"value": "fullscreen_quad"
+			},
+			{
+				"name": "MaterialName",
+				"value": "starfield"
+			},
+			{
+				"name": "Position",
+				"value": [0,0,0],
 				"type": "vec3"
 			}
 		]
