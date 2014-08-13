@@ -1,43 +1,16 @@
 #include "GM/Application/Main.h"
-
-#include "GM/Core/Utilities/ShaderFactory.h"
-
 #include "GM/Framework/Framework.h"
+#include "GM/Core/Utilities/ShaderFactory.h"
+#include "GM/Samples/IdleRotate.h"
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
 #include <cstdlib>
 
-#define COMPONENT_IDLE_ROTATION "IdleRotation"
 
 using namespace GM;
 using namespace Application;
-
-class IdleRotationComponent : public Framework::Component < IdleRotationComponent >
-{
-public:
-	IdleRotationComponent(const Framework::EntityPtr &owner, const std::string &name = std::string())
-		: Framework::Component< IdleRotationComponent >(owner, name)
-	{
-		orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat(
-			glm::angleAxis(0.0f, glm::vec3(1, 0, 0)) *
-			glm::angleAxis(0.0f, glm::vec3(0, 1, 0)) *
-			glm::angleAxis(0.0f, glm::vec3(0, 0, 1))));
-	}
-
-	std::string get_type() const override { return get_static_type(); }
-
-	void update(float elapsed_time) {
-		orientation_property = glm::rotate(orientation_property.get(), elapsed_time, glm::vec3(0, 1, 0));
-	}
-
-public:
-	static std::string get_static_type() { return COMPONENT_IDLE_ROTATION; }
-
-private:
-	Framework::Property<glm::quat> orientation_property;
-};
 
 class MyComponentSerializer {
 public:
@@ -57,8 +30,8 @@ public:
 		else if (type == Framework::Transform::get_static_type()) {
 			owner->create_component<Framework::Transform>(app->get_scene_system());
 		}
-		else if (type == IdleRotationComponent::get_static_type()) {
-			owner->create_component<IdleRotationComponent>();
+		else if (type == Samples::IdleRotationComponent::get_static_type()) {
+			owner->create_component<Samples::IdleRotationComponent>();
 		}
 	}
 private:

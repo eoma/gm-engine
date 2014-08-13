@@ -5,6 +5,7 @@ project(${NAME})
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/include/
+  ${CMAKE_SOURCE_DIR}/samples_common/
   ${CMAKE_SOURCE_DIR}/depends/ClanLib/Include/
   ${CMAKE_SOURCE_DIR}/depends/glm/include/
   ${CMAKE_SOURCE_DIR}/depends/gl3w/include/
