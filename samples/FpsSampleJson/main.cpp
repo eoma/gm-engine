@@ -10,6 +10,10 @@
 
 #include <cstdlib>
 
+// TODO: Must have a camera that can draw to an FBO (RTT) before we can truly do this...
+//		 Then apply the result to a cube texture and slap that onto a skybox.
+#define STARFIELD 0
+
 using namespace GM;
 using namespace Application;
 
@@ -73,22 +77,27 @@ bool mainTest() {
 
 	// Create our entities
 	auto camera = entity_manager->create_entity("camera");
-	auto starfield = entity_manager->create_entity("starfield");
 	auto spaceship = entity_manager->create_entity("spaceship");
+#if STARFIELD
+	auto starfield = entity_manager->create_entity("starfield");
+#endif
 
 	// Apply an entity template, as defined in entity_templates.json
 	entity_manager->apply("fps_camera", camera);
-	entity_manager->apply("starfield", starfield);
 	entity_manager->apply("spaceship", spaceship);
+#if STARFIELD
+	entity_manager->apply("starfield", starfield);
+#endif
 	
 	// Set up the projection for the camera
 	if (camera->has_component<Framework::Camera>()) {
 		auto &camera_component = camera->get_component<Framework::Camera>();
 		camera_component->set_projection(app->get_resolution());
-
+#if STARFIELD
 		if (starfield->has_component<Samples::StarfieldComponent>()) {
 			starfield->get_component<Samples::StarfieldComponent>()->set_camera(camera_component);
 		}
+#endif
 	}
 
 	app->hide_cursor();

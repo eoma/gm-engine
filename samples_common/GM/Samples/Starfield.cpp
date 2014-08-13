@@ -35,6 +35,11 @@ void StarfieldComponent::update(float elapsed_time) {
 			inv_resolution_property = renderable->get_material()->get<glm::vec2>("inv_resolution");
 			inv_resolution_property = glm::vec2(1.0f - resolution.x, 1.0f - resolution.y);
 		}
+
+		// TODO: Origin should be the center of the skybox I presume... or maybe the active camera.
+		//		 This might even be the position of the actual skybox surface we draw (which would require we draw a single side at a time).
+		//		 But can't really be sure until we try it out...
+		//		 For now, this is based on the position of the camera.
 		if (renderable->get_material()->has_property("origin")) {
 			origin_property = renderable->get_material()->get<glm::vec3>("origin");
 			if (camera != nullptr) {
@@ -45,6 +50,10 @@ void StarfieldComponent::update(float elapsed_time) {
 				});
 			}
 		}
+
+		// TODO: Rotation is most likely the direction of the skybox surface (front, back, left, right, up, down).
+		//		 But can't be sure until we try...
+		//		 For now this is based on the orientation of the camera, just to get in some manipulation.
 		if (renderable->get_material()->has_property("rotate")) {
 			rotate_property = renderable->get_material()->get<glm::mat2>("rotate");
 			if (camera != nullptr) {
@@ -58,7 +67,7 @@ void StarfieldComponent::update(float elapsed_time) {
 		}
 		if (renderable->get_material()->has_property("zoom")) {
 			zoom_property = renderable->get_material()->get<float>("zoom");
-			zoom_property = 0.5f;
+			zoom_property = 1.0f;
 		}
 	}
 
