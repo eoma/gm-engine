@@ -13,27 +13,6 @@
 using namespace GM;
 using namespace Application;
 
-class MyComponentSerializer {
-public:
-	MyComponentSerializer(const MainPtr &app) : app(app) {
-		slots.connect(
-			app->get_entity_manager()->register_component_serializer_signal(),
-			this, &MyComponentSerializer::create_and_add_component);
-	}
-
-	void create_and_add_component(const Framework::EntityPtr &owner, const std::string &type, const std::string &/*name*/) {
-		if (type == Framework::Camera::get_static_type()) {
-			owner->create_component<Framework::Camera>(app->get_render_system());
-		}
-		else if (type == Framework::Renderable::get_static_type()) {
-			owner->create_component<Framework::Renderable>(app->get_render_system(), app->get_material_manager(), app->get_mesh_manager());
-		}
-	}
-private:
-	MainPtr app;
-	clan::SlotContainer slots;
-};
-
 void create_quad_mesh(const MainPtr &app)
 {
 	if (app->get_mesh_manager()->contains("quad"))
@@ -75,7 +54,6 @@ bool mainTest() {
 	auto app = Main::create_with_gl_version("test", 3, 3);
 
 	auto entity_manager = app->get_entity_manager();
-	auto component_serializer = std::make_shared<MyComponentSerializer>(app);
 
 	// Set up resource data path locations
 	auto json_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/json/samples/texture");

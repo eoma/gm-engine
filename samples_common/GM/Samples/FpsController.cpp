@@ -6,8 +6,8 @@ using namespace GM;
 using namespace Application;
 using namespace Samples;
 
-FPSControllerComponent::FPSControllerComponent(const Framework::EntityPtr &owner, const Application::MainPtr &app, const std::string &name)
-	: Framework::Component< FPSControllerComponent >(owner, name), app(app.get())
+FPSControllerComponent::FPSControllerComponent(const Framework::EntityPtr &owner, GM::Application::Main *app, const std::string &name)
+	: Framework::Component< FPSControllerComponent >(owner, name), app(app)
 {
 	position_property = owner->add(PROPERTY_POSITION, glm::vec3());
 	orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat(

@@ -14,6 +14,13 @@
 #include "GM/Framework/IO/SoilImageIO.h"
 #include "GM/Framework/IO/AssimpMeshIO.h"
 
+#include "GM/Framework/Components/Camera.h"
+#include "GM/Framework/Components/Renderable.h"
+#include "GM/Framework/Components/Transform.h"
+#include "GM/Framework/Components/Light.h"
+
+#include "GM/Framework/Entity.h"
+
 #include <glm/ext.hpp>
 
 #include <iostream>
@@ -22,7 +29,28 @@
 namespace GM {
 namespace Application {
 
-	Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_flags, unsigned int width, unsigned int height, bool fullscreen, bool visible, bool construct_window)
+MainComponentSerializer::MainComponentSerializer(Main *app) : app(app) {
+	slots.connect(
+		app->get_entity_manager()->register_component_serializer_signal(),
+		this, &MainComponentSerializer::create_and_add_component);
+}
+
+void MainComponentSerializer::create_and_add_component(const Framework::EntityPtr &owner, const std::string &type, const std::string &/*name*/) {
+	if (type == Framework::Camera::get_static_type()) {
+		owner->create_component<Framework::Camera>(app->get_render_system());
+	}
+	else if (type == Framework::Renderable::get_static_type()) {
+		owner->create_component<Framework::Renderable>(app->get_render_system(), app->get_material_manager(), app->get_mesh_manager());
+	}
+	else if (type == Framework::Transform::get_static_type()) {
+		owner->create_component<Framework::Transform>(app->get_scene_system());
+	}
+	else if (type == Framework::Light::get_static_type()) {
+		owner->create_component<Framework::Light>(app->get_render_system());
+	}
+}
+
+Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_flags, unsigned int width, unsigned int height, bool fullscreen, bool visible, bool construct_window)
 : Framework::PropertyContainer<>()
 , window(nullptr)
 , error_flags(error_flags)
@@ -109,6 +137,9 @@ namespace Application {
 			std::make_shared<Framework::AssimpMeshIO>()
 			);
 	}
+
+	// TODO: Should this be part of the flags? Probably...
+	main_component_serializer = std::make_shared<MainComponentSerializer>(this);
 
 	if (construct_window)
 	{

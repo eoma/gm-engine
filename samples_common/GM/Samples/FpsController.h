@@ -14,7 +14,7 @@ namespace GM {
 		class FPSControllerComponent : public GM::Framework::Component < FPSControllerComponent >
 		{
 		public:
-			FPSControllerComponent(const GM::Framework::EntityPtr &owner, const GM::Application::MainPtr &app, const std::string &name = std::string());
+			FPSControllerComponent(const GM::Framework::EntityPtr &owner, GM::Application::Main *app, const std::string &name = std::string());
 
 			std::string get_type() const override { return get_static_type(); }
 			void update(float elapsed_time) override;

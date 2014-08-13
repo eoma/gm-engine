@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Framework/EntityManager.h"
-#include "../Framework/Totem/Totem.h"
+#include "GM/Framework/EntityManager.h"
+#include "GM/Framework/Totem/Totem.h"
 
 // gl3w has to be included before glfw
 #include <GL/gl3w.h>
@@ -32,6 +32,16 @@ namespace Framework {
 namespace Application {
 
 class Main; typedef std::shared_ptr<Main> MainPtr;
+
+class MainComponentSerializer {
+public:
+	MainComponentSerializer(Main *app);
+	void create_and_add_component(const Framework::EntityPtr &owner, const std::string &type, const std::string &/*name*/);
+private:
+	Main *app;
+	clan::SlotContainer slots;
+};
+typedef std::shared_ptr<MainComponentSerializer> MainComponentSerializerPtr;
 
 class Main : public Framework::PropertyContainer<>
 {
@@ -210,6 +220,8 @@ protected:
 	void clean_up();
 
 protected:
+	MainComponentSerializerPtr main_component_serializer;
+
 	GLFWwindow *window;
 	std::vector<bool> keyboard_state;
 	std::vector<bool> button_state;
