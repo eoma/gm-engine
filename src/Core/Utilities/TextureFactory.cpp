@@ -30,12 +30,49 @@ TexturePtr TextureFactory::create(const TextureFormat &format, const std::vector
 	return texture;
 }
 
-TexturePtr TextureFactory::create(const TextureFormat &format, int width, int height, GLenum texture_format, GLenum data_type, std::shared_ptr<const std::vector<unsigned char>> data_ptr)
+TexturePtr TextureFactory::create(const TextureFormat &format, TextureData data)
 {
 	auto texture = std::make_shared<Texture>(format.get_type());
 	texture->bind();
 
-	upload_single_image(texture, width, height, texture_format, data_type, data_ptr);
+	upload_single_image(texture->get_type(), data.width, data.height, data.texture_format, data.data_type, data.data_ptr);
+
+	set_parameters(texture, format);
+
+	if (format.is_generating_mipmap())
+	{
+		glGenerateMipmap(format.get_type());
+	}
+
+	texture->unbind();
+
+	return texture;
+}
+
+TexturePtr TextureFactory::create(const TextureFormat &format, const std::vector<TextureData> &data)
+{
+	auto texture = std::make_shared<Texture>(format.get_type());
+	texture->bind();
+
+	if (texture->get_type() == GL_TEXTURE_2D) {
+		if (data.size() != 1) {
+			throw clan::Exception(clan::string_format("A 2d texture requires 1 image, (%1) were provided", data.size()));
+		}
+
+		unsigned int i = 0;
+		upload_single_image(GL_TEXTURE_2D, data[i].width, data[i].height, data[i].texture_format, data[i].data_type, data[i].data_ptr);
+	}
+	else if (texture->get_type() == GL_TEXTURE_CUBE_MAP) {
+		if (data.size() != 6) {
+			throw clan::Exception(clan::string_format("A cube texture requires 6 images, (%1) were provided", data.size()));
+		}
+
+		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
+		for (unsigned int i = 0; i < data.size(); i++) {
+			upload_single_image(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, data[i].width, data[i].height, data[i].texture_format, data[i].data_type, data[i].data_ptr);
+		}
+	}
 
 	set_parameters(texture, format);
 
@@ -139,14 +176,9 @@ void TextureFactory::upload_single_image(const GLenum target, const std::string 
 	0, texture_format, type, imgdata->data());
 }
 
-void TextureFactory::upload_single_image(const TexturePtr &texture, int width, int height, GLenum texture_format, GLenum data_type, std::shared_ptr<const std::vector<unsigned char>> data_ptr)
+void TextureFactory::upload_single_image(const GLenum target, int width, int height, GLenum texture_format, GLenum data_type, std::shared_ptr<const std::vector<unsigned char>> data_ptr)
 {
-	if (texture->get_type() != GL_TEXTURE_2D)
-	{
-		throw clan::Exception(clan::string_format("Only 2d texture is supported by this function overload, use version that loads image internally using vector of string paths"));
-	}
-
-	glTexImage2D(texture->get_type(),
+	glTexImage2D(target,
 		0, texture_format, width, height,
 		0, texture_format, data_type, data_ptr->data());
 }

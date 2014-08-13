@@ -136,7 +136,13 @@ Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, 
 	else if (channels == 4) gl_texture_format = GL_RGBA;
 	else gl_texture_format = GL_RGB;
 
-	texture = Core::TextureFactory::create(format, (int)image.get_width(), (int)image.get_height(), gl_texture_format, (GLenum)GL_UNSIGNED_BYTE, image.get_dataptr());
+	texture = Core::TextureFactory::create(format, Core::TextureFactory::TextureData{
+		(int)image.get_width(),
+		(int)image.get_height(),
+		gl_texture_format,
+		(GLenum)GL_UNSIGNED_BYTE,
+		image.get_dataptr()
+	});
 	if (!texture) {
 		throw clan::Exception(clan::string_format("Failed to get or create the texture %1.", texture_name));
 	}
@@ -155,19 +161,29 @@ Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, 
 		return texture;
 	}
 
-	if (images.size() > 1)
-		throw clan::Exception("Sending multiple rawimages to a texture creation is yet to be implemented in the texture factory for the way texture manager is set up right now...");
+	std::vector<Core::TextureFactory::TextureData> data;
+	for (auto image : images) {
 
-	// Implement generating a texture based on raw image data and format.
-	GLenum gl_texture_format;
-	int channels = images[0]->get_num_channels();
-	if (channels == 1) gl_texture_format = GL_RED;
-	else if (channels == 2) gl_texture_format = GL_RG;
-	else if (channels == 3) gl_texture_format = GL_RGB;
-	else if (channels == 4) gl_texture_format = GL_RGBA;
-	else gl_texture_format = GL_RGB;
+		// Implement generating a texture based on raw image data and format.
+		GLenum gl_texture_format;
+		int channels = image->get_num_channels();
+		if (channels == 1) gl_texture_format = GL_RED;
+		else if (channels == 2) gl_texture_format = GL_RG;
+		else if (channels == 3) gl_texture_format = GL_RGB;
+		else if (channels == 4) gl_texture_format = GL_RGBA;
+		else gl_texture_format = GL_RGB;
 
-	texture = Core::TextureFactory::create(format, (int)images[0]->get_width(), (int)images[0]->get_height(), gl_texture_format, (GLenum)GL_UNSIGNED_BYTE, images[0]->get_dataptr());
+		data.push_back(Core::TextureFactory::TextureData { 
+			(int)image->get_width(), 
+			(int)image->get_height(), 
+			gl_texture_format, 
+			(GLenum)GL_UNSIGNED_BYTE, 
+			image->get_dataptr() 
+		});
+	}
+
+	texture = Core::TextureFactory::create(format, data);
+
 	if (!texture) {
 		throw clan::Exception(clan::string_format("Failed to get or create the texture %1.", texture_name));
 	}
