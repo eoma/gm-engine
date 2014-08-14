@@ -9,6 +9,9 @@ get_filename_component(GM_ENGINE_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 set(GM_ENGINE_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
 set(GM_ENGINE_SOURCE_DIR "@CONF_SOURCE_DIR@")
 
+# Definitions
+set(GM_ENGINE_DEFINITIONS @CONF_DEFINITIONS@)
+
 # Set path to script setting up compiler specific options
 set(GM_ENGINE_COMPILER_SETUP_SCRIPT "${GM_ENGINE_CMAKE_DIR}/CompilerSetup.cmake")
 

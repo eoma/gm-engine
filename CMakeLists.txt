@@ -92,6 +92,9 @@ set(CONF_INCLUDE_DIRS
 )
 set(CONF_SOURCE_DIR ${PROJECT_SOURCE_DIR})
 
+set(CONF_DEFINITIONS
+	-DGLM_FORCE_RADIANS)
+
 configure_file(GmEngineConfig.cmake.in
   "${PROJECT_BINARY_DIR}/GmEngineConfig.cmake" @ONLY)
 
