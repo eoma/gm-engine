@@ -1,6 +1,8 @@
 #include "GM/Framework/Primitives/PrimitivesManager.h"
 #include <ClanLib/core.h>
 
+#include <algorithm>
+
 using namespace GM;
 using namespace Framework;
 
