@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 
 project(GmEngine)
 
+option(BUILD_SAMPLES "Build samples" ON)
+option(BUILD_TESTS "Build tests" ON)
+
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
@@ -89,7 +92,12 @@ endif()
 
 add_subdirectory(src)
 
-add_subdirectory(samples)
 
-enable_testing()
-add_subdirectory(tests)
+if (BUILD_SAMPLES)
+	add_subdirectory(samples)
+endif()
+
+if (BUILD_TESTS)
+	enable_testing()
+	add_subdirectory(tests)
+endif()
