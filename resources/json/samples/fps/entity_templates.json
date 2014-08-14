@@ -129,6 +129,11 @@
 				"name": "Position",
 				"value": [0,0,0],
 				"type": "vec3"
+			},
+			{
+				"name": "Scale",
+				"value": [49990, 49990, 49990],
+				"type": "vec3"
 			}
 		]
 	}

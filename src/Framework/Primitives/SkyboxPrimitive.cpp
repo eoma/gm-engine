@@ -30,8 +30,7 @@ MeshPtr SkyboxPrimitive::create(const BufferManagerPtr &buffer_manager, const Va
 	Core::VaoLayout vao_layout;
 	Core::RenderCommand render_command;
 
-	// FIXME: This variable should probably be set somewhere, or maybe even set as a vertex shader uniform to offset the vertices.
-	float s = 49900.0f;
+	float s = 0.5f;
 	std::vector<MyVertex> vertices{
 		//X+
 			{ { s, -s, -s } },
