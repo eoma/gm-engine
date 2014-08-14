@@ -33,7 +33,7 @@ bool mainTest() {
 	bool changed = false;
 
 	slots.connect(
-		entity1->add<glm::mat4>(PROPERTY_VIEW_MATRIX, glm::mat4()).value_changed(), 
+		entity1->add<glm::mat4>(GM_PROPERTY_VIEW_MATRIX, glm::mat4()).value_changed(),
 		[&changed](const glm::mat4 &/*o*/, const glm::mat4 &/*n*/) mutable { changed = true; }
 	);
 

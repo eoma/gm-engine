@@ -24,14 +24,14 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 {
 	render_system->add_renderable(this);
 
-	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4(1));
-	object_matrix_property = owner->add(PROPERTY_OBJECT_MATRIX, glm::mat4(1));
-	normal_matrix_property = owner->add(PROPERTY_NORMAL_MATRIX, glm::mat3(1));
+	world_matrix_property = owner->add(GM_PROPERTY_WORLD_MATRIX, glm::mat4(1));
+	object_matrix_property = owner->add(GM_PROPERTY_OBJECT_MATRIX, glm::mat4(1));
+	normal_matrix_property = owner->add(GM_PROPERTY_NORMAL_MATRIX, glm::mat3(1));
 
-	culled_property = owner->add(PROPERTY_CULLED, false);
-	visible_property = owner->add(PROPERTY_VISIBLE, false);
+	culled_property = owner->add(GM_PROPERTY_CULLED, false);
+	visible_property = owner->add(GM_PROPERTY_VISIBLE, false);
 
-	material_name_property = owner->add(PROPERTY_MATERIAL_NAME, std::string());
+	material_name_property = owner->add(GM_PROPERTY_MATERIAL_NAME, std::string());
 	slots.connect(material_name_property.value_changed(),
 		[this](const std::string &/*old_material_name*/, const std::string &new_material_name)
 		{
@@ -48,7 +48,7 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 			}
 		});
 
-	mesh_name_property = owner->add(PROPERTY_MESH_NAME, std::string());
+	mesh_name_property = owner->add(GM_PROPERTY_MESH_NAME, std::string());
 	slots.connect(mesh_name_property.value_changed(),
 		[this](const std::string &/*old_mesh_name*/, const std::string &new_mesh_name) mutable
 		{
@@ -228,16 +228,16 @@ void Renderable::add_uniform_listener(const std::shared_ptr<IProperty> &prop)
 }
 
 void Renderable::update_uniforms(Camera *camera) { 
-	if (material->has_property(PROPERTY_PROJECTION_MATRIX)) {
-		material->get<glm::mat4>(PROPERTY_PROJECTION_MATRIX) = camera->get_projection_matrix();
+	if (material->has_property(GM_PROPERTY_PROJECTION_MATRIX)) {
+		material->get<glm::mat4>(GM_PROPERTY_PROJECTION_MATRIX) = camera->get_projection_matrix();
 	}
 
-	if (material->has_property(PROPERTY_VIEW_MATRIX)) {
-		material->get<glm::mat4>(PROPERTY_VIEW_MATRIX) = camera->get_view_matrix();
+	if (material->has_property(GM_PROPERTY_VIEW_MATRIX)) {
+		material->get<glm::mat4>(GM_PROPERTY_VIEW_MATRIX) = camera->get_view_matrix();
 	}
 
 	// Let's only actually update the normal matrix value based on world and view matrix if the shader use it.
-	if (material->has_property(PROPERTY_NORMAL_MATRIX)) {
+	if (material->has_property(GM_PROPERTY_NORMAL_MATRIX)) {
 		update_normal_matrix(camera->get_view_matrix());
 	}
 

@@ -44,7 +44,7 @@ void StarfieldComponent::update(float elapsed_time) {
 			origin_property = renderable->get_material()->get<glm::vec3>("origin");
 			if (camera != nullptr) {
 				auto camera_owner = const_cast<Framework::Entity*>(camera->get_owner());
-				slots.connect(camera_owner->get<glm::vec3>(PROPERTY_POSITION).value_changed(),
+				slots.connect(camera_owner->get<glm::vec3>(GM_PROPERTY_POSITION).value_changed(),
 					[&](const glm::vec3 &, const glm::vec3 &new_value) {
 						origin_property = new_value * 0.1f * last_elapsed_time;
 				});
@@ -58,7 +58,7 @@ void StarfieldComponent::update(float elapsed_time) {
 			rotate_property = renderable->get_material()->get<glm::mat2>("rotate");
 			if (camera != nullptr) {
 				auto camera_owner = const_cast<Framework::Entity*>(camera->get_owner());
-				slots.connect(camera_owner->get<glm::quat>(PROPERTY_ORIENTATION).value_changed(),
+				slots.connect(camera_owner->get<glm::quat>(GM_PROPERTY_ORIENTATION).value_changed(),
 					[&](const glm::quat &, const glm::quat &new_value) {
 						auto rot3 = glm::toMat3(new_value);
 						rotate_property = glm::mat2(rot3);

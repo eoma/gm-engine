@@ -7,7 +7,7 @@ using namespace Samples;
 IdleRotationComponent::IdleRotationComponent(const GM::Framework::EntityPtr &owner, const std::string &name)
 	: Framework::Component< IdleRotationComponent >(owner, name)
 {
-	orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat(
+	orientation_property = owner->add(GM_PROPERTY_ORIENTATION, glm::quat(
 		glm::angleAxis(0.0f, glm::vec3(1, 0, 0)) *
 		glm::angleAxis(0.0f, glm::vec3(0, 1, 0)) *
 		glm::angleAxis(0.0f, glm::vec3(0, 0, 1))));

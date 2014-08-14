@@ -27,7 +27,7 @@ public:
 	virtual ~Camera();
 
 	std::string get_type() const override { return get_static_type(); };
-	static std::string get_static_type() { return COMPONENT_CAMERA; };
+	static std::string get_static_type() { return GM_COMPONENT_CAMERA; };
 
 	unsigned int get_render_layers() const { return render_layers; };
 	unsigned int get_depth() const { return depth; };

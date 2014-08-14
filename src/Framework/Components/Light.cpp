@@ -15,11 +15,11 @@ Light::Light(const EntityPtr &owner, const RenderSystemPtr &render_system, const
 : Component(owner, name)
 , render_system(render_system)
 {
-	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4(1));
-	radius_property = owner->add(PROPERTY_RADIUS, 0.0f);
-	material_color_diffuse_property = owner->add(PROPERTY_MATERIAL_COLOR_DIFFUSE, glm::vec3(1));
-	material_color_specular_property = owner->add(PROPERTY_MATERIAL_COLOR_SPECULAR, glm::vec3(1));
-	material_color_ambient_property = owner->add(PROPERTY_MATERIAL_COLOR_AMBIENT, glm::vec3(1));
+	world_matrix_property = owner->add(GM_PROPERTY_WORLD_MATRIX, glm::mat4(1));
+	radius_property = owner->add(GM_PROPERTY_RADIUS, 0.0f);
+	material_color_diffuse_property = owner->add(GM_PROPERTY_MATERIAL_COLOR_DIFFUSE, glm::vec3(1));
+	material_color_specular_property = owner->add(GM_PROPERTY_MATERIAL_COLOR_SPECULAR, glm::vec3(1));
+	material_color_ambient_property = owner->add(GM_PROPERTY_MATERIAL_COLOR_AMBIENT, glm::vec3(1));
 
 	render_system->add_light(this);
 }

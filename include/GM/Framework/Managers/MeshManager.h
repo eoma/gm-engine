@@ -10,6 +10,8 @@ namespace GM {
 		class Mesh; typedef std::shared_ptr<Mesh> MeshPtr;
 		class IMeshIO; typedef std::shared_ptr<IMeshIO> IMeshIOPtr;
 		class MeshTemplateManager; typedef std::shared_ptr<MeshTemplateManager> MeshTemplateManagerPtr;
+		class IPrimitive; typedef std::shared_ptr<IPrimitive> IPrimitivePtr;
+		class PrimitivesManager; typedef std::shared_ptr<PrimitivesManager> PrimitivesManagerPtr;
 		class BufferManager; typedef std::shared_ptr<BufferManager> BufferManagerPtr;
 		class VaoManager; typedef std::shared_ptr<VaoManager> VaoManagerPtr;
 
@@ -30,12 +32,14 @@ namespace GM {
 			MeshPtr get_or_create(const std::string &name, const std::string &filename, int mesh_index);
 
 			void add_templates(const std::string &template_filename);
+			void add_primitive(IPrimitivePtr primitive);
 		public:
 
 		private:
 			BufferManagerPtr buffer_manager;
 			VaoManagerPtr vao_manager;
 			MeshTemplateManagerPtr template_manager;
+			PrimitivesManagerPtr primitives_manager;
 
 			IMeshIOPtr mesh_io;
 

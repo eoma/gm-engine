@@ -16,16 +16,16 @@ Transform::Transform(const EntityPtr &owner, const SceneSystemPtr &scene_system,
 , scene_system(scene_system)
 , parent(nullptr)
 {
-	position_property = owner->add(PROPERTY_POSITION, glm::vec3());
-	scale_property = owner->add(PROPERTY_SCALE, glm::vec3(1));
-	orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat(
+	position_property = owner->add(GM_PROPERTY_POSITION, glm::vec3());
+	scale_property = owner->add(GM_PROPERTY_SCALE, glm::vec3(1));
+	orientation_property = owner->add(GM_PROPERTY_ORIENTATION, glm::quat(
 		glm::angleAxis(0.0f, glm::vec3(1, 0, 0)) *
 		glm::angleAxis(0.0f, glm::vec3(0, 1, 0)) *
 		glm::angleAxis(0.0f, glm::vec3(0, 0, 1))));
 
-	object_matrix_property = owner->add(PROPERTY_OBJECT_MATRIX, glm::mat4(1));
-	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4(1));
-	normal_matrix_property = owner->add(PROPERTY_NORMAL_MATRIX, glm::mat3(1));
+	object_matrix_property = owner->add(GM_PROPERTY_OBJECT_MATRIX, glm::mat4(1));
+	world_matrix_property = owner->add(GM_PROPERTY_WORLD_MATRIX, glm::mat4(1));
+	normal_matrix_property = owner->add(GM_PROPERTY_NORMAL_MATRIX, glm::mat3(1));
 
 	scene_system->add(this);
 }

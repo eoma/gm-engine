@@ -1,5 +1,6 @@
 #include "GM/Framework/Managers/MeshManager.h"
 #include "GM/Framework/Templates/MeshTemplateManager.h"
+#include "GM/Framework/Primitives/PrimitivesManager.h"
 #include <GM/Framework/IO/IMeshIO.h>
 #include <GM/Framework/Utilities/Mesh.h>
 #include "ClanLib/core.h"
@@ -13,6 +14,7 @@ MeshManager::MeshManager(const BufferManagerPtr &buffer_manager, const VaoManage
 : buffer_manager(buffer_manager), vao_manager(vao_manager), mesh_io(mesh_io)
 {
 	template_manager = MeshTemplateManagerPtr(new MeshTemplateManager());
+	primitives_manager = PrimitivesManagerPtr(new PrimitivesManager(buffer_manager, vao_manager));
 }
 
 MeshManager::~MeshManager() {
@@ -62,8 +64,18 @@ MeshPtr MeshManager::get_or_create(const std::string &name) {
 	template_manager->get(name, [this, name, &mesh](const MeshTemplateManager::Template &t) {
 		mesh = get_or_create(name, t.filename, t.mesh_index);
 	});
+	if (mesh) {
+		return mesh;
+	}
 
-	return mesh;
+	//If no template was generated for this name, maybe it's a primitive?
+	mesh = primitives_manager->create(name);
+	if (mesh) {
+		add(mesh);
+		return mesh;
+	}
+
+	throw clan::Exception(clan::string_format("Failed to get or create the mesh %1.", name));
 }
 
 MeshPtr MeshManager::get_or_create(const std::string &name, const std::string &filename, int mesh_index) {
@@ -84,9 +96,12 @@ MeshPtr MeshManager::get_or_create(const std::string &name, const std::string &f
 	return mesh;
 }
 
-void MeshManager::add_templates(const std::string &template_filename)
-{
+void MeshManager::add_templates(const std::string &template_filename) {
 	template_manager->add_templates(template_filename);
+}
+
+void MeshManager::add_primitive(IPrimitivePtr primitive) {
+	primitives_manager->add(primitive);
 }
 
 } // namespace Framework

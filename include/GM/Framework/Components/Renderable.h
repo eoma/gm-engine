@@ -49,7 +49,7 @@ public:
 	void update_normal_matrix(const glm::mat4 &view_matrix);
 
 public:
-	static std::string get_static_type() { return COMPONENT_RENDERABLE; }
+	static std::string get_static_type() { return GM_COMPONENT_RENDERABLE; }
 
 private:
 	void set_up_uniforms();

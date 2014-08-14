@@ -19,6 +19,11 @@
 #include "GM/Framework/Components/Transform.h"
 #include "GM/Framework/Components/Light.h"
 
+#include "GM/Framework/Primitives/TrianglePrimitive.h"
+#include "GM/Framework/Primitives/QuadPrimitive.h"
+#include "GM\Framework/Primitives/FullscreenQuadPrimitive.h"
+#include "GM/Framework/Primitives/SkyboxPrimitive.h"
+
 #include "GM/Framework/Entity.h"
 
 #include <glm/ext.hpp>
@@ -136,10 +141,20 @@ Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_f
 		mesh_manager = std::make_shared<Framework::MeshManager>(buffer_manager, vao_manager,
 			std::make_shared<Framework::AssimpMeshIO>()
 			);
+
+		if (flags & GM_FRAMEWORK_PRIMITIVES)
+		{
+			mesh_manager->add_primitive(std::make_shared<Framework::TrianglePrimitive>());
+			mesh_manager->add_primitive(std::make_shared<Framework::QuadPrimitive>());
+			mesh_manager->add_primitive(std::make_shared<Framework::FullscreenQuadPrimitive>());
+			mesh_manager->add_primitive(std::make_shared<Framework::SkyboxPrimitive>());
+		}
 	}
 
-	// TODO: Should this be part of the flags? Probably...
-	main_component_serializer = std::make_shared<MainComponentSerializer>(this);
+	if (flags & GM_FRAMEWORK_COMPONENT_SERIALIZER)
+	{
+		main_component_serializer = std::make_shared<MainComponentSerializer>(this);
+	}
 
 	if (construct_window)
 	{

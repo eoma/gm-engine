@@ -17,134 +17,6 @@
 using namespace GM;
 using namespace Application;
 
-void create_fullscreen_quad_mesh(const MainPtr &app)
-{
-	if (app->get_mesh_manager()->contains("fullscreen_quad"))
-	{
-		return;
-	}
-
-	struct MyVertex {
-		glm::vec2 position;
-	};
-
-	const float s = 1.0f;
-	std::vector<MyVertex> vertices{
-			{{ -s, -s }},
-			{{  s, -s }},
-			{{ -s,  s }},
-			{{  s,  s }}
-	};
-
-	auto vertex_allocation = app->get_buffer_manager()->allocate_and_upload(vertices, GL_DYNAMIC_DRAW);
-
-	Core::VaoLayout vao_layout;
-	vao_layout
-		.for_buffer(vertex_allocation)
-		.use_as(GL_ARRAY_BUFFER)
-		.bind_interleaved(
-		Core::VaoArg<glm::vec2>(Core::ShaderConstants::Position))
-		;
-
-	Core::RenderCommand render_command;
-	render_command.set_vertices(vertex_allocation, vertices);
-
-	auto mesh = std::make_shared<Framework::Mesh>(render_command, vao_layout, app->get_vao_manager(), "fullscreen_quad");
-	app->get_mesh_manager()->add(mesh);
-}
-
-void create_skybox_mesh(float s, const MainPtr &app)
-{
-	if (app->get_mesh_manager()->contains("skybox"))
-	{
-		return;
-	}
-
-	struct MyVertex {
-		glm::vec3 position;
-	};
-
-	Core::VaoLayout vao_layout;
-	Core::RenderCommand render_command;
-
-	std::vector<MyVertex> vertices {
-			//X+
-			{ { s,-s,-s } },
-			{ { s,-s, s } },
-			{ { s, s, s } },
-			{ { s, s,-s } },
-			
-			//X-
-			{ {-s, s,-s } },
-			{ {-s, s, s } },
-			{ {-s,-s, s } },
-			{ {-s,-s,-s } },
-
-			//Y+
-			{ { s, s,-s } },
-			{ { s, s, s } },
-			{ {-s, s, s } },
-			{ {-s, s,-s } },
-
-			//Y-
-			{ {-s,-s,-s } },
-			{ {-s,-s, s } },
-			{ { s,-s, s } },
-			{ { s,-s,-s } },
-
-			//Z+
-			{ { s,-s, s } },
-			{ {-s,-s, s } },
-			{ {-s, s, s } },
-			{ { s, s, s } },
-
-			//Z-
-			{ { s, s,-s } },
-			{ {-s, s,-s } },
-			{ {-s,-s,-s } },
-			{ { s,-s,-s } }
-	};
-
-	std::vector<unsigned int> indices {
-		0, 1, 2,
-		2, 3, 0,
-
-		4, 5, 6,
-		6, 7, 4,
-
-		8,  9, 10,
-		10, 11, 8,
-
-		12, 13, 14,
-		14, 15, 12,
-
-		16, 17, 18,
-		18, 19, 16,
-
-		20, 21, 22,
-		22, 23, 20
-	};
-
-	auto vertex_allocation = app->get_buffer_manager()->allocate_and_upload(vertices, GL_DYNAMIC_DRAW);
-	vao_layout
-		.for_buffer(vertex_allocation)
-			.use_as(GL_ARRAY_BUFFER)
-				.bind_interleaved(
-					Core::VaoArg<glm::vec3>(Core::ShaderConstants::Position));
-	render_command.set_vertices(vertex_allocation, vertices);
-
-	auto index_allocation = app->get_buffer_manager()->allocate_and_upload(indices);
-	vao_layout
-		.for_buffer(index_allocation)
-			.use_as(GL_ELEMENT_ARRAY_BUFFER);
-	render_command.set_indices(index_allocation, indices);
-
-	render_command.set_draw_mode(GL_TRIANGLES);
-
-	auto mesh = std::make_shared<Framework::Mesh>(render_command, vao_layout, app->get_vao_manager(), "skybox");
-	app->get_mesh_manager()->add(mesh);
-}
-
 bool mainTest() {
 	auto app = Main::create_with_gl_version("test", 3, 3);
 
@@ -167,10 +39,6 @@ bool mainTest() {
 	app->get_texture_manager()->add_templates(json_path + "/texture_templates.json");
 	app->get_texture_manager()->add_format_templates(json_path + "/texture_format_templates.json");
 	app->get_texture_manager()->set_texture_path(texture_path);
-
-	// Set up resources
-	create_fullscreen_quad_mesh(app);
-	create_skybox_mesh(49900, app);
 
 	// Create our entities
 	auto camera = entity_manager->create_entity("camera");
@@ -198,7 +66,7 @@ bool mainTest() {
 		}
 #endif
 	}
-
+	
 	app->hide_cursor();
 
 	// Set some run time limits

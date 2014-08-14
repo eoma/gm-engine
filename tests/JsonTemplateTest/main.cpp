@@ -109,17 +109,17 @@ bool mainTest() {
 	slots.connect(entity2->component_added(), &on_component_added);
 	slots.connect(entity3->component_added(), &on_component_added);
 
-	slots.connect(entity1->add<glm::vec3>(PROPERTY_POSITION, glm::vec3(0,0,0)).value_changed(), [&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
+	slots.connect(entity1->add<glm::vec3>(GM_PROPERTY_POSITION, glm::vec3(0, 0, 0)).value_changed(), [&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
 		std::cout << "Entity " + entity1->get_name() << "'s "; 
 		on_position_changed(old_value, new_value);
 	});
 
-	slots.connect(entity2->add<glm::vec3>(PROPERTY_POSITION, glm::vec3(0, 0, 0)).value_changed(), [&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
+	slots.connect(entity2->add<glm::vec3>(GM_PROPERTY_POSITION, glm::vec3(0, 0, 0)).value_changed(), [&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
 		std::cout << "Entity " + entity2->get_name() << "'s ";
 		on_position_changed(old_value, new_value);
 	});
 
-	slots.connect(entity3->add<glm::vec3>(PROPERTY_POSITION, glm::vec3(0, 0, 0)).value_changed(), [&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
+	slots.connect(entity3->add<glm::vec3>(GM_PROPERTY_POSITION, glm::vec3(0, 0, 0)).value_changed(), [&](const glm::vec3 &old_value, const glm::vec3 &new_value) mutable {
 		std::cout << "Entity " + entity3->get_name() << "'s ";
 		on_position_changed(old_value, new_value);
 	});

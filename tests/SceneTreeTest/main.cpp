@@ -34,12 +34,12 @@ bool mainTest() {
 
 	// Add world matrix property value listeners on the children
 	slots.connect(
-		child1->get<glm::mat4>(PROPERTY_WORLD_MATRIX).value_changed(),
+		child1->get<glm::mat4>(GM_PROPERTY_WORLD_MATRIX).value_changed(),
 		[&](const glm::mat4 &/*o*/, const glm::mat4 &/*n*/) mutable { child1changed = true; }
 	);
 
 	slots.connect(
-		child2->get<glm::mat4>(PROPERTY_WORLD_MATRIX).value_changed(),
+		child2->get<glm::mat4>(GM_PROPERTY_WORLD_MATRIX).value_changed(),
 		[&](const glm::mat4 &/*o*/, const glm::mat4 &/*n*/) mutable { child2changed = true; }
 	);
 

@@ -20,7 +20,7 @@ namespace GM {
 			void update(float elapsed_time) override;
 
 		public:
-			static std::string get_static_type() { return COMPONENT_IDLE_ROTATION; }
+			static std::string get_static_type() { return GM_COMPONENT_IDLE_ROTATION; }
 
 		private:
 			Framework::Property<glm::quat> orientation_property;

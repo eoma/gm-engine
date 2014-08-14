@@ -9,19 +9,19 @@ using namespace Samples;
 FPSControllerComponent::FPSControllerComponent(const Framework::EntityPtr &owner, GM::Application::Main *app, const std::string &name)
 	: Framework::Component< FPSControllerComponent >(owner, name), app(app)
 {
-	position_property = owner->add(PROPERTY_POSITION, glm::vec3());
-	orientation_property = owner->add(PROPERTY_ORIENTATION, glm::quat(
+	position_property = owner->add(GM_PROPERTY_POSITION, glm::vec3());
+	orientation_property = owner->add(GM_PROPERTY_ORIENTATION, glm::quat(
 		glm::angleAxis(0.0f, glm::vec3(1, 0, 0)) *
 		glm::angleAxis(0.0f, glm::vec3(0, 1, 0)) *
 		glm::angleAxis(0.0f, glm::vec3(0, 0, 1))));
 
-	world_matrix_property = owner->add(PROPERTY_WORLD_MATRIX, glm::mat4(1));
+	world_matrix_property = owner->add(GM_PROPERTY_WORLD_MATRIX, glm::mat4(1));
 
-	cursor_deadroom_property = owner->add(PROPERTY_CURSOR_DEADROOM, 0.0125f);
-	pitch_sensitivity_property = owner->add(PROPERTY_PITCH_SENSITIVITY, 1.0f);
-	yaw_sensitivity_property = owner->add(PROPERTY_YAW_SENSITIVITY, 1.0f);
-	max_vertical_angle_property = owner->add<float>(PROPERTY_MAX_VERTICAL_ANGLE, 85.0f);
-	speed_property = owner->add<float>(PROPERTY_SPEED, 1000.0f);
+	cursor_deadroom_property = owner->add(GM_PROPERTY_CURSOR_DEADROOM, 0.0125f);
+	pitch_sensitivity_property = owner->add(GM_PROPERTY_PITCH_SENSITIVITY, 1.0f);
+	yaw_sensitivity_property = owner->add(GM_PROPERTY_YAW_SENSITIVITY, 1.0f);
+	max_vertical_angle_property = owner->add<float>(GM_PROPERTY_MAX_VERTICAL_ANGLE, 85.0f);
+	speed_property = owner->add<float>(GM_PROPERTY_SPEED, 1000.0f);
 
 	accum_vertical = 0.0f;
 	accum_horizontal = 0.0f;

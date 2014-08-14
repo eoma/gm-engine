@@ -22,7 +22,7 @@ namespace GM {
 			void set_camera(const Framework::CameraPtr &camera) { this->camera = camera; }
 
 		public:
-			static std::string get_static_type() { return COMPONENT_STARFIELD; }
+			static std::string get_static_type() { return GM_COMPONENT_STARFIELD; }
 
 		private:
 			GM::Application::Main *app;

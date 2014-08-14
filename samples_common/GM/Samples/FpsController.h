@@ -20,7 +20,7 @@ namespace GM {
 			void update(float elapsed_time) override;
 
 		public:
-			static std::string get_static_type() { return COMPONENT_FPS_CONTROLLER; }
+			static std::string get_static_type() { return GM_COMPONENT_FPS_CONTROLLER; }
 
 		private:
 			Application::Main *app;

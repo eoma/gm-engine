@@ -101,6 +101,8 @@ bool mainTest() {
 	auto material_manager = app->get_material_manager();
 
 	// Set up resources
+	// Framework already implements a triangle primitive, but for the purpose
+	// of this example, we overwrite that mesh with our own version here.
 	create_triangle_mesh(app);
 	create_shader(app);
 	create_red_material(app);

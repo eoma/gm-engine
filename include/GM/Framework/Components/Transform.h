@@ -78,7 +78,7 @@ public:
 	void update_object_matrix();
 
 public:
-	static std::string get_static_type() { return COMPONENT_TRANSFORM; }
+	static std::string get_static_type() { return GM_COMPONENT_TRANSFORM; }
 
 	// Called when a child is to be added to a parent
 	static void add_callback(Transform * const child, Transform * const parent);

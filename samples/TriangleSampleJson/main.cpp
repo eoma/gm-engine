@@ -13,35 +13,6 @@
 using namespace GM;
 using namespace Application;
 
-void create_triangle_mesh(const MainPtr &app)
-{
-	if (app->get_mesh_manager()->contains("triangle"))
-	{
-		return;
-	}
-
-	std::vector<glm::vec3> vertices {
-			{ -1.0f, -1.0f, 0.0f },
-			{ 1.0f, -1.0f, 0.0f },
-			{ 0.0f, 1.0f, 0.0f },
-	};
-
-	auto buffer_allocation = app->get_buffer_manager()->allocate_and_upload(vertices, GL_DYNAMIC_DRAW);
-
-	Core::VaoLayout vao_layout;
-	vao_layout
-		.for_buffer(buffer_allocation)
-			.use_as(GL_ARRAY_BUFFER)
-				.bind<glm::vec3>(Core::ShaderConstants::Position)
-	;
-
-	Core::RenderCommand render_command;
-	render_command.set_vertices(buffer_allocation, vertices);
-
-	auto mesh = std::make_shared<Framework::Mesh>(render_command, vao_layout, app->get_vao_manager(), "triangle");
-	app->get_mesh_manager()->add(mesh);
-}
-
 bool mainTest() {
 	auto app = Main::create_with_gl_version("test", 3, 3);
 
@@ -56,9 +27,6 @@ bool mainTest() {
 	app->get_material_manager()->add_templates(json_path + "/material_templates.json");
 	app->get_shader_manager()->add_templates(json_path + "/shader_templates.json");
 	app->get_shader_manager()->set_glsl_path(glsl_path);
-
-	// Set up resources
-	create_triangle_mesh(app);
 
 	// Create our entity
 	auto entity = entity_manager->create_entity("entity");

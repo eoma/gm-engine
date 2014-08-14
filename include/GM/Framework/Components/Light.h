@@ -31,7 +31,7 @@ public:
 	glm::vec3 get_material_color_ambient() const { return material_color_ambient_property; }
 
 public:
-	static std::string get_static_type() { return COMPONENT_LIGHT; };
+	static std::string get_static_type() { return GM_COMPONENT_LIGHT; };
 
 private:
 	clan::SlotContainer slots;

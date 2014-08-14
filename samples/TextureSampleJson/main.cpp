@@ -13,43 +13,6 @@
 using namespace GM;
 using namespace Application;
 
-void create_quad_mesh(const MainPtr &app)
-{
-	if (app->get_mesh_manager()->contains("quad"))
-	{
-		return;
-	}
-
-	struct MyVertex {
-		glm::vec3 position;
-		glm::vec2 texcoord;
-	};
-
-	std::vector<MyVertex> vertices{
-			{ { -0.5f, -0.5f, 0.0f },	{ 0, 0 } },
-			{ { 0.5f, -0.5f, 0.0f },	{ 1, 0 } },
-			{ { -0.5f, 0.5f, 0.0f },	{ 0, 1 } },
-			{ { 0.5f, 0.5f, 0.0f },		{ 1, 1 } }
-	};
-
-	auto vertex_allocation = app->get_buffer_manager()->allocate_and_upload(vertices, GL_DYNAMIC_DRAW);
-
-	Core::VaoLayout vao_layout;
-	vao_layout
-		.for_buffer(vertex_allocation)
-			.use_as(GL_ARRAY_BUFFER)
-				.bind_interleaved(
-					Core::VaoArg<glm::vec3>(Core::ShaderConstants::Position),
-					Core::VaoArg<glm::vec2>(Core::ShaderConstants::TexCoord))
-	;
-
-	Core::RenderCommand render_command;
-	render_command.set_vertices(vertex_allocation, vertices);
-
-	auto mesh = std::make_shared<Framework::Mesh>(render_command, vao_layout, app->get_vao_manager(), "quad");
-	app->get_mesh_manager()->add(mesh);
-}
-
 bool mainTest() {
 	auto app = Main::create_with_gl_version("test", 3, 3);
 
@@ -68,9 +31,6 @@ bool mainTest() {
 	app->get_texture_manager()->add_templates(json_path + "/texture_templates.json");
 	app->get_texture_manager()->add_format_templates(json_path + "/texture_format_templates.json");
 	app->get_texture_manager()->set_texture_path(texture_path);
-
-	// Set up resources
-	create_quad_mesh(app);
 
 	// Create our entity
 	auto entity = entity_manager->create_entity("entity");
