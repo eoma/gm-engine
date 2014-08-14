@@ -45,6 +45,9 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 			{
 				this->material = this->material_manager->get_or_create(new_material_name);
 				this->set_up_uniforms();
+				if (this->material->has_property(GM_PROPERTY_MESH_PIVOT_POINT_OFFSET)) {
+					this->material->get<glm::vec3>(GM_PROPERTY_MESH_PIVOT_POINT_OFFSET) = mesh_pivot_point_offset_property.get();
+				}
 			}
 		});
 
@@ -59,6 +62,17 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 			else
 			{
 				mesh = this->mesh_manager->get_or_create(new_mesh_name);
+			}
+		});
+
+	mesh_pivot_point_offset_property = owner->add(GM_PROPERTY_MESH_PIVOT_POINT_OFFSET, glm::vec3());
+	slots.connect(mesh_pivot_point_offset_property.value_changed(), 
+		[this](const glm::vec3 &/*old_value*/, const glm::vec3 &new_value) mutable 
+		{
+			if (this->material != nullptr) {
+				if (this->material->has_property(GM_PROPERTY_MESH_PIVOT_POINT_OFFSET)) {
+					this->material->get<glm::vec3>(GM_PROPERTY_MESH_PIVOT_POINT_OFFSET) = new_value;
+				}
 			}
 		});
 }

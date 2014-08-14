@@ -13,5 +13,10 @@
     	"texture": "metal_base",
     	"image": "patterns/steel/diffuse.tga",
 		"format": "tiled_texture2d"
+    },
+	{
+    	"texture": "metal_arm",
+    	"image": "patterns/pattern_09/diffuse.tga",
+		"format": "tiled_texture2d"
     }
 ]

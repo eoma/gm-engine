@@ -53,12 +53,41 @@
 			},
 			{
 				"name": "Position",
-				"value": [0,2,0],
+				"value": [0,1.5,0],
 				"type": "vec3"
 			},
 			{
 				"name": "Scale",
 				"value": [1,2,4],
+				"type": "vec3"
+			}
+		]
+	},
+	{
+		"entity": "robot_arm",
+		"components": [ "Renderable", "Transform" ],
+		"properties": [
+			{
+				"name": "MeshName",
+				"value": "cube"
+			},
+			{
+				"name": "MaterialName",
+				"value": "robot_arm"
+			},
+			{
+				"name": "Position",
+				"value": [0,0.5,0],
+				"type": "vec3"
+			},
+			{
+				"name": "Scale",
+				"value": [1,8,1],
+				"type": "vec3"
+			},
+			{
+				"name": "MeshPivotPointOffset",
+				"value": [0,0.5,0],
 				"type": "vec3"
 			}
 		]

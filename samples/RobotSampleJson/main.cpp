@@ -13,6 +13,37 @@
 using namespace GM;
 using namespace Application;
 
+Framework::TransformPtr create_robot(Framework::EntityManagerPtr entity_manager) {
+	// Create empty entities
+	auto robot_entity = entity_manager->create_entity("robot");
+	auto robot_base_left_entity = entity_manager->create_entity("robot_base_left");
+	auto robot_base_right_entity = entity_manager->create_entity("robot_base_right");
+	auto robot_arm_lower_entity = entity_manager->create_entity("robot_arm_lower");
+
+	// Apply templates
+	entity_manager->apply("robot", robot_entity);
+	entity_manager->apply("robot_base", robot_base_left_entity);
+	entity_manager->apply("robot_base", robot_base_right_entity);
+	entity_manager->apply("robot_arm", robot_arm_lower_entity);
+
+	// Extract scenegraph components (Transform)
+	auto robot = robot_entity->get_component<Framework::Transform>();
+	auto robot_base_left = robot_base_left_entity->get_component<Framework::Transform>();
+	auto robot_base_right = robot_base_right_entity->get_component<Framework::Transform>();
+	auto robot_arm_lower = robot_arm_lower_entity->get_component<Framework::Transform>();
+
+	// Assemble the robot
+	robot->add_child(robot_base_left);
+	robot->add_child(robot_base_right);
+	robot->add_child(robot_arm_lower);
+
+	// Position assembled robot parts
+	robot_base_left->translate(glm::vec3(-1, 0, 0));
+	robot_base_right->translate(glm::vec3(1, 0, 0));
+
+	return robot;
+}
+
 bool mainTest() {
 	auto app = Main::create_with_gl_version("test", 3, 3);
 
@@ -37,28 +68,19 @@ bool mainTest() {
 	auto camera = entity_manager->create_entity("camera");
 	auto skybox = entity_manager->create_entity("skybox");
 	auto floor = entity_manager->create_entity("floor");
-	auto robot_entity = entity_manager->create_entity("robot");
-	auto robot_base_entity = entity_manager->create_entity("robot_base");
 
 	// Apply an entity template, as defined in entity_templates.json
 	entity_manager->apply("fps_camera", camera);
 	entity_manager->apply("skybox", skybox);
 	entity_manager->apply("floor", floor);
-	entity_manager->apply("robot", robot_entity);
-	entity_manager->apply("robot_base", robot_base_entity);
-
+	
 	// Set up the projection for the camera
 	if (camera->has_component<Framework::Camera>()) {
 		auto camera_component = camera->get_component<Framework::Camera>();
 		camera_component->set_projection(app->get_resolution());
 	}
 
-	// Extract scenegraph component (Transform)
-	auto robot = robot_entity->get_component<Framework::Transform>();
-	auto robot_base = robot_base_entity->get_component<Framework::Transform>();
-
-	// Assemble the robot
-	robot->add_child(robot_base);
+	auto robot = create_robot(entity_manager);
 	
 	app->hide_cursor();
 

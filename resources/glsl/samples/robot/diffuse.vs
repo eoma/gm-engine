@@ -14,7 +14,9 @@ uniform mat4 WorldMatrix;		// object_to_world
 uniform mat4 ViewMatrix;		// world_to_view
 uniform mat4 ProjectionMatrix;	// view_to_clip
 
+uniform vec3 MeshPivotPointOffset = vec3(0,0,0);
+
 void main() {
-	gl_Position = ProjectionMatrix * ViewMatrix * WorldMatrix * vec4(position, 1.0);
+	gl_Position = ProjectionMatrix * ViewMatrix * WorldMatrix * vec4(position + MeshPivotPointOffset, 1.0);
 	tex_coord = texcoord;
 }

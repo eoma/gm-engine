@@ -79,6 +79,8 @@ private:
 	Property<std::string> material_name_property;
 	Property<std::string> mesh_name_property;
 
+	Property<glm::vec3> mesh_pivot_point_offset_property;
+
 	clan::SlotContainer slots;
 
 	MaterialPtr material;
