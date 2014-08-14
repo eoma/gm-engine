@@ -24,6 +24,10 @@ configure_file(CompilerSetup.cmake.in
   "${PROJECT_BINARY_DIR}/CompilerSetup.cmake" @ONLY)
 include("${PROJECT_BINARY_DIR}/CompilerSetup.cmake") # Compiler setup may be used by both us and external project
 
+###
+### Set up dependencies
+###
+
 add_subdirectory(depends/gl3w)
 
 # The options are set as internal because the folders containing the code has been removed
@@ -53,6 +57,10 @@ if (TARGET zlibstatic)
 		PROPERTIES
 		FOLDER "Dependencies")
 endif()
+
+###
+### end setup of dependencies
+###
 
 add_subdirectory(src)
 
