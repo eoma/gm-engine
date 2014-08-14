@@ -3,16 +3,12 @@
 #include "GM/Core/Utilities/ShaderConstants.h"
 #include "GM/Core/Utilities/ShaderFactory.h"
 #include "GM/Samples/SamplesComponentSerializer.h"
-#include "GM/Samples/Starfield.h"
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
 #include <cstdlib>
 
-// TODO: Must have a camera that can draw to an FBO (RTT) before we can truly do this...
-//		 Then apply the result to a cube texture and slap that onto a skybox.
-#define STARFIELD 0
 
 using namespace GM;
 using namespace Application;
@@ -24,9 +20,8 @@ bool mainTest() {
 	auto samples_component_serializer = std::make_shared<Samples::SamplesComponentSerializer>(app);
 
 	// Set up resource data path locations
-	auto json_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/json/samples/fps");
-	auto glsl_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/glsl/samples/fps");
-	auto mesh_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/mesh/samples/mesh");
+	auto json_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/json/samples/robot");
+	auto glsl_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/glsl/samples/robot");
 	auto texture_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/textures/samples");
 
 	// Set up resource data
@@ -34,38 +29,36 @@ bool mainTest() {
 	app->get_material_manager()->add_templates(json_path + "/material_templates.json");
 	app->get_shader_manager()->add_templates(json_path + "/shader_templates.json");
 	app->get_shader_manager()->set_glsl_path(glsl_path);
-	app->get_mesh_manager()->add_templates(json_path + "/mesh_templates.json");
-	app->get_mesh_manager()->set_mesh_path(mesh_path);
 	app->get_texture_manager()->add_templates(json_path + "/texture_templates.json");
 	app->get_texture_manager()->add_format_templates(json_path + "/texture_format_templates.json");
 	app->get_texture_manager()->set_texture_path(texture_path);
 
 	// Create our entities
 	auto camera = entity_manager->create_entity("camera");
-	auto spaceship = entity_manager->create_entity("spaceship");
 	auto skybox = entity_manager->create_entity("skybox");
-#if STARFIELD
-	auto starfield = entity_manager->create_entity("starfield");
-#endif
+	auto floor = entity_manager->create_entity("floor");
+	auto robot_entity = entity_manager->create_entity("robot");
+	auto robot_base_entity = entity_manager->create_entity("robot_base");
 
 	// Apply an entity template, as defined in entity_templates.json
 	entity_manager->apply("fps_camera", camera);
-	entity_manager->apply("spaceship", spaceship);
 	entity_manager->apply("skybox", skybox);
-#if STARFIELD
-	entity_manager->apply("starfield", starfield);
-#endif
-	
+	entity_manager->apply("floor", floor);
+	entity_manager->apply("robot", robot_entity);
+	entity_manager->apply("robot_base", robot_base_entity);
+
 	// Set up the projection for the camera
 	if (camera->has_component<Framework::Camera>()) {
 		auto camera_component = camera->get_component<Framework::Camera>();
 		camera_component->set_projection(app->get_resolution());
-#if STARFIELD
-		if (starfield->has_component<Samples::StarfieldComponent>()) {
-			starfield->get_component<Samples::StarfieldComponent>()->set_camera(camera_component);
-		}
-#endif
 	}
+
+	// Extract scenegraph component (Transform)
+	auto robot = robot_entity->get_component<Framework::Transform>();
+	auto robot_base = robot_base_entity->get_component<Framework::Transform>();
+
+	// Assemble the robot
+	robot->add_child(robot_base);
 	
 	app->hide_cursor();
 
@@ -79,6 +72,19 @@ bool mainTest() {
 		{
 			app->stop_running();
 			return;
+		}
+
+		if (app->is_key_down(GLFW_KEY_UP)) {
+			robot->translate(glm::vec3(0, 0, -1) * dt);
+		}
+		else if (app->is_key_down(GLFW_KEY_DOWN)) {
+			robot->translate(glm::vec3(0, 0, 1) * dt);
+		}
+		if (app->is_key_down(GLFW_KEY_LEFT)) {
+			robot->translate(glm::vec3(-1, 0, 0) * dt);
+		}
+		else if (app->is_key_down(GLFW_KEY_RIGHT)) {
+			robot->translate(glm::vec3(1, 0, 0) * dt);
 		}
 	});
 

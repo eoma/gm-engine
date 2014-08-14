@@ -30,3 +30,5 @@
 # Folders
 /build/*
 /builds
+/resources/mesh
+/resources/textures

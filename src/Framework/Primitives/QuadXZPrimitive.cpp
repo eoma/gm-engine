@@ -1,4 +1,4 @@
-#include "GM/Framework/Primitives/QuadPrimitive.h"
+#include "GM/Framework/Primitives/QuadXZPrimitive.h"
 #include "GM/Framework/Managers/BufferManager.h"
 #include "GM/Framework/Managers/VaoManager.h"
 #include "GM/Framework/Utilities/Mesh.h"
@@ -17,22 +17,22 @@
 using namespace GM;
 using namespace Framework;
 
-QuadPrimitive::QuadPrimitive()
-	: IPrimitive(GM_PRIMITIVE_QUAD)
+QuadXZPrimitive::QuadXZPrimitive()
+	: IPrimitive(GM_PRIMITIVE_QUAD_XZ)
 {
 }
 
-MeshPtr QuadPrimitive::create(const BufferManagerPtr &buffer_manager, const VaoManagerPtr &vao_manager) {
+MeshPtr QuadXZPrimitive::create(const BufferManagerPtr &buffer_manager, const VaoManagerPtr &vao_manager) {
 	struct MyVertex {
 		glm::vec3 position;
 		glm::vec2 texcoord;
 	};
 
 	std::vector<MyVertex> vertices{
-		{ { -0.5f, -0.5f, 0.0f }, { 0, 0 } },
-		{ { 0.5f, -0.5f, 0.0f }, { 1, 0 } },
-		{ { -0.5f, 0.5f, 0.0f }, { 0, 1 } },
-		{ { 0.5f, 0.5f, 0.0f }, { 1, 1 } }
+		{ {-0.5f, 0.0f,-0.5f }, { 0, 0 } },
+		{ { 0.5f, 0.0f,-0.5f }, { 1, 0 } },
+		{ {-0.5f, 0.0f, 0.5f }, { 0, 1 } },
+		{ { 0.5f, 0.0f, 0.5f }, { 1, 1 } }
 	};
 
 	auto vertex_allocation = buffer_manager->allocate_and_upload(vertices, GL_DYNAMIC_DRAW);

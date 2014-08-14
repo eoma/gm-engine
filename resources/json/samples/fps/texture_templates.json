@@ -1,12 +1,12 @@
 [
 	{
     	"texture": "test_cube",
-    	"image": [ "X+.png", "X-.png", "Y+.png", "Y-.png", "Z+.png", "Z-.png"],
+    	"image": [ "skybox/X+.png", "skybox/X-.png", "skybox/Y+.png", "skybox/Y-.png", "skybox/Z+.png", "skybox/Z-.png"],
 		"format": "textureCube"
     },
 	{
     	"texture": "nebulea",
-    	"image": [ "Nebulea_X+.png", "Nebulea_X-.png", "Nebulea_Y+.png", "Nebulea_Y-.png", "Nebulea_Z+.png", "Nebulea_Z-.png"],
+    	"image": [ "skybox/Nebulea_X+.png", "skybox/Nebulea_X-.png", "skybox/Nebulea_Y+.png", "skybox/Nebulea_Y-.png", "skybox/Nebulea_Z+.png", "skybox/Nebulea_Z-.png"],
 		"format": "textureCube"
     }
 ]

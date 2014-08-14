@@ -1,0 +1,22 @@
+[
+	{
+		"shader": "default",
+		"vertex_shader": "pass_through.vs",
+		"fragment_shader": "pass_through.fs"
+	},
+	{
+		"shader": "diffuse",
+		"vertex_shader": "diffuse.vs",
+		"fragment_shader": "diffuse.fs"
+	},
+	{
+		"shader": "starfield",
+		"vertex_shader": "fullscreen_pass_through.vs",
+		"fragment_shader": "starfield.fs"
+	},
+	{
+		"shader": "skybox",
+		"vertex_shader": "skybox.vs",
+		"fragment_shader": "skybox.fs"
+	}
+]

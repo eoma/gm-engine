@@ -21,7 +21,7 @@ bool mainTest() {
 	// Set up resource data path locations
 	auto json_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/json/samples/texture");
 	auto glsl_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/glsl/samples/texture");
-	auto texture_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/textures/samples/texture");
+	auto texture_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), "resources/textures/samples");
 
 	// Set up resource data
 	entity_manager->add_templates(json_path + "/entity_templates.json");

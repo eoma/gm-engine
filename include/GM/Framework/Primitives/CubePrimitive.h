@@ -4,11 +4,11 @@
 
 namespace GM {
 	namespace Framework {
-		class QuadPrimitive : public IPrimitive {
+		class CubePrimitive : public IPrimitive {
 		public:
-			QuadPrimitive();
+			CubePrimitive();
 			MeshPtr create(const BufferManagerPtr &buffer_manager, const VaoManagerPtr &vao_manager) override;
 		};
-		typedef std::shared_ptr<QuadPrimitive> QuadPrimitivePtr;
+		typedef std::shared_ptr<CubePrimitive> CubePrimitivePtr;
 	}
 }

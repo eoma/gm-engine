@@ -20,9 +20,11 @@
 #include "GM/Framework/Components/Light.h"
 
 #include "GM/Framework/Primitives/TrianglePrimitive.h"
-#include "GM/Framework/Primitives/QuadPrimitive.h"
-#include "GM\Framework/Primitives/FullscreenQuadPrimitive.h"
+#include "GM/Framework/Primitives/QuadXYPrimitive.h"
+#include "GM/Framework/Primitives/QuadXZPrimitive.h"
+#include "GM/Framework/Primitives/FullscreenQuadPrimitive.h"
 #include "GM/Framework/Primitives/SkyboxPrimitive.h"
+#include "GM/Framework/Primitives/CubePrimitive.h"
 
 #include "GM/Framework/Entity.h"
 
@@ -145,9 +147,11 @@ Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_f
 		if (flags & GM_FRAMEWORK_PRIMITIVES)
 		{
 			mesh_manager->add_primitive(std::make_shared<Framework::TrianglePrimitive>());
-			mesh_manager->add_primitive(std::make_shared<Framework::QuadPrimitive>());
+			mesh_manager->add_primitive(std::make_shared<Framework::QuadXYPrimitive>());
+			mesh_manager->add_primitive(std::make_shared<Framework::QuadXZPrimitive>());
 			mesh_manager->add_primitive(std::make_shared<Framework::FullscreenQuadPrimitive>());
 			mesh_manager->add_primitive(std::make_shared<Framework::SkyboxPrimitive>());
+			mesh_manager->add_primitive(std::make_shared<Framework::CubePrimitive>());
 		}
 	}
 

@@ -1,0 +1,17 @@
+[
+	{
+    	"texture": "test_cube",
+    	"image": [ "skybox/X+.png", "skybox/X-.png", "skybox/Y+.png", "skybox/Y-.png", "skybox/Z+.png", "skybox/Z-.png"],
+		"format": "textureCube"
+    },
+	{
+    	"texture": "green_tiled_floor",
+    	"image": "patterns/pattern_193/diffuse.tga",
+		"format": "tiled_texture2d"
+    },
+	{
+    	"texture": "metal_base",
+    	"image": "patterns/steel/diffuse.tga",
+		"format": "tiled_texture2d"
+    }
+]

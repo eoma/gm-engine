@@ -1,0 +1,71 @@
+[
+	{
+		"material": "diffuse",
+		"shader": "diffuse",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [1, 1, 1],
+				"type": "vec3"
+			},
+			{
+				"name": "diffuse_map",
+				"value": "floor",
+				"type": "texture"
+			}
+		]
+	},
+	{
+		"material": "green_tiled_floor",
+		"shader": "diffuse",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [1, 1, 1],
+				"type": "vec3"
+			},
+			{
+				"name": "diffuse_map",
+				"value": "green_tiled_floor",
+				"type": "texture"
+			},
+			{
+				"name": "map_repeat_count",
+				"value": 512.0,
+				"type": "float"
+			}
+		]
+	},
+	{
+		"material": "robot_base",
+		"shader": "diffuse",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [1, 1, 1],
+				"type": "vec3"
+			},
+			{
+				"name": "diffuse_map",
+				"value": "metal_base",
+				"type": "texture"
+			},
+			{
+				"name": "map_repeat_count",
+				"value": 0.5,
+				"type": "float"
+			}
+		]
+	},
+	{
+		"material": "skybox",
+		"shader": "skybox",
+		"uniforms": [
+			{
+				"name": "cube_map",
+				"value": "test_cube",
+				"type": "texture"
+			}
+		]
+	}
+]
