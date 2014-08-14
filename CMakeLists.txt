@@ -64,6 +64,40 @@ endif()
 
 add_subdirectory(src)
 
+###
+### Set up project configuration
+###
+
+set(EXPORT_TARGETS Application Framework Core clanCore SOIL2 assimp glfw gl3w)
+if (TARGET zlibstatic)
+	list(APPEND EXPORT_TARGETS zlibstatic)
+endif()
+
+# Add all relevant targets to the build-tree export set
+export(TARGETS ${EXPORT_TARGETS}
+  FILE "${PROJECT_BINARY_DIR}/GmEngineTargets.cmake")
+
+# Export the package for use from the build-tree
+# (this registers the build-tree with a global CMake-registry)
+export(PACKAGE GmEngine)
+
+set(CONF_INCLUDE_DIRS
+  ${PROJECT_SOURCE_DIR}/include/
+  ${PROJECT_SOURCE_DIR}/samples_common/
+  ${PROJECT_SOURCE_DIR}/depends/ClanLib/Include/
+  ${PROJECT_SOURCE_DIR}/depends/glm/include/
+  ${PROJECT_SOURCE_DIR}/depends/gl3w/include/
+  ${PROJECT_SOURCE_DIR}/depends/glfw/include/
+  ${PROJECT_SOURCE_DIR}/depends/assimp/include/
+)
+set(CONF_SOURCE_DIR ${PROJECT_SOURCE_DIR})
+
+configure_file(GmEngineConfig.cmake.in
+  "${PROJECT_BINARY_DIR}/GmEngineConfig.cmake" @ONLY)
+
+###
+### End setup project config
+###
 
 if (BUILD_SAMPLES)
 	add_subdirectory(samples)
