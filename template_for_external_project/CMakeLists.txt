@@ -6,6 +6,7 @@ find_package(GmEngine)
 include(${GM_ENGINE_COMPILER_SETUP_SCRIPT})
 
 include_directories(${GM_ENGINE_INCLUDE_DIRS})
+add_definitions(${GM_ENGINE_DEFINITIONS})
 
 file(GLOB_RECURSE Headers ${PROJECT_SOURCE_DIR}/inlude/*.h)
 file(GLOB_RECURSE Sources ${PROJECT_SOURCE_DIR}/src/*.cpp)
