@@ -58,7 +58,7 @@ bool mainTest() {
 	
 	// Set up the projection for the camera
 	if (camera->has_component<Framework::Camera>()) {
-		auto &camera_component = camera->get_component<Framework::Camera>();
+		auto camera_component = camera->get_component<Framework::Camera>();
 		camera_component->set_projection(app->get_resolution());
 #if STARFIELD
 		if (starfield->has_component<Samples::StarfieldComponent>()) {
