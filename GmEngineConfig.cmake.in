@@ -1,0 +1,19 @@
+# - Config file for the GM Engine package
+# It defines the following variables
+#  GM_ENGINE_INCLUDE_DIRS - include directories for GM Engine
+#  GM_ENGINE_LIBRARIES    - libraries to link against
+#  GM_ENGINE_SOURCE_DIR   - where do the actual source reside?
+
+# Compute paths
+get_filename_component(GM_ENGINE_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(GM_ENGINE_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+set(GM_ENGINE_SOURCE_DIR "@CONF_SOURCE_DIR@")
+
+# Set path to script setting up compiler specific options
+set(GM_ENGINE_COMPILER_SETUP_SCRIPT "${GM_ENGINE_CMAKE_DIR}/CompilerSetup.cmake")
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+include("${GM_ENGINE_CMAKE_DIR}/GmEngineTargets.cmake")
+
+# These are IMPORTED targets created by GM EngineTargets.cmake
+set(GM_ENGINE_LIBRARIES Application Framework Core)
