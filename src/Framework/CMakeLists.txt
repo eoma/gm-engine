@@ -34,7 +34,11 @@ foreach(folder ${PROJECT_FOLDERS})
 endforeach()
 
 add_library(${NAME} STATIC ${Headers} ${Sources})
-target_link_libraries(${NAME} clanCore)
-target_link_libraries(${NAME} assimp)
+# This library depends on the following libraries
+target_link_libraries(${NAME}
+	Core # Core has it's own dependencies, they will get pulled automatically
+	assimp # These should probably be moved to Application
+	SOIL2)
+
 
 set_target_properties(${NAME} PROPERTIES FOLDER "GM")
