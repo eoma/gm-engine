@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(gm-engine)
+project(GmEngine)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
