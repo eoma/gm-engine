@@ -100,6 +100,27 @@
 		]
 	},
 	{
+		"material": "robot_claw",
+		"shader": "diffuse",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [0, 0, 1],
+				"type": "vec3"
+			},
+			{
+				"name": "diffuse_map",
+				"value": "metal_claw",
+				"type": "texture"
+			},
+			{
+				"name": "map_repeat_count",
+				"value": 2.0,
+				"type": "float"
+			}
+		]
+	},
+	{
 		"material": "skybox",
 		"shader": "skybox",
 		"uniforms": [

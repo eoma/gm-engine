@@ -23,5 +23,10 @@
     	"texture": "metal_head",
     	"image": "patterns/pattern_10/diffuse.tga",
 		"format": "tiled_texture2d"
+    },
+	{
+    	"texture": "metal_claw",
+    	"image": "patterns/pattern_07/diffuse.tga",
+		"format": "tiled_texture2d"
     }
 ]
