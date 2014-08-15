@@ -60,6 +60,7 @@ void TextureFormatTemplateManager::apply_requirement(const std::string &template
 			if (t.swizzle_rgba.empty() || t.swizzle_rgba == "red green blue alpha") t.swizzle_rgba = it_template->swizzle_rgba;
 			if (t.border_color == glm::vec4(0, 0, 0, 0)) t.border_color = it_template->border_color;
 			if (t.generate_mipmap) t.generate_mipmap = it_template->generate_mipmap;
+			if (t.gl_texture_format.empty()) t.gl_texture_format = it_template->gl_texture_format;
 			return;
 		}
 	}

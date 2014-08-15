@@ -82,7 +82,8 @@ Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name)
 						t.swizzle_a,
 						t.swizzle_rgba,
 						t.border_color,
-						t.generate_mipmap);
+						t.generate_mipmap,
+						t.gl_texture_format);
 				});
 			}
 
@@ -127,14 +128,22 @@ Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, 
 		return texture;
 	}
 
-	// Implement generating a texture based on raw image data and format.
+	
 	GLenum gl_texture_format;
-	int channels = image.get_num_channels();
-	if (channels == 1) gl_texture_format = GL_RED;
-	else if (channels == 2) gl_texture_format = GL_RG;
-	else if (channels == 3) gl_texture_format = GL_RGB;
-	else if (channels == 4) gl_texture_format = GL_RGBA;
-	else gl_texture_format = GL_RGB;
+	
+	// Have the user set a forced texture format?
+	if (format.has_gl_texture_format()) {
+		gl_texture_format = format.get_gl_texture_format();
+	}
+	// Implement generating a texture based on raw image data and format.
+	else {
+		int channels = image.get_num_channels();
+		if (channels == 1) gl_texture_format = GL_RED;
+		else if (channels == 2) gl_texture_format = GL_RG;
+		else if (channels == 3) gl_texture_format = GL_RGB;
+		else if (channels == 4) gl_texture_format = GL_RGBA;
+		else gl_texture_format = GL_RGB;
+	}
 
 	texture = Core::TextureFactory::create(format, Core::TextureFactory::TextureData{
 		(int)image.get_width(),
@@ -233,7 +242,8 @@ Core::TextureFormatPtr TextureManager::get_or_create_format(const std::string &f
 	const std::string &swizzle_a,
 	const std::string &swizzle_rgba,
 	const glm::vec4 &border_color,
-	bool generate_mipmap)
+	bool generate_mipmap,
+	const std::string &gl_texture_format)
 {
 	auto format = get_format(format_name);
 	if (format)
@@ -260,7 +270,8 @@ Core::TextureFormatPtr TextureManager::get_or_create_format(const std::string &f
 		swizzle_a,
 		swizzle_rgba,
 		border_color,
-		generate_mipmap);
+		generate_mipmap,
+		gl_texture_format);
 	name_to_texture_format[format_name] = format;
 	texture_format_to_name[format] = format_name;
 

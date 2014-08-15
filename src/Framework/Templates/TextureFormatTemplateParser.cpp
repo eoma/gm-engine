@@ -266,6 +266,14 @@ void TextureFormatTemplateParser::parse_templates(const std::string &data, std::
 			t.generate_mipmap = it->second.to_boolean();
 		}
 
+		it = json_members.find("gl_texture_format");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_string())
+				throw Exception("gl_texture_format must be a string");
+			t.gl_texture_format = it->second.to_string();
+		}
+
 		func(t);
 	}
 }

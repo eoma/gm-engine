@@ -57,7 +57,8 @@ public:
 		const std::string &swizzle_a,
 		const std::string &swizzle_rgba,
 		const glm::vec4 &border_color,
-		bool generate_mipmap);
+		bool generate_mipmap,
+		const std::string &gl_texture_format);
 
 	void add_templates(const std::string &template_filename);
 	void add_format_templates(const std::string &template_filename);

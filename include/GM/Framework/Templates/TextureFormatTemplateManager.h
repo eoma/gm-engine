@@ -39,6 +39,7 @@ namespace GM {
 				std::string swizzle_rgba;		// red, green, blue, alpha, zero, one. Defaults to "red green blue alpha".
 				glm::vec4 border_color;			// define the border values that should be used for border texels. Defaults to (0,0,0,0).
 				bool generate_mipmap;
+				std::string gl_texture_format;
 
 				//TODO: The default params should be aquired through a getter interface, or through a structure for simpler reuse and default-testing.
 				Template() : name("default"), type("2d"), requires(),
@@ -62,7 +63,9 @@ namespace GM {
 					swizzle_rgba("red green blue alpha"),
 					border_color(glm::vec4(0,0,0,0)),
 
-					generate_mipmap(true) {}
+					generate_mipmap(true),
+					gl_texture_format()
+				{}
 			};
 
 			void add_templates(const std::string &template_filename);

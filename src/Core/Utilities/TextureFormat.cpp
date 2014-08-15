@@ -137,6 +137,38 @@ void TextureFormat::string_to_parameter(const std::string &value, int &result)
 		throw clan::Exception(clan::string_format("The int parameter (%1) was not supported in TextureFormat when deserializing from string!", value));
 }
 
+GLenum TextureFormat::string_to_gl_texture_format(const std::string &value) {
+	if (value == "r") return GL_RED;
+	if (value == "g") return GL_GREEN;
+	if (value == "b") return GL_BLUE;
+	if (value == "a") return GL_ALPHA;
+
+	if (value == "rg") return GL_RG;
+	if (value == "rgb") return GL_RGB;
+	if (value == "rgba") return GL_RGBA;
+
+	if (value == "bgr") return GL_BGR;
+	if (value == "bgra") return GL_BGRA;
+
+	if (value == "rg16f") return GL_RG16F;
+	if (value == "rgb16f") return GL_RGB16F;
+	if (value == "rgba16f") return GL_RGBA16F;
+
+	if (value == "rg32f") return GL_RG32F;
+	if (value == "rgb32f") return GL_RGB32F;
+	if (value == "rgba32f") return GL_RGBA32F;
+
+	if (value == "srgb") return GL_SRGB;
+	if (value == "srgba") return GL_SRGB_ALPHA;
+
+	if (value == "depth_component16") return GL_DEPTH_COMPONENT16;
+	if (value == "depth_component24") return GL_DEPTH_COMPONENT24;
+	if (value == "depth_component32") return GL_DEPTH_COMPONENT32;
+	if (value == "depth_component32f") return GL_DEPTH_COMPONENT32F;
+
+	// TODO: Add all formats in the current opengl spec... yeah... there's many :-P
+}
+
 TextureFormatPtr TextureFormat::create_texture2d_format(bool generate_mipmap, unsigned int wrap_mode)
 {
 	TextureFormatPtr format(new TextureFormat(GL_TEXTURE_2D));
@@ -172,7 +204,8 @@ TextureFormatPtr TextureFormat::create_texture_format_from_string(
 	const std::string &swizzle_a,
 	const std::string &swizzle_rgba,
 	const glm::vec4 &border_color,
-	bool generate_mipmap)
+	bool generate_mipmap,
+	const std::string &gl_texture_format)
 {
 	TextureFormatPtr format(new TextureFormat(string_to_type(type)));
 
@@ -257,6 +290,13 @@ TextureFormatPtr TextureFormat::create_texture_format_from_string(
 				format->set_parameter(GL_TEXTURE_SWIZZLE_R+i, result);
 			}
 		}
+	}
+
+	if (!gl_texture_format.empty()) {
+		format->gl_texture_format = string_to_gl_texture_format(gl_texture_format);
+	}
+	else {
+		format->gl_texture_format = GL_NONE;
 	}
 
 	format->set_parameter(GL_TEXTURE_BASE_LEVEL, base_level);

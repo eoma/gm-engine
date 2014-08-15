@@ -26,6 +26,9 @@ public:
 
 	bool is_generating_mipmap() const { return make_mipmap; }
 
+	GLenum get_gl_texture_format() const { return gl_texture_format; }
+	bool has_gl_texture_format() const { return gl_texture_format != GL_NONE; }
+
 	const std::vector<ITextureParameterPtr> &get_parameters() const { return parameters; }
 
 	template<class T>
@@ -58,11 +61,13 @@ public:
 		const std::string &swizzle_a,
 		const std::string &swizzle_rgba,
 		const glm::vec4 &border_color,
-		bool generate_mipmap);
+		bool generate_mipmap,
+		const std::string &gl_texture_format);
 
 	static void string_to_parameter(const std::string &value, float &result);
 	static void string_to_parameter(const std::string &value, int &result);
 	static unsigned int string_to_type(const std::string &value);
+	static GLenum string_to_gl_texture_format(const std::string &value);
 
 protected:
 	// TODO: A bit unclear a bout these, why should they be protected?
@@ -84,6 +89,9 @@ protected:
 
 	// should we create a mipmap for the(se) texture(s)?
 	bool make_mipmap;
+
+	// we can force a given texture format type
+	GLenum gl_texture_format = GL_NONE;
 
 	// Ordered list of parameters.
 	std::vector<ITextureParameterPtr> parameters;
