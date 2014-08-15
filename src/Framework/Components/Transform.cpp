@@ -26,6 +26,8 @@ Transform::Transform(const EntityPtr &owner, const SceneSystemPtr &scene_system,
 	object_matrix_property = owner->add(GM_PROPERTY_OBJECT_MATRIX, glm::mat4(1));
 	world_matrix_property = owner->add(GM_PROPERTY_WORLD_MATRIX, glm::mat4(1));
 	normal_matrix_property = owner->add(GM_PROPERTY_NORMAL_MATRIX, glm::mat3(1));
+	object_matrix_no_scale_property = owner->add(GM_PROPERTY_OBJECT_MATRIX_NO_SCALE, glm::mat4(1));
+	world_matrix_no_scale_property = owner->add(GM_PROPERTY_WORLD_MATRIX_NO_SCALE, glm::mat4(1));
 
 	scene_system->add(this);
 }
@@ -116,32 +118,46 @@ void Transform::clear_dirty() {
 
 void Transform::update_object_matrix() {
 	object_matrix_property = make_object_matrix();
+	object_matrix_no_scale_property = make_object_matrix_no_scale();
 }
 
 glm::mat4 Transform::make_object_matrix() const {
 	glm::mat4 translation = glm::translate(position_property.get());
-	//translation[3] = glm::vec4(position_property.get(), 1);
-
 	glm::mat4 rotation = glm::toMat4(orientation_property.get());
-
 	glm::mat4 scale = glm::diagonal4x4(glm::vec4(scale_property.get(), 1));
-
 	return translation * rotation * scale;
+}
+
+glm::mat4 Transform::make_object_matrix_no_scale() const {
+	glm::mat4 translation = glm::translate(position_property.get());
+	glm::mat4 rotation = glm::toMat4(orientation_property.get());
+	return translation * rotation;
 }
 
 void Transform::update_world_matrix() {
 	update_object_matrix();
 
 	world_matrix_property = make_world_matrix();
+	world_matrix_no_scale_property = make_world_matrix_no_scale();
 }
 
 glm::mat4 Transform::make_world_matrix() const {
-	glm::mat4 thisWorld = get_object_matrix();
+	glm::mat4 this_world = get_object_matrix();
 
 	if (parent != nullptr) {
-		thisWorld = parent->get_world_matrix() * thisWorld;
+		this_world = parent->get_world_matrix_no_scale() * this_world;
 	}
 
-	return thisWorld;
+	return this_world;
+}
+
+glm::mat4 Transform::make_world_matrix_no_scale() const {
+	glm::mat4 this_world_no_scale = get_object_matrix_no_scale();
+
+	if (parent != nullptr) {
+		this_world_no_scale = parent->get_world_matrix_no_scale() * this_world_no_scale;
+	}
+
+	return this_world_no_scale;
 }
 

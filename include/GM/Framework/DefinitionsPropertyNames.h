@@ -6,6 +6,8 @@
 #define GM_PROPERTY_ORIENTATION			"Orientation"		// glm::quat
 #define GM_PROPERTY_OBJECT_MATRIX		"OjectMatrix"		// glm::mat4
 #define GM_PROPERTY_WORLD_MATRIX		"WorldMatrix"		// glm::mat4
+#define GM_PROPERTY_OBJECT_MATRIX_NO_SCALE	"OjectMatrixNoScale"	// glm::mat4
+#define GM_PROPERTY_WORLD_MATRIX_NO_SCALE	"WorldMatrixNoScale"	// glm::mat4
 
 // Culler and render system
 #define GM_PROPERTY_CULLED				"Culled"			// bool

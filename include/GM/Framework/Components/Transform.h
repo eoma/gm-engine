@@ -66,12 +66,14 @@ public:
 	void clear_dirty();
 
 	const glm::mat4 &get_world_matrix() const { return world_matrix_property; };
+	const glm::mat4 &get_world_matrix_no_scale() const { return world_matrix_no_scale_property; };
 
 	// Essentially goes world_matrix_property = make_world_matrix();
 	// You need only call this to update, world and object
 	void update_world_matrix();
 
 	const glm::mat4 &get_object_matrix() const { return object_matrix_property; };
+	const glm::mat4 &get_object_matrix_no_scale() const { return object_matrix_no_scale_property; };
 
 	// Essentially goes object_matrix_property = make_object_matrix() if
 	// dependent properties (position, orientation, scale) has changed.
@@ -88,7 +90,9 @@ public:
 
 protected:
 	glm::mat4 make_object_matrix() const;
+	glm::mat4 make_object_matrix_no_scale() const;
 	glm::mat4 make_world_matrix() const;
+	glm::mat4 make_world_matrix_no_scale() const;
 
 private:
 	SceneSystemPtr scene_system;
@@ -107,7 +111,9 @@ private:
 	Property<glm::quat> orientation_property;
 
 	Property<glm::mat4> object_matrix_property;
+	Property<glm::mat4> object_matrix_no_scale_property;
 	Property<glm::mat4> world_matrix_property;
+	Property<glm::mat4> world_matrix_no_scale_property;
 	Property<glm::mat3> normal_matrix_property;
 };
 
