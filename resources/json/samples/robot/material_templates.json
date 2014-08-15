@@ -79,6 +79,27 @@
 		]
 	},
 	{
+		"material": "robot_head",
+		"shader": "diffuse",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [0, 1, 0],
+				"type": "vec3"
+			},
+			{
+				"name": "diffuse_map",
+				"value": "metal_arm",
+				"type": "texture"
+			},
+			{
+				"name": "map_repeat_count",
+				"value": 1.0,
+				"type": "float"
+			}
+		]
+	},
+	{
 		"material": "skybox",
 		"shader": "skybox",
 		"uniforms": [

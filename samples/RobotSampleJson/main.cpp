@@ -94,6 +94,7 @@ Framework::TransformPtr create_robot(Framework::EntityManagerPtr entity_manager)
 	entity_manager->apply("robot_base", robot_base_right_entity);
 	entity_manager->apply("robot_arm", robot_arm_lower_entity);
 	entity_manager->apply("robot_arm", robot_arm_upper_entity);
+	entity_manager->apply("robot_head", robot_head_entity);
 
 	// Extract scenegraph components (Transform)
 	auto robot = robot_entity->get_component<Framework::Transform>();
@@ -101,17 +102,20 @@ Framework::TransformPtr create_robot(Framework::EntityManagerPtr entity_manager)
 	auto robot_base_right = robot_base_right_entity->get_component<Framework::Transform>();
 	auto robot_arm_lower = robot_arm_lower_entity->get_component<Framework::Transform>();
 	auto robot_arm_upper = robot_arm_upper_entity->get_component<Framework::Transform>();
+	auto robot_head = robot_head_entity->get_component<Framework::Transform>();
 
 	// Assemble the robot
 	robot->add_child(robot_base_left);
 	robot->add_child(robot_base_right);
 	robot->add_child(robot_arm_lower);
 	robot_arm_lower->add_child(robot_arm_upper);
+	robot_arm_upper->add_child(robot_head);
 
 	// Position assembled robot parts
 	robot_base_left->translate(glm::vec3(-1, 0, 0));
 	robot_base_right->translate(glm::vec3(1, 0, 0));
 	robot_arm_upper->translate(glm::vec3(0, 7.5f, 0));
+	robot_head->translate(glm::vec3(0, 7.5f, 0));
 
 	return robot;
 }
@@ -156,6 +160,7 @@ bool mainTest() {
 	auto robot = create_robot(entity_manager);
 	auto robot_arm_lower = find_part(robot.get(), RobotParts::ARM_LOWER);
 	auto robot_arm_upper = find_part(robot.get(), RobotParts::ARM_UPPER);
+	auto robot_head = find_part(robot.get(), RobotParts::HEAD);
 	
 	app->hide_cursor();
 	auto keyboard_slot = app->sign_keyboard().connect(
@@ -242,6 +247,16 @@ bool mainTest() {
 			}
 			else if (app->is_key_down(GLFW_KEY_DOWN)) {
 				robot_arm_upper->rotate(glm::angleAxis(dt, glm::vec3(-1, 0, 0)));
+			}
+		}
+
+		// If the head of the robot is selected, we rotate the robot head left or right
+		else if (robot_head && currently_selected_part == RobotParts::HEAD) {
+			if (app->is_key_down(GLFW_KEY_LEFT)) {
+				robot_head->rotate(glm::angleAxis(dt, glm::vec3(0, 1, 0)));
+			}
+			else if (app->is_key_down(GLFW_KEY_RIGHT)) {
+				robot_head->rotate(glm::angleAxis(dt, glm::vec3(0, -1, 0)));
 			}
 		}
 	});

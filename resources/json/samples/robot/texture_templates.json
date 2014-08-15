@@ -18,5 +18,10 @@
     	"texture": "metal_arm",
     	"image": "patterns/pattern_09/diffuse.tga",
 		"format": "tiled_texture2d"
+    },
+	{
+    	"texture": "metal_head",
+    	"image": "patterns/pattern_10/diffuse.tga",
+		"format": "tiled_texture2d"
     }
 ]
