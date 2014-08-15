@@ -1,0 +1,55 @@
+[
+	{
+		"material": "diffuse",
+		"shader": "diffuse",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [1, 1, 1],
+				"type": "vec3"
+			},
+			{
+				"name": "diffuse_map",
+				"value": "floor",
+				"type": "texture"
+			}
+		]
+	},
+	{
+		"material": "skybox",
+		"shader": "skybox",
+		"uniforms": [
+			{
+				"name": "cube_map",
+				"value": "test_cube",
+				"type": "texture"
+			}
+		]
+	},
+	{
+		"material": "terrain",
+		"shader": "terrain_no_tess",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [1, 1, 1],
+				"type": "vec3"
+			},
+			{
+				"name": "heightmap",
+				"value": "heightmap",
+				"type": "texture"
+			},
+			{
+				"name": "diffuse_map",
+				"value": "ground_earth",
+				"type": "texture"
+			},
+			{
+				"name": "map_repeat_count",
+				"value": 256.0,
+				"type": "float"
+			}
+		]
+	}
+]

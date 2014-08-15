@@ -1,0 +1,48 @@
+#version 410 core
+
+layout(quads, equal_spacing, ccw) in;
+
+in vec3 evaluation_normal[];
+in vec2 evaluation_texcoord[];
+
+out vec4 position_in_viewspace;
+out vec3 normal_in_viewspace;
+out vec2 texcoord;
+
+uniform mat4 WorldMatrix;		// object_to_world
+uniform mat4 ViewMatrix;		// world_to_view
+uniform mat4 ProjectionMatrix;	// view_to_clip
+uniform mat3 NormalMatrix;		// normal_to_view
+
+uniform sampler2D heightmap;
+
+// Bilinear interpolation
+vec2 interpolate(vec2 bl, vec2 br, vec2 tr, vec2 tl){
+	float u = gl_TessCoord.x;
+	float v = gl_TessCoord.y;
+ 
+	vec2 b = mix(bl,br,u);
+	vec2 t = mix(tl,tr,u);
+	return mix(b,t,v);
+} 
+
+vec3 interpolate_normal(vec3 n1, vec3 n2, vec3 n3, vec3 n4) {
+	return normalize((n1+n2+n3+n4) / 4.0);
+}
+
+void main()
+{
+	// Generate vertices by interpolating patch vertices and tessellation coordinates
+	texcoord = interpolate(evaluation_texcoord[0], evaluation_texcoord[1], evaluation_texcoord[2], evaluation_texcoord[3]);
+
+	// Find the average between all patch normals
+	normal_in_viewspace = NormalMatrix * interpolate_normal(evaluation_normal[0], evaluation_normal[1], evaluation_normal[2], evaluation_normal[3]);
+ 
+	// Look up terrain height from height map
+	float height = texture(heightmap, texcoord.yx).x;
+	vec3 position_in_objectspace = vec3(texcoord.x, height, texcoord.y);
+	vec4 position_in_worldspace = (WorldMatrix * vec4(position_in_objectspace, 1));
+
+	position_in_viewspace = ViewMatrix * position_in_worldspace;
+	gl_Position = ProjectionMatrix * position_in_viewspace;
+}

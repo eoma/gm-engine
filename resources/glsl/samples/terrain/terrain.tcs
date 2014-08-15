@@ -1,0 +1,93 @@
+#version 410 core
+
+// Generate uv coordinates for vertices in output triangles.
+layout (vertices = 4) out;
+
+// Inputs from vertex shader
+in vec3 control_point[];
+in vec3 control_normal[];
+in vec2 control_texcoord[];
+
+// Pass local/texture coordinate through unchanged
+out vec3 evaluation_normal[];
+out vec2 evaluation_texcoord[];
+
+uniform mat4 ViewMatrix;		// world_to_view
+uniform mat4 ProjectionMatrix;	// view_to_clip
+
+// The distance from camera_position to the control_point determines the number of triangles to generate
+uniform vec3 camera_position;
+uniform float lod = 0.1;
+
+//convert control_point to normalized device coordinates
+vec3 ndc(vec3 point) {
+	vec4 v = ProjectionMatrix * ViewMatrix * vec4(point,1);
+	v /= v.w;
+	return v.xyz;
+}
+
+// Determine if is vertex is on the screen. This is used to do culling. 
+// My assumption is that if all vertices are off the screen then the patch should be discarded.
+// Unfortunately this isn't true if you stand close to a patch and look at its center.  
+// The extra stuff you see is an attempt to prevent culling of a patch if it is close to the eye.
+bool offscreen(vec3 vertex) {
+	vertex = ndc(vertex);
+	float z = vertex.z * .5 + .5;
+ 
+	float w = 1 + (1-z) * 100;
+	return vertex.z < -1 || vertex.z > 1 || any(lessThan(vertex.xy, vec2(-w)) || greaterThan(vertex.xy, vec2(w)));
+}
+
+// Make a custom func to determine a tessellation level based on distance of the patch from the camera
+float level(float d) {
+	return clamp(lod * 2000/d, 1, 64);
+}
+
+void main()
+{
+	// Pass local/texture coordinate through unchanged
+	evaluation_texcoord[gl_InvocationID] = control_texcoord[gl_InvocationID];
+
+	// Pass normal coordinate through unchanged
+	evaluation_normal[gl_InvocationID] = control_normal[gl_InvocationID];
+ 
+	// For some reason this shader is called once for every vertex in a patch,
+	// even though the tess level only needs set once.  
+	// For efficiency only calculate it once.
+	if (gl_InvocationID == 0){
+		if (offscreen(control_point[0])
+			&& offscreen(control_point[1])
+			&& offscreen(control_point[2])
+			&& offscreen(control_point[3])){
+ 
+			// All patch vertices off the screen, cull the patch
+			gl_TessLevelOuter[0] = 0;
+			gl_TessLevelOuter[1] = 0;
+			gl_TessLevelOuter[2] = 0;
+			gl_TessLevelOuter[3] = 0;
+ 
+			gl_TessLevelInner[0] = 0;
+			gl_TessLevelInner[1] = 0;
+ 
+			return;
+		}
+ 
+		// Calculate tessellation based on distance from camera
+		float d0 = distance(camera_position, control_point[0]);
+		float d1 = distance(camera_position, control_point[1]);
+		float d2 = distance(camera_position, control_point[2]);
+		float d3 = distance(camera_position, control_point[3]);
+ 
+		// Specify tessellation on edges of the quad, make tessellation 
+		// identical on bordering edges of quads or there will be gaps.
+		gl_TessLevelOuter[0] = level(mix(d3,d0,.5)); //left
+		gl_TessLevelOuter[1] = level(mix(d0,d1,.5)); //bottom
+		gl_TessLevelOuter[2] = level(mix(d1,d2,.5)); //right
+		gl_TessLevelOuter[3] = level(mix(d2,d3,.5)); //top
+ 
+		// Inner value doesn't really matter, just make it something similar to Outer
+		float l = max(max(gl_TessLevelOuter[0], gl_TessLevelOuter[1]), max(gl_TessLevelOuter[2], gl_TessLevelOuter[3]));
+		gl_TessLevelInner[0] = l;
+		gl_TessLevelInner[1] = l;
+	}
+}
