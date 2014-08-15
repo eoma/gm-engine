@@ -24,7 +24,7 @@ void main(void){
 	texcoord = position.xz;
 	normal_in_viewspace = NormalMatrix * normal;
 
-    float height = texture(heightmap, texcoord.yx / 1024.0).y * 100.0;
+    float height = texture(heightmap, texcoord.yx).y;
     position_in_viewspace = ViewMatrix * WorldMatrix * vec4(position.x, height, position.z, 1);
 	gl_Position = ProjectionMatrix * position_in_viewspace;
 }

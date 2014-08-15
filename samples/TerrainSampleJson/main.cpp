@@ -62,10 +62,10 @@ void build_terrain_indices(std::vector<unsigned int> &indices, unsigned int x, u
 	indices.push_back(next_index);
 }
 
-void build_terrain_vertices(std::vector<TerrainVertex> &vertices, unsigned int x, unsigned int y)
+void build_terrain_vertices(std::vector<TerrainVertex> &vertices, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 {
 	//Add one x,y,z vertex for each x,y in the grid
-	vertices.push_back({ { glm::vec3((float)x, 0.0f, (float)y) }, { 0, 1, 0 } });
+	vertices.push_back({ { glm::vec3(x / (float)width, 0.0f, y / (float)height) }, { 0, 1, 0 } });
 }
 
 //////////////////////////////
@@ -196,7 +196,7 @@ void create_triangle_mesh(const MainPtr &app, unsigned int width, unsigned int h
 	for (unsigned int y = 0; y < height; y++) {
 		for (unsigned int x = 0; x < width; x++) {
 			build_terrain_indices(indices, x, y, width, height);
-			build_terrain_vertices(vertices, x, y);
+			build_terrain_vertices(vertices, x, y, width, height);
 		}
 	}
 #if GENERATE_NORMALS

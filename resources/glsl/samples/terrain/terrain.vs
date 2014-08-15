@@ -17,9 +17,9 @@ uniform mat4 WorldMatrix;		// object_to_world
 uniform sampler2D heightmap;
     
 void main(void){
-	control_texcoord = position.xz / 1024.0;
+	control_texcoord = position.xz;
 	control_normal = normal;
 
-    float height = texture(heightmap, control_texcoord.yx).x * 100.0;
+    float height = texture(heightmap, control_texcoord.yx).x;
     control_point = (WorldMatrix * vec4(position.x, height, position.z, 1)).xyz;
 }

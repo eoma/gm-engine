@@ -8,6 +8,7 @@ out vec3 color;
 
 uniform vec3 diffuse = vec3(0,0,0);
 uniform sampler2D diffuse_map;
+uniform float map_repeat_count = 1.0;
 
 uniform struct SLight {
         vec3 position_in_viewspace;
@@ -57,9 +58,9 @@ void main() {
 	color = vec3(0,0,0);
     for(int i = 0; i < light_count; i++)
     {
-        color += color_from_light(i, N, V, diffuse * texture(diffuse_map, texcoord).rgb);
+        color += color_from_light(i, N, V, diffuse * texture(diffuse_map, texcoord * map_repeat_count).rgb);
     }
     if(color == vec3(0,0,0)) {
-        color = diffuse * texture(diffuse_map, texcoord).rgb;
+        color = diffuse * texture(diffuse_map, texcoord * map_repeat_count).rgb;
     }
 }
