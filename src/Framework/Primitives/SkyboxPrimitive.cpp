@@ -97,13 +97,11 @@ MeshPtr SkyboxPrimitive::create(const BufferManagerPtr &buffer_manager, const Va
 					Core::VaoArg<glm::vec3>(Core::ShaderConstants::Position));
 	render_command.set_vertices(vertex_allocation, vertices);
 
-	// FIXME: This generates an "invalid operator<" error in xtree related to comparison issues with VaoLayout.
-	//		  Maybe lexicographical_compare? http://stackoverflow.com/questions/9040689/stl-less-operator-and-invalid-operator-error
-	/*auto index_allocation = buffer_manager->allocate_and_upload(indices);
+	auto index_allocation = buffer_manager->allocate_and_upload(indices);
 	vao_layout
 		.for_buffer(index_allocation)
 			.use_as(GL_ELEMENT_ARRAY_BUFFER);
-	render_command.set_indices(index_allocation, indices);*/
+	render_command.set_indices(index_allocation, indices);
 
 	render_command.set_draw_mode(GL_TRIANGLES);
 
