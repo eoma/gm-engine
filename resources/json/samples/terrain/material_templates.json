@@ -28,7 +28,7 @@
 	},
 	{
 		"material": "terrain",
-		"shader": "terrain_no_tess",
+		"shader": "terrain",
 		"uniforms": [
 			{
 				"name": "diffuse",

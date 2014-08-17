@@ -13,8 +13,6 @@
 using namespace GM;
 using namespace Application;
 
-#define GENERATE_NORMALS 0
-
 struct TerrainVertex {
 	glm::vec3 position;
 	glm::vec3 normal;
@@ -68,118 +66,6 @@ void build_terrain_vertices(std::vector<TerrainVertex> &vertices, unsigned int x
 	vertices.push_back({ { glm::vec3(x / (float)width, 0.0f, y / (float)height) }, { 0, 1, 0 } });
 }
 
-//////////////////////////////
-//
-//       a---b---c
-//    ^  |  /|  /|
-//    |  |/  |/  |
-//    z  d---e---f
-//    |  |  /|  /|
-//    v  |/  |/  |
-//       g---h---i
-//
-//         <-x->
-//
-///////////////////////////////
-void build_terrain_normals(std::vector<TerrainVertex> &vertices, unsigned int width, unsigned int height)
-{
-	glm::vec3 v1, v2, v3, v4, v5, v6;
-	glm::vec3 n, n1, n2, n3, n4, n5, n6;
-
-	for (unsigned int z = 0; z < height; z++) {
-		for (unsigned int x = 0; x < width; x++)
-		{
-			// back left corner - 1 tri 2 vertices
-			if (z == 0 && x == 0)
-			{
-				v1 = vertices[((z + 1)*width + (x))].position - vertices[((z)*width + (x))].position;
-				v2 = vertices[((z)*width + (x + 1))].position - vertices[((z)*width + (x))].position;
-				n = glm::cross(v1, v2);
-			}
-			// left edge - 3 tri 4 vertices
-			else if ((z > 0 && z < (height - 1)) && x == 0)
-			{
-				v1 = vertices[((z)*width + (x + 1))].position - vertices[((z)*width + (x))].position;
-				v2 = vertices[((z - 1)*width + (x + 1))].position - vertices[((z)*width + (x))].position;
-				v3 = vertices[((z - 1)*width + (x))].position - vertices[((z)*width + (x))].position;
-				v4 = vertices[((z + 1)*width + (x + 1))].position - vertices[((z)*width + (x))].position;
-				n1 = glm::cross(v1, v2); n2 = glm::cross(v2, v3); n3 = glm::cross(v3, v4);
-				n = (n1 + n2 + n3) / 3.0f;
-			}
-			// front left corner - 2 tri 3 vertices
-			else if (z == (height - 1) && x == 0)
-			{
-				v1 = vertices[((z)*width + (x + 1))].position - vertices[((z)*width + (x))].position;
-				v2 = vertices[((z - 1)*width + (x + 1))].position - vertices[((z)*width + (x))].position;
-				v3 = vertices[((z - 1)*width + (x))].position - vertices[((z)*width + (x))].position;
-				n1 = glm::cross(v1, v2); n2 = glm::cross(v2, v3);
-				n = (n1 + n2) / 2.0f;
-			}
-			// front edge - 3 tri 4 vertices
-			else if (z == (height - 1) && (x > 0 && x < (width - 1)))
-			{
-				v1 = vertices[((z)*width + (x + 1))].position - vertices[((z)*width + (x))].position;
-				v2 = vertices[((z - 1)*width + (x + 1))].position - vertices[((z)*width + (x))].position;
-				v3 = vertices[((z - 1)*width + (x))].position - vertices[((z)*width + (x))].position;
-				v4 = vertices[((z)*width + (x - 1))].position - vertices[((z)*width + (x))].position;
-				n1 = glm::cross(v1, v2); n2 = glm::cross(v2, v3); n3 = glm::cross(v3, v4);
-				n = (n1 + n2 + n3) / 3.0f;
-			}
-			// front right corner - 1 tri 2 vertices
-			else if (z == (height - 1) && x == (width - 1))
-			{
-				v1 = vertices[((z - 1)*width + (x))].position - vertices[((z)*width + (x))].position;
-				v2 = vertices[((z)*width + (x - 1))].position - vertices[((z)*width + (x))].position;
-				n = glm::cross(v1, v2);
-			}
-			// right edge - 3 tri 4 vertices
-			else if ((z > 0 && z < (height - 1)) && x == (width - 1))
-			{
-				v1 = vertices[((z - 1)*width + (x))].position - vertices[((z)*width + (x))].position;
-				v2 = vertices[((z)*width + (x - 1))].position - vertices[((z)*width + (x))].position;
-				v3 = vertices[((z + 1)*width + (x - 1))].position - vertices[((z)*width + (x))].position;
-				v4 = vertices[((z + 1)*width + (x))].position - vertices[((z)*width + (x))].position;
-				n1 = glm::cross(v1, v2); n2 = glm::cross(v2, v3); n3 = glm::cross(v3, v4);
-				n = (n1 + n2 + n3) / 3.0f;
-			}
-			// back right corner - 2 tri 3 vertices
-			else if (z == 0 && x == (width - 1))
-			{
-				v1 = vertices[((z)*width + (x - 1))].position - vertices[((z)*width + (x))].position;
-				v2 = vertices[((z + 1)*width + (x - 1))].position - vertices[((z)*width + (x))].position;
-				v3 = vertices[((z + 1)*width + (x))].position - vertices[((z)*width + (x))].position;
-				n1 = glm::cross(v1, v2); n2 = glm::cross(v2, v3);
-				n = (n1 + n2) / 2.0f;
-			}
-			// back edge - 3 tri 4 vertices
-			else if (z == 0 && (x > 0 && x < (width - 1)))
-			{
-				v1 = vertices[((z)*width + (x - 1))].position - vertices[((z)*width + (x))].position;
-				v2 = vertices[((z + 1)*width + (x - 1))].position - vertices[((z)*width + (x))].position;
-				v3 = vertices[((z + 1)*width + (x))].position - vertices[((z)*width + (x))].position;
-				v4 = vertices[((z)*width + (x + 1))].position - vertices[((z)*width + (x))].position;
-				n1 = glm::cross(v1, v2); n2 = glm::cross(v2, v3); n3 = glm::cross(v3, v4);
-				n = (n1 + n2 + n3) / 3.0f;
-			}
-			// internal - 6 tri 6 vertices
-			else
-			{
-				v1 = vertices[((z)*width + (x + 1))].position - vertices[((z)*width + (x))].position;
-				v2 = vertices[((z - 1)*width + (x + 1))].position - vertices[((z)*width + (x))].position;
-				v3 = vertices[((z - 1)*width + (x))].position - vertices[((z)*width + (x))].position;
-				v4 = vertices[((z)*width + (x - 1))].position - vertices[((z)*width + (x))].position;
-				v5 = vertices[((z + 1)*width + (x - 1))].position - vertices[((z)*width + (x))].position;
-				v6 = vertices[((z + 1)*width + (x))].position - vertices[((z)*width + (x))].position;
-				n1 = glm::cross(v1, v2); n2 = glm::cross(v2, v3); n3 = glm::cross(v3, v4);
-				n4 = glm::cross(v4, v5); n5 = glm::cross(v5, v6); n6 = glm::cross(v6, v1);
-				n = (n1 + n2 + n3 + n4 + n5 + n6) / 6.0f;
-			}
-
-			vertices[z*width + x].normal = glm::normalize(n);
-		}
-	}
-}
-
 void create_triangle_mesh(const MainPtr &app, unsigned int width, unsigned int height)
 {
 	if (app->get_mesh_manager()->contains("terrain"))
@@ -199,16 +85,8 @@ void create_triangle_mesh(const MainPtr &app, unsigned int width, unsigned int h
 			build_terrain_vertices(vertices, x, y, width, height);
 		}
 	}
-#if GENERATE_NORMALS
-	for (unsigned int y = 0; y < height; y++) {
-		for (unsigned int x = 0; x < width; x++) {
-			build_terrain_normals(vertices, width, height);
-		}
-	}
-#endif
 
 	auto vertex_allocation = app->get_buffer_manager()->allocate_and_upload(vertices, GL_DYNAMIC_DRAW);
-
 	
 	vao_layout
 		.for_buffer(vertex_allocation)
@@ -220,15 +98,14 @@ void create_triangle_mesh(const MainPtr &app, unsigned int width, unsigned int h
 
 	render_command.set_vertices(vertex_allocation, vertices);
 
-	auto index_allocation = app->get_buffer_manager()->allocate_and_upload(indices);
+	/*auto index_allocation = app->get_buffer_manager()->allocate_and_upload(indices);
 	vao_layout
 		.for_buffer(index_allocation)
 			.use_as(GL_ELEMENT_ARRAY_BUFFER);
-	render_command.set_indices(index_allocation, indices);
+	render_command.set_indices(index_allocation, indices);*/
 
-	glPatchParameteri(GL_PATCH_VERTICES, 4);
-	//render_command.set_draw_mode(GL_PATCHES);
-	render_command.set_draw_mode(GL_TRIANGLE_STRIP);
+	render_command.set_draw_mode(GL_PATCHES);
+	//render_command.set_draw_mode(GL_TRIANGLE_STRIP);
 
 	auto mesh = std::make_shared<Framework::Mesh>(render_command, vao_layout, app->get_vao_manager(), "terrain");
 	app->get_mesh_manager()->add(mesh);
@@ -271,6 +148,11 @@ bool mainTest() {
 	if (camera->has_component<Framework::Camera>()) {
 		auto camera_component = camera->get_component<Framework::Camera>();
 		camera_component->set_projection(app->get_resolution());
+	}
+
+	if (terrain->has_component<Framework::Renderable>()) {
+		auto renderable = terrain->get_component<Framework::Renderable>();
+		renderable->get_material()->get<int>(GM_PROPERTY_PATCH_VERTICES) = 4;
 	}
 	
 	// Hide the cursor since we have an FPS Camera

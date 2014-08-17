@@ -1,6 +1,7 @@
 #include "GM/Framework/Utilities/Material.h"
 #include "GM/Framework/Managers/TextureManager.h"
 #include "GM/Framework/Components/Light.h"
+#include "GM/Framework/DefinitionsPropertyNames.h"
 #include "GM/Core/GL/Shader.h"
 #include "GM/Core/GL/Texture.h"
 
@@ -179,6 +180,8 @@ namespace Framework {
 			}*/
 		}
 	});
+
+	patch_vertices_property = add<int>(GM_PROPERTY_PATCH_VERTICES, 0);
 }
 
 void Material::bind_textures() const {
@@ -225,6 +228,11 @@ void Material::update_uniforms(Camera * camera, const std::vector<Light *> &ligh
 		}
 	}
 	update_uniforms_signal(); 
+
+	// If this material is using tesselation, this property must be set with the amount of patch vertices to generate.
+	if (patch_vertices_property > 0) {
+		glPatchParameteri(GL_PATCH_VERTICES, patch_vertices_property);
+	}
 }
 
 } // namespace Framework

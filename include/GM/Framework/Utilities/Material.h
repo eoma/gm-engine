@@ -64,6 +64,8 @@ private:
 	};
 	std::vector<Texture> textures;
 
+	Property<int> patch_vertices_property;
+
 	clan::Signal<void()> update_uniforms_signal;
 	clan::SlotContainer update_uniform_slots;
 	clan::Slot property_added_slot;

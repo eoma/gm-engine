@@ -105,7 +105,9 @@ Core::ShaderPtr ShaderManager::get_or_create(
 	if (!vs_file.empty()) shader_sets.push_back(file_to_shader_deps[vs_file]);
 	if (!gs_file.empty()) shader_sets.push_back(file_to_shader_deps[gs_file]);
 	if (!fs_file.empty()) shader_sets.push_back(file_to_shader_deps[fs_file]);
-	// TODO: Expand to support tesselation and compute shaders
+	if (!tess_ctrl_file.empty()) shader_sets.push_back(file_to_shader_deps[tess_ctrl_file]);
+	if (!tess_eval_file.empty()) shader_sets.push_back(file_to_shader_deps[tess_eval_file]);
+	if (!compute_file.empty()) shader_sets.push_back(file_to_shader_deps[compute_file]);
 
 	// If no shader files were specified (only the name), then we have nothing more to do here other than returning
 	// the result of the name to shader relation.
@@ -147,7 +149,24 @@ Core::ShaderPtr ShaderManager::get_or_create(
 			Core::ShaderSource res(fs_file, load_contents(fs_file), GL_FRAGMENT_SHADER);
 			shader_sources.push_back(res);
 		}
-		// TODO: Expand to support tesselation and compute shaders
+
+		if (!tess_ctrl_file.empty())
+		{
+			Core::ShaderSource res(tess_ctrl_file, load_contents(tess_ctrl_file), GL_TESS_CONTROL_SHADER);
+			shader_sources.push_back(res);
+		}
+
+		if (!tess_eval_file.empty())
+		{
+			Core::ShaderSource res(tess_eval_file, load_contents(tess_eval_file), GL_TESS_EVALUATION_SHADER);
+			shader_sources.push_back(res);
+		}
+
+		if (!compute_file.empty())
+		{
+			Core::ShaderSource res(compute_file, load_contents(compute_file), GL_COMPUTE_SHADER);
+			shader_sources.push_back(res);
+		}
 
 		// TODO: What about errors?
 		// TODO: What about rasterizer_discard?

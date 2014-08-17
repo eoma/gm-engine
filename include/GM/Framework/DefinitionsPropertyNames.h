@@ -24,6 +24,7 @@
 
 // Material
 #define GM_PROPERTY_MATERIAL_NAME		"MaterialName"		// std::string
+#define GM_PROPERTY_PATCH_VERTICES		"PatchVertices"		// int
 
 // Mesh
 #define GM_PROPERTY_MESH_NAME					"MeshName"				// std::string
