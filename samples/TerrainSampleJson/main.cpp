@@ -18,12 +18,12 @@ struct TerrainVertex {
 	glm::vec3 normal;
 };
 
-void build_terrain_indices(std::vector<unsigned int> &indices, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
+void build_terrain_indices_triangle_strip(std::vector<unsigned int> &indices, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 {
-	// 0    1       2       3
-	// 4    5       6       7
-	// 8    9       10      c
-	// n    13      14      u
+	// 0    c1      n1      3
+	// 4    u1      6       7
+	// 8    9       10      c2
+	// n2   13      14      u2
 	// 16   17      18      19
 
 	//convert the (x,y) to a single index value which represents the "current" index in the triangle strip
@@ -60,13 +60,68 @@ void build_terrain_indices(std::vector<unsigned int> &indices, unsigned int x, u
 	indices.push_back(next_index);
 }
 
+void build_terrain_indices_triangles(std::vector<unsigned int> &indices, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
+{
+	// 0    c1      n1      3
+	// 4    u1      v1      7
+	// 8    9       c2      n2
+	// 12   13      u2      v2
+	// 16   17      18      19
+
+	// Triangluation order
+	// 0 - 1
+	// | \ |
+	// 3 - 2
+	//
+
+	// If at end of row
+	if (x >= width - 1)
+		return;
+
+	// If at end of column
+	if (y >= height - 2)
+		return;
+
+	//convert the (x,y) to a single index value which represents the "current" index in the triangle strip
+	//represented by "c" in the figure above
+	unsigned int current_index = y*width + x;
+
+	//find the vertex index in the grid directly under the current index
+	//represented by "u" in the figure above
+	unsigned int under_index = 0;
+	if (y < height - 1)
+		under_index = (y + 1)*width + x;
+	else
+		return; //This is the last row, which has already been covered in the previous row with triangles in mind
+
+	//find the next vertex index in the grid from the current index
+	//represented by "n" in the figure above
+	unsigned int next_index = y*width + x + 1;
+
+	//find the vertex index in the grid directly under the current index
+	//represented by "v" in the figure above
+	unsigned int next_under_index = 0;
+	if (y < height - 1)
+		next_under_index = (y + 1)*width + x + 1;
+	else
+		return; //This is the last row, which has already been covered in the previous row with triangles in mind
+
+	indices.push_back(next_under_index);
+	indices.push_back(next_index);
+	indices.push_back(current_index);
+
+	indices.push_back(current_index);
+	indices.push_back(under_index);
+	indices.push_back(next_under_index);
+}
+
 void build_terrain_vertices(std::vector<TerrainVertex> &vertices, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 {
 	//Add one x,y,z vertex for each x,y in the grid
 	vertices.push_back({ { glm::vec3(x / (float)width, 0.0f, y / (float)height) }, { 0, 1, 0 } });
 }
 
-void create_triangle_mesh(const MainPtr &app, unsigned int width, unsigned int height)
+void create_triangle_mesh(const MainPtr &app, unsigned int width, unsigned int height, bool use_tesselation)
 {
 	if (app->get_mesh_manager()->contains("terrain"))
 	{
@@ -81,7 +136,11 @@ void create_triangle_mesh(const MainPtr &app, unsigned int width, unsigned int h
 
 	for (unsigned int y = 0; y < height; y++) {
 		for (unsigned int x = 0; x < width; x++) {
-			build_terrain_indices(indices, x, y, width, height);
+			if (use_tesselation)
+				build_terrain_indices_triangles(indices, x, y, width, height);
+			else
+				build_terrain_indices_triangle_strip(indices, x, y, width, height);
+				
 			build_terrain_vertices(vertices, x, y, width, height);
 		}
 	}
@@ -98,14 +157,16 @@ void create_triangle_mesh(const MainPtr &app, unsigned int width, unsigned int h
 
 	render_command.set_vertices(vertex_allocation, vertices);
 
-	/*auto index_allocation = app->get_buffer_manager()->allocate_and_upload(indices);
+	auto index_allocation = app->get_buffer_manager()->allocate_and_upload(indices);
 	vao_layout
 		.for_buffer(index_allocation)
 			.use_as(GL_ELEMENT_ARRAY_BUFFER);
-	render_command.set_indices(index_allocation, indices);*/
+	render_command.set_indices(index_allocation, indices);
 
-	render_command.set_draw_mode(GL_PATCHES);
-	//render_command.set_draw_mode(GL_TRIANGLE_STRIP);
+	if (use_tesselation)
+		render_command.set_draw_mode(GL_PATCHES);
+	else 
+		render_command.set_draw_mode(GL_TRIANGLE_STRIP);
 
 	auto mesh = std::make_shared<Framework::Mesh>(render_command, vao_layout, app->get_vao_manager(), "terrain");
 	app->get_mesh_manager()->add(mesh);
@@ -132,7 +193,7 @@ bool mainTest() {
 	app->get_texture_manager()->set_texture_path(texture_path);
 
 	// Setup resources
-	create_triangle_mesh(app, 1024, 1024);
+	create_triangle_mesh(app, 1024, 1024, true); // True when tesselation is active, false when not...
 
 	// Create our entities
 	auto camera = entity_manager->create_entity("camera");
