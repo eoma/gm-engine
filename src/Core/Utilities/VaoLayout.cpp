@@ -154,7 +154,12 @@ const std::vector<BufferUse> &VaoLayout::get_used_buffers() const
 
 bool VaoLayout::operator< (const VaoLayout &other) const
 {
-	return (used_buffers < other.used_buffers) || (definitions < other.definitions);
+	int result = 0;
+
+	if (result == 0) result = (used_buffers < other.used_buffers) ? -1 : (other.used_buffers < used_buffers ? 1 : 0);
+	if (result == 0) result = (definitions < other.definitions) ? -1 : (other.definitions < definitions ? 1 : 0);
+
+	return result < 0;
 }
 
 } // namespace Core
