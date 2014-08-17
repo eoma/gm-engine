@@ -196,24 +196,30 @@ bool mainTest() {
 	create_triangle_mesh(app, 1024, 1024, true); // True when tesselation is active, false when not...
 
 	// Create our entities
-	auto camera = entity_manager->create_entity("camera");
+	auto camera_entity = entity_manager->create_entity("camera");
 	auto skybox = entity_manager->create_entity("skybox");
 	auto terrain = entity_manager->create_entity("terrain");
 
 	// Apply an entity template, as defined in entity_templates.json
-	entity_manager->apply("fps_camera", camera);
+	entity_manager->apply("fps_camera", camera_entity);
 	entity_manager->apply("skybox", skybox);
 	entity_manager->apply("terrain", terrain);
 	
 	// Set up the projection for the camera
-	if (camera->has_component<Framework::Camera>()) {
-		auto camera_component = camera->get_component<Framework::Camera>();
-		camera_component->set_projection(app->get_resolution());
+	if (camera_entity->has_component<Framework::Camera>()) {
+		auto camera = camera_entity->get_component<Framework::Camera>();
+		camera->set_projection(app->get_resolution());
 	}
 
+	Framework::TransformPtr camera_transform;
+	if (camera_entity->has_component<Framework::Transform>()) {
+		camera_transform = camera_entity->get_component<Framework::Transform>();
+	}
+
+	Framework::RenderablePtr terrain_renderable;
 	if (terrain->has_component<Framework::Renderable>()) {
-		auto renderable = terrain->get_component<Framework::Renderable>();
-		renderable->get_material()->get<int>(GM_PROPERTY_PATCH_VERTICES) = 4;
+		terrain_renderable = terrain->get_component<Framework::Renderable>();
+		terrain_renderable->get_material()->get<int>(GM_PROPERTY_PATCH_VERTICES) = 4;
 	}
 	
 	// Hide the cursor since we have an FPS Camera
@@ -230,7 +236,12 @@ bool mainTest() {
 			app->stop_running();
 			return;
 		}
+
+		if (terrain_renderable->get_material()->has_property("camera_position")) {
+			terrain_renderable->get_material()->get<glm::vec3>("camera_position") = camera_transform->get_position();
+		}
 	});
+
 
 	// Start rendering
 	app->run();

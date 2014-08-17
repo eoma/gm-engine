@@ -1,6 +1,6 @@
 #version 410 core
 
-layout(quads, fractional_odd_spacing, ccw) in;
+layout(quads, equal_spacing, ccw) in;
 
 in vec3 evaluation_normal[];
 in vec2 evaluation_texcoord[];
