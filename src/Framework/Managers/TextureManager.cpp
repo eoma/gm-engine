@@ -30,14 +30,14 @@ const RawImagePtr &TextureManager::get_or_create_image(const std::string &file_n
 	if (iter == loaded_images.end())
 	{
 		if (!clan::FileHelp::file_exists(texture_path + "/" + file_name)) {
-			throw clan::Exception("Texture does not exist!");
+			throw clan::Exception(clan::string_format("Texture image (%1) does not exist!", file_name));
 		}
 
 		RawImagePtr image = std::make_shared<RawImage>(image_io->load(texture_path + "/" + file_name));
 
 		if (image->get_data().empty() || image->get_width() < 1 || image->get_height() < 1)
 		{
-			throw clan::Exception("The texture was not successfully loaded!");
+			throw clan::Exception(clan::string_format("The texture image (%1) was not successfully loaded!", file_name));
 		}
 
 		iter = loaded_images.insert(std::make_pair(file_name, image)).first;
