@@ -263,11 +263,11 @@ bool mainTest() {
 			bool new_robot_part_selected = false;
 
 			// Select a robot part
-			if (key == GLFW_KEY_KP_ADD && action == GLFW_PRESS) {
+			if ((key == GLFW_KEY_KP_ADD || key == GLFW_KEY_MINUS) && action == GLFW_PRESS) {
 				currently_selected_part += selection_jump_up((RobotParts)currently_selected_part);
 				new_robot_part_selected = true;
 			}
-			else if (key == GLFW_KEY_KP_SUBTRACT && action == GLFW_PRESS) {
+			else if ((key == GLFW_KEY_KP_SUBTRACT || key == GLFW_KEY_SLASH) && action == GLFW_PRESS) {
 				currently_selected_part -= selection_jump_down((RobotParts)currently_selected_part);
 				new_robot_part_selected = true;
 			}
