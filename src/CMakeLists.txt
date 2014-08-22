@@ -13,6 +13,11 @@ include_directories(
 
 add_definitions(-DGLM_FORCE_RADIANS)
 
+set(GM_LIBRARY_TYPE STATIC)
+if (BUILD_SHARED_LIBS)
+	set(GM_LIBRARY_TYPE SHARED)
+endif()
+
 add_subdirectory(Core)
 add_subdirectory(Framework)
 add_subdirectory(Application)

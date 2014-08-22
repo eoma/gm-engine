@@ -8,6 +8,8 @@ PROJECT(${NAME})
 # Also note that when linking, clanCore should always come last.
 set(CLANLIB_MODULES Core)
 
+option(BUILD_SHARED_LIBS "Build shared libs" OFF)
+
 set(CLANLIB_HOME_PATH ${CMAKE_SOURCE_DIR}/depends/ClanLib)
 set(CLANLIB_SOURCE_PATH ${CLANLIB_HOME_PATH}/Sources)
 
@@ -16,6 +18,14 @@ include_directories(${CMAKE_SOURCE_DIR}/depends/ClanLib/Sources/)
 
 ###########################################
 ##	Build the modules
+
+set(CLANLIB_SUFFIX_PART "")
+if (MSVC)
+	set(CLANLIB_SUFFIX_PART "-static-mt")
+	if (BUILD_SHARED_LIBS)
+		set(CLANLIB_SUFFIX_PART "-dll")
+	endif()
+endif()
 
 set(_platformPatterns "win32" "unix")
 if (UNIX)
@@ -75,15 +85,19 @@ foreach(module ${CLANLIB_MODULES})
 		${CLANLIB_${MODULE}_SOURCES}
 	)
 
-	add_library(clan${module} STATIC ${headers} ${sources})
+	if (BUILD_SHARED_LIBS)
+		add_library(clan${module} SHARED ${headers} ${sources})
+	else()
+		add_library(clan${module} STATIC ${headers} ${sources})
+	endif()
 
 	set_target_properties(clan${module} 
 		PROPERTIES
 		FOLDER "Dependencies"
-		RELEASE_POSTFIX "-static-mt"
-		RELWITHDEBINFO_POSTFIX "-static-mt"
-		MINSIZEREL_POSTFIX "-static-mt"
-		DEBUG_POSTFIX "-static-mt-debug")
+		RELEASE_POSTFIX ${CLANLIB_SUFFIX_PART}
+		RELWITHDEBINFO_POSTFIX ${CLANLIB_SUFFIX_PART}
+		MINSIZEREL_POSTFIX ${CLANLIB_SUFFIX_PART}
+		DEBUG_POSTFIX "${CLANLIB_SUFFIX_PART}-debug")
 
 	# Uncomment these and other similar to enable building of a mega library
 	#list(APPEND CLANLIB_ALLMODS_HEADERS ${CLANLIB_${MODULE}_HEADERS})

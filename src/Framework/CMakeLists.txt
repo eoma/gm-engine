@@ -33,7 +33,7 @@ foreach(folder ${PROJECT_FOLDERS})
 	source_group("Source Files\\${folderForSourceGroup}" FILES ${folder_sources})
 endforeach()
 
-add_library(${NAME} STATIC ${Headers} ${Sources})
+add_library(${NAME} ${GM_LIBRARY_TYPE} ${Headers} ${Sources})
 # This library depends on the following libraries
 target_link_libraries(${NAME}
 	Core # Core has it's own dependencies, they will get pulled automatically

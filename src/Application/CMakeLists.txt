@@ -33,7 +33,9 @@ foreach(folder ${PROJECT_FOLDERS})
 	source_group("Source Files\\${folderForSourceGroup}" FILES ${folder_sources})
 endforeach()
 
-add_library(${NAME} STATIC ${Headers} ${Sources})
+add_library(${NAME} ${GM_LIBRARY_TYPE} ${Headers} ${Sources})
+
+
 target_link_libraries(${NAME}
 	Framework
 	clanCore

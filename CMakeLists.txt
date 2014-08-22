@@ -4,6 +4,7 @@ project(GmEngine)
 
 option(BUILD_SAMPLES "Build samples" ON)
 option(BUILD_TESTS "Build tests" ON)
+option(BUILD_SHARED_LIBS "Build the libraries as shared libraries" FALSE)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
@@ -52,7 +53,7 @@ add_subdirectory(depends/assimp)
 set_target_properties(assimp
 	PROPERTIES
 	FOLDER "Dependencies")
-if (TARGET zlibstatic)
+if (TARGET zlibstatic) # does target zlibstatic exist?
 	set_target_properties(zlibstatic
 		PROPERTIES
 		FOLDER "Dependencies")
