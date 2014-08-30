@@ -26,6 +26,7 @@
 
 # Other
 .clang_complete
+.DS_Store
 
 # Folders
 /build/*
