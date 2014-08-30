@@ -16,6 +16,14 @@ set(CLANLIB_SOURCE_PATH ${CLANLIB_HOME_PATH}/Sources)
 include_directories(${CMAKE_SOURCE_DIR}/depends/ClanLib/Sources/API)
 include_directories(${CMAKE_SOURCE_DIR}/depends/ClanLib/Sources/)
 
+set(extra_dependent_link_libs)
+if (BUILD_SHARED_LIBS)
+	if (APPLE)
+		find_library(CORE_FOUNDATION_FRAMEWORK CoreFoundation)
+		list(APPEND extra_dependent_link_libs ${CORE_FOUNDATION_FRAMEWORK})
+	endif()
+endif()
+
 ###########################################
 ##	Build the modules
 
@@ -89,6 +97,10 @@ foreach(module ${CLANLIB_MODULES})
 		add_library(clan${module} SHARED ${headers} ${sources})
 	else()
 		add_library(clan${module} STATIC ${headers} ${sources})
+	endif()
+
+	if (extra_dependent_link_libs)
+		target_link_libraries(clan${module} ${extra_dependent_link_libs})
 	endif()
 
 	set_target_properties(clan${module} 
