@@ -117,7 +117,7 @@ bool mainTest() {
 	renderable->set_material("red_diffuse");
 
 	// Set some run time limits
-	float max_run_time = 1.0f;
+	float max_run_time = 100.0f;
 	float run_time = 0.f;
 
 	auto update_slot = app->on_update().connect([&](float dt) mutable {
