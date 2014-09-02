@@ -414,8 +414,11 @@ void Main::construct_window_and_gl()
 
 	if (error_flags & ErrorFlags::GM_ERROR_GL_DEBUG_OUTPUT)
 	{
-		glDebugMessageCallback(gl_debug_callback, NULL);
-		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        if ( glDebugMessageCallback )
+        {
+            glDebugMessageCallback(gl_debug_callback, NULL);
+            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        }
 	}
 
 	std::clog << "VENDOR: " << glGetString(GL_VENDOR) << std::endl;

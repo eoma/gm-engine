@@ -21,22 +21,42 @@ void Render::render(const RenderCommand &command)
 			index_type_size = 4;
 		}
 
-		glDrawElementsInstancedBaseVertexBaseInstance(command.mode,
-			command.count,
-			command.index_type,
-			reinterpret_cast<void*>(command.first * index_type_size),
-			command.instance_count,
-			command.base_vertex,
-			command.base_instance);
+        if (command.base_instance <= 1)
+        {
+            glDrawElementsBaseVertex(command.mode,
+                                     command.count,
+                                     command.index_type,
+                                     reinterpret_cast<void*>(command.first * index_type_size),
+                                     command.base_vertex);
+        }
+        else
+        {
+            glDrawElementsInstancedBaseVertexBaseInstance(command.mode,
+                                                          command.count,
+                                                          command.index_type,
+                                                          reinterpret_cast<void*>(command.first * index_type_size),
+                                                          command.instance_count,
+                                                          command.base_vertex,
+                                                          command.base_instance);
+        }
 	}
 	else
 	{
-		// Render using RenderArrays*
-		glDrawArraysInstancedBaseInstance(command.mode,
-			command.first,
-			command.count,
-			command.instance_count,
-			command.base_instance);
+        if (command.base_instance <= 1)
+        {
+            glDrawArrays(command.mode,
+                         command.first,
+                         command.count);
+        }
+        else
+        {
+            // Render using RenderArrays*
+            glDrawArraysInstancedBaseInstance(command.mode,
+                                            command.first,
+                                            command.count,
+                                            command.instance_count,
+                                            command.base_instance);
+        }
 	}
 }
 
