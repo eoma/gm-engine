@@ -51,5 +51,31 @@
 				"type": "float"
 			}
 		]
+	},
+	{
+		"material": "terrain_no_tess",
+		"shader": "terrain_no_tess",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [1, 1, 1],
+				"type": "vec3"
+			},
+			{
+				"name": "heightmap",
+				"value": "heightmap",
+				"type": "texture"
+			},
+			{
+				"name": "diffuse_map",
+				"value": "ground_earth",
+				"type": "texture"
+			},
+			{
+				"name": "map_repeat_count",
+				"value": 256.0,
+				"type": "float"
+			}
+		]
 	}
 ]

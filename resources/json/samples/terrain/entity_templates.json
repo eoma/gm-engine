@@ -9,7 +9,7 @@
 			},
 			{
 				"name": "MaterialName",
-				"value": "terrain"
+				"value": "terrain_no_tess"
 			},
 			{
 				"name": "Position",

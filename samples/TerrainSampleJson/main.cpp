@@ -193,7 +193,7 @@ bool mainTest() {
 	app->get_texture_manager()->set_texture_path(texture_path);
 
 	// Setup resources
-	create_triangle_mesh(app, 1024, 1024, true); // True when tesselation is active, false when not...
+	create_triangle_mesh(app, 1024, 1024, false); // True when tesselation is active, false when not... (Need to make sure the tesselation material is active before this is set to true though).
 
 	// Create our entities
 	auto camera_entity = entity_manager->create_entity("camera");
