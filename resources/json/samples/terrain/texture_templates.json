@@ -1,27 +1,27 @@
 [
 	{
-    	"texture": "test_cube",
-    	"image": [ "skybox/X+.png", "skybox/X-.png", "skybox/Y+.png", "skybox/Y-.png", "skybox/Z+.png", "skybox/Z-.png"],
+		"texture": "test_cube",
+		"image": [ "skybox/X+.png", "skybox/X-.png", "skybox/Y+.png", "skybox/Y-.png", "skybox/Z+.png", "skybox/Z-.png"],
 		"format": "textureCube"
-    },
+	},
 	{
-    	"texture": "sky_cube",
-    	"image": [ "skybox/Sky_X+.png", "skybox/Sky_X-.png", "skybox/Sky_Y+.png", "skybox/Sky_Y-.png", "skybox/Sky_Z+.png", "skybox/Sky_Z-.png"],
+		"texture": "sky_cube",
+		"image": [ "skybox/Sky_X+.png", "skybox/Sky_X-.png", "skybox/Sky_Y+.png", "skybox/Sky_Y-.png", "skybox/Sky_Z+.png", "skybox/Sky_Z-.png"],
 		"format": "textureCube"
-    },
+	},
 	{
-    	"texture": "ground_earth",
-    	"image": "terrain/ground/42/diffuse.tga",
+		"texture": "ground_earth",
+		"image": "terrain/ground/42/diffuse.tga",
 		"format": "tiled_texture2d"
-    },
+	},
 	{
-    	"texture": "ground_earth2",
-    	"image": "terrain/ground/51/diffuse.tga",
+		"texture": "ground_earth2",
+		"image": "terrain/ground/51/diffuse.tga",
 		"format": "tiled_texture2d"
-    },
+	},
 	{
-    	"texture": "heightmap",
-    	"image": "terrain/heightmap/1/heightmap.png",
+		"texture": "heightmap",
+		"image": "terrain/heightmap/heightmap.png",
 		"format": "32f_texture2d"
-    }
+	}
 ]
