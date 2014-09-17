@@ -11,12 +11,7 @@ if ( Headers OR Sources )
 	target_link_libraries(${NAME}
 		Application
 		Framework
-		Core
-		SOIL2
-		gl3w
-		glfw
-		${GLFW_LIBRARIES}
-		${CMAKE_DL_LIBS}) # or something else
+		Core) # or something else
 
 	set_target_properties(${NAME} PROPERTIES
 		FOLDER "Tests"
