@@ -214,6 +214,8 @@ protected:
 
 	static void window_size_callback(GLFWwindow* window, int width, int height);
 
+	static void glfw_error_callback(int error_code, const char* error_msg);
+
 protected:
 	void initialize();
 	void update();

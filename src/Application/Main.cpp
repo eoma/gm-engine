@@ -361,6 +361,8 @@ void Main::construct_window_and_gl()
 		return;
 	}
 
+	glfwSetErrorCallback(&Main::glfw_error_callback);
+
 	if (!glfwInit())
 	{
 		// Failed to initialize 
@@ -672,6 +674,10 @@ void Main::show_cursor() {
 
 void Main::hide_cursor() {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+}
+
+void Main::glfw_error_callback(int error_code, const char *error_msg) {
+	std::cerr << "GLFW Error (0x" << std::hex << error_code << std::dec << "): " << error_msg << std::endl;
 }
 
 } // namespace Application
