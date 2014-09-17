@@ -475,6 +475,8 @@ static GLboolean initExtensions(void)
 
     if (_glfw.x11.randr.available)
     {
+        XRRScreenResources* sr;
+
         if (!XRRQueryVersion(_glfw.x11.display,
                              &_glfw.x11.randr.versionMajor,
                              &_glfw.x11.randr.versionMinor))
@@ -490,6 +492,21 @@ static GLboolean initExtensions(void)
         {
             _glfw.x11.randr.available = GL_FALSE;
         }
+
+        sr = XRRGetScreenResources(_glfw.x11.display, _glfw.x11.root);
+
+        if (!sr->ncrtc || !XRRGetCrtcGammaSize(_glfw.x11.display, sr->crtcs[0]))
+        {
+            // This is either a headless system or an older Nvidia binary driver
+            // with broken gamma support
+            // Flag it as useless and fall back to Xf86VidMode gamma, if
+            // available
+            _glfwInputError(GLFW_PLATFORM_ERROR,
+                            "X11: RandR gamma ramp support seems broken");
+            _glfw.x11.randr.gammaBroken = GL_TRUE;
+        }
+
+        XRRFreeScreenResources(sr);
     }
 
     if (XQueryExtension(_glfw.x11.display,
@@ -588,17 +605,6 @@ static Cursor createNULLCursor(void)
     return _glfwCreateCursor(&image, 0, 0);
 }
 
-// Terminate X11 display
-//
-static void terminateDisplay(void)
-{
-    if (_glfw.x11.display)
-    {
-        XCloseDisplay(_glfw.x11.display);
-        _glfw.x11.display = NULL;
-    }
-}
-
 // X error handler
 //
 static int errorHandler(Display *display, XErrorEvent* event)
@@ -612,7 +618,7 @@ static int errorHandler(Display *display, XErrorEvent* event)
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-// Install the X error handler
+// Sets the X error handler callback
 //
 void _glfwGrabXErrorHandler(void)
 {
@@ -620,7 +626,7 @@ void _glfwGrabXErrorHandler(void)
     XSetErrorHandler(errorHandler);
 }
 
-// Remove the X error handler
+// Clears the X error handler callback
 //
 void _glfwReleaseXErrorHandler(void)
 {
@@ -629,7 +635,7 @@ void _glfwReleaseXErrorHandler(void)
     XSetErrorHandler(NULL);
 }
 
-// Report X error
+// Reports the specified error, appending information about the last X error
 //
 void _glfwInputXError(int error, const char* message)
 {
@@ -640,7 +646,7 @@ void _glfwInputXError(int error, const char* message)
     _glfwInputError(error, "%s: %s", message, buffer);
 }
 
-// Create a cursor object
+// Creates a native cursor object from the specified image and hotspot
 //
 Cursor _glfwCreateCursor(const GLFWimage* image, int xhot, int yhot)
 {
@@ -701,7 +707,6 @@ int _glfwPlatformInit(void)
 
     _glfwInitTimer();
     _glfwInitJoysticks();
-    _glfwInitGammaRamp();
 
     return GL_TRUE;
 }
@@ -714,11 +719,16 @@ void _glfwPlatformTerminate(void)
         _glfw.x11.cursor = (Cursor) 0;
     }
 
-    free(_glfw.x11.selection.string);
+    free(_glfw.x11.clipboardString);
 
     _glfwTerminateJoysticks();
     _glfwTerminateContextAPI();
-    terminateDisplay();
+
+    if (_glfw.x11.display)
+    {
+        XCloseDisplay(_glfw.x11.display);
+        _glfw.x11.display = NULL;
+    }
 }
 
 const char* _glfwPlatformGetVersionString(void)

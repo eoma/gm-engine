@@ -26,6 +26,8 @@
 
 #include "internal.h"
 
+#include <string.h>
+
 // Needed for _NSGetProgname
 #include <crt_externs.h>
 
@@ -39,19 +41,30 @@ static void centerCursor(_GLFWwindow *window)
     _glfwPlatformSetCursorPos(window, width / 2.0, height / 2.0);
 }
 
-// Update the cursor to match the specified cursor mode
+// Get the cursor object that window uses in the specified cursor mode
 //
-static void setModeCursor(_GLFWwindow* window)
+static NSCursor* getModeCursor(_GLFWwindow* window)
 {
     if (window->cursorMode == GLFW_CURSOR_NORMAL)
     {
         if (window->cursor)
-            [(NSCursor*) window->cursor->ns.object set];
+            return (NSCursor*) window->cursor->ns.object;
         else
-            [[NSCursor arrowCursor] set];
+            return [NSCursor arrowCursor];
     }
     else
-        [(NSCursor*) _glfw.ns.cursor set];
+        return (NSCursor*) _glfw.ns.cursor;
+}
+
+// Update the cursor to match the specified cursor mode
+//
+static void updateModeCursor(_GLFWwindow* window)
+{
+    // This is required for the cursor to update if it's inside the window
+    [getModeCursor(window) set];
+
+    // This is required for the cursor to update if it's outside the window
+    [window->ns.object invalidateCursorRectsForView:window->ns.view];
 }
 
 // Enter fullscreen mode
@@ -197,8 +210,6 @@ static NSRect convertRectToBacking(_GLFWwindow* window, NSRect contentRect)
 - (void)windowDidResignKey:(NSNotification *)notification
 {
     _glfwInputWindowFocus(window, GL_FALSE);
-    window->cursorMode = GLFW_CURSOR_NORMAL;
-    _glfwPlatformApplyCursorMode(window);
 }
 
 @end
@@ -480,7 +491,7 @@ static int translateKey(unsigned int key)
 
 - (void)cursorUpdate:(NSEvent *)event
 {
-    setModeCursor(window);
+    updateModeCursor(window);
 }
 
 - (void)mouseDown:(NSEvent *)event
@@ -677,10 +688,7 @@ static int translateKey(unsigned int key)
 
 - (void)resetCursorRects
 {
-    // This makes the cursor dissapear when the window is
-    // resized or received a drag operation
-    [self discardCursorRects];
-    [self addCursorRect:[self bounds] cursor:_glfw.ns.cursor];
+    [self addCursorRect:[self bounds] cursor:getModeCursor(window)];
 }
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
@@ -1147,6 +1155,12 @@ void _glfwPlatformShowWindow(_GLFWwindow* window)
     _glfwInputWindowVisibility(window, GL_TRUE);
 }
 
+void _glfwPlatformUnhideWindow(_GLFWwindow* window)
+{
+    [window->ns.object orderFront:nil];
+    _glfwInputWindowVisibility(window, GL_TRUE);
+}
+
 void _glfwPlatformHideWindow(_GLFWwindow* window)
 {
     [window->ns.object orderOut:nil];
@@ -1201,7 +1215,7 @@ void _glfwPlatformPostEmptyEvent(void)
 
 void _glfwPlatformSetCursorPos(_GLFWwindow* window, double x, double y)
 {
-    setModeCursor(window);
+    updateModeCursor(window);
 
     if (window->monitor)
     {
@@ -1221,7 +1235,7 @@ void _glfwPlatformSetCursorPos(_GLFWwindow* window, double x, double y)
 
 void _glfwPlatformApplyCursorMode(_GLFWwindow* window)
 {
-    setModeCursor(window);
+    updateModeCursor(window);
 
     if (window->cursorMode == GLFW_CURSOR_DISABLED)
     {
@@ -1287,6 +1301,40 @@ void _glfwPlatformSetCursor(_GLFWwindow* window, _GLFWcursor* cursor)
         else
             [[NSCursor arrowCursor] set];
     }
+}
+
+void _glfwPlatformSetClipboardString(_GLFWwindow* window, const char* string)
+{
+    NSArray* types = [NSArray arrayWithObjects:NSStringPboardType, nil];
+
+    NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
+    [pasteboard declareTypes:types owner:nil];
+    [pasteboard setString:[NSString stringWithUTF8String:string]
+                  forType:NSStringPboardType];
+}
+
+const char* _glfwPlatformGetClipboardString(_GLFWwindow* window)
+{
+    NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
+
+    if (![[pasteboard types] containsObject:NSStringPboardType])
+    {
+        _glfwInputError(GLFW_FORMAT_UNAVAILABLE, NULL);
+        return NULL;
+    }
+
+    NSString* object = [pasteboard stringForType:NSStringPboardType];
+    if (!object)
+    {
+        _glfwInputError(GLFW_PLATFORM_ERROR,
+                        "Cocoa: Failed to retrieve object from pasteboard");
+        return NULL;
+    }
+
+    free(_glfw.ns.clipboardString);
+    _glfw.ns.clipboardString = strdup([object UTF8String]);
+
+    return _glfw.ns.clipboardString;
 }
 
 

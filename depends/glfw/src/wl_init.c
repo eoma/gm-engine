@@ -33,35 +33,9 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <wayland-client.h>
-#include <wayland-client-protocol.h>
 #include <wayland-cursor.h>
 
 #include "xkb_unicode.h"
-
-static void handlePing(void* data,
-                       struct wl_shell_surface* shellSurface,
-                       uint32_t serial)
-{
-    wl_shell_surface_pong(shellSurface, serial);
-}
-
-static void handleConfigure(void* data,
-                            struct wl_shell_surface* shellSurface,
-                            uint32_t edges,
-                            int32_t width,
-                            int32_t height)
-{
-}
-
-static void handlePopupDone(void *data, struct wl_shell_surface *shell_surface)
-{
-}
-
-static const struct wl_shell_surface_listener shellSurfaceListener = {
-    handlePing,
-    handleConfigure,
-    handlePopupDone
-};
 
 static void pointerHandleEnter(void* data,
                                struct wl_pointer* pointer,
@@ -72,7 +46,10 @@ static void pointerHandleEnter(void* data,
 {
     _GLFWwindow* window = wl_surface_get_user_data(surface);
 
+    _glfw.wl.pointerSerial = serial;
     _glfw.wl.pointerFocus = window;
+
+    _glfwPlatformSetCursor(window, window->wl.currentCursor);
     _glfwInputCursorEnter(window, GL_TRUE);
 }
 
@@ -81,8 +58,12 @@ static void pointerHandleLeave(void* data,
                                uint32_t serial,
                                struct wl_surface* surface)
 {
-    _GLFWwindow* window = wl_surface_get_user_data(surface);
+    _GLFWwindow* window = _glfw.wl.pointerFocus;
 
+    if (!window)
+        return;
+
+    _glfw.wl.pointerSerial = serial;
     _glfw.wl.pointerFocus = NULL;
     _glfwInputCursorEnter(window, GL_FALSE);
 }
@@ -94,6 +75,9 @@ static void pointerHandleMotion(void* data,
                                 wl_fixed_t sy)
 {
     _GLFWwindow* window = _glfw.wl.pointerFocus;
+
+    if (!window)
+        return;
 
     if (window->cursorMode == GLFW_CURSOR_DISABLED)
     {
@@ -118,6 +102,9 @@ static void pointerHandleButton(void* data,
     _GLFWwindow* window = _glfw.wl.pointerFocus;
     int glfwButton;
 
+    if (!window)
+        return;
+
     /* Makes left, right and middle 0, 1 and 2. Overall order follows evdev
      * codes. */
     glfwButton = button - BTN_LEFT;
@@ -139,6 +126,9 @@ static void pointerHandleAxis(void* data,
     _GLFWwindow* window = _glfw.wl.pointerFocus;
     double scroll_factor;
     double x, y;
+
+    if (!window)
+        return;
 
     /* Wayland scroll events are in pointer motion coordinate space (think
      * two finger scroll). The factor 10 is commonly used to convert to
@@ -248,6 +238,9 @@ static void keyboardHandleLeave(void* data,
                                 struct wl_surface* surface)
 {
     _GLFWwindow* window = _glfw.wl.keyboardFocus;
+
+    if (!window)
+        return;
 
     _glfw.wl.keyboardFocus = NULL;
     _glfwInputWindowFocus(window, GL_FALSE);
@@ -391,6 +384,9 @@ static void keyboardHandleKey(void* data,
     const xkb_keysym_t *syms;
     _GLFWwindow* window = _glfw.wl.keyboardFocus;
 
+    if (!window)
+        return;
+
     keyCode = toGLFWKeyCode(key);
     action = state == WL_KEYBOARD_KEY_STATE_PRESSED
             ? GLFW_PRESS : GLFW_RELEASE;
@@ -499,6 +495,11 @@ static void registryHandleGlobal(void* data,
         _glfw.wl.compositor =
             wl_registry_bind(registry, name, &wl_compositor_interface, 1);
     }
+    else if (strcmp(interface, "wl_shm") == 0)
+    {
+        _glfw.wl.shm =
+            wl_registry_bind(registry, name, &wl_shm_interface, 1);
+    }
     else if (strcmp(interface, "wl_shell") == 0)
     {
         _glfw.wl.shell =
@@ -572,6 +573,20 @@ int _glfwPlatformInit(void)
     _glfwInitTimer();
     _glfwInitJoysticks();
 
+    if (_glfw.wl.pointer && _glfw.wl.shm){
+        _glfw.wl.cursorTheme = wl_cursor_theme_load(NULL, 24, _glfw.wl.shm);
+        if (!_glfw.wl.cursorTheme) {
+            _glfwInputError(GLFW_PLATFORM_ERROR, "Wayland: Unable to load default cursor theme\n");
+            return GL_FALSE;
+        }
+        _glfw.wl.defaultCursor = wl_cursor_theme_get_cursor(_glfw.wl.cursorTheme, "left_ptr");
+        if (!_glfw.wl.defaultCursor) {
+            _glfwInputError(GLFW_PLATFORM_ERROR, "Wayland: Unable to load default left pointer\n");
+            return GL_FALSE;
+        }
+        _glfw.wl.cursorSurface = wl_compositor_create_surface(_glfw.wl.compositor);
+    }
+
     return GL_TRUE;
 }
 
@@ -579,6 +594,10 @@ void _glfwPlatformTerminate(void)
 {
     _glfwTerminateContextAPI();
 
+    if (_glfw.wl.cursorTheme)
+        wl_cursor_theme_destroy(_glfw.wl.cursorTheme);
+    if (_glfw.wl.cursorSurface)
+        wl_surface_destroy(_glfw.wl.cursorSurface);
     if (_glfw.wl.registry)
         wl_registry_destroy(_glfw.wl.registry);
     if (_glfw.wl.display)

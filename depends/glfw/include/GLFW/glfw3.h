@@ -38,8 +38,6 @@ extern "C" {
  * Doxygen documentation
  *************************************************************************/
 
-/*! @defgroup clipboard Clipboard support
- */
 /*! @defgroup context Context handling
  */
 /*! @defgroup error Error handling
@@ -525,6 +523,7 @@ extern "C" {
 #define GLFW_OPENGL_FORWARD_COMPAT  0x00022006
 #define GLFW_OPENGL_DEBUG_CONTEXT   0x00022007
 #define GLFW_OPENGL_PROFILE         0x00022008
+#define GLFW_CONTEXT_RELEASE_BEHAVIOR 0x00022009
 
 #define GLFW_OPENGL_API             0x00030001
 #define GLFW_OPENGL_ES_API          0x00030002
@@ -544,6 +543,10 @@ extern "C" {
 #define GLFW_CURSOR_NORMAL          0x00034001
 #define GLFW_CURSOR_HIDDEN          0x00034002
 #define GLFW_CURSOR_DISABLED        0x00034003
+
+#define GLFW_ANY_RELEASE_BEHAVIOR            0
+#define GLFW_RELEASE_BEHAVIOR_FLUSH 0x00035001
+#define GLFW_RELEASE_BEHAVIOR_NONE  0x00035002
 
 #define GLFW_CONNECTED              0x00040001
 #define GLFW_DISCONNECTED           0x00040002
@@ -2072,6 +2075,10 @@ GLFWAPI void glfwGetCursorPos(GLFWwindow* window, double* xpos, double* ypos);
  *  @param[in] ypos The desired y-coordinate, relative to the top edge of the
  *  client area.
  *
+ *  @remarks **X11:** Due to the asynchronous nature of a modern X desktop, it
+ *  may take a moment for the window focus event to arrive.  This means you will
+ *  not be able to set the cursor position directly after window creation.
+ *
  *  @note This function may only be called from the main thread.
  *
  *  @sa glfwGetCursorPos
@@ -2409,7 +2416,7 @@ GLFWAPI const char* glfwGetJoystickName(int joy);
  *
  *  @sa glfwGetClipboardString
  *
- *  @ingroup clipboard
+ *  @ingroup input
  */
 GLFWAPI void glfwSetClipboardString(GLFWwindow* window, const char* string);
 
@@ -2433,7 +2440,7 @@ GLFWAPI void glfwSetClipboardString(GLFWwindow* window, const char* string);
  *
  *  @sa glfwSetClipboardString
  *
- *  @ingroup clipboard
+ *  @ingroup input
  */
 GLFWAPI const char* glfwGetClipboardString(GLFWwindow* window);
 

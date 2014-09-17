@@ -71,6 +71,10 @@ extern "C" {
  *************************************************************************/
 
 #if defined(GLFW_EXPOSE_NATIVE_WIN32)
+ // This is a workaround for the fact that glfw3.h needs to export APIENTRY (for
+ // example to allow applications to correctly declare a GL_ARB_debug_output
+ // callback) but windows.h assumes no one will define APIENTRY before it does
+ #undef APIENTRY
  #include <windows.h>
 #elif defined(GLFW_EXPOSE_NATIVE_COCOA)
  #include <ApplicationServices/ApplicationServices.h>
@@ -81,6 +85,7 @@ extern "C" {
  #endif
 #elif defined(GLFW_EXPOSE_NATIVE_X11)
  #include <X11/Xlib.h>
+ #include <X11/extensions/Xrandr.h>
 #else
  #error "No window API specified"
 #endif
@@ -103,11 +108,11 @@ extern "C" {
  *************************************************************************/
 
 #if defined(GLFW_EXPOSE_NATIVE_WIN32)
-/*! @brief Returns the device name of the specified monitor.
- *  @return The the device name of the specified monitor.
+/*! @brief Returns the display device name of the specified monitor.
+ *  @return The display device name of the specified monitor.
  *  @ingroup native
  */
-GLFWAPI const WCHAR* glfwGetWin32Monitor(GLFWmonitor* monitor);
+GLFWAPI const char* glfwGetWin32Monitor(GLFWmonitor* monitor);
 
 /*! @brief Returns the `HWND` of the specified window.
  *  @return The `HWND` of the specified window.
@@ -126,7 +131,7 @@ GLFWAPI HGLRC glfwGetWGLContext(GLFWwindow* window);
 
 #if defined(GLFW_EXPOSE_NATIVE_COCOA)
 /*! @brief Returns the `CGDirectDisplayID` of the specified monitor.
- *  @return The the `CGDirectDisplayID` of the specified monitor.
+ *  @return The `CGDirectDisplayID` of the specified monitor.
  *  @ingroup native
  */
 GLFWAPI CGDirectDisplayID glfwGetCocoaMonitor(GLFWmonitor* monitor);
@@ -153,11 +158,11 @@ GLFWAPI id glfwGetNSGLContext(GLFWwindow* window);
  */
 GLFWAPI Display* glfwGetX11Display(void);
 
-/*! @brief Returns the `RRCrtc` of the specified monitor.
- *  @return The the `RRCrtc` of the specified monitor.
+/*! @brief Returns the `RROutput` of the specified monitor.
+ *  @return The `RROutput` of the specified monitor.
  *  @ingroup native
  */
-GLFWAPI RRCrtc glfwGetX11Monitor(GLFWmonitor* monitor);
+GLFWAPI RROutput glfwGetX11Monitor(GLFWmonitor* monitor);
 
 /*! @brief Returns the `Window` of the specified window.
  *  @return The `Window` of the specified window.

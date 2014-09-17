@@ -28,12 +28,14 @@
 #include "internal.h"
 
 #include <stdlib.h>
+#include <stdlib.h>
 #include <limits.h>
 
 #include <IOKit/graphics/IOGraphicsLib.h>
 #include <IOKit/graphics/IOGraphicsLib.h>
 #include <CoreVideo/CVBase.h>
 #include <CoreVideo/CVDisplayLink.h>
+#include <ApplicationServices/ApplicationServices.h>
 
 
 // Get the name of the specified display
@@ -45,6 +47,8 @@ static char* getDisplayName(CGDirectDisplayID displayID)
     CFStringRef value;
     CFIndex size;
 
+    // NOTE: This uses a deprecated function because Apple has
+    //       (as of September 2014) not provided any alternative
     info = IODisplayCreateInfoDictionary(CGDisplayIOServicePort(displayID),
                                          kIODisplayOnlyPreferredName);
     names = CFDictionaryGetValue(info, CFSTR(kDisplayProductName));
@@ -248,18 +252,26 @@ _GLFWmonitor** _glfwPlatformGetMonitors(int* count)
 
     *count = 0;
 
-    CGGetActiveDisplayList(0, NULL, &displayCount);
+    CGGetOnlineDisplayList(0, NULL, &displayCount);
 
     displays = calloc(displayCount, sizeof(CGDirectDisplayID));
     monitors = calloc(displayCount, sizeof(_GLFWmonitor*));
 
-    CGGetActiveDisplayList(displayCount, displays, &displayCount);
+    CGGetOnlineDisplayList(displayCount, displays, &displayCount);
 
     NSArray* screens = [NSScreen screens];
 
     for (i = 0;  i < displayCount;  i++)
     {
         int j;
+
+        if (CGDisplayIsAsleep(displays[i]))
+            continue;
+
+        CGDirectDisplayID screenDisplayID = CGDisplayMirrorsDisplay(displays[i]);
+        if (screenDisplayID == kCGNullDirectDisplay)
+            screenDisplayID = displays[i];
+
         const CGSize size = CGDisplayScreenSize(displays[i]);
         char* name = getDisplayName(displays[i]);
 
@@ -274,7 +286,7 @@ _GLFWmonitor** _glfwPlatformGetMonitors(int* count)
             NSDictionary* dictionary = [screen deviceDescription];
             NSNumber* number = [dictionary objectForKey:@"NSScreenNumber"];
 
-            if (monitors[found]->ns.displayID == [number unsignedIntegerValue])
+            if ([number unsignedIntegerValue] == screenDisplayID)
             {
                 monitors[found]->ns.screen = screen;
                 break;
@@ -356,6 +368,51 @@ void _glfwPlatformGetVideoMode(_GLFWmonitor* monitor, GLFWvidmode *mode)
     CVDisplayLinkRelease(link);
 }
 
+void _glfwPlatformGetGammaRamp(_GLFWmonitor* monitor, GLFWgammaramp* ramp)
+{
+    uint32_t i, size = CGDisplayGammaTableCapacity(monitor->ns.displayID);
+    CGGammaValue* values = calloc(size * 3, sizeof(CGGammaValue));
+
+    CGGetDisplayTransferByTable(monitor->ns.displayID,
+                                size,
+                                values,
+                                values + size,
+                                values + size * 2,
+                                &size);
+
+    _glfwAllocGammaArrays(ramp, size);
+
+    for (i = 0; i < size; i++)
+    {
+        ramp->red[i]   = (unsigned short) (values[i] * 65535);
+        ramp->green[i] = (unsigned short) (values[i + size] * 65535);
+        ramp->blue[i]  = (unsigned short) (values[i + size * 2] * 65535);
+    }
+
+    free(values);
+}
+
+void _glfwPlatformSetGammaRamp(_GLFWmonitor* monitor, const GLFWgammaramp* ramp)
+{
+    int i;
+    CGGammaValue* values = calloc(ramp->size * 3, sizeof(CGGammaValue));
+
+    for (i = 0;  i < ramp->size;  i++)
+    {
+        values[i]                  = ramp->red[i] / 65535.f;
+        values[i + ramp->size]     = ramp->green[i] / 65535.f;
+        values[i + ramp->size * 2] = ramp->blue[i] / 65535.f;
+    }
+
+    CGSetDisplayTransferByTable(monitor->ns.displayID,
+                                ramp->size,
+                                values,
+                                values + ramp->size,
+                                values + ramp->size * 2);
+
+    free(values);
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 //////                        GLFW native API                       //////
@@ -364,7 +421,7 @@ void _glfwPlatformGetVideoMode(_GLFWmonitor* monitor, GLFWvidmode *mode)
 GLFWAPI CGDirectDisplayID glfwGetCocoaMonitor(GLFWmonitor* handle)
 {
     _GLFWmonitor* monitor = (_GLFWmonitor*) handle;
-    _GLFW_REQUIRE_INIT_OR_RETURN(0);
+    _GLFW_REQUIRE_INIT_OR_RETURN(kCGNullDirectDisplay);
     return monitor->ns.displayID;
 }
 
