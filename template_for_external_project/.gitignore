@@ -26,9 +26,12 @@
 
 # Other
 .clang_complete
+.DS_Store
 
 # Folders
 /build/*
 /builds
-/resources/mesh
-/resources/textures
+
+# Uncomment these if necessary
+#/resources/mesh
+#/resources/textures

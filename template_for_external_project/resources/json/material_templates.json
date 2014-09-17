@@ -1,0 +1,34 @@
+[
+	{
+		"material": "metal",
+		"shader": "diffuse",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [1, 1, 1],
+				"type": "vec3"
+			},
+			{
+				"name": "diffuse_map",
+				"value": "metal",
+				"type": "texture"
+			}
+		]
+	},
+	{
+		"material": "rock",
+		"shader": "diffuse",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [1, 1, 1],
+				"type": "vec3"
+			},
+			{
+				"name": "diffuse_map",
+				"value": "rock",
+				"type": "texture"
+			}
+		]
+	}
+]

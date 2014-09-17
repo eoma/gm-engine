@@ -1,0 +1,68 @@
+[
+	{
+		"entity": "metal_cube",
+		"components": [ "Renderable", "Transform" ],
+		"properties": [
+			{
+				"name": "MeshName",
+				"value": "cube"
+			},
+			{
+				"name": "MaterialName",
+				"value": "metal"
+			},
+			{
+				"name": "Position",
+				"value": [1.75,-1,1],
+				"type": "vec3"
+			}
+		]
+	},
+	{
+		"entity": "rock",
+		"components": [ "Renderable", "Transform" ],
+		"properties": [
+			{
+				"name": "MeshName",
+				"value": "rock"
+			},
+			{
+				"name": "MaterialName",
+				"value": "rock"
+			},
+			{
+				"name": "Position",
+				"value": [-1,-0.5,0],
+				"type": "vec3"
+			},
+			{
+				"name": "Scale",
+				"value": [1,1,1],
+				"type": "vec3"
+			},
+		]
+	},
+	{
+		"entity": "camera",
+		"components": [ "Camera", "Transform" ],
+		"properties": [
+			{
+				"name": "FOV",
+				"value": 45
+			},
+			{
+				"name": "NearClipping",
+				"value": 0.1
+			},
+			{
+				"name": "FarClipping",
+				"value": 10000
+			},
+			{
+				"name": "Position",
+				"value": [0,0,5],
+				"type": "vec3"
+			}
+		]
+	}
+]

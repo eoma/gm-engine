@@ -1,0 +1,12 @@
+[
+	{
+		"texture": "metal",
+		"image": "webtreats_metal_1-512px.jpg",
+		"format": "texture2d"
+	},
+	{
+		"texture": "rock",
+		"image": "rock.png",
+		"format": "texture2d"
+	}
+]

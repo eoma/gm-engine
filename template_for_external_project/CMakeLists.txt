@@ -22,6 +22,9 @@ source_group("GLSL Files\\" FILES ${GLSL})
 if ( Headers OR Sources )
 	add_executable(${PROJECT_NAME} ${Headers} ${Sources} ${JSON} ${GLSL})
 	target_link_libraries(${PROJECT_NAME} ${GM_ENGINE_LIBRARIES}) # or something else
+
+	set_target_properties(${PROJECT_NAME} PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 else()
 	message("No source files defined for ${PROJECT_NAME}")
 endif()
