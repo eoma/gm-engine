@@ -8,5 +8,10 @@
 		"texture": "rock",
 		"image": "rock.png",
 		"format": "texture2d"
+	},
+	{
+		"texture": "mars",
+		"image": "mars.png",
+		"format": "texture2d"
 	}
 ]

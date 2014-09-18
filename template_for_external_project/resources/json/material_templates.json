@@ -30,5 +30,21 @@
 				"type": "texture"
 			}
 		]
+	},
+	{
+		"material": "mars",
+		"shader": "diffuse",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [1, 1, 1],
+				"type": "vec3"
+			},
+			{
+				"name": "diffuse_map",
+				"value": "mars",
+				"type": "texture"
+			}
+		]
 	}
 ]

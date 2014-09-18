@@ -19,7 +19,7 @@
 		]
 	},
 	{
-		"entity": "sphere",
+		"entity": "mars_sphere",
 		"components": [ "Renderable", "Transform" ],
 		"properties": [
 			{
@@ -28,7 +28,7 @@
 			},
 			{
 				"name": "MaterialName",
-				"value": "rock"
+				"value": "mars"
 			},
 			{
 				"name": "Position",
