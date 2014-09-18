@@ -19,12 +19,12 @@
 		]
 	},
 	{
-		"entity": "rock",
+		"entity": "sphere",
 		"components": [ "Renderable", "Transform" ],
 		"properties": [
 			{
 				"name": "MeshName",
-				"value": "rock"
+				"value": "sphere"
 			},
 			{
 				"name": "MaterialName",

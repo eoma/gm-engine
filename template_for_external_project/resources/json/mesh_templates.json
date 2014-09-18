@@ -1,7 +1,7 @@
 [
 	{
-		"mesh": "rock",
-		"filename": "rock.obj",
+		"mesh": "sphere",
+		"filename": "primitives/sphere.3ds",
 		"mesh_index": 0
 	}
 ]

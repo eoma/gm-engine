@@ -32,8 +32,8 @@ int main() {
 	Framework::EntityPtr cube = entity_manager->create_entity("cube");
 	entity_manager->apply("metal_cube", cube); // apple metal_cube entity template
 
-	Framework::EntityPtr rock = entity_manager->create_entity("rock");
-	entity_manager->apply("rock", rock);// ....
+	Framework::EntityPtr sphere = entity_manager->create_entity("sphere");
+	entity_manager->apply("sphere", sphere);// ....
 
 	// Set up the projection for the camera
 	if (camera->has_component<Framework::Camera>()) {
