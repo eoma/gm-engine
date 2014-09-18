@@ -31,5 +31,5 @@
 # Folders
 /build/*
 /builds
-/resources/mesh
+#/resources/mesh
 /resources/textures
