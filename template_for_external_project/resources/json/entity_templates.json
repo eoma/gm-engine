@@ -64,5 +64,28 @@
 				"type": "vec3"
 			}
 		]
+	},
+	{
+		"entity": "fps_camera",
+		"requires": [ "camera" ],
+		"components": [ "FPSController" ],
+		"properties": [
+			{
+				"name": "CursorDeadroom",
+				"value": 0.0125
+			},
+			{
+				"name": "PitchSensitivity",
+				"value": 1.0
+			},
+			{
+				"name": "YawSensitivity",
+				"value": 1.0
+			},
+			{
+				"name": "Speed",
+				"value": 10.0
+			}
+		]
 	}
 ]
