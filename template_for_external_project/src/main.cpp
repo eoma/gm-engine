@@ -1,5 +1,6 @@
 #include "GM/Application/Application.h"
 #include "GM/Framework/Framework.h"
+#include "../common/include/CommonComponentSerializer.h"
 
 // Very basic example.
 
@@ -26,8 +27,12 @@ int main() {
 	// Set up our entities
 	Framework::EntityManagerPtr entity_manager = app->get_entity_manager();
 
+	// Import our common entities
+  auto common_component_serializer = std::make_shared<Common::CommonComponentSerializer>(app);
+
+
 	Framework::EntityPtr camera = entity_manager->create_entity("camera");
-	entity_manager->apply("camera", camera); // apply camera entity template
+	entity_manager->apply("fps_camera", camera); // apply camera entity template
 
 	Framework::EntityPtr cube = entity_manager->create_entity("cube");
 	entity_manager->apply("metal_cube", cube); // apple metal_cube entity template
