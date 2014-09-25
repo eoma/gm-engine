@@ -29,11 +29,28 @@ const RawImagePtr &TextureManager::get_or_create_image(const std::string &file_n
 	auto iter = loaded_images.find(file_name);
 	if (iter == loaded_images.end())
 	{
-		if (!clan::FileHelp::file_exists(texture_path + "/" + file_name)) {
+		bool file_found = false;
+		std::string complete_path;
+
+		for (const std::string& path : texture_paths) {
+			if (path.empty()) {
+				continue;
+			}
+
+			std::string file_path = clan::PathHelp::make_absolute(path, file_name);
+
+			file_found = clan::FileHelp::file_exists(file_path);
+			if (file_found) {
+				complete_path = file_path;
+				break;
+			}
+		}
+
+		if (!file_found) {
 			throw clan::Exception(clan::string_format("Texture image (%1) does not exist!", file_name));
 		}
 
-		RawImagePtr image = std::make_shared<RawImage>(image_io->load(texture_path + "/" + file_name));
+		RawImagePtr image = std::make_shared<RawImage>(image_io->load(complete_path));
 
 		if (image->get_data().empty() || image->get_width() < 1 || image->get_height() < 1)
 		{

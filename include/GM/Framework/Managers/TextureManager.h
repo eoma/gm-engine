@@ -25,7 +25,14 @@ public:
 	TextureManager(const IImageIOPtr &image_io);
 	~TextureManager();
 
-	void set_texture_path(const std::string &texture_path) { this->texture_path = texture_path; }
+	// Will replace all texture paths with a single path
+	void set_texture_path(const std::string &texture_path) { this->texture_paths = {texture_path}; }
+
+	// Will replace the current collection of resource paths with a new collection
+	void set_texture_path(const std::vector<std::string> &texture_paths) { this->texture_paths = texture_paths; }
+
+	// Will add a resource path to the existing collection of resource paths
+	void add_texture_path(const std::string &texture_path) { this->texture_paths.push_back(texture_path); }
 
 	const RawImagePtr &get_or_create_image(const std::string &file_name);
 
@@ -77,7 +84,7 @@ private:
 	std::unordered_map<std::string, Core::TextureFormatPtr> name_to_texture_format;
 	std::unordered_map<Core::TextureFormatPtr, std::string> texture_format_to_name;
 
-	std::string texture_path;
+	std::vector<std::string> texture_paths;
 	TextureTemplateManagerPtr template_manager;
 	TextureFormatTemplateManagerPtr format_template_manager;
 };
