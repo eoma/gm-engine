@@ -30,6 +30,10 @@ if ( Headers OR Sources )
 
 	set_target_properties(${PROJECT_NAME} PROPERTIES
 		RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
+	# Uses the GM_ENGINE_RESOURCE_DIR variable that gets set when we run find_package(GmEngine)
+	configure_file(external_resource_paths.json.in
+		"${CMAKE_SOURCE_DIR}/bin/external_resource_paths.json" @ONLY)
 else()
 	message("No source files defined for ${PROJECT_NAME}")
 endif()
