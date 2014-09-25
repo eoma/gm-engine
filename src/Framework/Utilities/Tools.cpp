@@ -27,7 +27,7 @@ std::string GM::Framework::find_path_in_hierarchy(const std::string &start_path,
 	}
 
 	if (!found) {
-		throw clan::Exception("Unable to find path");
+		throw clan::Exception(clan::string_format("Unable to find path that ends with (%1), starting from (%2)", wanted_end_of_path, start_path));
 	}
 	
 	return path;
