@@ -26,6 +26,8 @@
 #include "GM/Framework/Primitives/SkyboxPrimitive.h"
 #include "GM/Framework/Primitives/CubePrimitive.h"
 
+#include "GM/Framework/Utilities/Tools.h"
+
 #include "GM/Framework/Entity.h"
 
 #include <glm/ext.hpp>
@@ -678,6 +680,44 @@ void Main::hide_cursor() {
 
 void Main::glfw_error_callback(int error_code, const char *error_msg) {
 	std::cerr << "GLFW Error (0x" << std::hex << error_code << std::dec << "): " << error_msg << std::endl;
+}
+
+void Main::add_extra_resource_paths(const std::string &resource_file)
+{
+	std::string resource_path;
+
+	try
+	{
+		resource_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), resource_file);
+	}
+	catch (clan::Exception e)
+	{
+		std::cerr << e.what() << std::endl; // is this necessary?
+		return;
+	}
+
+	clan::JsonValue resources = clan::JsonValue::from_json(clan::File::read_text(resource_path));
+
+	if (!resources.is_object())
+	{
+		return;
+	}
+
+	auto &map = resources.get_members();
+
+	std::string root = "";
+
+	if (map.find("root") != map.end())
+	{
+		root = map["root"].to_string();
+	}
+
+	if (has_texture_manager() && map.find("textures") != map.end())
+	{
+		texture_manager->add_texture_path(clan::PathHelp::make_absolute(root, map["textures"].to_string()));
+	}
+
+	// Add more...
 }
 
 } // namespace Application

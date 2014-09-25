@@ -192,6 +192,10 @@ public:
 	const Framework::VaoManagerPtr &get_vao_manager() const { return vao_manager; }
 	void set_vao_manager(const Framework::VaoManagerPtr &vao_manager) { this->vao_manager = vao_manager; }
 
+
+	void add_extra_resource_paths(const std::string &resource_path_file = "external_resource_paths.json");
+
+
 protected:
 	// Debug functions, taken from https://lva.cg.tuwien.ac.at/cgue/wiki/doku.php?id=students:debugcontext
 	static void APIENTRY gl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const GLvoid* userParam);
