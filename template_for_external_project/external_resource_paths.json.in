@@ -1,4 +1,5 @@
 {
 	"root": "@GM_ENGINE_RESOURCE_DIR@",
-	"textures": "textures"
+	"textures": "textures",
+	"mesh": "mesh"
 }
