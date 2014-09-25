@@ -717,6 +717,11 @@ void Main::add_extra_resource_paths(const std::string &resource_file)
 		texture_manager->add_texture_path(clan::PathHelp::make_absolute(root, map["textures"].to_string()));
 	}
 
+	if (has_mesh_manager() && map.find("mesh") != map.end())
+	{
+		mesh_manager->add_mesh_path(clan::PathHelp::make_absolute(root, map["mesh"].to_string()));
+	}
+
 	// Add more...
 }
 
