@@ -3,6 +3,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace GM {
 	namespace Framework {
@@ -20,7 +21,14 @@ namespace GM {
 			MeshManager(const BufferManagerPtr &buffer_manager, const VaoManagerPtr &vao_manager, const IMeshIOPtr &mesh_io);
 			~MeshManager();
 
-			void set_mesh_path(const std::string &mesh_path) { this->mesh_path = mesh_path; }
+			// Will replace all texture paths with a single path
+			void set_mesh_path(const std::string &mesh_path) { this->mesh_paths = {mesh_path}; }
+
+			// Will replace the current collection of resource paths with a new collection
+			void set_mesh_path(const std::vector<std::string> &mesh_paths) { this->mesh_paths = mesh_paths; }
+
+			// Will add a resource path to the existing collection of resource paths
+			void add_mesh_path(const std::string &mesh_path) { this->mesh_paths.push_back(mesh_path); }
 
 			bool contains(const std::string &name) const;
 
@@ -43,7 +51,7 @@ namespace GM {
 
 			IMeshIOPtr mesh_io;
 
-			std::string mesh_path;
+			std::vector<std::string> mesh_paths;
 			std::map<std::string, MeshPtr> meshes;
 
 		};

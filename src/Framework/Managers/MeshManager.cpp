@@ -85,7 +85,28 @@ MeshPtr MeshManager::get_or_create(const std::string &name, const std::string &f
 		return mesh;
 	}
 
-	mesh = mesh_io->load(name, mesh_path + "/" + filename, mesh_index, buffer_manager, vao_manager);
+	bool file_found = false;
+	std::string complete_path;
+
+	for (const std::string& path : mesh_paths) {
+		if (path.empty()) {
+			continue;
+		}
+
+		std::string file_path = clan::PathHelp::make_absolute(path, filename);
+
+		file_found = clan::FileHelp::file_exists(file_path);
+		if (file_found) {
+			complete_path = file_path;
+			break;
+		}
+	}
+
+	if (!file_found) {
+		throw clan::Exception(clan::string_format("Mesh (%1) does not exist!", filename));
+	}
+
+	mesh = mesh_io->load(name, complete_path, mesh_index, buffer_manager, vao_manager);
 	if (mesh) {
 		add(mesh);
 	}
