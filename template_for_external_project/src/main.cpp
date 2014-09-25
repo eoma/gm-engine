@@ -24,6 +24,9 @@ int main() {
 	app->get_texture_manager()->add_format_templates(json_path + "/texture_format_templates.json");
 	app->get_texture_manager()->set_texture_path(texture_path);
 
+	// If extra resource paths have been defined, locate and add them.
+	app->add_extra_resource_paths();
+
 	// Set up our entities
 	Framework::EntityManagerPtr entity_manager = app->get_entity_manager();
 
