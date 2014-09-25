@@ -12,7 +12,7 @@ std::string GM::Framework::find_path_in_hierarchy(const std::string &start_path,
 	clan::DirectoryScanner directory_scanner;
 
 	for (unsigned int i = 0; !found && i < max_ancestor_length; ++i) {
-		found = directory_scanner.scan(path);
+		found = directory_scanner.scan(path) || clan::FileHelp::file_exists(path);
 
 		if (!found) {
 			try {
