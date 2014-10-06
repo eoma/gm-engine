@@ -109,7 +109,7 @@ std::vector<ShaderVariableInfo> ShaderFactory::get_attribute_infos(const unsigne
 		int size = 0;
 		GLenum type = 0;
 		
-glGetActiveAttrib(program, i, name_buffer.size(), &name_length, &size, &type, name_buffer.data());
+		glGetActiveAttrib(program, i, name_buffer.size(), &name_length, &size, &type, name_buffer.data());
 
 		std::string name(name_buffer.begin(), name_buffer.begin() + name_length);
 
@@ -143,7 +143,7 @@ std::vector<ShaderVariableInfo> ShaderFactory::get_uniform_infos(const unsigned 
 		int size = 0;
 		GLenum type = 0;
 		
-glGetActiveUniform(program, i, name_buffer.size(), &name_length, &size, &type, name_buffer.data());
+		glGetActiveUniform(program, i, name_buffer.size(), &name_length, &size, &type, name_buffer.data());
 
 		std::string name(name_buffer.begin(), name_buffer.begin() + name_length);
 
