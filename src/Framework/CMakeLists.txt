@@ -38,7 +38,8 @@ add_library(${NAME} ${GM_LIBRARY_TYPE} ${Headers} ${Sources})
 target_link_libraries(${NAME}
 	Core # Core has it's own dependencies, they will get pulled automatically
 	assimp # These should probably be moved to Application
-	SOIL2)
+	SOIL2
+	LodePNG)
 
 
 set_target_properties(${NAME} PROPERTIES FOLDER "GM")
