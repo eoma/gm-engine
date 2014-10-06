@@ -48,6 +48,7 @@ set_target_properties(glfw
 	FOLDER "Dependencies")
 
 add_subdirectory(depends/ClanLib)
+add_subdirectory(depends/LodePNG)
 add_subdirectory(depends/SOIL2)
 add_subdirectory(depends/assimp)
 set_target_properties(assimp
@@ -69,7 +70,17 @@ add_subdirectory(src)
 ### Set up project configuration
 ###
 
-set(EXPORT_TARGETS Application Framework Core clanCore SOIL2 assimp glfw gl3w)
+set(EXPORT_TARGETS
+	Application
+	Framework
+	Core
+	clanCore
+	SOIL2
+	assimp
+	glfw
+	gl3w
+	LodePNG)
+
 if (TARGET zlibstatic)
 	list(APPEND EXPORT_TARGETS zlibstatic)
 endif()
