@@ -115,10 +115,139 @@ void build_terrain_indices_triangles(std::vector<unsigned int> &indices, unsigne
 	indices.push_back(next_under_index);
 }
 
-void build_terrain_vertices(std::vector<TerrainVertex> &vertices, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
+/**
+ * Construct the vertices. Sets position and a normal that points upwards.
+ */
+void build_terrain_vertices(std::vector<TerrainVertex> &vertices, const GM::Framework::RawImagePtr &img, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
 {
+	const std::vector<unsigned char> &img_data = img->get_data();
+	unsigned int pixel_coordinate = y*width + x;
+
+	// A channel is a colour component, eg. red is channel 0, green is channel 1, blue is channel 2 etc.
+	// Heightmaps are usually in greyscale, and often only one channel.
+	unsigned int channel = 0; // channel must be lesser than img->get_num_channels()
+
+	// Normalized terrain height
+	float terrain_height = (img_data[img->get_num_channels() * pixel_coordinate + channel]) / 255.f;
+
 	//Add one x,y,z vertex for each x,y in the grid
-	vertices.push_back({ { glm::vec3(x / (float)width, 0.0f, y / (float)height) }, { 0, 1, 0 } });
+	vertices.push_back({
+		glm::vec3(x / (float)width, terrain_height, y / (float)height), // position
+		glm::vec3( 0, 1, 0 ) // normal
+	});
+}
+
+//////////////////////////////
+//
+//       a---b---c
+// -1 ^  |  /|  /|
+//    |  |/  |/  |
+//  0 z  d---e---f
+//    |  |  /|  /|
+// +1 v  |/  |/  |
+//       g---h---i
+//
+//         <-x->
+//       -1  0 +1
+///////////////////////////////
+void build_terrain_normals(std::vector<TerrainVertex> &verts, unsigned int width, unsigned int height)
+{
+	glm::vec3 v1,v2,v3,v4,v5,v6; // direction vectors
+	glm::vec3 n,n1,n2,n3,n4,n5,n6; // normal vectors created from direction vectors
+
+	for(unsigned int z = 0; z < height; z++)
+	{
+		for(unsigned int x = 0; x < width; x++)
+		{
+			// back left corner - 1 tri 2 vertices
+			if(z == 0 && x == 0)
+			{
+				v1 = verts[((z+1)*width + (x)  )].position - verts[((z)*width + (x))].position;
+				v2 = verts[(  (z)*width + (x+1))].position - verts[((z)*width + (x))].position;
+				n = glm::cross(v1,v2);
+			}
+			// left edge - 3 tri 4 vertices
+			else if((z > 0 && z < (height-1)) && x == 0)
+			{
+				v1 = verts[(  (z)*width + (x+1))].position - verts[((z)*width + (x))].position;
+				v2 = verts[((z-1)*width + (x+1))].position - verts[((z)*width + (x))].position;
+				v3 = verts[((z-1)*width + (x)  )].position - verts[((z)*width + (x))].position;
+				v4 = verts[((z+1)*width + (x+1))].position - verts[((z)*width + (x))].position;
+				n1 = glm::cross(v1,v2); n2 = glm::cross(v2,v3); n3 = glm::cross(v3,v4);
+				n = (n1+n2+n3)/3.0f;
+			}
+			// front left corner - 2 tri 3 vertices
+			else if(z == (height-1) && x == 0)
+			{
+				v1 = verts[(  (z)*width + (x+1))].position - verts[((z)*width + (x))].position;
+				v2 = verts[((z-1)*width + (x+1))].position - verts[((z)*width + (x))].position;
+				v3 = verts[((z-1)*width + (x)  )].position - verts[((z)*width + (x))].position;
+				n1 = glm::cross(v1,v2); n2 = glm::cross(v2,v3);
+				n = (n1+n2)/2.0f;
+			}
+			// front edge - 3 tri 4 vertices
+			else if(z == (height-1) && (x > 0 && x < (width-1)))
+			{
+				v1 = verts[(  (z)*width + (x+1))].position - verts[((z)*width + (x))].position;
+				v2 = verts[((z-1)*width + (x+1))].position - verts[((z)*width + (x))].position;
+				v3 = verts[((z-1)*width + (x)  )].position - verts[((z)*width + (x))].position;
+				v4 = verts[(  (z)*width + (x-1))].position - verts[((z)*width + (x))].position;
+				n1 = glm::cross(v1,v2); n2 = glm::cross(v2,v3); n3 = glm::cross(v3,v4);
+				n = (n1+n2+n3)/3.0f;
+			}
+			// front right corner - 1 tri 2 vertices
+			else if(z == (height-1) && x == (width-1))
+			{
+				v1 = verts[((z-1)*width + (x)  )].position - verts[((z)*width + (x))].position;
+				v2 = verts[(  (z)*width + (x-1))].position - verts[((z)*width + (x))].position;
+				n = glm::cross(v1,v2);
+			}
+			// right edge - 3 tri 4 vertices
+			else if((z > 0 && z < (height-1)) && x == (width-1))
+			{
+				v1 = verts[((z-1)*width + (x)  )].position - verts[((z)*width + (x))].position;
+				v2 = verts[(  (z)*width + (x-1))].position - verts[((z)*width + (x))].position;
+				v3 = verts[((z+1)*width + (x-1))].position - verts[((z)*width + (x))].position;
+				v4 = verts[((z+1)*width + (x)  )].position - verts[((z)*width + (x))].position;
+				n1 = glm::cross(v1,v2); n2 = glm::cross(v2,v3); n3 = glm::cross(v3,v4);
+				n = (n1+n2+n3)/3.0f;
+			}
+			// back right corner - 2 tri 3 vertices
+			else if(z == 0 && x == (width-1))
+			{
+				v1 = verts[(  (z)*width + (x-1))].position - verts[((z)*width + (x))].position;
+				v2 = verts[((z+1)*width + (x-1))].position - verts[((z)*width + (x))].position;
+				v3 = verts[((z+1)*width + (x)  )].position - verts[((z)*width + (x))].position;
+				n1 = glm::cross(v1,v2); n2 = glm::cross(v2,v3);
+				n = (n1+n2)/2.0f;
+			}
+			// back edge - 3 tri 4 vertices
+			else if(z == 0 && (x > 0 && x < (width-1)))
+			{
+				v1 = verts[(  (z)*width + (x-1))].position - verts[((z)*width + (x))].position;
+				v2 = verts[((z+1)*width + (x-1))].position - verts[((z)*width + (x))].position;
+				v3 = verts[((z+1)*width + (x)  )].position - verts[((z)*width + (x))].position;
+				v4 = verts[(  (z)*width + (x+1))].position - verts[((z)*width + (x))].position;
+				n1 = glm::cross(v1,v2); n2 = glm::cross(v2,v3); n3 = glm::cross(v3,v4);
+				n = (n1+n2+n3)/3.0f;
+			}
+			// internal - 6 tri 6 vertices
+			else
+			{
+				v1 = verts[(  (z)*width + (x+1))].position - verts[((z)*width + (x))].position;
+				v2 = verts[((z-1)*width + (x+1))].position - verts[((z)*width + (x))].position;
+				v3 = verts[((z-1)*width + (x)  )].position - verts[((z)*width + (x))].position;
+				v4 = verts[(  (z)*width + (x-1))].position - verts[((z)*width + (x))].position;
+				v5 = verts[((z+1)*width + (x-1))].position - verts[((z)*width + (x))].position;
+				v6 = verts[((z+1)*width + (x)  )].position - verts[((z)*width + (x))].position;
+				n1 = glm::cross(v1,v2); n2 = glm::cross(v2,v3); n3 = glm::cross(v3,v4);
+				n4 = glm::cross(v4,v5); n5 = glm::cross(v5,v6); n6 = glm::cross(v6,v1);
+				n = (n1+n2+n3+n4+n5+n6)/6.0f;
+			}
+
+			verts[z*width + x].normal = glm::normalize(n);
+		}
+	}
 }
 
 void create_triangle_mesh(const MainPtr &app, unsigned int width, unsigned int height, bool use_tesselation)
@@ -126,6 +255,14 @@ void create_triangle_mesh(const MainPtr &app, unsigned int width, unsigned int h
 	if (app->get_mesh_manager()->contains("terrain"))
 	{
 		return;
+	}
+
+	// Assumes a texture exists by the name heightmap
+	GM::Framework::RawImagePtr img = app->get_texture_manager()->get_or_create_image("terrain/heightmap/heightmap.png");
+
+	if (img == nullptr || img->get_height() == 0 || img->get_width() == 0)
+	{
+		throw clan::Exception("Unable to fetch required image for heightmap");
 	}
 
 	Core::VaoLayout vao_layout;
@@ -141,9 +278,10 @@ void create_triangle_mesh(const MainPtr &app, unsigned int width, unsigned int h
 			else
 				build_terrain_indices_triangle_strip(indices, x, y, width, height);
 				
-			build_terrain_vertices(vertices, x, y, width, height);
+			build_terrain_vertices(vertices, img, x, y, width, height);
 		}
 	}
+	build_terrain_normals(vertices, width, height);
 
 	auto vertex_allocation = app->get_buffer_manager()->allocate_and_upload(vertices, GL_DYNAMIC_DRAW);
 	
@@ -199,11 +337,13 @@ bool mainTest() {
 	auto camera_entity = entity_manager->create_entity("camera");
 	auto skybox = entity_manager->create_entity("skybox");
 	auto terrain = entity_manager->create_entity("terrain");
+	auto light = entity_manager->create_entity("light");
 
 	// Apply an entity template, as defined in entity_templates.json
 	entity_manager->apply("fps_camera", camera_entity);
 	entity_manager->apply("skybox", skybox);
 	entity_manager->apply("terrain", terrain);
+	entity_manager->apply("light", light);
 	
 	// Set up the projection for the camera
 	if (camera_entity->has_component<Framework::Camera>()) {
