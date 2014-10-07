@@ -75,6 +75,12 @@ VaoLayout &VaoLayout::use_as(const unsigned int buffer_type) {
 			used_buffers.push_back(buffer_use);
 			std::sort(used_buffers.begin(), used_buffers.end());
 		}
+		else if (iter->buffer != active_buffer)
+		{
+			// Override old value
+			iter->buffer = active_buffer;
+			std::sort(used_buffers.begin(), used_buffers.end());
+		}
 	}
 
 	return *this;
@@ -140,6 +146,47 @@ VaoLayout &VaoLayout::bind_interleaved(const unsigned int offset, const unsigned
 	}
 
 	return *this;
+}
+
+bool VaoLayout::is_instanced() const
+{
+	for (const BufferVertexAttribDefinition &def : definitions)
+	{
+		if (def.divisor > 0)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+VaoLayout VaoLayout::get_copy_without_instancing() const
+{
+	if (is_instanced())
+	{
+		VaoLayout no_instance;
+		no_instance.used_buffers = used_buffers;
+
+		for (const BufferVertexAttribDefinition &def : definitions)
+		{
+			if (def.divisor == 0)
+			{
+				no_instance
+					.for_buffer(def.buffer)
+						.use_as(GL_ARRAY_BUFFER)
+								.bind(def.index, def.size_per_index, def.data_type,
+				                      def.normalized, def.stride, def.offset, 0);
+
+			}
+		}
+
+		return no_instance;
+	}
+	else
+	{
+		return *this; // return copy of self
+	}
 }
 
 const std::vector<BufferVertexAttribDefinition> &VaoLayout::get_definitions() const

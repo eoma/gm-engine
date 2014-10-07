@@ -59,6 +59,12 @@ public:
 	
 	VaoLayout &bind_interleaved(const unsigned int offset, const unsigned int divisor, const std::vector<VertexAttribute> &interleaved_attribs);
 
+	// Will search through vertex attrib definitions for instanced attribs
+	bool is_instanced() const;
+
+	// Returns a copy where there are no vertex attributes with divisor > 0
+	VaoLayout get_copy_without_instancing() const;
+
 	// Relevant for VaoManager.
 	const std::vector<BufferVertexAttribDefinition> &get_definitions() const;
 	const std::vector<BufferUse> &get_used_buffers() const;
