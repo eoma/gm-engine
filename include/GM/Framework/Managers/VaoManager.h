@@ -21,11 +21,21 @@ public:
 
 	Core::VertexArrayObjectPtr get_vao_for(const Core::VaoLayout &layout);
 
+	/**
+	 * Will locate a VAO Layout for a constructed VertexArrayObject that this manager
+	 * know about
+	 * 
+	 * @return a defined VAO Layout or an empty vao layout
+	 */
+	Core::VaoLayout get_vao_layout_for(const Core::VertexArrayObjectPtr &vao) const;
+
 private:
 	Core::VertexArrayObjectPtr build_vao(const Core::VaoLayout &layout);
 
 private:
-	std::map<Core::VaoLayout, Core::VertexArrayObjectPtr> vaos;
+	// These could be replaced by a bimap
+	std::map<Core::VaoLayout, Core::VertexArrayObjectPtr> layouts_to_vaos;
+	std::map<Core::VertexArrayObjectPtr, Core::VaoLayout> vaos_to_layouts;
 
 };
 
