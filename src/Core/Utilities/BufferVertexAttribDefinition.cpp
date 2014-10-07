@@ -7,8 +7,8 @@ int BufferVertexAttribDefinition::compare(const BufferVertexAttribDefinition &cu
 {
 	int result = 0;
 
-	if (result == 0) result = (current.buffer < other.buffer ? -1 : (other.buffer < current.buffer ? 1 : 0));
 	if (result == 0) result = current.index - other.index;
+	if (result == 0) result = (current.buffer < other.buffer ? -1 : (other.buffer < current.buffer ? 1 : 0));
 	if (result == 0) result = current.size_per_index - other.size_per_index;
 	if (result == 0) result = current.data_type - other.data_type;
 	if (result == 0) result = current.normalized - other.normalized;
