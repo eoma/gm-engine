@@ -25,6 +25,7 @@
 
 #include "Utilities/RenderCommand.h"
 
+#include "Utilities/ShaderConstants.h"
 #include "Utilities/ShaderFactory.h"
 #include "Utilities/ShaderSource.h"
 
