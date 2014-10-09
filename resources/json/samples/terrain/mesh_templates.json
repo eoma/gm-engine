@@ -1,7 +1,12 @@
 [
 	{
-    	"mesh": "spaceship",
-    	"filename": "ferox.3ds",
+		"mesh": "spaceship",
+		"filename": "ferox.3ds",
 		"mesh_index": 3
-    }
+	},
+	{
+		"mesh": "rock",
+		"filename": "terrain/rocks/11/rock.obj",
+		"mesh_index": 0
+	}
 ]

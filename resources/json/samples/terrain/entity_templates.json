@@ -75,12 +75,12 @@
 		"properties": [
 			{
 				"name": "Position",
-				"value": [0,100,0],
+				"value": [100,100,100],
 				"type": "vec3"
 			},
 			{
 				"name": "Radius",
-				"value": 100.0
+				"value": 90.0
 			},
 			{
 				"name": "MaterialColorDiffuse",
@@ -119,6 +119,30 @@
 			{
 				"name": "Scale",
 				"value": [49990, 49990, 49990],
+				"type": "vec3"
+			}
+		]
+	},
+	{
+		"entity": "rock",
+		"components": [ "Renderable", "Transform" ],
+		"properties": [
+			{
+				"name": "MeshName",
+				"value": "rock"
+			},
+			{
+				"name": "MaterialName",
+				"value": "rock_with_bumpmap"
+			},
+			{
+				"name": "Position",
+				"value": [20,6,20],
+				"type": "vec3"
+			},
+			{
+				"name": "Scale",
+				"value": [0.05, 0.05, 0.05],
 				"type": "vec3"
 			}
 		]

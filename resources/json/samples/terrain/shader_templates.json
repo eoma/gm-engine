@@ -25,5 +25,10 @@
 		"shader": "terrain_no_tess",
 		"vertex_shader": "terrain_no_tess.vs",
 		"fragment_shader": "terrain.fs"
+	},
+	{
+		"shader": "bumpmapping",
+		"vertex_shader": "bumpmapping.vs.glsl",
+		"fragment_shader": "bumpmapping.fs.glsl"
 	}
 ]

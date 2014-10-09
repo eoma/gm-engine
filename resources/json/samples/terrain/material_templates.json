@@ -77,5 +77,26 @@
 				"type": "float"
 			}
 		]
+	},
+	{
+		"material": "rock_with_bumpmap",
+		"shader": "bumpmapping",
+		"uniforms": [
+			{
+				"name": "tex_color",
+				"value": "rock_diffuse",
+				"type": "texture"
+			},
+			{
+				"name": "tex_normal",
+				"value": "rock_normal",
+				"type": "texture"
+			},
+			{
+				"name": "light_pos",
+				"value": [0,0,0],
+				"type": "vec3"
+			}
+		]
 	}
 ]
