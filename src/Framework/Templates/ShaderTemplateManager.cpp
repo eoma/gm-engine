@@ -52,10 +52,17 @@ void ShaderTemplateManager::apply_requirement(const std::string &template_name, 
 }
 
 void ShaderTemplateManager::add_templates(const std::string &template_filename) {
-	ShaderTemplateParser::parse_templates(
-		TextIO::load_contents(template_filename),
-		[this](const ShaderTemplateManager::Template &t)
+	try
 	{
-		templates.push_back(t);
-	});
+		ShaderTemplateParser::parse_templates(
+			TextIO::load_contents(template_filename),
+			[this](const ShaderTemplateManager::Template &t)
+		{
+			templates.push_back(t);
+		});
+	}
+	catch (Exception e)
+	{
+		throw Exception(string_format("%1: %2", template_filename, e.what()));
+	}
 }

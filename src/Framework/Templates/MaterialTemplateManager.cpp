@@ -72,10 +72,17 @@ void MaterialTemplateManager::apply_properties(const std::string &template_name,
 }
 
 void MaterialTemplateManager::add_templates(const std::string &template_filename) {
-	MaterialTemplateParser::parse_templates(
-		TextIO::load_contents(template_filename),
-		[this](const MaterialTemplateManager::Template &t)
+	try
 	{
-		templates.push_back(t);
-	});
+		MaterialTemplateParser::parse_templates(
+			TextIO::load_contents(template_filename),
+			[this](const MaterialTemplateManager::Template &t)
+		{
+			templates.push_back(t);
+		});
+	}
+	catch (Exception e)
+	{
+		throw Exception(string_format("%1: %2", template_filename, e.what()));
+	}
 }

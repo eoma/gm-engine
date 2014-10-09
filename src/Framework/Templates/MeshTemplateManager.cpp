@@ -51,10 +51,17 @@ void MeshTemplateManager::apply_requirement(const std::string &template_name, Me
 }
 
 void MeshTemplateManager::add_templates(const std::string &template_filename) {
-	MeshTemplateParser::parse_templates(
-		TextIO::load_contents(template_filename),
-		[this](const MeshTemplateManager::Template &t)
+	try
 	{
-		templates.push_back(t);
-	});
+		MeshTemplateParser::parse_templates(
+			TextIO::load_contents(template_filename),
+			[this](const MeshTemplateManager::Template &t)
+		{
+			templates.push_back(t);
+		});
+	}
+	catch (Exception e)
+	{
+		throw Exception(string_format("%1: %2", template_filename, e.what()));
+	}
 }

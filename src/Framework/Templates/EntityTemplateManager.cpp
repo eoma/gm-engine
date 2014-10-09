@@ -81,10 +81,17 @@ void EntityTemplateManager::apply_properties(const std::string &template_name, c
 
 void EntityTemplateManager::add_templates(const std::string &template_filename)
 {
-	EntityTemplateParser::parse_templates(
-		TextIO::load_contents(template_filename),
-		[this](const EntityTemplateManager::Template &t)
-		{
-			templates.push_back(t);
-		});
+	try
+	{
+		EntityTemplateParser::parse_templates(
+			TextIO::load_contents(template_filename),
+			[this](const EntityTemplateManager::Template &t)
+			{
+				templates.push_back(t);
+			});
+	}
+	catch (Exception e)
+	{
+		throw Exception(string_format("%1: %2", template_filename, e.what()));
+	}
 }

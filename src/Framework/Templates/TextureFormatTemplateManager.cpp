@@ -67,10 +67,17 @@ void TextureFormatTemplateManager::apply_requirement(const std::string &template
 }
 
 void TextureFormatTemplateManager::add_templates(const std::string &template_filename) {
-	TextureFormatTemplateParser::parse_templates(
-		TextIO::load_contents(template_filename),
-		[this](const TextureFormatTemplateManager::Template &t)
+	try
 	{
-		templates.push_back(t);
-	});
+		TextureFormatTemplateParser::parse_templates(
+			TextIO::load_contents(template_filename),
+			[this](const TextureFormatTemplateManager::Template &t)
+		{
+			templates.push_back(t);
+		});
+	}
+	catch (Exception e)
+	{
+		throw Exception(string_format("%1: %2", template_filename, e.what()));
+	}
 }
