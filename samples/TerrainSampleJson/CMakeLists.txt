@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 set(NAME TerrainSampleJson)
 project(${NAME})
 
-file(GLOB_RECURSE Headers ${CMAKE_CURRENT_LIST_DIR}/*.h)
-file(GLOB_RECURSE Sources ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
+file(GLOB_RECURSE Headers ${CMAKE_CURRENT_LIST_DIR}/include/*.h)
+file(GLOB_RECURSE Sources ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp)
 
 file(GLOB_RECURSE CommonHeaders ${CMAKE_SOURCE_DIR}/samples_common/*.h)
 file(GLOB_RECURSE CommonSources ${CMAKE_SOURCE_DIR}/samples_common/*.cpp)
@@ -16,6 +16,8 @@ set(GLSL_Path ${CMAKE_SOURCE_DIR}/resources/glsl/samples/terrain/)
 file(GLOB_RECURSE GLSL ${GLSL_Path}*.vs ${GLSL_Path}*.fs ${GLSL_Path}*.gs ${GLSL_Path}*.cs ${GLSL_Path}*.tcs ${GLSL_Path}*.tes)
 source_group("JSON Files\\" FILES ${JSON})
 source_group("GLSL Files\\" FILES ${GLSL})
+
+include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
 
 if ( Headers OR Sources )
 	add_executable(${NAME} ${Headers} ${Sources} ${CommonHeaders} ${CommonSources} ${JSON} ${GLSL})
