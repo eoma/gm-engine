@@ -26,17 +26,17 @@
 	},
 	{
 		"texture": "rock_diffuse",
-		"image": "terrain/rocks/11/diffuse.tga",
+		"image": "terrain/rocks/7/diffuse.tga",
 		"format": "texture2d"
 	},
 	{
 		"texture": "rock_normal",
-		"image": "terrain/rocks/11/normal.tga",
+		"image": "terrain/rocks/7/normal.tga",
 		"format": "texture2d"
 	},
 	{
 		"texture": "rock_specular",
-		"image": "terrain/rocks/11/specular.tga",
+		"image": "terrain/rocks/7/specular.tga",
 		"format": "texture2d"
 	}
 ]
