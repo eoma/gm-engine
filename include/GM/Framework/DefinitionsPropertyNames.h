@@ -35,3 +35,4 @@
 #define GM_PROPERTY_MATERIAL_COLOR_DIFFUSE		"MaterialColorDiffuse"	// glm::vec3
 #define GM_PROPERTY_MATERIAL_COLOR_SPECULAR		"MaterialColorSpecular" // glm::vec3
 #define GM_PROPERTY_MATERIAL_COLOR_AMBIENT		"MaterialColorAmbient"	// glm::vec3
+#define GM_PROPERTY_ACTIVATED                   "Activated"             // bool
