@@ -25,6 +25,9 @@ CubePrimitive::CubePrimitive()
 MeshPtr CubePrimitive::create(const BufferManagerPtr &buffer_manager, const VaoManagerPtr &vao_manager) {
 	struct MyVertex {
 		glm::vec3 position;
+		glm::vec3 normal;
+		glm::vec3 tangent;
+		glm::vec3 bitangent;
 		glm::vec2 texcoord;
 	};
 
@@ -33,42 +36,53 @@ MeshPtr CubePrimitive::create(const BufferManagerPtr &buffer_manager, const VaoM
 
 	float s = 0.5f;
 	std::vector<MyVertex> vertices{
+			// The following tangents are badly chosen, but satisfy the orthogonality requirement
+			// The bitangents are initialized to zero as we will compute them from the normal and tangent
+			// when this array/vector has been filled
+
 			//X+
-			{ { s,-s, s }, { 0, 1 } },
-			{ { s,-s,-s }, { 0, 0 } },
-			{ { s, s,-s }, { 1, 0 } },
-			{ { s, s, s }, { 1, 1 } },
+			//position     normal      tangent    bitangent  texcoord
+			{ { s,-s, s }, { 1, 0, 0}, {0, 1, 0}, {0, 0, 0}, { 0, 1 } },
+			{ { s,-s,-s }, { 1, 0, 0}, {0, 1, 0}, {0, 0, 0}, { 0, 0 } },
+			{ { s, s,-s }, { 1, 0, 0}, {0, 1, 0}, {0, 0, 0}, { 1, 0 } },
+			{ { s, s, s }, { 1, 0, 0}, {0, 1, 0}, {0, 0, 0}, { 1, 1 } },
 		
 			//X-
-			{ {-s, s, s }, { 1, 1 } },
-			{ {-s, s,-s }, { 1, 0 } },
-			{ {-s,-s,-s }, { 0, 0 } },
-			{ {-s,-s, s }, { 0, 1 } },
+			{ {-s, s, s }, {-1, 0, 0}, {0, 1, 0}, {0, 0, 0}, { 1, 1 } },
+			{ {-s, s,-s }, {-1, 0, 0}, {0, 1, 0}, {0, 0, 0}, { 1, 0 } },
+			{ {-s,-s,-s }, {-1, 0, 0}, {0, 1, 0}, {0, 0, 0}, { 0, 0 } },
+			{ {-s,-s, s }, {-1, 0, 0}, {0, 1, 0}, {0, 0, 0}, { 0, 1 } },
 
 			//Y+
-			{ { s, s, s }, { 1, 1 } },
-			{ { s, s,-s }, { 1, 0 } },
-			{ {-s, s,-s }, { 0, 0 } },
-			{ {-s, s, s }, { 0, 1 } },
+			{ { s, s, s }, { 0, 1, 0}, {1, 0, 0}, {0, 0, 0}, { 1, 1 } },
+			{ { s, s,-s }, { 0, 1, 0}, {1, 0, 0}, {0, 0, 0}, { 1, 0 } },
+			{ {-s, s,-s }, { 0, 1, 0}, {1, 0, 0}, {0, 0, 0}, { 0, 0 } },
+			{ {-s, s, s }, { 0, 1, 0}, {1, 0, 0}, {0, 0, 0}, { 0, 1 } },
 
 			//Y-
-			{ {-s,-s, s }, { 0, 1 } },
-			{ {-s,-s,-s }, { 0, 0 } },
-			{ { s,-s,-s }, { 1, 0 } },
-			{ { s,-s, s }, { 1, 1 } },
+			{ {-s,-s, s }, { 0,-1, 0}, {1, 0, 0}, {0, 0, 0}, { 0, 1 } },
+			{ {-s,-s,-s }, { 0,-1, 0}, {1, 0, 0}, {0, 0, 0}, { 0, 0 } },
+			{ { s,-s,-s }, { 0,-1, 0}, {1, 0, 0}, {0, 0, 0}, { 1, 0 } },
+			{ { s,-s, s }, { 0,-1, 0}, {1, 0, 0}, {0, 0, 0}, { 1, 1 } },
 
 			//Z+
-			{ {-s,-s, s }, { 0, 0 } },
-			{ { s,-s, s }, { 1, 0 } },
-			{ { s, s, s }, { 1, 1 } },
-			{ {-s, s, s }, { 0, 1 } },
+			{ {-s,-s, s }, { 0, 0, 1}, {0, 1, 0}, {0, 0, 0}, { 0, 0 } },
+			{ { s,-s, s }, { 0, 0, 1}, {0, 1, 0}, {0, 0, 0}, { 1, 0 } },
+			{ { s, s, s }, { 0, 0, 1}, {0, 1, 0}, {0, 0, 0}, { 1, 1 } },
+			{ {-s, s, s }, { 0, 0, 1}, {0, 1, 0}, {0, 0, 0}, { 0, 1 } },
 
 			//Z-
-			{ {-s, s,-s }, { 0, 1 } },
-			{ { s, s,-s }, { 1, 1 } },
-			{ { s,-s,-s }, { 1, 0 } },
-			{ {-s,-s,-s }, { 0, 0 } },
+			{ {-s, s,-s }, { 0, 0,-1}, {0, 1, 0}, {0, 0, 0}, { 0, 1 } },
+			{ { s, s,-s }, { 0, 0,-1}, {0, 1, 0}, {0, 0, 0}, { 1, 1 } },
+			{ { s,-s,-s }, { 0, 0,-1}, {0, 1, 0}, {0, 0, 0}, { 1, 0 } },
+			{ {-s,-s,-s }, { 0, 0,-1}, {0, 1, 0}, {0, 0, 0}, { 0, 0 } },
 	};
+
+	// Compute the bitangents
+	for (MyVertex &vertex : vertices)
+	{
+		vertex.bitangent = glm::normalize(glm::cross(vertex.tangent, vertex.normal));
+	}
 
 	std::vector<unsigned int> indices{
 		0, 1, 2,
@@ -96,6 +110,9 @@ MeshPtr CubePrimitive::create(const BufferManagerPtr &buffer_manager, const VaoM
 			.use_as(GL_ARRAY_BUFFER)
 				.bind_interleaved(
 					Core::VaoArg<glm::vec3>(Core::ShaderConstants::Position),
+					Core::VaoArg<glm::vec3>(Core::ShaderConstants::Normal),
+					Core::VaoArg<glm::vec3>(Core::ShaderConstants::Tangent),
+					Core::VaoArg<glm::vec3>(Core::ShaderConstants::Bitangent),
 					Core::VaoArg<glm::vec2>(Core::ShaderConstants::TexCoord));
 	render_command.set_vertices(vertex_allocation, vertices);
 
