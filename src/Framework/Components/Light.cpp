@@ -20,6 +20,7 @@ Light::Light(const EntityPtr &owner, const RenderSystemPtr &render_system, const
 	material_color_diffuse_property = owner->add(GM_PROPERTY_MATERIAL_COLOR_DIFFUSE, glm::vec3(1));
 	material_color_specular_property = owner->add(GM_PROPERTY_MATERIAL_COLOR_SPECULAR, glm::vec3(1));
 	material_color_ambient_property = owner->add(GM_PROPERTY_MATERIAL_COLOR_AMBIENT, glm::vec3(1));
+    activated_property = owner->add(GM_PROPERTY_ACTIVATED, true);
 
 	render_system->add_light(this);
 }

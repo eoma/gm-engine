@@ -44,9 +44,19 @@ bool mainTest() {
 	if (camera->has_component<Framework::Camera>()) {
 		camera->get_component<Framework::Camera>()->set_projection(app->get_resolution());
 	}
+    
+    // Switch light on/off
+    auto keyboard_slot = app->sign_keyboard().connect(
+      [&](int key, int scancode, int action, int mods) {
+          if ((key == GLFW_KEY_SPACE) && action == GLFW_RELEASE) {
+              auto activated = light->get<bool>("Activated");
+              activated = !activated;
+          }
+      });
+
 
 	// Set some run time limits
-	float max_run_time = 7.5f;
+	float max_run_time = 70.5f;
 	float run_time = 0.f;
 
 	auto update_slot = app->on_update().connect([&](float dt) mutable {

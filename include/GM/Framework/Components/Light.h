@@ -29,6 +29,7 @@ public:
 	glm::vec3 get_material_color_diffuse() const { return material_color_diffuse_property; }
 	glm::vec3 get_material_color_specular() const { return material_color_specular_property; }
 	glm::vec3 get_material_color_ambient() const { return material_color_ambient_property; }
+    bool get_activated() const { return activated_property; }
 
 public:
 	static std::string get_static_type() { return GM_COMPONENT_LIGHT; };
@@ -43,6 +44,7 @@ private:
 	Property<glm::vec3> material_color_diffuse_property;
 	Property<glm::vec3> material_color_specular_property;
 	Property<glm::vec3> material_color_ambient_property;
+    Property<bool> activated_property;
 };
 
 } // namespace Framework

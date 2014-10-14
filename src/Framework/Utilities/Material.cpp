@@ -27,6 +27,11 @@ namespace Framework {
 
 		switch (info.type)
 		{
+        case GL_BOOL:
+            {
+                add_sleeping_uniform(info.name, 0, shader->get_handle(), info.location);
+                break;
+            }
 		case GL_BYTE:
 			{
 				add_sleeping_uniform<char>(info.name, 0, shader->get_handle(), info.location);
@@ -208,6 +213,7 @@ void Material::update_uniforms(Camera * camera, const std::vector<Light *> &ligh
 				auto light_material_color_diffuse_name = clan::string_format("%1.material_color_diffuse", light_in_array_name);
 				auto light_material_color_specular_name = clan::string_format("%1.material_color_specular", light_in_array_name);
 				auto light_material_color_ambient_name = clan::string_format("%1.material_color_ambient", light_in_array_name);
+                auto light_activated_name = clan::string_format("%1.activated", light_in_array_name);
 
 				auto light = lights[i];
 				get<glm::vec3>(light_position_in_viewspace_name) = light->get_position_in_viewspace(camera);
@@ -224,6 +230,9 @@ void Material::update_uniforms(Camera * camera, const std::vector<Light *> &ligh
 				if (has_property(light_material_color_ambient_name)) {
 					get<glm::vec3>(light_material_color_ambient_name) = light->get_material_color_ambient();
 				}
+                if (has_property(light_activated_name)) {
+                    get<bool>(light_activated_name) = light->get_activated();
+                }
 			}
 		}
 	}

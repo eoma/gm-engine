@@ -11,6 +11,7 @@ uniform struct SLight {
         vec3 material_color_diffuse;
         vec3 material_color_specular;
         vec3 material_color_ambient;
+        bool activated;
 } light[64];
 uniform int light_count;
 
@@ -53,7 +54,10 @@ void main() {
 	color = vec3(0,0,0);
     for(int i = 0; i < light_count; i++)
     {
-        color += color_from_light(i, N, V, diffuse);
+        if (light[i].activated)
+        {
+            color += color_from_light(i, N, V, diffuse);
+        }
     }
     if(color == vec3(0,0,0)) {
         color = diffuse;
