@@ -87,7 +87,7 @@ void RenderCommand::set_vertices(const BufferAllocation &vertex_buffer, const st
 template<class Instance>
 void RenderCommand::set_instances(const BufferAllocation &instance_buffer, const std::vector<Instance> &instances)
 {
-	set_vertices(instance_buffer, instances.size(), sizeof(Instance));
+	set_instances(instance_buffer, instances.size(), sizeof(Instance));
 }
 
 template<class IndexType>
