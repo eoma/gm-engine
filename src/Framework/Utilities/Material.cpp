@@ -29,7 +29,7 @@ namespace Framework {
 		{
         case GL_BOOL:
             {
-                add_sleeping_uniform(info.name, 0, shader->get_handle(), info.location);
+                add_sleeping_uniform<bool>(info.name, 0, shader->get_handle(), info.location);
                 break;
             }
 		case GL_BYTE:
