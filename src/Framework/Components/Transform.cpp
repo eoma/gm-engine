@@ -28,6 +28,7 @@ Transform::Transform(const EntityPtr &owner, const SceneSystemPtr &scene_system,
 	normal_matrix_property = owner->add(GM_PROPERTY_NORMAL_MATRIX, glm::mat3(1));
 	object_matrix_no_scale_property = owner->add(GM_PROPERTY_OBJECT_MATRIX_NO_SCALE, glm::mat4(1));
 	world_matrix_no_scale_property = owner->add(GM_PROPERTY_WORLD_MATRIX_NO_SCALE, glm::mat4(1));
+	parent_world_matrix_no_scale_property = owner->add(GM_PROPERTY_PARENT_WORLD_MATRIX_NO_SCALE, glm::mat4(1));
 
 	scene_system->add(this);
 }
@@ -139,6 +140,10 @@ void Transform::update_world_matrix() {
 
 	world_matrix_property = make_world_matrix();
 	world_matrix_no_scale_property = make_world_matrix_no_scale();
+
+	if (parent != nullptr) {
+		parent_world_matrix_no_scale_property = parent->get_world_matrix_no_scale();
+	}
 }
 
 glm::mat4 Transform::make_world_matrix() const {
