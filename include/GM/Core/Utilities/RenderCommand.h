@@ -32,7 +32,7 @@ public:
 	RenderCommand();
 
 	// Not reccommended to use
-	RenderCommand(bool is_indexed, unsigned int count, unsigned int instance_count, unsigned int first, unsigned int base_vertex = 0, unsigned int base_instance = 0);
+	RenderCommand(bool is_indexed, bool is_instanced, unsigned int count, unsigned int instance_count, unsigned int first, unsigned int base_vertex = 0, unsigned int base_instance = 0);
 
 	void set_draw_mode(const GLenum mode) { this->mode = mode; };
 
@@ -59,7 +59,8 @@ private:
 
 public:
 	// whether or not this is a RenderArrays or RenderElements command
-	bool is_indexed; 
+	bool is_indexed;
+	bool is_instanced;
 
 	// The draw mode, eg GL_POINTS, GL_LINE_STRIP, etc.
 	GLenum mode;

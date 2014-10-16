@@ -5,6 +5,7 @@ namespace Core {
 
 RenderCommand::RenderCommand()
 : is_indexed(false)
+, is_instanced(false)
 , mode(GL_TRIANGLE_STRIP)
 , index_type(GL_UNSIGNED_INT)
 , count(0)
@@ -16,8 +17,9 @@ RenderCommand::RenderCommand()
 
 }
 
-RenderCommand::RenderCommand(bool is_indexed, unsigned int count, unsigned int instance_count, unsigned int first, unsigned int base_vertex, unsigned int base_instance)
+RenderCommand::RenderCommand(bool is_indexed, bool is_instanced, unsigned int count, unsigned int instance_count, unsigned int first, unsigned int base_vertex, unsigned int base_instance)
 : is_indexed(is_indexed)
+, is_instanced(is_instanced)
 , mode(GL_TRIANGLE_STRIP)
 , index_type(GL_UNSIGNED_INT)
 , count(count)
@@ -94,8 +96,12 @@ void RenderCommand::set_instances(const BufferAllocation &instance_buffer, const
 		throw clan::Exception("Instance buffer's offset is not aligned with the size of the instance object");
 	}
 
+	is_instanced = true;
 	instance_count = count;
+
+#ifndef __APPLE__ // FIXME: remove this test when OS X supports OpenGL 4.2 or ARB_base_instance
 	base_instance = instance_buffer.offset / instance_size;
+#endif
 }
 
 } // namespace Core
