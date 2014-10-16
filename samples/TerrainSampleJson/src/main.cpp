@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+#include <memory>
 #include <cstdlib>
 
 #include "TerrainMaker.h"
@@ -53,7 +54,78 @@ bool mainTest() {
 	entity_manager->apply("terrain", terrain);
 	//entity_manager->apply("light", light);
 	entity_manager->apply("rock", rock);
-	
+
+	// Instancing example
+	{
+		auto instanced_rock = entity_manager->create_entity("instanced_rock");
+		entity_manager->apply("rock_instanced", instanced_rock);
+
+		// Our instance data structure
+		struct MyInstanceData {
+			glm::vec3 position;
+		};
+
+		std::vector<MyInstanceData> instance_collection;
+
+		for (unsigned int x = 0; x < 10; ++x) {
+			for (unsigned int y = 0; y < 10; ++y) {
+				// Generate instance data
+				instance_collection.push_back(MyInstanceData{
+					{ x, 0 , y }
+				});
+			}
+		}
+		
+		if (instanced_rock->has_component<Framework::Renderable>()) {
+			// We can fetch renderable, and thus mesh
+			auto renderable = instanced_rock->get_component<Framework::Renderable>();
+
+			auto original_mesh = renderable->get_mesh(); // We will not modify the original mesh
+
+			if (original_mesh != nullptr) {
+				// Can not set up instancing if mesh has not been set
+
+				// Upload our data, alternatively we could manually allocate using
+				// auto allocation = app->get_buffer_manager()->allocate<MyInstanceData>(max_number_of_instances);
+				// allocation.upload(instance_collection);
+				Core::BufferAllocation instance_allocation = app->get_buffer_manager()->allocate_and_upload(instance_collection);
+
+				// We need to get a copy of the vao layout without any previous instances, we have no
+				// guarantees the format is the same
+				Core::VaoLayout instanced_layout = original_mesh->get_vao_layout().get_copy_without_instancing();
+
+				// The instance vao structure needs to reflect the structure of MyInstanceData
+				// It must also be of a form the shader expects, that is same type (glm::vec3 maps to glsl vec3)
+				// and same location (6 in this example)
+				std::vector<Core::VertexAttribute> instance_structure {
+					Core::VaoArg<glm::vec3>(6),
+					// Fill in or replace...
+				};
+
+#ifdef __APPLE__ // FIXME: Until OS X supports OpenGL 4.2
+				instanced_layout.for_buffer(instance_allocation).use_as(GL_ARRAY_BUFFER)
+					.bind_interleaved(instance_allocation.offset, 1, instance_structure);
+#else
+				instanced_layout.for_buffer(instance_allocation).use_as(GL_ARRAY_BUFFER)
+					.bind_interleaved(0, 1, instance_structure);
+#endif
+
+				// Get a copy of the original render command and update it
+				Core::RenderCommand instanced_render_command = original_mesh->get_render_command();
+				instanced_render_command.set_instances(instance_allocation, instance_collection);
+
+				std::cout << "Are we instanced? " << instanced_layout.is_instanced() << std::endl;
+				std::cout << "Num instances: " << instanced_render_command.instance_count << std::endl;
+
+				Framework::MeshPtr instanced_mesh = std::make_shared<Framework::Mesh>(instanced_render_command,
+					instanced_layout, app->get_vao_manager(), clan::string_format("%1%2", original_mesh->get_name(), "_instanced"));
+
+				// Then we override the original mesh in our renderable
+				renderable->set_mesh(instanced_mesh);
+			}
+		}
+	}
+
 	// Set up the projection for the camera
 	if (camera_entity->has_component<Framework::Camera>()) {
 		auto camera = camera_entity->get_component<Framework::Camera>();

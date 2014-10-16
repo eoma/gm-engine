@@ -98,5 +98,26 @@
 				"type": "vec3"
 			}
 		]
+	},
+	{
+		"material": "rock_with_bumpmap_instanced",
+		"shader": "bumpmapping_instanced",
+		"uniforms": [
+			{
+				"name": "tex_color",
+				"value": "rock_diffuse",
+				"type": "texture"
+			},
+			{
+				"name": "tex_normal",
+				"value": "rock_normal",
+				"type": "texture"
+			},
+			{
+				"name": "light_pos",
+				"value": [0,0,0],
+				"type": "vec3"
+			}
+		]
 	}
 ]

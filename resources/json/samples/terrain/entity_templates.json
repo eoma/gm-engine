@@ -146,5 +146,29 @@
 				"type": "vec3"
 			}
 		]
+	},
+	{
+		"entity": "rock_instanced",
+		"components": [ "Renderable", "Transform" ],
+		"properties": [
+			{
+				"name": "MeshName",
+				"value": "rock"
+			},
+			{
+				"name": "MaterialName",
+				"value": "rock_with_bumpmap_instanced"
+			},
+			{
+				"name": "Position",
+				"value": [0,1,0],
+				"type": "vec3"
+			},
+			{
+				"name": "Scale",
+				"value": [0.0025, 0.0025, 0.0025],
+				"type": "vec3"
+			}
+		]
 	}
 ]

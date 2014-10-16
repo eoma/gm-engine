@@ -30,5 +30,10 @@
 		"shader": "bumpmapping",
 		"vertex_shader": "bumpmapping.vs.glsl",
 		"fragment_shader": "bumpmapping.fs.glsl"
+	},
+	{
+		"shader": "bumpmapping_instanced",
+		"vertex_shader": "bumpmapping_instanced.vs.glsl",
+		"fragment_shader": "bumpmapping.fs.glsl"
 	}
 ]
