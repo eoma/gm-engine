@@ -21,7 +21,29 @@ void Render::render(const RenderCommand &command)
 			index_type_size = 4;
 		}
 
-		if (command.base_instance <= 1)
+		if (command.is_instanced)
+		{
+			if (command.base_instance > 0) { 
+				glDrawElementsInstancedBaseVertexBaseInstance(command.mode,
+					                                      command.count,
+					                                      command.index_type,
+					                                      reinterpret_cast<void*>(command.first * index_type_size),
+					                                      command.instance_count,
+					                                      command.base_vertex,
+					                                      command.base_instance);
+			}
+			else
+			{
+				// FIXME: Remove this when OS X supports OpenGL 4.2
+				glDrawElementsInstancedBaseVertex(command.mode,
+					                          command.count,
+					                          command.index_type,
+					                          reinterpret_cast<void*>(command.first * index_type_size),
+					                          command.instance_count,
+					                          command.base_vertex);
+			}
+		}
+		else
 		{
 			glDrawElementsBaseVertex(command.mode,
 			                         command.count,
@@ -29,33 +51,33 @@ void Render::render(const RenderCommand &command)
 			                         reinterpret_cast<void*>(command.first * index_type_size),
 			                         command.base_vertex);
 		}
-		else
-		{
-			glDrawElementsInstancedBaseVertexBaseInstance(command.mode,
-			                                              command.count,
-			                                              command.index_type,
-			                                              reinterpret_cast<void*>(command.first * index_type_size),
-			                                              command.instance_count,
-			                                              command.base_vertex,
-			                                              command.base_instance);
-		}
 	}
 	else
 	{
-		if (command.base_instance <= 1)
+		if (command.is_instanced)
+		{
+			if (command.base_instance > 0)
+			{
+				// Render using RenderArrays*
+				glDrawArraysInstancedBaseInstance(command.mode,
+					                          command.first,
+					                          command.count,
+					                          command.instance_count,
+					                          command.base_instance);
+			}
+			else
+			{
+				glDrawArraysInstanced(command.mode,
+					              command.first,
+					              command.count,
+					              command.instance_count);
+			}
+		}
+		else
 		{
 			glDrawArrays(command.mode,
 			             command.first,
 			             command.count);
-		}
-		else
-		{
-			// Render using RenderArrays*
-			glDrawArraysInstancedBaseInstance(command.mode,
-			                                  command.first,
-			                                  command.count,
-			                                  command.instance_count,
-			                                  command.base_instance);
 		}
 	}
 }
