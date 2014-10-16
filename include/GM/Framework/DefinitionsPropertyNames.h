@@ -8,6 +8,7 @@
 #define GM_PROPERTY_WORLD_MATRIX		"WorldMatrix"		// glm::mat4
 #define GM_PROPERTY_OBJECT_MATRIX_NO_SCALE	"ObjectMatrixNoScale"	// glm::mat4
 #define GM_PROPERTY_WORLD_MATRIX_NO_SCALE	"WorldMatrixNoScale"	// glm::mat4
+#define GM_PROPERTY_PARENT_WORLD_MATRIX_NO_SCALE		"ParentWorldMatrixNoScale"		// glm::mat4
 
 // Culler and render system
 #define GM_PROPERTY_CULLED				"Culled"			// bool
