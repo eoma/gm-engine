@@ -11,12 +11,12 @@
 	},
 	{
 		"texture": "ground_earth",
-		"image": "terrain/ground/42/diffuse.tga",
+		"image": "terrain/ground/42/diffus.tga",
 		"format": "tiled_texture2d"
 	},
 	{
 		"texture": "ground_earth2",
-		"image": "terrain/ground/51/diffuse.tga",
+		"image": "terrain/ground/51/diffus.tga",
 		"format": "tiled_texture2d"
 	},
 	{
