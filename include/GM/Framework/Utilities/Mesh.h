@@ -23,6 +23,9 @@ public:
 	const Core::VaoLayout &get_vao_layout() const { return vao_layout; }
 	const Core::RenderCommand &get_render_command() const { return render_command; }
 
+	// This might be dangerous, useful when updating the render command
+	void set_render_command(const Core::RenderCommand &command) { render_command = command; }
+
 private:
 	std::string name;
 	Core::VertexArrayObjectPtr vao;
