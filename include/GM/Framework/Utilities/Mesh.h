@@ -20,12 +20,14 @@ public:
 
 	const std::string &get_name() const { return name; }
 	const Core::VertexArrayObjectPtr &get_vao() const { return vao; }
+	const Core::VaoLayout &get_vao_layout() const { return vao_layout; }
 	const Core::RenderCommand &get_render_command() const { return render_command; }
 
 private:
 	std::string name;
 	Core::VertexArrayObjectPtr vao;
 	Core::RenderCommand render_command;
+	Core::VaoLayout vao_layout;
 };
 
 } // namespace Framework

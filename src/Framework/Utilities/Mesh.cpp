@@ -6,6 +6,7 @@ namespace Framework {
 	Mesh::Mesh(const Core::RenderCommand &render_command, const Core::VaoLayout &vao_layout, const VaoManagerPtr &vao_manager, const std::string &name)
 		: name(name)
 		, render_command(render_command)
+		, vao_layout(vao_layout)
 {
 		vao = vao_manager->get_vao_for(vao_layout);
 }
