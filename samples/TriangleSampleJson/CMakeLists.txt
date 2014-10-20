@@ -8,7 +8,8 @@ file(GLOB_RECURSE Sources ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
 
 file(GLOB_RECURSE JSON ${CMAKE_SOURCE_DIR}/resources/json/samples/triangle/*.json)
 set(GLSL_Path ${CMAKE_SOURCE_DIR}/resources/glsl/samples/triangle/)
-file(GLOB_RECURSE GLSL ${GLSL_Path}*.vs ${GLSL_Path}*.fs ${GLSL_Path}*.gs ${GLSL_Path}*.cs ${GLSL_Path}*.tcs ${GLSL_Path}*.tes)
+file(GLOB_RECURSE GLSL ${GLSL_Path}*.vs ${GLSL_Path}*.fs ${GLSL_Path}*.gs ${GLSL_Path}*.cs
+	${GLSL_Path}*.tcs ${GLSL_Path}*.tes ${GLSL_Path}*.glsl)
 source_group("JSON Files\\" FILES ${JSON})
 source_group("GLSL Files\\" FILES ${GLSL})
 
