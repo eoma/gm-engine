@@ -24,6 +24,9 @@ file(GLOB_RECURSE GLSL ${GLSL_Path}*.vs ${GLSL_Path}*.fs ${GLSL_Path}*.gs ${GLSL
 source_group("JSON Files\\" FILES ${JSON})
 source_group("GLSL Files\\" FILES ${GLSL})
 
+include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/common/include)
+
 if ( Headers OR Sources )
 	add_executable(${PROJECT_NAME} ${Headers} ${Sources} ${CommonHeaders} ${CommonSources} ${JSON} ${GLSL})
 	target_link_libraries(${PROJECT_NAME} ${GM_ENGINE_LIBRARIES}) # or something else
