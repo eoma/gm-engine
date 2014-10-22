@@ -77,6 +77,7 @@ Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_f
 , fullscreen(add<bool>("fullscreen", fullscreen))
 , visible(add<bool>("visible", visible))
 , keep_running(add<bool>("keep_running", false))
+, initialize_entities(true)
 
 #ifdef __APPLE__
 , gl_version(3,2)
@@ -270,6 +271,10 @@ void Main::run(bool destruct_window_and_gl_on_exit)
 
 void Main::initialize()
 {
+	if (initialize_entities) {
+		entity_manager->initialize();
+	}
+
 	reset_mouse_position();
 	initialize_sign();
 }

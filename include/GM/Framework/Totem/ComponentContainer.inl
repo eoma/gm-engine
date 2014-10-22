@@ -94,6 +94,13 @@ void ComponentContainer<UserData>::update_components(float elapsed_time)
 }
 
 template<class UserData>
+void ComponentContainer<UserData>::initialize_components()
+{
+	for(unsigned int i = 0; i < components.size(); i++)
+		components[i]->initialize();
+}
+
+template<class UserData>
 template<class ComponentType>
 void ComponentContainer<UserData>::remove_component(const std::string &name, bool uphold_order_in_list)
 {
