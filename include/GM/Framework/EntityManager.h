@@ -30,6 +30,9 @@ public:
 
 	void update(float elapsed_time);
 
+	// Initializes all entities
+	void initialize();
+
 	//ComponentSerializerPtr get_component_serializer() const { return component_serializer; }
 	clan::Signal<void(const EntityPtr &/*owner*/, const std::string &/*type*/, const std::string &/*name*/)> &register_component_serializer_signal();
 

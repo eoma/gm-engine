@@ -128,6 +128,9 @@ public:
 	bool is_running() const { return keep_running; }
 	void stop_running() { keep_running = false; }
 
+	bool is_initializing_entities() const { return initialize_entities; }
+	void set_initialize_entities(bool state) { initialize_entities = state; }
+
 	bool is_key_down(unsigned int key) const;
 	bool is_button_down(unsigned int button) const;
 
@@ -253,6 +256,8 @@ protected:
 	Framework::Property<bool> fullscreen;
 	Framework::Property<bool> visible;
 	Framework::Property<bool> keep_running;
+
+	bool initialize_entities;
 
 	glm::ivec2 gl_version;
 

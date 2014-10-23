@@ -37,6 +37,13 @@ void EntityManager::update(float elapsed_time)
 	}
 }
 
+void EntityManager::initialize()
+{
+	for (auto entity : entities)
+	{
+		entity->initialize_components();
+	}
+}
 EntityPtr EntityManager::get_entity(const std::string &name) const
 {
 	for(auto entity : entities)

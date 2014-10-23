@@ -27,6 +27,10 @@ public:
 	template<class ComponentType> std::shared_ptr<ComponentType> get_component(const std::string &name = std::string());
 	std::vector<std::shared_ptr<IComponent<UserData>>> &get_components();
 	void update_components(float elapsed_time);
+
+	// Should be called when all components for an entity has loaded
+	void initialize_components();
+
 	template<class ComponentType> void remove_component(const std::string &name = std::string(), bool uphold_order_in_list = false);
 
 	clan::Signal<void(std::shared_ptr<IComponent<UserData>>)> &component_added();
