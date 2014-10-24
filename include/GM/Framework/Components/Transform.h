@@ -88,6 +88,8 @@ public:
 	// Called when a child is to be removed from a parent
 	static void remove_callback(Transform * const child, Transform * const parent);
 
+	static bool child_addition_forms_cycle(Transform * const child, Transform * const parent);
+
 protected:
 	glm::mat4 make_object_matrix() const;
 	glm::mat4 make_object_matrix_no_scale() const;

@@ -83,6 +83,15 @@ void Transform::add_callback(Transform * const child, Transform * const parent) 
 		return;
 	}
 
+	if (parent == child) {
+		throw clan::Exception("Can not parent transform can not be child of itself!");
+	}
+	
+	if (child_addition_forms_cycle(child, parent)) {
+		throw clan::Exception(clan::string_format("Addition of child transform %1 to parent transform %2 forms a cycle!",
+			child->get_owner()->get_name(), parent->get_owner()->get_name()));
+	}
+
 	parent->children.push_back(child);
 	child->parent = parent;
 
@@ -105,6 +114,19 @@ void Transform::remove_callback(Transform * const child, Transform * const paren
 
 		parent->child_removed_sig(parent, child);
 	}
+}
+
+bool Transform::child_addition_forms_cycle(Transform * const child, Transform * const parent) {
+	// Assume child is a-cyclic, if it has children
+	bool cyclic = false;
+	Transform * candidate = parent;
+
+	while (!cyclic && candidate != nullptr) {
+		cyclic = (child == candidate);
+		candidate = candidate->get_parent();
+	}
+
+	return cyclic;
 }
 
 bool Transform::is_dirty() const {
