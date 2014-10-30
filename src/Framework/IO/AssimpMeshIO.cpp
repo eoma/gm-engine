@@ -49,6 +49,16 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 	Core::VaoLayout vao_layout;
 	Core::RenderCommand render_command;
 
+	// vectors to store bounds position and size in.
+	glm::vec3 mesh_bounds_pos = glm::vec3(0);
+	glm::vec3 mesh_bounds_size = glm::vec3(0);
+
+	if (scene_mesh->HasPositions() && scene_mesh->mNumVertices > 0)
+	{
+		mesh_bounds_pos = glm::vec3(scene_mesh->mVertices[0].x, scene_mesh->mVertices[0].y, scene_mesh->mVertices[0].z);
+		mesh_bounds_size = mesh_bounds_pos;
+	}
+
 	//
 	// Set up vertices
 	//
@@ -90,6 +100,10 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 			vertices.push_back(position.x);
 			vertices.push_back(position.y);
 			vertices.push_back(position.z);
+
+			// check for new min-max component in vertex, and update bounds.
+			check_if_new_min_or_max_vertex(glm::vec3(position.x, position.y, position.z),
+			                               mesh_bounds_pos, mesh_bounds_size);
 		}
 
 		if (scene_mesh->HasNormals())
@@ -155,7 +169,33 @@ MeshPtr AssimpMeshIO::load(const std::string &mesh_name, const std::string &file
 		render_command.set_indices(index_allocation, indices);
 	}
 
-	return std::make_shared<Mesh>(render_command, vao_layout, vao_manager, mesh_name);
+	// Ensure that mesh_bounds_size is the distance from mesh_bounds_pos to upper-right-back-corner of the bounds
+	mesh_bounds_size = glm::vec3(
+	                             mesh_bounds_size.x - mesh_bounds_pos.x,
+	                             mesh_bounds_size.y - mesh_bounds_pos.y,
+	                             mesh_bounds_size.z - mesh_bounds_pos.z
+	                            );
+
+	return std::make_shared<Mesh>(render_command, vao_layout, vao_manager, mesh_name, mesh_bounds_pos, mesh_bounds_size);
+}
+
+// Check if this vertex has components that are greater or less than or more than the corresponding components in
+// bounds_pos and bounds_size, respectively, and if so, set the relevant component as new component in bounds_pos
+// or bounds_size.
+void AssimpMeshIO::check_if_new_min_or_max_vertex(const glm::vec3 &vertex, glm::vec3 &bounds_pos, glm::vec3 &bounds_size) {
+
+	// loop through the vectors
+	for(unsigned int i = 0; i < 3; i++) {
+
+		// if vertex[i] has a greater value than bounds_size[i], set bounds_size[i] = vertex[i]
+		if(vertex[i] > bounds_size[i]) {
+			bounds_size[i] = vertex[i];
+		}
+		// if vertex[i] has lower value than bounds_pos[i], set bounds_pos[i] = vertex[i]
+		if(vertex[i] < bounds_pos[i]) {
+			bounds_pos[i] = vertex[i];
+		}
+	}
 }
 
 } // namespace Framework
