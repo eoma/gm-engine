@@ -46,7 +46,7 @@ int TextureFormat::compare(const TextureFormat &current, const TextureFormat &ot
 
 bool operator< (const TextureFormat &current, const TextureFormat &other)
 {
-	return TextureFormat::compare(current, other) ? true : false;
+	return TextureFormat::compare(current, other) < 0;
 }
 
 void TextureFormat::string_to_parameter(const std::string &value, float &result)
