@@ -20,11 +20,18 @@ class TextureFormat; typedef std::shared_ptr<TextureFormat> TextureFormatPtr;
 class TextureFormat
 {
 public:
+	TextureFormat(const unsigned int type);
 	virtual ~TextureFormat() {};
 	
 	unsigned int get_type() const { return type; }
 
 	bool is_generating_mipmap() const { return make_mipmap; }
+	void set_generate_mipmap(bool value) { make_mipmap = value; }
+
+	void set_parameter(unsigned int param_name, float param) { set_parameter<float>(param_name, param); }
+	void set_parameter(unsigned int param_name, int param) { set_parameter<int>(param_name, param); }
+	void set_parameter(unsigned int param_name, glm::vec4 param) { set_parameter<glm::vec4>(param_name, param); }
+	void set_parameter(unsigned int param_name, glm::ivec4 param) { set_parameter<glm::ivec4>(param_name, param); }
 
 	GLenum get_gl_texture_format() const { return gl_texture_format; }
 	bool has_gl_texture_format() const { return gl_texture_format != GL_NONE; }
@@ -70,18 +77,8 @@ public:
 	static GLenum string_to_gl_texture_format(const std::string &value);
 
 protected:
-	// TODO: A bit unclear a bout these, why should they be protected?
-	TextureFormat(const unsigned int type);
-
-	void set_generate_mipmap(bool value) { make_mipmap = value; }
-
 	template<class T>
 	void set_parameter(unsigned int param_name, T param); 
-
-	void set_parameter(unsigned int param_name, float param) { set_parameter<float>(param_name, param); }
-	void set_parameter(unsigned int param_name, int param) { set_parameter<int>(param_name, param); }
-	void set_parameter(unsigned int param_name, glm::vec4 param) { set_parameter<glm::vec4>(param_name, param); }
-	void set_parameter(unsigned int param_name, glm::ivec4 param) { set_parameter<glm::ivec4>(param_name, param); }
 
 protected:
 	// texture format type
