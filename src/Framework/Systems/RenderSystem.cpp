@@ -134,6 +134,8 @@ void RenderSystem::render() {
 
 		// Draw from depth zero and up
 		for (Camera *camera : cameras)	{
+			const std::string render_pass_name = "standard";
+
 			camera->clear_buffer();
 
 			for (IRenderable *renderable : bucket) {
@@ -165,19 +167,24 @@ void RenderSystem::render() {
 						continue; // Jump to next renderable
 					}
 
-					if (active_shader != active_material->get_shader())
+					// Get appropriate shader type, depending pass
+					if (active_shader != active_material->get_render_pass(render_pass_name))
 					{
-						active_shader = active_material->get_shader();
+						active_shader = active_material->get_render_pass(render_pass_name);
 						active_shader->bind();
 						// Update camera uniforms?
 					}
 
+					if (active_shader == nullptr)
+					{
+						continue;
+					}
+
 					// FIXME: bind textures every frame?
-					active_material->bind_textures();
-					active_material->update_uniforms(camera, lights);
+					active_material->update_uniforms(camera, lights, render_pass_name);
 				}
 
-				renderable->update_uniforms(camera);
+				renderable->update_uniforms(camera, render_pass_name);
 
 				if (renderable->has_custom_render()) {
 					renderable->custom_render(camera);
@@ -199,6 +206,8 @@ void RenderSystem::render() {
 	{
 		active_vao->unbind();
 	}
+
+	// Perform post-process?
 }
 
 void RenderSystem::resize(int width, int height) {
