@@ -49,7 +49,7 @@ public:
 
 	virtual void custom_render(Camera * /*camera*/) override {}
 
-	virtual void update_uniforms(Camera *camera) override; //{ update_uniforms_signal(camera); }
+	virtual void update_uniforms(Camera *camera, const std::string &render_pass_name) override; //{ update_uniforms_signal(camera); }
 
 	void update_normal_matrix(const glm::mat4 &view_matrix);
 
@@ -57,12 +57,12 @@ public:
 	static std::string get_static_type() { return GM_COMPONENT_RENDERABLE; }
 
 private:
-	void set_up_uniforms();
+	void set_up_uniform_listeners();
 
 	void add_uniform_listener(const std::shared_ptr<IProperty> &prop);
 
 	template<class Value>
-	void add_uniform(const std::shared_ptr<IProperty> &prop, const unsigned int program, const int uniform_location);
+	void add_uniform(const std::string &render_pass_name, const std::shared_ptr<IProperty> &prop, const unsigned int program, const int uniform_location);
 
 	glm::mat3 make_normal_matrix(const glm::mat4 &view_matrix) const;
 
@@ -91,9 +91,14 @@ private:
 	MaterialPtr material;
 	MeshPtr mesh;
 
-	clan::Signal<void()> update_uniforms_signal;
+	struct UniformsInRenderPass {
+		clan::SlotContainer update_uniform_slots;
+		clan::Signal<void()> update_uniforms_signal;
+	};
+	std::map<std::string, UniformsInRenderPass> uniforms_for_render_pass;
+
 	clan::Slot new_uniform_listener_slot;
-	clan::SlotContainer update_uniform_slots;
+
 };
 
 //
@@ -101,11 +106,12 @@ private:
 //
 
 template<class Value>
-void Renderable::add_uniform(const std::shared_ptr<IProperty> &prop, const unsigned int program, const int uniform_location)
+void Renderable::add_uniform(const std::string &render_pass_name, const std::shared_ptr<IProperty> &prop, const unsigned int program, const int uniform_location)
 {
 	if (IProperty::is_type<Value>(prop)) {
 		auto prop_with_type = std::static_pointer_cast<Property<Value>>(prop);
-		update_uniform_slots.connect(update_uniforms_signal, [program, uniform_location, prop_with_type]() {
+		UniformsInRenderPass &unis = uniforms_for_render_pass[render_pass_name];
+		unis.update_uniform_slots.connect(unis.update_uniforms_signal, [program, uniform_location, prop_with_type]() {
 			Core::update_uniform(program, uniform_location, prop_with_type->get());
 		});
 	}
