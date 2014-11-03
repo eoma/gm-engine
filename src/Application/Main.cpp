@@ -680,7 +680,7 @@ void Main::show_cursor() {
 }
 
 void Main::hide_cursor() {
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void Main::glfw_error_callback(int error_code, const char *error_msg) {
