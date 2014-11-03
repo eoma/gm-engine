@@ -6,3 +6,4 @@
 #define GM_PRIMITIVE_FULLSCREEN_QUAD "fullscreen_quad"
 #define GM_PRIMITIVE_SKYBOX "skybox"
 #define GM_PRIMITIVE_CUBE "cube"
+#define GM_PRIMITIVE_ICOSAHEDRON "icosahedron"

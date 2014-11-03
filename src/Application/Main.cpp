@@ -18,6 +18,7 @@
 #include "GM/Framework/Components/Renderable.h"
 #include "GM/Framework/Components/Transform.h"
 #include "GM/Framework/Components/Light.h"
+#include "GM/Framework/Components/Tessellate.h"
 
 #include "GM/Framework/Primitives/TrianglePrimitive.h"
 #include "GM/Framework/Primitives/QuadXYPrimitive.h"
@@ -25,6 +26,7 @@
 #include "GM/Framework/Primitives/FullscreenQuadPrimitive.h"
 #include "GM/Framework/Primitives/SkyboxPrimitive.h"
 #include "GM/Framework/Primitives/CubePrimitive.h"
+#include "GM/Framework/Primitives/IcosahedronPrimitive.h"
 
 #include "GM/Framework/Utilities/Tools.h"
 
@@ -57,6 +59,9 @@ void MainComponentSerializer::create_and_add_component(const Framework::EntityPt
 	else if (type == Framework::Light::get_static_type()) {
 		owner->create_component<Framework::Light>(app->get_render_system());
 	}
+    else if (type == Framework::Tessellate::get_static_type()) {
+        owner->create_component<Framework::Tessellate>(app->get_render_system());
+    }
 }
 
 Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_flags, unsigned int width, unsigned int height, bool fullscreen, bool visible, bool construct_window)
@@ -155,6 +160,7 @@ Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_f
 			mesh_manager->add_primitive(std::make_shared<Framework::FullscreenQuadPrimitive>());
 			mesh_manager->add_primitive(std::make_shared<Framework::SkyboxPrimitive>());
 			mesh_manager->add_primitive(std::make_shared<Framework::CubePrimitive>());
+            mesh_manager->add_primitive(std::make_shared<Framework::IcosahedronPrimitive>());
 		}
 	}
 

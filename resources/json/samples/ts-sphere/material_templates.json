@@ -1,0 +1,13 @@
+[
+	{
+		"material": "diffuse",
+		"shader": "diffuse",
+        "properties": [
+            {
+                "name": "PatchVertices",
+                "value": 16,
+                "type": "int"
+            }
+        ]
+    },
+]
