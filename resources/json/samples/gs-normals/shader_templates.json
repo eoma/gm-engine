@@ -1,0 +1,13 @@
+[
+	{
+		"shader": "diffuse",
+		"vertex_shader": "diffuse.vs",
+		"fragment_shader": "diffuse.fs"
+	},
+    {
+     "shader": "diffuse_gs",
+     "vertex_shader": "diffuse.vs",
+     "geometry_shader": "normals.gs",
+     "fragment_shader": "diffuse.fs"
+	}
+]

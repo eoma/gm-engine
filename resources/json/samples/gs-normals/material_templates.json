@@ -1,0 +1,24 @@
+[
+	{
+		"material": "green_diffuse",
+		"shader": "diffuse",
+		"uniforms": [
+			{
+				"name": "diffuse",
+				"value": [0, 1, 0],
+				"type": "vec3"
+			}
+		]
+    },
+    {
+     "material": "green_diffuse_gs",
+     "shader": "diffuse_gs",
+     "uniforms": [
+     {
+         "name": "diffuse",
+         "value": [0, 1, 0],
+         "type": "vec3"
+     }
+     ]
+	}
+]
