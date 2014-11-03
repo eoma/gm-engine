@@ -9,7 +9,6 @@
 #include "GM/Core/Utilities/RenderCommand.h"
 
 #include <glm/glm.hpp>
-#include <glm/ext.hpp>
 
 #include <GL/gl3w.h>
 

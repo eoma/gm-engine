@@ -30,8 +30,6 @@
 
 #include "GM/Framework/Entity.h"
 
-#include <glm/ext.hpp>
-
 #include <iostream>
 #include <sstream>
 

@@ -10,7 +10,8 @@
 #include "GM/Core/GL/Render.h"
 #include "GM/Core/GL/Shader.h"
 
-#include <glm/ext.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 
 namespace GM {
 namespace Framework {

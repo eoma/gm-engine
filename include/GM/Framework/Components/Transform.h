@@ -4,7 +4,7 @@
 
 // GLM
 #include <glm/glm.hpp>
-#include <glm/ext.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 // ClanLib
 #include <ClanLib/core.h>
