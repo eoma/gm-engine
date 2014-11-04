@@ -3,9 +3,11 @@ layout(vertices = 3) out;
 
 in vec3 vPosition[];
 in vec3 vDiffuse[];
+in vec3 vNormal[];
 
 out vec3 tcPosition[];
-patch out vec3 patch_color;
+out vec3 tcDiffuse[];
+out vec3 tcNormal[];
 
 uniform int TessLevelInner;
 uniform int TessLevelOuter;
@@ -13,7 +15,8 @@ uniform int TessLevelOuter;
 void main()
 {
     tcPosition[gl_InvocationID] = vPosition[gl_InvocationID];
-    patch_color = vDiffuse[gl_InvocationID];
+    tcDiffuse[gl_InvocationID] = vDiffuse[gl_InvocationID];
+    tcNormal[gl_InvocationID] = vNormal[gl_InvocationID];
     
     if (gl_InvocationID == 0) {
         gl_TessLevelInner[0] = TessLevelInner;

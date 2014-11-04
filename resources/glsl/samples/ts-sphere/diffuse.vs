@@ -17,8 +17,10 @@ layout(location = NORMAL) in vec3 normal;
 
 out vec3 vPosition;
 out vec3 vDiffuse;
+out vec3 vNormal;
 
 void main() {
     vDiffuse = diffuse;
     vPosition = position;
+    vNormal = normal;
 }

@@ -4,6 +4,7 @@
 		"vertex_shader": "diffuse.vs",
         "tesselation_control_shader": "diffuse.tcs",
         "tesselation_evaluation_shader": "diffuse.tes",
+        "geometry_shader": "diffuse.gs",
 		"fragment_shader": "diffuse.fs"
 	}
 ]
