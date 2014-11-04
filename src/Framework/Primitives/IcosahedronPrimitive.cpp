@@ -76,6 +76,24 @@ IcosahedronPrimitive::create(const BufferManagerPtr &buffer_manager, const VaoMa
         1, 6, 10
     };
     
+    // Create normals
+    for (unsigned int i = 0; i < indices.size() / 3; ++i)
+    {
+        const glm::vec3 pos1 = vertices[indices[(i * 3) + 0]].position;
+        const glm::vec3 pos2 = vertices[indices[(i * 3) + 1]].position;
+        const glm::vec3 pos3 = vertices[indices[(i * 3) + 2]].position;
+        
+        const glm::vec3 normal = glm::normalize(glm::cross(pos3 - pos1, pos2 - pos1));
+        
+        vertices[indices[(i * 3) + 0]].normal += normal;
+        vertices[indices[(i * 3) + 1]].normal += normal;
+        vertices[indices[(i * 3) + 2]].normal += normal;
+    }
+    for (unsigned int i = 0; i < vertices.size(); ++i)
+    {
+        vertices[i].normal = glm::normalize(vertices[i].normal);
+    }
+    
     auto vertex_allocation = buffer_manager->allocate_and_upload(vertices, GL_STATIC_DRAW);
     vao_layout
         .for_buffer(vertex_allocation)

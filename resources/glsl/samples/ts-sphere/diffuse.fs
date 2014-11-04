@@ -10,4 +10,5 @@ void main() {
     vec3 test1 = tePosition;
     vec3 test2 = tePatchDistance;
     color = diffuse;
+    color = tePatchDistance;
 }

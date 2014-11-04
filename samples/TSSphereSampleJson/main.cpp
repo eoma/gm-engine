@@ -13,7 +13,7 @@ using namespace GM;
 using namespace Application;
 
 bool mainTest() {
-	auto app = Main::create_with_gl_version("test", 4, 1);
+	auto app = Main::create_with_gl_version("TSSPhereSampleJson", 4, 1);
     app->set_resolution(1024, 768);
 
     auto entity_manager = app->get_entity_manager();
