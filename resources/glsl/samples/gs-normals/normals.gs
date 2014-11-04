@@ -2,7 +2,7 @@
 #define NORMAL_LENGTH 10
 
 layout(triangles, invocations = 2) in;
-layout(line_strip, max_vertices = 12) out;
+layout(line_strip, max_vertices = 6) out;
 
 in block
 {
