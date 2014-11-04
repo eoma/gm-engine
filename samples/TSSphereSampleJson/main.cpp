@@ -49,7 +49,36 @@ bool mainTest() {
 	float run_time = 0.f;
     
     auto keyboard_slot = app->sign_keyboard().connect([&](int key, int scancode, int action, int mods) {
-       
+       if (mods == GLFW_MOD_SHIFT)
+       {
+           auto tessLevelOuter = icosahedron->get<int>("TessLevelOuter");
+           if (action == GLFW_RELEASE && key == GLFW_KEY_UP)
+           {
+               tessLevelOuter++;
+           }
+           else if (action == GLFW_RELEASE && key == GLFW_KEY_DOWN)
+           {
+               if (tessLevelOuter > 1)
+               {
+                   tessLevelOuter--;
+               }
+           }
+       }
+       else
+       {
+           auto tessLevelInner = icosahedron->get<int>("TessLevelInner");
+           if (action == GLFW_RELEASE && key == GLFW_KEY_UP)
+           {
+               tessLevelInner++;
+           }
+           else if (action == GLFW_RELEASE && key == GLFW_KEY_DOWN)
+           {
+               if (tessLevelInner > 1)
+               {
+                   tessLevelInner--;
+               }
+           }
+       }
     });
 
     auto update_slot = app->on_update().connect([&](float dt) mutable {

@@ -2,11 +2,12 @@
 
 in vec3 tePosition;
 in vec3 tePatchDistance;
+in vec3 diffuse;
 
 out vec3 color;
 
 void main() {
     vec3 test1 = tePosition;
     vec3 test2 = tePatchDistance;
-    color = vec3(1, 0, 0);
+    color = diffuse;
 }

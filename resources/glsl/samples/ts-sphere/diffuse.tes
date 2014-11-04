@@ -1,10 +1,12 @@
-//-- TessEval
 #version 410 core
-
 layout(triangles, equal_spacing, cw) in;
+
 in vec3 tcPosition[];
+patch in vec3 patch_color;
+
 out vec3 tePosition;
 out vec3 tePatchDistance;
+out vec3 diffuse;
 
 uniform mat4 WorldMatrix;		// object_to_world
 uniform mat4 ViewMatrix;		// world_to_view
@@ -17,5 +19,6 @@ void main()
     vec3 p2 = gl_TessCoord.z * tcPosition[2];
     tePatchDistance = gl_TessCoord;
     tePosition = normalize(p0 + p1 + p2);
+    diffuse = patch_color;
     gl_Position = ProjectionMatrix * ViewMatrix * WorldMatrix * vec4(tePosition, 1);
 }
