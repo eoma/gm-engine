@@ -1,12 +1,14 @@
 #version 410 core
 
-in vec3 gDiffuse;
-in vec3 gNormal;
-in vec3 gPatchDistance;
-in vec3 gTriDistance;
+in GS_OUT
+{
+    vec3 diffuse;
+    vec3 normal;
+    vec3 patchDistance;
+    vec3 triDistance;
+} fs_in;
 
 out vec3 color;
-
 
 float amplify(float d, float scale, float offset)
 {
@@ -18,8 +20,8 @@ float amplify(float d, float scale, float offset)
 
 void main()
 {
-    vec3 normal = gNormal;
-    float d1 = min(min(gTriDistance.x, gTriDistance.y), gTriDistance.z);
-    float d2 = min(min(gPatchDistance.x, gPatchDistance.y), gPatchDistance.z);
-    color = amplify(d1, 40, -0.5) * amplify(d2, 60, -0.5) * gDiffuse;
+    float d1 = min(min(fs_in.triDistance.x, fs_in.triDistance.y), fs_in.triDistance.z);
+    float d2 = min(min(fs_in.patchDistance.x, fs_in.patchDistance.y), fs_in.patchDistance.z);
+    
+    color = amplify(d1, 60, -0.5) * amplify(d2, 80, -0.5) * fs_in.diffuse;
 }

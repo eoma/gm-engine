@@ -2,33 +2,39 @@
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
-in vec3 teDiffuse[3];
-in vec3 teNormal[3];
-in vec3 tePatchDistance[3];
+in TES_OUT
+{
+    vec3 diffuse;
+    vec3 normal;
+    vec3 patchDistance;
+} gs_in[3];
 
-out vec3 gDiffuse;
-out vec3 gNormal;
-out vec3 gPatchDistance;
-out vec3 gTriDistance;
+out GS_OUT
+{
+    vec3 diffuse;
+    vec3 normal;
+    vec3 patchDistance;
+    vec3 triDistance;
+} gs_out;
 
 void main()
 {
-    gDiffuse = teDiffuse[0];
-    gNormal = teNormal[0];
-    gPatchDistance = tePatchDistance[0];
-    gTriDistance = vec3(1, 0, 0);
+    gs_out.diffuse = gs_in[0].diffuse;
+    gs_out.normal = gs_in[0].normal;
+    gs_out.patchDistance = gs_in[0].patchDistance;
+    gs_out.triDistance = vec3(1, 0, 0);
     gl_Position = gl_in[0].gl_Position; EmitVertex();
     
-    gDiffuse = teDiffuse[1];
-    gNormal = teNormal[1];
-    gPatchDistance = tePatchDistance[1];
-    gTriDistance = vec3(0, 1, 0);
+    gs_out.diffuse = gs_in[1].diffuse;
+    gs_out.normal = gs_in[1].normal;
+    gs_out.patchDistance = gs_in[1].patchDistance;
+    gs_out.triDistance = vec3(0, 1, 0);
     gl_Position = gl_in[1].gl_Position; EmitVertex();
     
-    gDiffuse = teDiffuse[1];
-    gNormal = teNormal[1];
-    gPatchDistance = tePatchDistance[2];
-    gTriDistance = vec3(0, 0, 1);
+    gs_out.diffuse = gs_in[2].diffuse;
+    gs_out.normal = gs_in[2].normal;
+    gs_out.patchDistance = gs_in[2].patchDistance;
+    gs_out.triDistance = vec3(0, 0, 1);
     gl_Position = gl_in[2].gl_Position; EmitVertex();
     
     EndPrimitive();

@@ -1,22 +1,29 @@
 #version 410 core
 layout(vertices = 3) out;
 
-in vec3 vPosition[];
-in vec3 vDiffuse[];
-in vec3 vNormal[];
+in VS_OUT
+{
+    vec3 position;
+    vec3 diffuse;
+    vec3 normal;
+} tcs_in[];
 
-out vec3 tcPosition[];
-out vec3 tcDiffuse[];
-out vec3 tcNormal[];
+
+out TCS_OUT
+{
+    vec3 position;
+    vec3 diffuse;
+    vec3 normal;
+} tcs_out[];
 
 uniform int TessLevelInner;
 uniform int TessLevelOuter;
 
 void main()
 {
-    tcPosition[gl_InvocationID] = vPosition[gl_InvocationID];
-    tcDiffuse[gl_InvocationID] = vDiffuse[gl_InvocationID];
-    tcNormal[gl_InvocationID] = vNormal[gl_InvocationID];
+    tcs_out[gl_InvocationID].position = tcs_in[gl_InvocationID].position;
+    tcs_out[gl_InvocationID].diffuse = tcs_in[gl_InvocationID].diffuse;
+    tcs_out[gl_InvocationID].normal = tcs_in[gl_InvocationID].normal;
     
     if (gl_InvocationID == 0) {
         gl_TessLevelInner[0] = TessLevelInner;
