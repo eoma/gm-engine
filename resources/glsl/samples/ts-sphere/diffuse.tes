@@ -1,0 +1,35 @@
+#version 410 core
+layout(triangles, equal_spacing, cw) in;
+
+in vec3 tcPosition[];
+in vec3 tcDiffuse[];
+in vec3 tcNormal[];
+
+out vec3 teDiffuse;
+out vec3 teNormal;
+out vec3 tePatchDistance;
+
+uniform mat4 WorldMatrix;		// object_to_world
+uniform mat4 ViewMatrix;		// world_to_view
+uniform mat4 ProjectionMatrix;	// view_to_clip
+uniform mat3 NormalMatrix;		// normal_to_view
+
+vec3 interpolate3D(vec3 v0, vec3 v1, vec3 v2)
+{
+   	return vec3(gl_TessCoord.x) * v0 + vec3(gl_TessCoord.y) * v1 + vec3(gl_TessCoord.z) * v2;
+}
+
+void main()
+{
+    vec3 p0 = gl_TessCoord.x * tcPosition[0];
+    vec3 p1 = gl_TessCoord.y * tcPosition[1];
+    vec3 p2 = gl_TessCoord.z * tcPosition[2];
+    
+    tePatchDistance = gl_TessCoord;
+    teDiffuse = interpolate3D(tcDiffuse[0], tcDiffuse[1], tcDiffuse[2]);
+    teNormal = normalize(interpolate3D(tcNormal[0], tcNormal[1], tcNormal[2]));
+    teNormal = NormalMatrix * teNormal;
+    
+    vec3 position = normalize(p0 + p1 + p2);
+    gl_Position = ProjectionMatrix * ViewMatrix * WorldMatrix * vec4(position, 1);
+}

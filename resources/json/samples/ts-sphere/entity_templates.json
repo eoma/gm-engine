@@ -1,0 +1,82 @@
+[
+ {
+     "entity": "icosahedron",
+     "components": [ "Renderable", "Transform", "Tessellate" ],
+     "properties": [
+         {
+             "name": "MeshName",
+             "value": "icosahedron"
+         },
+         {
+             "name": "MaterialName",
+             "value": "diffuse"
+         },
+         {
+             "name": "Position",
+             "value": [0,0,0],
+             "type": "vec3"
+         },
+         {
+             "name": "Scale",
+             "value": [10,10,10],
+             "type": "vec3"
+         },
+         {
+             "name": "TessLevelInner",
+             "value": 4,
+             "type": "int"
+         },
+         {
+             "name": "TessLevelOuter",
+             "value": 4,
+             "type": "int"
+         }
+     ]
+ },
+{
+    "entity": "camera",
+    "components": [ "Camera", "Transform" ],
+    "properties": [
+    {
+        "name": "FOV",
+        "value": 45
+    },
+    {
+        "name": "NearClipping",
+        "value": 0.1
+    },
+    {
+        "name": "FarClipping",
+        "value": 100000
+    },
+    {
+        "name": "Position",
+        "value": [0,5,10],
+        "type": "vec3"
+    }
+    ]
+},
+{
+    "entity": "fps_camera",
+    "requires": [ "camera" ],
+    "components": [ "FPSController" ],
+    "properties": [
+    {
+        "name": "CursorDeadroom",
+        "value": 0.0125
+    },
+    {
+        "name": "PitchSensitivity",
+        "value": 1.0
+    },
+    {
+        "name": "YawSensitivity",
+        "value": 1.0
+    },
+    {
+        "name": "Speed",
+        "value": 10.0
+    }
+    ]
+}
+]

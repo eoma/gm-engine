@@ -25,7 +25,6 @@
 
 // Material
 #define GM_PROPERTY_MATERIAL_NAME		"MaterialName"		// std::string
-#define GM_PROPERTY_PATCH_VERTICES		"PatchVertices"		// int
 
 // Mesh
 #define GM_PROPERTY_MESH_NAME					"MeshName"				// std::string
@@ -37,3 +36,8 @@
 #define GM_PROPERTY_MATERIAL_COLOR_SPECULAR		"MaterialColorSpecular" // glm::vec3
 #define GM_PROPERTY_MATERIAL_COLOR_AMBIENT		"MaterialColorAmbient"	// glm::vec3
 #define GM_PROPERTY_ACTIVATED                   "Activated"             // bool
+
+// Tessellate
+#define GM_PROPERTY_TESS_LEVEL_INNER            "TessLevelInner"        // int
+#define GM_PROPERTY_TESS_LEVEL_OUTER            "TessLevelOuter"        // int
+#define GM_PROPERTY_PATCH_VERTICES              "PatchVertices"         // int
