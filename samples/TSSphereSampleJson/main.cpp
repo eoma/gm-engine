@@ -59,7 +59,7 @@ bool mainTest() {
            }
            else if (action == GLFW_RELEASE && key == GLFW_KEY_DOWN)
            {
-               if (tessLevelOuter > 1)
+               if (tessLevelOuter > 0)
                {
                    tessLevelOuter--;
                }
