@@ -1,8 +1,8 @@
 #include "GM/Core/Utilities/UniformOperations.h"
 
-#include <glm/ext.hpp>
-
 #include <GL/gl3w.h>
+
+#include <glm/gtc/type_ptr.hpp>
 
 namespace GM {
 namespace Core {

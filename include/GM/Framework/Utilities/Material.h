@@ -28,74 +28,73 @@ class Tessellator;
 class Material : public PropertyContainer<>
 {
 public:
-	Material(const TextureManagerPtr &texture_manager, const Core::ShaderPtr &shader, const std::string &name);
+	struct RenderPassConfig {
+		RenderPassConfig(const Core::ShaderPtr &shader = nullptr) : shader(shader), current_available_texture_unit(0) {}
+
+		int compute_available_texture_unit() { return current_available_texture_unit++; }
+
+		//
+
+		Core::ShaderPtr shader;
+
+		int current_available_texture_unit;
+
+		clan::Signal<void()> update_uniforms_signal;
+		clan::SlotContainer update_uniform_slots;
+
+		// Uniforms directly used by this material
+		std::vector<std::string> used_uniforms;
+
+		// Uniforms _not_ used by this material, useful for entities referencing this material
+		std::vector<std::string> unused_uniforms;
+		std::map<std::string, clan::Slot> wait_for_first_write_slots;
+	};
+
+public:
+	Material(const TextureManagerPtr &texture_manager, const Core::ShaderPtr &standard_render_pass_shader, const std::string &name);
 	virtual ~Material() {};
 
 	const std::string &get_name() const { return name; }
-	Core::ShaderPtr &get_shader() { return shader; }
 
-	void update_uniforms(Camera * camera, const std::vector<Light *> &lights);// { update_uniforms_signal(); }
-	void bind_textures() const;
+	void update_uniforms(Camera * camera, const std::vector<Light *> &lights, const std::string &render_pass_name = "standard");
 
-	const std::vector<std::string> &get_unused_uniforms() const { return unused_uniforms; }
+	// Methods for testing, fetching and setting render pass shaders
+	bool has_render_pass(const std::string &render_pass_name = "standard") const;
+	const Core::ShaderPtr &get_render_pass(const std::string &render_pass_name = "standard") const;
+	void set_render_pass(const Core::ShaderPtr &shader, const std::string &render_pass_name = "standard");
+
+	// Specific render pass configurations, useful for renderable
+	const Material::RenderPassConfig &get_render_pass_config(const std::string &render_pass_name) const;
+	const std::map<std::string, Material::RenderPassConfig> &get_render_pass_configs() const;
 
 private:
-	// Probably need one specifically made for textures
+	void set_up_uniforms(const std::string &render_pass_name);
+
 	template<class T>
-	void add_sleeping_uniform(const std::string &name, const T &default_value, const unsigned int program, const int uniform_location);
+	void add_sleeping_uniform(const std::string &render_pass_name, const std::string &name, const T &default_value, const unsigned int program, const int uniform_location);
+
+	template<class T>
+	std::function<void()> uniform_lambda_maker(const std::string &render_pass_name, const unsigned int program, const int uniform_location, const Property<T> &prop);
 
 private:
 	std::string name;
-	Core::ShaderPtr shader;
+
 	TextureManagerPtr texture_manager;
 
-	// Uniforms directly used by this material
+	// Render pass shader specific data
+	std::map<std::string, Material::RenderPassConfig> render_pass_configs;
+
+	// All uniforms directly used by this material
 	std::vector<std::string> used_uniforms;
-
-	// Uniforms _not_ used by this material
-	std::vector<std::string> unused_uniforms;
-	std::map<std::string, clan::Slot> unused_first_write_slots;
-
-	// We need to track textures for proper texture binding
-	struct Texture {
-		Property<Core::TexturePtr> texture;
-		unsigned int program;
-		int location;
-		Texture(const Property<Core::TexturePtr> &texture, unsigned int program, int location) : texture(texture), program(program), location(location) {}
-	};
-	std::vector<Texture> textures;
 
 	Property<int> patch_vertices_property;
 
-	clan::Signal<void()> update_uniforms_signal;
-	clan::SlotContainer update_uniform_slots;
 	clan::Slot property_added_slot;
 };
 
 //
 // Implementations
 //
-
-template <class T>
-void Material::add_sleeping_uniform(const std::string &name, const T &default_value, const unsigned int program, const int uniform_location)
-{
-	auto prop = add<T>(name, default_value);
-
-	auto update_lambda = [program, uniform_location, prop]() {
-		Core::update_uniform(program, uniform_location, (T)prop.get());
-	};
-
-	unused_first_write_slots.emplace(
-		name,
-		prop.value_changed().connect([this, name, update_lambda](const T &/*old_v*/, const T &/*new_v*/) {
-			unused_uniforms.erase(std::find(unused_uniforms.begin(), unused_uniforms.end(), name));
-			unused_first_write_slots.erase(name);
-			used_uniforms.push_back(name);
-
-			update_uniform_slots.connect(update_uniforms_signal, update_lambda);
-		})
-	);
-}
 
 } // namespace Framework
 } // namespace GM

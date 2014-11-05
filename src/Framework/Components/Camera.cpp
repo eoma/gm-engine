@@ -7,7 +7,8 @@
 
 #include "GM/Core/GL/FramebufferObject.h"
 
-#include <glm/ext.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <GL/gl3w.h>
 
 using namespace GM::Framework;

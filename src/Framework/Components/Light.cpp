@@ -6,7 +6,6 @@
 #include "GM/Framework/DefinitionsPropertyNames.h"
 #include "GM/Framework/Entity.h"
 
-#include <glm/ext.hpp>
 #include <GL/gl3w.h>
 
 using namespace GM::Framework;
