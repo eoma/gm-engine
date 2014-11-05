@@ -5,7 +5,7 @@
         "properties": [
             {
                 "name": "PatchVertices",
-                "value": 16,
+                "value": 3,
                 "type": "int"
             }
         ]

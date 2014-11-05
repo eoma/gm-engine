@@ -28,7 +28,7 @@ bool mainTest() {
 	app->get_material_manager()->add_templates(json_path + "/material_templates.json");
 	app->get_shader_manager()->add_templates(json_path + "/shader_templates.json");
 	app->get_shader_manager()->set_glsl_path(glsl_path);
-
+    
 	// Create our entities
     auto camera = entity_manager->create_entity("camera");
 	auto icosahedron = entity_manager->create_entity("icosahedron");
@@ -55,6 +55,7 @@ bool mainTest() {
            if (action == GLFW_RELEASE && key == GLFW_KEY_UP)
            {
                tessLevelOuter++;
+               std::cout << "tessLevelOuter = " << tessLevelOuter << std::endl;
            }
            else if (action == GLFW_RELEASE && key == GLFW_KEY_DOWN)
            {
@@ -62,6 +63,7 @@ bool mainTest() {
                {
                    tessLevelOuter--;
                }
+               std::cout << "tessLevelOuter = " << tessLevelOuter << std::endl;
            }
        }
        else
@@ -70,12 +72,14 @@ bool mainTest() {
            if (action == GLFW_RELEASE && key == GLFW_KEY_UP)
            {
                tessLevelInner++;
+               std::cout << "tessLevelInner = " << tessLevelInner << std::endl;
            }
            else if (action == GLFW_RELEASE && key == GLFW_KEY_DOWN)
            {
                if (tessLevelInner > 1)
                {
                    tessLevelInner--;
+                   std::cout << "tessLevelInner = " << tessLevelInner << std::endl;
                }
            }
        }
