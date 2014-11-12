@@ -232,6 +232,22 @@ void MaterialTemplateParser::parse_templates(const std::string &data, std::funct
 					{
 						p.value = it->second.to_string();
 					}
+					else if (forced_type == PropertySerializer::TYPE_QUAT_EULER_ANGLES_DEG)
+					{
+						if (!it->second.is_array())
+							throw Exception("A quat_euler_angles_deg type requires an array!");
+
+						if (it->second.get_size() != 3)
+							throw Exception("A quat_euler_angles_deg type's array must be of size 3!");
+
+						if (!it->second[0].is_number() || !it->second[1].is_number() || !it->second[2].is_number())
+							throw Exception("A quat_euler_angles_deg type requires an array of numbers!");
+
+						p.value =
+							StringHelp::float_to_text(it->second[0].to_float()) + " " +
+							StringHelp::float_to_text(it->second[1].to_float()) + " " +
+							StringHelp::float_to_text(it->second[2].to_float());
+					}
 					else
 						throw Exception("Type not implemented yet for property " + p.name);
 

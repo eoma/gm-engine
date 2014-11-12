@@ -24,7 +24,8 @@ namespace GM {
 				TYPE_VEC4 = 103,			// x y z w
 				TYPE_QUAT = 104,			// x y z w
 				TYPE_COLOR = 105,			// string (0xFFFFFF or 0xFFFFFFFF)
-				TYPE_TEXTURE_NAME = 106			// string (texture name)
+				TYPE_TEXTURE_NAME = 106,		// string (texture name)
+				TYPE_QUAT_EULER_ANGLES_DEG = 107		// angles around x, y and z-axis (respectively)
 			};
 
 		public:
@@ -51,7 +52,7 @@ namespace GM {
 			static void from_string(const std::string &value, glm::vec2 &result);
 			static void from_string(const std::string &value, glm::vec3 &result);
 			static void from_string(const std::string &value, glm::vec4 &result);
-			static void from_string(const std::string &value, glm::quat &result);
+			static void from_string(const std::string &value, glm::quat &result, const bool from_euler_angles = false);
 			static void from_string(const std::string &value, Color &result);
 		};
 	}

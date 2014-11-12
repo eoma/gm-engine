@@ -114,6 +114,14 @@ void PropertySerializer::create_and_add_property(PropertyContainer<> &container,
 			property.set(result);
 			break;
 		}
+		case PropertySerializer::TYPE_QUAT_EULER_ANGLES_DEG:
+		{
+			glm::quat result;
+			from_string(value, result, true);
+			Property<glm::quat> property = container.add<glm::quat>(name, result);
+			property.set(result);
+			break;
+		}
 		default:
 			throw Exception(string_format("PropertySerializer::create_and_add_property - Unknown property type %1", type_id));
 	}
@@ -147,6 +155,8 @@ PropertySerializer::PropertyType PropertySerializer::get_property_type(const std
 		return PropertySerializer::TYPE_COLOR;
 	if (StringHelp::compare("texture", property_type, true) == 0)
 		return PropertySerializer::TYPE_TEXTURE_NAME;
+	if (StringHelp::compare("quat_euler_angles_deg", property_type, true) == 0)
+		return PropertySerializer::TYPE_QUAT_EULER_ANGLES_DEG;
 	throw Exception(string_format("PropertySerializer::get_property_type - Unknown property type %1", property_type));
 }
 
@@ -354,18 +364,32 @@ void PropertySerializer::from_string(const std::string &value, glm::vec4 &result
 	result = glm::vec4(x, y, z, w);
 }
 
-void PropertySerializer::from_string(const std::string &value, glm::quat &result)
+void PropertySerializer::from_string(const std::string &value, glm::quat &result, const bool from_euler_angles)
 {
 	std::vector<std::string> values = StringHelp::split_text(value, " ");
-	if (values.size() != 4)
-		throw Exception("quat from_string failed");
 
-	float x = StringHelp::text_to_float(values[0]);
-	float y = StringHelp::text_to_float(values[1]);
-	float z = StringHelp::text_to_float(values[2]);
-	float w = StringHelp::text_to_float(values[3]);
+	if (!from_euler_angles) {
+		if (values.size() != 4)
+			throw Exception("quat from_string failed");
 
-	result = glm::quat(x, y, z, w);
+		float x = StringHelp::text_to_float(values[0]);
+		float y = StringHelp::text_to_float(values[1]);
+		float z = StringHelp::text_to_float(values[2]);
+		float w = StringHelp::text_to_float(values[3]);
+
+		result = glm::quat(x, y, z, w);
+	}
+	else
+	{
+		if (values.size() != 3)
+			throw Exception("quat from_string(from_euler_angles=true) failed");
+
+		float x = glm::radians(StringHelp::text_to_float(values[0]));
+		float y = glm::radians(StringHelp::text_to_float(values[1]));
+		float z = glm::radians(StringHelp::text_to_float(values[2]));
+
+		result = glm::quat(glm::vec3(x, y, z));
+	}
 }
 
 void PropertySerializer::from_string(const std::string &value, Color &result)
