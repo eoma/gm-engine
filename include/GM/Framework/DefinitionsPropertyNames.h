@@ -4,6 +4,7 @@
 #define GM_PROPERTY_POSITION			"Position"			// glm::vec3
 #define GM_PROPERTY_SCALE 				"Scale"				// glm::vec3
 #define GM_PROPERTY_ORIENTATION			"Orientation"		// glm::quat
+#define GM_PROPERTY_ORIENTATION_MATRIX			"OrientationMatrix"		// glm::mat3
 #define GM_PROPERTY_OBJECT_MATRIX		"ObjectMatrix"		// glm::mat4
 #define GM_PROPERTY_WORLD_MATRIX		"WorldMatrix"		// glm::mat4
 #define GM_PROPERTY_OBJECT_MATRIX_NO_SCALE	"ObjectMatrixNoScale"	// glm::mat4

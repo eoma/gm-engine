@@ -61,6 +61,9 @@ public:
 	void scale(const glm::vec3 &scale) { scale_property += scale; }
 	void rotate(const glm::quat &orientation) { orientation_property *= orientation; }
 
+	// This is the orientation property converted to a 3x3 matrix. Read only
+	const glm::mat3 &get_orientation_matrix() const { return orientation_matrix_property; }
+
 	// Called by SceneSystem
 	bool is_dirty() const;
 	void clear_dirty();
@@ -119,6 +122,11 @@ private:
 	Property<glm::mat4> parent_world_matrix_no_scale_property;
 
 	Property<glm::mat3> normal_matrix_property;
+
+	// Read only, as in it will only change when orientation_property changes
+	Property<glm::mat3> orientation_matrix_property;
+
+	clan::Slot orientation_change_slot;
 };
 
 } // namespace Framework

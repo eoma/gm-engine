@@ -34,6 +34,12 @@ Transform::Transform(const EntityPtr &owner, const SceneSystemPtr &scene_system,
 	world_matrix_no_scale_property = owner->add(GM_PROPERTY_WORLD_MATRIX_NO_SCALE, glm::mat4(1));
 	parent_world_matrix_no_scale_property = owner->add(GM_PROPERTY_PARENT_WORLD_MATRIX_NO_SCALE, glm::mat4(1));
 
+	orientation_matrix_property = owner->add(GM_PROPERTY_ORIENTATION_MATRIX, glm::mat3_cast(orientation_property.get()));
+
+	orientation_change_slot = orientation_property.value_changed().connect([this](const glm::quat &/*old_v*/, const glm::quat &new_v) {
+		orientation_matrix_property = glm::mat3_cast(new_v);
+	});
+
 	scene_system->add(this);
 }
 
