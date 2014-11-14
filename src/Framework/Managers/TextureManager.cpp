@@ -166,6 +166,7 @@ Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, 
 		(int)image.get_width(),
 		(int)image.get_height(),
 		gl_texture_format,
+		gl_texture_format,
 		(GLenum)GL_UNSIGNED_BYTE,
 		image.get_dataptr()
 	});
@@ -203,6 +204,7 @@ Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, 
 			(int)image->get_width(), 
 			(int)image->get_height(), 
 			gl_texture_format, 
+			gl_texture_format,
 			(GLenum)GL_UNSIGNED_BYTE, 
 			image->get_dataptr() 
 		});
