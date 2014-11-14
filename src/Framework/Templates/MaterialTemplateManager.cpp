@@ -81,7 +81,7 @@ void MaterialTemplateManager::add_templates(const std::string &template_filename
 			templates.push_back(t);
 		});
 	}
-	catch (Exception e)
+	catch (Exception &e)
 	{
 		throw Exception(string_format("%1: %2", template_filename, e.what()));
 	}

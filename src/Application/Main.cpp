@@ -699,7 +699,7 @@ void Main::add_extra_resource_paths(const std::string &resource_file)
 	{
 		resource_path = Framework::find_path_in_hierarchy(clan::System::get_exe_path(), resource_file);
 	}
-	catch (clan::Exception e)
+	catch (clan::Exception &e)
 	{
 		std::cerr << e.what() << std::endl; // is this necessary?
 		return;
