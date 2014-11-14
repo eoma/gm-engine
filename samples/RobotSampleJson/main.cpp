@@ -124,8 +124,7 @@ Framework::Transform *find_part(Framework::Transform *robot_or_part, RobotParts 
 	if (part_name == robot_or_part->get_owner()->get_name())
 		return robot_or_part;
 
-	for (auto iter = robot_or_part->get_children().begin(); iter != robot_or_part->get_children().end(); ++iter) {
-		auto part = (*iter);
+	for (Framework::Transform *part : robot_or_part->get_children()) {
 		if (part->get_owner()->get_name() == part_name) {
 			return part;
 		}
@@ -142,16 +141,16 @@ Framework::Transform *find_part(Framework::Transform *robot_or_part, RobotParts 
 Framework::TransformPtr create_robot(Framework::EntityManagerPtr entity_manager) {
 
 	// Create empty entities
-	auto robot_entity = entity_manager->create_entity(					to_robot_part_name(RobotParts::ROBOT) );
-	auto robot_base_left_entity = entity_manager->create_entity(		to_robot_part_name(RobotParts::BASE_LEFT));
-	auto robot_base_right_entity = entity_manager->create_entity(		to_robot_part_name(RobotParts::BASE_RIGHT));
-	auto robot_arm_lower_entity = entity_manager->create_entity(		to_robot_part_name(RobotParts::ARM_LOWER));
-	auto robot_arm_upper_entity = entity_manager->create_entity(		to_robot_part_name(RobotParts::ARM_UPPER));
-	auto robot_head_entity = entity_manager->create_entity(				to_robot_part_name(RobotParts::HEAD));
-	auto robot_claw_lower_left_entity = entity_manager->create_entity(	to_robot_part_name(RobotParts::CLAW_LOWER_LEFT));
-	auto robot_claw_lower_right_entity = entity_manager->create_entity(	to_robot_part_name(RobotParts::CLAW_LOWER_RIGHT));
-	auto robot_claw_upper_left_entity = entity_manager->create_entity(to_robot_part_name(RobotParts::CLAW_UPPER_LEFT));
-	auto robot_claw_upper_right_entity = entity_manager->create_entity(to_robot_part_name(RobotParts::CLAW_UPPER_RIGHT));
+	auto robot_entity = entity_manager->create_entity(                      to_robot_part_name(RobotParts::ROBOT) );
+	auto robot_base_left_entity = entity_manager->create_entity(            to_robot_part_name(RobotParts::BASE_LEFT));
+	auto robot_base_right_entity = entity_manager->create_entity(           to_robot_part_name(RobotParts::BASE_RIGHT));
+	auto robot_arm_lower_entity = entity_manager->create_entity(            to_robot_part_name(RobotParts::ARM_LOWER));
+	auto robot_arm_upper_entity = entity_manager->create_entity(            to_robot_part_name(RobotParts::ARM_UPPER));
+	auto robot_head_entity = entity_manager->create_entity(                 to_robot_part_name(RobotParts::HEAD));
+	auto robot_claw_lower_left_entity = entity_manager->create_entity(      to_robot_part_name(RobotParts::CLAW_LOWER_LEFT));
+	auto robot_claw_lower_right_entity = entity_manager->create_entity(     to_robot_part_name(RobotParts::CLAW_LOWER_RIGHT));
+	auto robot_claw_upper_left_entity = entity_manager->create_entity(      to_robot_part_name(RobotParts::CLAW_UPPER_LEFT));
+	auto robot_claw_upper_right_entity = entity_manager->create_entity(     to_robot_part_name(RobotParts::CLAW_UPPER_RIGHT));
 
 	// Apply templates from entity_templates.json, basically adding components to the entities and setting property values
 	entity_manager->apply("robot", robot_entity);
@@ -166,16 +165,16 @@ Framework::TransformPtr create_robot(Framework::EntityManagerPtr entity_manager)
 	entity_manager->apply("robot_claw", robot_claw_upper_right_entity);
 
 	// Extract scenegraph components (Transform)
-	auto robot					= robot_entity->get_component<Framework::Transform>();
-	auto robot_base_left		= robot_base_left_entity->get_component<Framework::Transform>();
-	auto robot_base_right		= robot_base_right_entity->get_component<Framework::Transform>();
-	auto robot_arm_lower		= robot_arm_lower_entity->get_component<Framework::Transform>();
-	auto robot_arm_upper		= robot_arm_upper_entity->get_component<Framework::Transform>();
-	auto robot_head				= robot_head_entity->get_component<Framework::Transform>();
-	auto robot_claw_lower_left	= robot_claw_lower_left_entity->get_component<Framework::Transform>();
-	auto robot_claw_lower_right = robot_claw_lower_right_entity->get_component<Framework::Transform>();
-	auto robot_claw_upper_left	= robot_claw_upper_left_entity->get_component<Framework::Transform>();
-	auto robot_claw_upper_right = robot_claw_upper_right_entity->get_component<Framework::Transform>();
+	auto robot                      = robot_entity->get_component<Framework::Transform>();
+	auto robot_base_left            = robot_base_left_entity->get_component<Framework::Transform>();
+	auto robot_base_right           = robot_base_right_entity->get_component<Framework::Transform>();
+	auto robot_arm_lower            = robot_arm_lower_entity->get_component<Framework::Transform>();
+	auto robot_arm_upper            = robot_arm_upper_entity->get_component<Framework::Transform>();
+	auto robot_head                 = robot_head_entity->get_component<Framework::Transform>();
+	auto robot_claw_lower_left      = robot_claw_lower_left_entity->get_component<Framework::Transform>();
+	auto robot_claw_lower_right     = robot_claw_lower_right_entity->get_component<Framework::Transform>();
+	auto robot_claw_upper_left      = robot_claw_upper_left_entity->get_component<Framework::Transform>();
+	auto robot_claw_upper_right     = robot_claw_upper_right_entity->get_component<Framework::Transform>();
 
 	// Assemble the robot (set up the scenegraph hierarchy)
 	robot->add_child(robot_base_left);
