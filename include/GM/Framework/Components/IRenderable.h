@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../RenderLayers.h"
+
 #include <glm/glm.hpp>
 
 #include <memory>

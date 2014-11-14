@@ -21,7 +21,7 @@ class RenderSystem; typedef std::shared_ptr<RenderSystem> RenderSystemPtr;
 
 class Renderable : public IRenderable, public Component<Renderable> {
 public:
-	Renderable(const EntityPtr &owner, const RenderSystemPtr &render_system, const MaterialManagerPtr material_manager, const MeshManagerPtr mesh_ptr, unsigned int render_layers = 1, const std::string &name = std::string());
+	Renderable(const EntityPtr &owner, const RenderSystemPtr &render_system, const MaterialManagerPtr material_manager, const MeshManagerPtr mesh_ptr, unsigned int render_layers = RenderLayers::MESH_OPAQUE, const std::string &name = std::string());
 	virtual ~Renderable();
 
 	std::string get_type() const override { return get_static_type(); }
