@@ -2,6 +2,7 @@
 
 #include "../Totem/Component.h"
 #include "../DefinitionsComponentNames.h"
+#include "../RenderLayers.h"
 
 #include <ClanLib/core.h>
 
@@ -23,14 +24,14 @@ class RenderSystem; typedef std::shared_ptr<RenderSystem> RenderSystemPtr;
 
 class Camera : public Component<Camera> {
 public:
-	Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, unsigned int render_layers = 1, unsigned int depth = 0, const std::string &name = std::string());
+	Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, unsigned int render_layers = RenderLayers::MESH_OPAQUE, int depth = 0, const std::string &name = std::string());
 	virtual ~Camera();
 
 	std::string get_type() const override { return get_static_type(); };
 	static std::string get_static_type() { return GM_COMPONENT_CAMERA; };
 
 	unsigned int get_render_layers() const { return render_layers; };
-	unsigned int get_depth() const { return depth; };
+	int get_depth() const { return depth; };
 
 	bool has_framebuffer() const { return framebuffer != nullptr; }
 	Core::FramebufferObjectPtr get_framebuffer() const { return framebuffer; }
@@ -62,8 +63,8 @@ private:
 	// What render layer is this camera supposed to follow?
 	unsigned int render_layers;
 
-	// Depth determines the order in the render layer, deth 0 gets rendered first, and so on.
-	unsigned int depth;
+	// Depth determines the order in the render layer, smallest deth gets rendered first, and so on.
+	int depth;
 
 	Core::FramebufferObjectPtr framebuffer;
 
