@@ -63,6 +63,10 @@ public:
 	void scale(const glm::vec3 &scale) { scale_property += scale; }
 	void rotate(const glm::quat &orientation) { orientation_property *= orientation; }
 
+	// Being able to get position in world space is useful for systems (like moving a "disconnected" camera to a light's position)
+	// Currently computed everytime it is needed
+	glm::vec3 get_position_in_worldspace() const;
+
 	// This is the orientation property converted to a 3x3 matrix. Read only
 	const glm::mat3 &get_orientation_matrix() const { return orientation_matrix_property; }
 

@@ -139,6 +139,11 @@ bool Transform::child_addition_forms_cycle(Transform * const child, Transform * 
 	return cyclic;
 }
 
+glm::vec3 Transform::get_position_in_worldspace() const
+{
+	return glm::vec3(parent_world_matrix_no_scale_property.get() * glm::vec4(position_property.get(), 1.f));
+}
+
 bool Transform::is_dirty() const {
 	return (position_property.is_dirty() || scale_property.is_dirty() || orientation_property.is_dirty());
 }
