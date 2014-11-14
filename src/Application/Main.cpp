@@ -57,9 +57,9 @@ void MainComponentSerializer::create_and_add_component(const Framework::EntityPt
 	else if (type == Framework::Light::get_static_type()) {
 		owner->create_component<Framework::Light>(app->get_render_system());
 	}
-    else if (type == Framework::Tessellate::get_static_type()) {
-        owner->create_component<Framework::Tessellate>(app->get_render_system());
-    }
+	else if (type == Framework::Tessellate::get_static_type()) {
+		owner->create_component<Framework::Tessellate>(app->get_render_system());
+	}
 }
 
 Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_flags, unsigned int width, unsigned int height, bool fullscreen, bool visible, bool construct_window)
@@ -158,7 +158,7 @@ Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_f
 			mesh_manager->add_primitive(std::make_shared<Framework::FullscreenQuadPrimitive>());
 			mesh_manager->add_primitive(std::make_shared<Framework::SkyboxPrimitive>());
 			mesh_manager->add_primitive(std::make_shared<Framework::CubePrimitive>());
-            mesh_manager->add_primitive(std::make_shared<Framework::IcosahedronPrimitive>());
+			mesh_manager->add_primitive(std::make_shared<Framework::IcosahedronPrimitive>());
 		}
 	}
 
@@ -427,11 +427,11 @@ void Main::construct_window_and_gl()
 
 	if (error_flags & ErrorFlags::GM_ERROR_GL_DEBUG_OUTPUT)
 	{
-        if ( glDebugMessageCallback )
-        {
-            glDebugMessageCallback(gl_debug_callback, NULL);
-            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-        }
+		if ( glDebugMessageCallback ) // Debug message callback may not exist if GL < 4.3
+		{
+			glDebugMessageCallback(gl_debug_callback, NULL);
+			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		}
 	}
 
 	std::clog << "VENDOR: " << glGetString(GL_VENDOR) << std::endl;

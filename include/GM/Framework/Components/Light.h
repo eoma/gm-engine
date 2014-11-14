@@ -44,7 +44,7 @@ private:
 	Property<glm::vec3> material_color_diffuse_property;
 	Property<glm::vec3> material_color_specular_property;
 	Property<glm::vec3> material_color_ambient_property;
-    Property<bool> activated_property;
+	Property<bool> activated_property;
 };
 
 } // namespace Framework
