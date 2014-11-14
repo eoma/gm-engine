@@ -49,6 +49,8 @@ public:
 	bool has_parent() const;
 	bool has_children() const;
 
+	// Position and orientation is always relative to this Transforms's (possible) parent
+	// Scale will only work on _this_ object. It will not be passed on to children.
 	const glm::vec3 &get_position() const { return position_property; }
 	const glm::vec3 &get_scale() const { return scale_property; }
 	const glm::quat &get_orientation() const { return orientation_property; }
