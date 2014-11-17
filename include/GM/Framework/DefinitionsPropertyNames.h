@@ -37,6 +37,7 @@
 #define GM_PROPERTY_MATERIAL_COLOR_SPECULAR		"MaterialColorSpecular" // glm::vec3
 #define GM_PROPERTY_MATERIAL_COLOR_AMBIENT		"MaterialColorAmbient"	// glm::vec3
 #define GM_PROPERTY_ACTIVATED                   "Activated"             // bool
+#define GM_PROPERTY_SHADOW_CASTER                   "ShadowCaster"             // bool
 
 // Tessellate
 #define GM_PROPERTY_TESS_LEVEL_INNER            "TessLevelInner"        // int
