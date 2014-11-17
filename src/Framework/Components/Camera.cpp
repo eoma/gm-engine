@@ -1,4 +1,5 @@
 #include "GM/Framework/Components/Camera.h"
+#include "GM/Framework/Components/IRenderPassComponent.h"
 
 #include "GM/Framework/DefinitionsPropertyNames.h"
 #include "GM/Framework/Entity.h"
@@ -13,7 +14,7 @@
 
 using namespace GM::Framework;
 
-Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, unsigned int render_layers, unsigned int depth, const std::string &name)
+Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, unsigned int render_layers, int depth, const std::string &name)
 : Component(owner, name)
 , render_system(render_system)
 , render_layers(render_layers)
@@ -80,4 +81,20 @@ void Camera::set_projection(const glm::uvec2 &resolution) {
 
 void Camera::set_projection(float width, float height) {
 	projection_matrix_property = glm::perspectiveFov(fov_property.get(), width, height, near_clipping_property.get(), far_clipping_property.get());
+}
+
+void Camera::initialize() {
+	// Hopefully all necessary pass components has been added
+	make_render_pass_sequence();
+}
+
+void Camera::make_render_pass_sequence() {
+	pass_sequence.clear();
+
+	for (auto &component : owner->get_components()) {
+		IRenderPassComponent* pass = dynamic_cast<IRenderPassComponent*>(component.get());
+		if (pass != nullptr) {
+			pass_sequence.push_back(pass);
+		}
+	}
 }

@@ -21,6 +21,7 @@ namespace Framework {
 class Camera; typedef std::shared_ptr<Camera> CameraPtr;
 class Entity; typedef std::shared_ptr<Entity> EntityPtr;
 class RenderSystem; typedef std::shared_ptr<RenderSystem> RenderSystemPtr;
+class IRenderPassComponent;
 
 class Camera : public Component<Camera> {
 public:
@@ -29,6 +30,15 @@ public:
 
 	std::string get_type() const override { return get_static_type(); };
 	static std::string get_static_type() { return GM_COMPONENT_CAMERA; };
+
+	void initialize() override;
+
+	const std::vector<IRenderPassComponent*> &get_render_pass_sequence() const { return pass_sequence; }
+	/**
+	 * Goes through all the components added to the entity and checks if they implement
+	 * the IRenderPassComponent interface. If so, it will add to the render pass sequence.
+	 */
+	void make_render_pass_sequence();
 
 	unsigned int get_render_layers() const { return render_layers; };
 	int get_depth() const { return depth; };
@@ -76,6 +86,8 @@ private:
 	Property<float> near_clipping_property;
 	Property<float> far_clipping_property;
 	Property<float> max_vertical_angle_property;
+
+	std::vector<IRenderPassComponent*> pass_sequence;
 };
 
 } // namespace Framework
