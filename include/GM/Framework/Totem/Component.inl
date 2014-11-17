@@ -29,6 +29,12 @@ const Entity *Component<ComponentType, UserData>::get_owner() const
 }
 
 template<class ComponentType, class UserData>
+Entity *Component<ComponentType, UserData>::get_owner()
+{
+	return owner;
+}
+
+template<class ComponentType, class UserData>
 Component<ComponentType, UserData> &Component<ComponentType, UserData>::operator= (const Component<ComponentType, UserData> &rhs)
 {
 	if(this == &rhs)

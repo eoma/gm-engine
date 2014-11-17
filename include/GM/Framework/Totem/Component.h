@@ -29,6 +29,7 @@ public:
 	unsigned int get_runtime_type_id() const override;
 	const std::string &get_name() const override;
 	virtual const Entity *get_owner() const override;
+	virtual Entity *get_owner() override;
 
 	Component &operator= (const Component &rhs);
 	
