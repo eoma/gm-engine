@@ -26,7 +26,12 @@ public:
 	void add_light(Light *light);
 	void remove_light(Light *light);
 
+	// Perform render
 	void render();
+
+	// render elements with shaders for a specific pass, elements from certain layers.
+	// @param accepted_layers will be &ed with cameras layers.
+	void pass(Camera * const camera, const std::string &render_pass_name, unsigned int accepted_layers);
 
 	void resize(int width, int height);
 

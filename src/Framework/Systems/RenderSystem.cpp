@@ -1,6 +1,7 @@
 #include "GM/Framework/Systems/RenderSystem.h"
 #include "GM/Framework/Components/Camera.h"
 #include "GM/Framework/Components/IRenderable.h"
+#include "GM/Framework/Components/IRenderPassComponent.h"
 #include "GM/Framework/Utilities/Material.h"
 #include "GM/Framework/Utilities/Mesh.h"
 
@@ -129,80 +130,98 @@ const std::vector<Camera*> &RenderSystem::get_cameras(const unsigned int layer_i
 
 void RenderSystem::render() {
 
+	// Remember that cameras are depth sorted, start at minimal depth and go upwards
+	for (Camera *cam : cameras)
+	{
+		for (IRenderPassComponent *render_pass : cam->get_render_pass_sequence())
+		{
+			render_pass->pass(this);
+		}
+	}
+
+}
+
+// Called by render passes
+void RenderSystem::pass(Camera * const camera, const std::string &render_pass_name, unsigned int accepted_layers)
+{
+
 	MaterialPtr active_material = nullptr;
 	MeshPtr active_mesh = nullptr;
 
 	Core::VertexArrayObjectPtr active_vao = nullptr;
 	Core::ShaderPtr active_shader = nullptr;
 
-	for (unsigned int layer = 0; layer < buckets.size(); ++layer) {
-		const auto &bucket = buckets[layer];
-		const auto &cameras = cameras_in_layers[layer];
+	camera->clear_buffer();
 
-		Core::RenderCommand command;
+	for (unsigned int layer : bit_index_maker(camera->get_render_layers() & accepted_layers))
+	{
+		const auto& bucket = buckets[layer];
 
-		// Draw from depth zero and up
-		for (Camera *camera : cameras)	{
-			const std::string render_pass_name = "standard";
+		for (IRenderable *renderable : bucket)
+		{
+			if (active_mesh != renderable->get_mesh())
+			{
+				active_mesh = renderable->get_mesh();
 
-			camera->clear_buffer();
-
-			for (IRenderable *renderable : bucket) {
-				if (active_mesh != renderable->get_mesh())
+				if (active_mesh == nullptr)
 				{
-					active_mesh = renderable->get_mesh();
-
-					if (active_mesh == nullptr)
-					{
-						continue; // Jump to next renderable
-					}
-
-					if (active_vao != active_mesh->get_vao())
-					{
-						active_vao = active_mesh->get_vao();
-						active_vao->bind();
-					}
-
-					command = active_mesh->get_render_command();
+					continue; // Jump to next renderable
 				}
 
-				if (active_material != renderable->get_material())
+				if (active_vao != active_mesh->get_vao())
 				{
-					// unbind previous?
-					active_material = renderable->get_material();
+					active_vao = active_mesh->get_vao();
+					active_vao->bind();
+				}
+			}
+			else if (active_mesh == nullptr)
+			{
+				// throw?
+				continue;
+			}
 
-					if (active_material == nullptr)
-					{
-						continue; // Jump to next renderable
-					}
+			if (active_material != renderable->get_material())
+			{
+				// unbind previous?
+				active_material = renderable->get_material();
 
-					// Get appropriate shader type, depending pass
-					if (active_shader != active_material->get_render_pass(render_pass_name))
-					{
-						active_shader = active_material->get_render_pass(render_pass_name);
-						active_shader->bind();
-						// Update camera uniforms?
-					}
+				if (active_material == nullptr)
+				{
+					continue; // Jump to next renderable
+				}
 
+				// Get appropriate shader type, depending pass
+				if (active_shader != active_material->get_render_pass(render_pass_name))
+				{
+					active_shader = active_material->get_render_pass(render_pass_name);
 					if (active_shader == nullptr)
 					{
 						continue;
 					}
 
-					// FIXME: bind textures every frame?
-					active_material->update_uniforms(camera, lights, render_pass_name);
+					active_shader->bind();
+				} else if (active_shader == nullptr) {
+					continue;
 				}
 
-				renderable->update_uniforms(camera, render_pass_name);
-
-				if (renderable->has_custom_render()) {
-					renderable->custom_render(camera);
-				}
-				else
-				{
-					Core::Render::render(command);
-				}
+				// FIXME: bind textures every frame?
+				active_material->update_uniforms(camera, lights, render_pass_name);
 			}
+			else if (active_material == nullptr)
+			{
+				continue;
+			}
+
+			renderable->update_uniforms(camera, render_pass_name);
+
+			if (renderable->has_custom_render()) {
+				renderable->custom_render(camera);
+			}
+			else
+			{
+				Core::Render::render(active_mesh->get_render_command());
+			}
+
 		}
 	}
 
@@ -215,8 +234,6 @@ void RenderSystem::render() {
 	{
 		active_vao->unbind();
 	}
-
-	// Perform post-process?
 }
 
 void RenderSystem::resize(int width, int height) {
