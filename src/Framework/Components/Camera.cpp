@@ -1,5 +1,6 @@
 #include "GM/Framework/Components/Camera.h"
 #include "GM/Framework/Components/IRenderPassComponent.h"
+#include "GM/Framework/Components/StandardPass.h"
 
 #include "GM/Framework/DefinitionsPropertyNames.h"
 #include "GM/Framework/Entity.h"
@@ -86,6 +87,12 @@ void Camera::set_projection(float width, float height) {
 void Camera::initialize() {
 	// Hopefully all necessary pass components has been added
 	make_render_pass_sequence();
+
+	if (pass_sequence.size() == 0) {
+		// If not we add the standard pass and initialize ourselvs
+		owner->create_component<StandardPass>()->initialize();
+		make_render_pass_sequence();
+	}
 }
 
 void Camera::make_render_pass_sequence() {
