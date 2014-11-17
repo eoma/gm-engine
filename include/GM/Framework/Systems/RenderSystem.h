@@ -5,7 +5,6 @@
 #include <memory>
 #include <vector>
 
-
 namespace GM {
 namespace Framework {
 
@@ -31,8 +30,13 @@ public:
 
 	void resize(int width, int height);
 
-	// The methods will throw an std::out_of_range exception if bcuket_index > 31
+	// The methods will throw an std::out_of_range exception if bucket_index > 31
 	const std::vector<IRenderable*> &get_bucket(const unsigned int bucket_index);
+
+	// Get all registered cameras
+	const std::vector<Camera*> &get_cameras() { return cameras; }
+
+	// Get all registered cameras in a render layer
 	const std::vector<Camera*> &get_cameras(const unsigned int layer_index);
 
 	const std::vector<Light *> &get_lights() const { return lights; }
@@ -51,6 +55,9 @@ private:
 	// Position is determined by layer. The order in the layer's
 	//  vector is depth sorted.
 	std::array<std::vector<Camera*>, std::numeric_limits<unsigned int>::digits> cameras_in_layers;
+
+	// Depth sorted cameras
+	std::vector<Camera*> cameras;
 
 	// We track lights in the scene in a special list, since
 	// lights affect all geometry in scene.

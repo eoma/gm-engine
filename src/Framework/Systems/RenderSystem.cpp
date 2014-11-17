@@ -50,15 +50,24 @@ void RenderSystem::remove_renderable(IRenderable *renderable) {
 void RenderSystem::add_camera(Camera *camera) {
 	unsigned int layer_bits = camera->get_render_layers();
 
-	for (auto &layer_index : bit_index_maker(layer_bits)) {
-		auto &depth_sorted_cameras = cameras_in_layers[layer_index];
-		auto iter = std::find(depth_sorted_cameras.begin(), depth_sorted_cameras.end(), camera);
+	if (std::find(cameras.begin(), cameras.end(), camera) == cameras.end()) {
+		cameras.push_back(camera);
+		std::sort(
+			cameras.begin(),
+			cameras.end(),
 
-		if (iter == depth_sorted_cameras.end()) {
-			depth_sorted_cameras.push_back(camera);
+			[](const Camera* cam1, const Camera* cam2) -> bool {
+				return cam1->get_depth() < cam2->get_depth();
+			}
+		);
+
+		for (auto &layer_index : bit_index_maker(layer_bits)) {
+			auto &depth_sorted_cameras_in_layer = cameras_in_layers[layer_index];
+
+			depth_sorted_cameras_in_layer.push_back(camera);
 			std::sort(
-				depth_sorted_cameras.begin(),
-				depth_sorted_cameras.end(),
+				depth_sorted_cameras_in_layer.begin(),
+				depth_sorted_cameras_in_layer.end(),
 
 				[](const Camera* cam1, const Camera* cam2) -> bool {
 					return cam1->get_depth() < cam2->get_depth();
