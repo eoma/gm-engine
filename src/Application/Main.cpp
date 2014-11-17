@@ -19,6 +19,7 @@
 #include "GM/Framework/Components/Transform.h"
 #include "GM/Framework/Components/Light.h"
 #include "GM/Framework/Components/Tessellate.h"
+#include "GM/Framework/Components/StandardPass.h"
 
 #include "GM/Framework/Primitives/TrianglePrimitive.h"
 #include "GM/Framework/Primitives/QuadXYPrimitive.h"
@@ -59,6 +60,9 @@ void MainComponentSerializer::create_and_add_component(const Framework::EntityPt
 	}
 	else if (type == Framework::Tessellate::get_static_type()) {
 		owner->create_component<Framework::Tessellate>(app->get_render_system());
+	}
+	else if (type == Framework::StandardPass::get_static_type()) {
+		owner->create_component<Framework::StandardPass>();
 	}
 }
 
