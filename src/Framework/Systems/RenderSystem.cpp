@@ -81,12 +81,17 @@ void RenderSystem::add_camera(Camera *camera) {
 void RenderSystem::remove_camera(Camera *camera) {
 	unsigned int layer_bits = camera->get_render_layers();
 
-	for (auto &layer_index : bit_index_maker(layer_bits)) {
-		auto &depth_sorted_cameras = cameras_in_layers[layer_index];
-		auto iter = std::find(depth_sorted_cameras.begin(), depth_sorted_cameras.end(), camera);
+	auto iter = std::find(cameras.begin(), cameras.end(), camera);
+	if (iter != cameras.end()) {
+		cameras.erase(iter);
 
-		if (iter != depth_sorted_cameras.end()) {
-			depth_sorted_cameras.erase(iter);
+		for (auto &layer_index : bit_index_maker(layer_bits)) {
+			auto &depth_sorted_cameras = cameras_in_layers[layer_index];
+			iter = std::find(depth_sorted_cameras.begin(), depth_sorted_cameras.end(), camera);
+
+			if (iter != depth_sorted_cameras.end()) {
+				depth_sorted_cameras.erase(iter);
+			}
 		}
 	}
 }
