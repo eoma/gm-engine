@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 
 #include <memory>
-#include <vector>
+#include <map>
 
 namespace GM {
 namespace Core {
@@ -17,35 +17,36 @@ class Texture; typedef std::shared_ptr<Texture> TexturePtr;
 class FramebufferObject
 {
 public:
-	FramebufferObject(unsigned int w, unsigned int h);
+	FramebufferObject();
 	~FramebufferObject();
 
+	unsigned int get_handle() const { return handle; }
+
+	// Bind this framebuffer
 	void bind();
 	void unbind();
 
-	void bind_rt(const ShaderPtr &active_program, unsigned int index_offset);
-	void unbind_rt(unsigned int index_offset);
+	// Checks if this is a valid framebuffer
+	void check();
 
 	void add(unsigned int attachment, const RenderbufferObjectPtr &render_buffer);
-	void add(unsigned int attachment, unsigned int texture_type, const std::string &sampler_name, const TexturePtr &render_texture);
+	void add(unsigned int attachment, const TexturePtr &render_texture);
 
-	void check();
+	bool has_attachment(unsigned int attachment) const;
+
+	bool has_render_texture(unsigned int attachment) const;
+	bool has_render_buffer(unsigned int attachment) const;
+
+	TexturePtr get_render_texture(unsigned int attachment) const { return render_textures.at(attachment); }
+	RenderbufferObjectPtr get_render_buffer(unsigned int attachment) const { return render_buffers.at(attachment); }
+
 	glm::vec4 pick(int x, int y, unsigned int attachment);
 
-	TexturePtr get_render_texture(unsigned int index) const { return render_textures[index]; }
-
-	unsigned int get_handle() const { return handle; }
 private:
-	unsigned int find_attachment_index(unsigned int attachment);
 	unsigned int handle;
 
-	unsigned int w;
-	unsigned int h;
-
-	std::vector<RenderbufferObjectPtr> render_buffers;
-	std::vector<TexturePtr> render_textures;
-	std::vector<std::string> render_samplers;
-	std::vector<unsigned int> attachments;
+	std::map<unsigned int, TexturePtr> render_textures;
+	std::map<unsigned int, RenderbufferObjectPtr> render_buffers;
 };
 
 } // namespace Core
