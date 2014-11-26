@@ -36,6 +36,8 @@ public:
 
 	const RawImagePtr &get_or_create_image(const std::string &file_name);
 
+	void add(const std::string &texture_name, const Core::TexturePtr &texture);
+
 	Core::TexturePtr get(const std::string &texture_name);
 	Core::TexturePtr get_or_create(const std::string &texture_name);
 	Core::TexturePtr get_or_create(const std::string &texture_name, const Core::TextureFormat &format);

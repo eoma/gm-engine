@@ -307,5 +307,16 @@ void TextureManager::add_format_templates(const std::string &template_filename)
 	format_template_manager->add_templates(template_filename);
 }
 
+void TextureManager::add(const std::string &texture_name, const Core::TexturePtr &texture)
+{
+	if (name_to_texture.find(texture_name) != name_to_texture.end())
+	{
+		throw clan::Exception(clan::string_format("Texture by name %1 already exists!", texture_name));
+	}
+
+	name_to_texture[texture_name] = texture;
+	texture_to_name[texture] = texture_name;
+}
+
 } // namespace Framework
 } // namespace GM
