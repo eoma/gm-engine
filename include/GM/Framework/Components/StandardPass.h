@@ -32,6 +32,10 @@ namespace GM {
 
 			void pass(RenderSystem * const render_system) override;
 
+			bool uses_render_texture_from_camera() const override { return false; }
+			void set_input_texture(const Core::TexturePtr &) override {}
+			void set_output_texture(const Core::TexturePtr &) override {}
+
 		private:
 			Camera *camera;
 		};
