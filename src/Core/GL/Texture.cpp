@@ -6,15 +6,24 @@ namespace GM {
 namespace Core {
 
 Texture::Texture(unsigned int type)
+: Texture(type, true)
+{
+}
+
+Texture::Texture(unsigned int type, bool create_handle)
 : type(type)
 , handle(0)
 {
-	glGenTextures(1, &handle);
+	if (create_handle) {
+		glGenTextures(1, &handle);
+	}
 }
 
 Texture::~Texture()
 {
-	glDeleteTextures(1, &handle);
+	if (handle != 0) {
+		glDeleteTextures(1, &handle);
+	}
 }
 
 void Texture::bind() const

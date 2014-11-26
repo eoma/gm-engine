@@ -11,7 +11,7 @@ class Texture
 {
 public:
 	Texture(unsigned int type);
-	~Texture();
+	virtual ~Texture();
 
 	void bind() const;
 	void unbind() const;
@@ -19,7 +19,9 @@ public:
 	unsigned int get_type() const { return type; }
 	unsigned int get_handle() const { return handle; }
 
-private:
+protected:
+	Texture(unsigned int type, bool create_handle);
+
 	unsigned int type;
 	unsigned int handle;
 };
