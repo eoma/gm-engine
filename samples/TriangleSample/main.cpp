@@ -99,6 +99,7 @@ bool mainTest() {
 	auto entity_manager = app->get_entity_manager();
 	auto mesh_manager = app->get_mesh_manager();
 	auto material_manager = app->get_material_manager();
+	auto texture_manager = app->get_texture_manager();
 
 	// Set up resources
 	// Framework already implements a triangle primitive, but for the purpose
@@ -110,7 +111,7 @@ bool mainTest() {
 	// Create our entity and add components so that it is possible to render
 	auto entity = entity_manager->create_entity("entity");
 	auto renderable = entity->create_component<Framework::Renderable>(render_system, material_manager, mesh_manager);
-	entity->create_component<Framework::Camera>(render_system);
+	entity->create_component<Framework::Camera>(render_system, texture_manager);
 
 	// Set up what resources our renderable is supposed to use
 	renderable->set_mesh("triangle");

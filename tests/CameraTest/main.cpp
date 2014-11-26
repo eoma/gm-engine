@@ -5,6 +5,7 @@
 #include <GM/Framework/Entity.h>
 #include <GM/Framework/Systems/SceneSystem.h>
 #include <GM/Framework/Systems/RenderSystem.h>
+#include <GM/Framework/Managers/TextureManager.h>
 #include <GM/Framework/Components/Camera.h>
 #include <GM/Framework/Components/Transform.h>
 #include <GM/Framework/Components/Renderable.h>
@@ -21,6 +22,7 @@ bool mainTest() {
 	auto entity_manager = std::make_shared<EntityManager>();
 	auto render_system = std::make_shared<RenderSystem>();
 	auto scene_system = std::make_shared<SceneSystem>();
+	auto texture_manager = std::make_shared<TextureManager>(nullptr);
 
 	auto entity1 = entity_manager->create_entity("one");
 	auto entity2 = entity_manager->create_entity("two");
@@ -28,7 +30,7 @@ bool mainTest() {
 	auto transform1 = entity1->create_component<Transform>(scene_system);
 
 	// Make a camera associated with render layer 0 and depth 1
-	auto camera1 = entity1->create_component<Camera>(render_system, (1<<0), 1);
+	auto camera1 = entity1->create_component<Camera>(render_system, texture_manager, (1<<0), 1);
 
 	bool changed = false;
 
@@ -45,7 +47,7 @@ bool mainTest() {
 	}
 
 	auto transform2 = entity2->create_component<Transform>(scene_system);
-	auto camera2 = entity2->create_component<Camera>(render_system, (1<<0), 0);
+	auto camera2 = entity2->create_component<Camera>(render_system, texture_manager, (1<<0), 0);
 
 	// THis tests the sorting of camera depth
 	auto &cameras = render_system->get_cameras(0);

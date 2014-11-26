@@ -47,7 +47,7 @@ MainComponentSerializer::MainComponentSerializer(Main *app) : app(app) {
 
 void MainComponentSerializer::create_and_add_component(const Framework::EntityPtr &owner, const std::string &type, const std::string &/*name*/) {
 	if (type == Framework::Camera::get_static_type()) {
-		owner->create_component<Framework::Camera>(app->get_render_system());
+		owner->create_component<Framework::Camera>(app->get_render_system(), app->get_texture_manager());
 	}
 	else if (type == Framework::Renderable::get_static_type()) {
 		owner->create_component<Framework::Renderable>(app->get_render_system(), app->get_material_manager(), app->get_mesh_manager());
