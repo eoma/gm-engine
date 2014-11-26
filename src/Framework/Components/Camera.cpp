@@ -5,22 +5,28 @@
 #include "GM/Framework/DefinitionsPropertyNames.h"
 #include "GM/Framework/Entity.h"
 
+#include "GM/Framework/Managers/TextureManager.h"
+
 #include "GM/Framework/Systems/RenderSystem.h"
 
 #include "GM/Core/GL/FramebufferObject.h"
+#include "GM/Core/Utilities/TextureFactory.h"
+#include "GM/Core/Utilities/ReadWriteTexture.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <GL/gl3w.h>
 
-using namespace GM::Framework;
+namespace GM {
+namespace Framework {
 
-Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, unsigned int render_layers, int depth, const std::string &name)
+Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, const TextureManagerPtr & texture_manager, unsigned int render_layers, int depth, const std::string &name)
 : Component(owner, name)
 , render_system(render_system)
 , render_layers(render_layers)
 , depth(depth)
 , framebuffer(nullptr)
+, render_texture(nullptr)
 {
 	fov_property = owner->add<float>(GM_PROPERTY_FOV, 60.0f);
 	near_clipping_property = owner->add<float>(GM_PROPERTY_NEAR_CLIPPING, 0.1f);
@@ -38,6 +44,9 @@ Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, uns
 	slots.connect(world_matrix_property.value_changed(), this, &Camera::recalculate_view_matrix);
 
 	render_system->add_camera(this);
+
+	render_texture = std::make_shared<Core::ReadWriteTexture>(GL_TEXTURE_2D);
+	texture_manager->add(clan::string_format("%1_camera_rt", owner->get_name()), render_texture);
 }
 
 Camera::~Camera() {
@@ -85,6 +94,24 @@ void Camera::set_projection(float width, float height) {
 }
 
 void Camera::initialize() {
+	if (render_texture->get_readable() == nullptr && render_texture->get_writable() == nullptr) {
+		Core::TextureFactory::TextureData texture_data;
+		Core::TextureFormatPtr texture_format = Core::TextureFormat::create_texture2d_format(false);
+
+		// FIXME: Add proper screen resolutions!
+		texture_data.width = 1;
+		texture_data.height = 1;
+		texture_data.internal_format = GL_RGBA;
+		texture_data.texture_format = GL_RGBA;
+		texture_data.data_type = (GLenum)GL_UNSIGNED_BYTE;
+		texture_data.data_ptr = nullptr;
+
+		render_texture->set_readable(Core::TextureFactory::create(*texture_format, texture_data));
+		render_texture->set_writable(Core::TextureFactory::create(*texture_format, texture_data));
+
+		// render_texture should be registered in texture_manager
+	}
+
 	// Hopefully all necessary pass components has been added
 	make_render_pass_sequence();
 
@@ -100,8 +127,24 @@ void Camera::make_render_pass_sequence() {
 
 	for (auto &component : owner->get_components()) {
 		IRenderPassComponent* pass = dynamic_cast<IRenderPassComponent*>(component.get());
+
 		if (pass != nullptr) {
 			pass_sequence.push_back(pass);
+
+			if (pass->uses_render_texture_from_camera()) {
+				// Flip textures used as read and write
+				render_texture->flip();
+
+				pass->set_input_texture(render_texture->get_readable());
+				pass->set_output_texture(render_texture->get_writable());
+			}
 		}
 	}
 }
+
+Core::TexturePtr Camera::get_render_texture() const {
+	return render_texture;
+}
+
+} // namespace Framework
+} // namespace GM

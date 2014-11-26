@@ -14,6 +14,8 @@ namespace GM {
 
 namespace Core {
 class FramebufferObject; typedef std::shared_ptr<FramebufferObject> FramebufferObjectPtr;
+class Texture; typedef std::shared_ptr<Texture> TexturePtr;
+class ReadWriteTexture; typedef std::shared_ptr<ReadWriteTexture> ReadWriteTexturePtr;
 }
 
 namespace Framework {
@@ -21,11 +23,12 @@ namespace Framework {
 class Camera; typedef std::shared_ptr<Camera> CameraPtr;
 class Entity; typedef std::shared_ptr<Entity> EntityPtr;
 class RenderSystem; typedef std::shared_ptr<RenderSystem> RenderSystemPtr;
+class TextureManager; typedef std::shared_ptr<TextureManager> TextureManagerPtr;
 class IRenderPassComponent;
 
 class Camera : public Component<Camera> {
 public:
-	Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, unsigned int render_layers = RenderLayers::MESH_OPAQUE, int depth = 0, const std::string &name = std::string());
+	Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, const TextureManagerPtr &texture_manager, unsigned int render_layers = RenderLayers::MESH_OPAQUE, int depth = 0, const std::string &name = std::string());
 	virtual ~Camera();
 
 	std::string get_type() const override { return get_static_type(); };
@@ -62,6 +65,8 @@ public:
 
 	void clear_buffer();
 
+	Core::TexturePtr get_render_texture() const;
+
 private:
 	void recalculate_view_matrix(const glm::mat4 &old_world, const glm::mat4 &new_world);
 
@@ -88,6 +93,9 @@ private:
 	Property<float> max_vertical_angle_property;
 
 	std::vector<IRenderPassComponent*> pass_sequence;
+
+	// Render texture for use in texture passes
+	Core::ReadWriteTexturePtr render_texture;
 };
 
 } // namespace Framework
