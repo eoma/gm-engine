@@ -5,7 +5,8 @@ namespace GM {
 		struct RenderLayers {
 			enum Value {
 				MESH_OPAQUE = (1<<0),
-				MESH_TRANSPARENT = (1<<1)
+				MESH_TRANSPARENT = (1<<1),
+				ALL = (1<<30) - 1
 			};
 		};
 	}
