@@ -101,7 +101,7 @@ void Camera::initialize() {
 		// FIXME: Add proper screen resolutions!
 		texture_data.width = 1;
 		texture_data.height = 1;
-		texture_data.internal_format = GL_RGBA;
+		texture_data.internal_format = GL_RGBA8;
 		texture_data.texture_format = GL_RGBA;
 		texture_data.data_type = (GLenum)GL_UNSIGNED_BYTE;
 		texture_data.data_ptr = nullptr;
