@@ -139,45 +139,7 @@ Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, 
 
 Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, const RawImage &image, const Core::TextureFormat &format)
 {
-	// First, test if the name has been cached.
-	auto texture = get(texture_name);
-	if (texture) {
-		return texture;
-	}
-
-	
-	GLenum gl_texture_format;
-	
-	// Have the user set a forced texture format?
-	if (format.has_gl_texture_format()) {
-		gl_texture_format = format.get_gl_texture_format();
-	}
-	// Implement generating a texture based on raw image data and format.
-	else {
-		int channels = image.get_num_channels();
-		if (channels == 1) gl_texture_format = GL_RED;
-		else if (channels == 2) gl_texture_format = GL_RG;
-		else if (channels == 3) gl_texture_format = GL_RGB;
-		else if (channels == 4) gl_texture_format = GL_RGBA;
-		else gl_texture_format = GL_RGB;
-	}
-
-	texture = Core::TextureFactory::create(format, Core::TextureFactory::TextureData{
-		(int)image.get_width(),
-		(int)image.get_height(),
-		gl_texture_format,
-		gl_texture_format,
-		(GLenum)GL_UNSIGNED_BYTE,
-		image.get_dataptr()
-	});
-	if (!texture) {
-		throw clan::Exception(clan::string_format("Failed to get or create the texture %1.", texture_name));
-	}
-
-	name_to_texture[texture_name] = texture;
-	texture_to_name[texture] = texture_name;
-
-	return texture;
+	return get_or_create(texture_name, {image}, format);
 }
 
 Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, const std::vector<RawImagePtr> &images, const Core::TextureFormat &format)
@@ -190,9 +152,10 @@ Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, 
 
 	std::vector<Core::TextureFactory::TextureData> data;
 	for (auto image : images) {
-
+		// FIXME: Better texture creation
 		// Implement generating a texture based on raw image data and format.
-		GLenum gl_texture_format;
+		GLenum gl_texture_format = 0;
+		GLenum gl_internal_format = 0;
 		int channels = image->get_num_channels();
 		if (channels == 1) gl_texture_format = GL_RED;
 		else if (channels == 2) gl_texture_format = GL_RG;
@@ -200,10 +163,16 @@ Core::TexturePtr TextureManager::get_or_create(const std::string &texture_name, 
 		else if (channels == 4) gl_texture_format = GL_RGBA;
 		else gl_texture_format = GL_RGB;
 
+		// Assume all file based textures are unsigned 8-bit.
+		if (gl_texture_format == GL_RED) gl_internal_format = GL_R8;
+		else if (gl_texture_format == GL_RG) gl_internal_format = GL_RG8;
+		else if (gl_texture_format == GL_RGB) gl_internal_format = GL_RGB8;
+		else if (gl_texture_format == GL_RGBA) gl_internal_format = GL_RGBA8;
+
 		data.push_back(Core::TextureFactory::TextureData { 
 			(int)image->get_width(), 
 			(int)image->get_height(), 
-			gl_texture_format, 
+			gl_internal_format, 
 			gl_texture_format,
 			(GLenum)GL_UNSIGNED_BYTE, 
 			image->get_dataptr() 
