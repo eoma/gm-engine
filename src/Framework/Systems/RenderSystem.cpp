@@ -5,6 +5,7 @@
 #include "GM/Framework/Utilities/Material.h"
 #include "GM/Framework/Utilities/Mesh.h"
 
+#include "GM/Core/GL/FramebufferObject.h"
 #include "GM/Core/GL/Render.h"
 #include "GM/Core/GL/Shader.h"
 #include "GM/Core/GL/VertexArrayObject.h"
@@ -241,17 +242,14 @@ void RenderSystem::pass(Camera * const camera, const std::string &render_pass_na
 	}
 }
 
-void RenderSystem::resize(int width, int height) {
+void RenderSystem::resize(int width, int height)
+{
 	// FIXME: Should move this to Core::ViewportManager, that holds a push/pop functionality for pushing viewport sizes. 
 	//        Very useful when working with framebuffers that holds different buffer/viewport sizes.
 	glViewport(0, 0, width, height);
 
-	// FIXME: Cameras should probably be stored in a pure list as well as in buckets, so that we can iterate over them
-	//        without risking that a camera's projection is calculated more than once.
-	for (unsigned int layer = 0; layer < buckets.size(); ++layer) {
-		const auto &cameras = cameras_in_layers[layer];
-		for (Camera *camera : cameras)	{
-			camera->set_projection(width, height);
-		}
+	for (Camera *cam : cameras)
+	{
+		cam->set_projection(width, height);
 	}
 }
