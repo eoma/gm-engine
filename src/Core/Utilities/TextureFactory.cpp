@@ -7,46 +7,26 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <sstream>
+#include <algorithm>
 
 namespace GM {
 namespace Core {
 
 TexturePtr TextureFactory::create(const TextureFormat &format, const std::vector<std::string> &image_paths, FileFetcherFunction &file_fetcher)
 {
-	auto texture = std::make_shared<Texture>(format.get_type());
-	texture->bind();
-
-	upload(texture, image_paths, file_fetcher);
-
-	set_parameters(texture, format);
-
-	if (format.is_generating_mipmap())
+	std::vector<TextureData> images;
+	images.reserve(image_paths.size());
+	for (const std::string &path : image_paths)
 	{
-		glGenerateMipmap(format.get_type());
+		images.push_back(fetch_image_data(path, file_fetcher));
 	}
 
-	texture->unbind();
-
-	return texture;
+	return create(format, images);
 }
 
 TexturePtr TextureFactory::create(const TextureFormat &format, TextureData data)
 {
-	auto texture = std::make_shared<Texture>(format.get_type());
-	texture->bind();
-
-	upload_single_image(texture->get_type(), data);
-
-	set_parameters(texture, format);
-
-	if (format.is_generating_mipmap())
-	{
-		glGenerateMipmap(format.get_type());
-	}
-
-	texture->unbind();
-
-	return texture;
+	return create(format, {data});
 }
 
 TexturePtr TextureFactory::create(const TextureFormat &format, const std::vector<TextureData> &data)
@@ -61,8 +41,9 @@ TexturePtr TextureFactory::create(const TextureFormat &format, const std::vector
 			throw clan::Exception(clan::string_format("A 2d texture requires 1 image, (%1) were provided", data.size()));
 		}
 
-		unsigned int i = 0;
-		upload_single_image(GL_TEXTURE_2D, data[i]);
+		make_immutable_storage(GL_TEXTURE_2D, format.is_generating_mipmap(), 
+		                       data[0].internal_format, data[0].width, data[0].height);
+		upload_single_image(GL_TEXTURE_2D, data[0]);
 	}
 	else if (texture->get_type() == GL_TEXTURE_CUBE_MAP)
 	{
@@ -71,6 +52,18 @@ TexturePtr TextureFactory::create(const TextureFormat &format, const std::vector
 			throw clan::Exception(clan::string_format("A cube texture requires 6 images, (%1) were provided", data.size()));
 		}
 
+		bool satisfied_image_sizes = std::all_of(++data.begin(), data.end(), 
+			[&data](const TextureData &img) {
+				return (data[0].width == img.width) && (data[0].height == img.height);
+			});
+
+		if (!satisfied_image_sizes)
+		{
+			throw clan::Exception("The six textures of a cube must the same dimensions!");
+		}
+
+		make_immutable_storage(GL_TEXTURE_CUBE_MAP, format.is_generating_mipmap(), 
+		                       data[0].internal_format, data[0].width, data[0].height);
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
 		for (unsigned int i = 0; i < data.size(); i++)
@@ -135,68 +128,47 @@ void TextureFactory::set_parameters(const TexturePtr &texture, const TextureForm
 	}
 }
 
-void TextureFactory::upload(const TexturePtr &texture, const std::vector<std::string> &files, FileFetcherFunction &file_fetcher)
+void TextureFactory::make_immutable_storage(GLenum target, bool mipmapped, GLenum internal_format, int width, int height)
 {
-	if (texture->get_type() == GL_TEXTURE_2D)
+	int numLevels = 1;
+	if (mipmapped) // test if rectangle or buffer?
 	{
-		if (files.size() != 1)
-		{
-			throw clan::Exception(clan::string_format("A 2d texture requires 1 image, (%1) were provided", files.size()));
-		}
-
-		upload_single_image(GL_TEXTURE_2D, files[0], file_fetcher);
+		numLevels += floor(log2(std::max(width, height)));
 	}
-	else if (texture->get_type() == GL_TEXTURE_CUBE_MAP)
-	{
-		if (files.size() != 6)
-		{
-			throw clan::Exception(clan::string_format("A cube texture requires 6 images, (%1) were provided", files.size()));
-		}
 
-		for (unsigned int i = 0; i < 6; ++i)
-		{
-			upload_single_image(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, files[i], file_fetcher);
-		}
-	}
-	else
-	{
-		std::stringstream str;
-		str << "Unhandled texture type 0x" << std::hex << texture->get_type() << std::dec;
-		throw clan::Exception(str.str());
-	}
-}
-
-void TextureFactory::upload_single_image(const GLenum target, const std::string &name, FileFetcherFunction &file_fetcher)
-{
-	int width = 0;
-	int height = 0;
-	GLenum texture_format = 0;
-	GLenum type = 0;
-
-	std::shared_ptr<const std::vector<unsigned char>> imgdata = file_fetcher(name, width, height, 
-		texture_format, type);
-
-	upload_single_image(target, width, height, texture_format, texture_format, type, imgdata);
+	// TODO: Maybe ensure that target is one GL_TEXTURE_2D, GL_TEXTURE_1D_ARRAY, GL_TEXTURE_RECTANGLE,
+	// GL_PROXY_TEXTURE_2D, GL_PROXY_TEXTURE_1D_ARRAY, GL_PROXY_TEXTURE_RECTANGLE 
+	// or GL_PROXY_TEXTURE_CUBE_MAP?
+	glTexStorage2D(target, numLevels, internal_format, width, height);
 }
 
 void TextureFactory::upload_single_image(const GLenum target, const TextureData &data)
 {
-	upload_single_image(target, data.width, data.height, data.internal_format, data.texture_format, data.data_type, data.data_ptr);
+	if (data.data_ptr != nullptr && data.data_ptr->size() > 0)
+	{
+		glTexSubImage2D(target, 0, 0, 0, data.width, data.height, data.texture_format, data.data_type, data.data_ptr->data());
+	}
 }
 
-void TextureFactory::upload_single_image(const GLenum target, int width, int height, GLenum internal_format, GLenum texture_format, GLenum data_type, std::shared_ptr<const std::vector<unsigned char>> data_ptr)
+TextureFactory::TextureData TextureFactory::fetch_image_data(std::string image_name, FileFetcherFunction &file_fetcher)
 {
-	const unsigned char* ptr = nullptr; // Assume initialization of texture
+	TextureData data;
 
-	if (data_ptr != nullptr && data_ptr->size() > 0)
-	{
-		// We are not just allocating memory, actually uploading
-		ptr = data_ptr->data();
-	}
+	data.width = 0;
+	data.height = 0;
+	data.texture_format = 0;
+	data.data_type = 0;
 
-	glTexImage2D(target,
-		0, internal_format, width, height,
-		0, texture_format, data_type, ptr);
+	data.data_ptr = file_fetcher(image_name, data.width, data.height, data.texture_format, data.data_type);
+
+	// Assume all file based textures are unsigned 8-bit.
+	data.internal_format = 0;
+	if (data.texture_format == GL_RED) data.internal_format = GL_R8;
+	else if (data.texture_format == GL_RG) data.internal_format = GL_RG8;
+	else if (data.texture_format == GL_RGB) data.internal_format = GL_RGB8;
+	else if (data.texture_format == GL_RGBA) data.internal_format = GL_RGBA8;
+
+	return data;
 }
 
 } // namespace Core
