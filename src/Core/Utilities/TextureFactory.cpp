@@ -26,7 +26,7 @@ TexturePtr TextureFactory::create(const TextureFormat &format, const std::vector
 
 TexturePtr TextureFactory::create(const TextureFormat &format, TextureData data)
 {
-	return create(format, {data});
+	return create(format, std::vector<TextureData>{data});
 }
 
 TexturePtr TextureFactory::create(const TextureFormat &format, const std::vector<TextureData> &data)
