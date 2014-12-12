@@ -12,7 +12,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/depends/assimp/include
 )
 
-add_definitions(-DGLM_FORCE_RADIANS)
+add_definitions(${GM_COMMON_DEFINES})
 
 set(GM_LIBRARY_TYPE STATIC)
 if (BUILD_SHARED_LIBS)

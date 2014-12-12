@@ -64,6 +64,9 @@ endif()
 ### end setup of dependencies
 ###
 
+set(GM_COMMON_DEFINES
+)
+
 add_subdirectory(src)
 
 ###
@@ -106,8 +109,7 @@ set(CONF_SOURCE_DIR ${PROJECT_SOURCE_DIR})
 
 # Add custom definitions needed here, prefixed with -D
 # example: -DGLM_FORCE_CXX11
-set(CONF_DEFINITIONS
-	)
+set(CONF_DEFINITIONS ${GM_COMMON_DEFINES})
 
 configure_file(GmEngineConfig.cmake.in
   "${PROJECT_BINARY_DIR}/GmEngineConfig.cmake" @ONLY)
