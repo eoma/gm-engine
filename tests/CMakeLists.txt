@@ -11,7 +11,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/depends/glfw/include/
 )
 
-add_definitions(-DGLM_FORCE_RADIANS)
+add_definitions(${GM_COMMON_DEFINES})
 
 MACRO(SUBDIRLIST result curdir)
   FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
