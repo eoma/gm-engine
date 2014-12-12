@@ -65,6 +65,7 @@ endif()
 ###
 
 set(GM_COMMON_DEFINES
+  -DGLM_FORCE_PURE # No SSE optimizations
 )
 
 add_subdirectory(src)
