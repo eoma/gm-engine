@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -38,7 +38,7 @@ namespace clan
 {
 
 NetGameClient::NetGameClient()
-: impl(new NetGameClient_Impl)
+: impl(std::make_shared<NetGameClient_Impl>())
 {
 }
 
@@ -55,7 +55,7 @@ void NetGameClient::connect(const std::string &server, const std::string &port)
 
 void NetGameClient::disconnect()
 {
-	if (impl->connection.get() != 0)
+	if (impl->connection.get() != nullptr)
 		impl->connection->disconnect();
 	impl->connection.reset();
 	impl->events.clear();
@@ -68,7 +68,7 @@ void NetGameClient::process_events()
 
 void NetGameClient::send_event(const NetGameEvent &game_event)
 {
-	if (impl->connection.get() != 0)
+	if (impl->connection.get() != nullptr)
 		impl->connection->send_event(game_event);
 }
 
@@ -100,15 +100,15 @@ void NetGameClient_Impl::process()
 	std::vector<NetGameNetworkEvent> new_events;
 	new_events.swap(events);
 	mutex_lock.unlock();
-	for (unsigned int i = 0; i < new_events.size(); i++)
+	for (auto & new_event : new_events)
 	{
-		switch (new_events[i].type)
+		switch (new_event.type)
 		{
 		case NetGameNetworkEvent::client_connected:
 			sig_game_connected();
 			break;
 		case NetGameNetworkEvent::event_received:
-			sig_game_event_received(new_events[i].game_event);
+			sig_game_event_received(new_event.game_event);
 			break;
 		case NetGameNetworkEvent::client_disconnected:
 			sig_game_disconnected();

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <cmath>
 #include "vec2.h"
 #include "vec3.h"
@@ -165,6 +164,9 @@ public:
 /// \{
 
 public:
+	void set_xy(const Vec2<Type> &v) { x = v.x; y = v.y; }
+	void set_zw(const Vec2<Type> &v) { z = v.x; w = v.y; }
+
 	/// \brief Returns the length (magnitude) of this vector (not taking into account the w ordinate).
 	///
 	/// Operates in the native datatype

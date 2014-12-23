@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,7 +30,6 @@
 #pragma once
 
 #include <vector>
-#include "../api_network.h"
 #include <string>
 #include "event.h"
 #include "../Socket/tcp_connection.h" // TODO: Remove
@@ -47,7 +46,7 @@ class NetGameConnectionSite;
 class NetGameConnection_Impl;
 
 /// \brief NetGameConnection
-class CL_API_NETWORK NetGameConnection
+class NetGameConnection
 {
 public:
 

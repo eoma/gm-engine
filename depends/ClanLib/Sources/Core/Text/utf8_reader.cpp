@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -52,7 +52,7 @@ public:
 };
 
 
-UTF8_Reader::UTF8_Reader(const std::string::value_type *text, std::string::size_type length) : impl(new UTF8_Reader_Impl(text, length))
+UTF8_Reader::UTF8_Reader(const std::string::value_type *text, std::string::size_type length) : impl(std::make_shared<UTF8_Reader_Impl>(text, length))
 {
 }
 

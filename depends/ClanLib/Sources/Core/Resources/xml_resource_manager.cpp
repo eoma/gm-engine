@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -42,9 +42,9 @@ ResourceManager XMLResourceManager::create(const XMLResourceDocument &doc)
 {
 	ResourceManager manager;
 	manager.set_cache<XMLResourceDocument>("clan.xmldoc", std::shared_ptr<XMLResourceDocument>(new XMLResourceDocument(doc)));
-	for (size_t i = 0; i < xml_cache_factories.size(); i++)
+	for (auto & xml_cache_factory : xml_cache_factories)
 	{
-		xml_cache_factories[i](manager, doc);
+		xml_cache_factory(manager, doc);
 	}
 	return manager;
 }

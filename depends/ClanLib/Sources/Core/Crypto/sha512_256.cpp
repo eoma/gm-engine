@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -39,7 +39,7 @@ namespace clan
 // SHA512_256 Construction:
 
 SHA512_256::SHA512_256()
-: impl(new SHA512_Impl(cl_sha_512_256))
+: impl(std::make_shared<SHA512_Impl>(cl_sha_512_256))
 {
 }
 

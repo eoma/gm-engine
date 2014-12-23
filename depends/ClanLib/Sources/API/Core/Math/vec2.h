@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,10 +28,8 @@
 **    Harry Storbacka
 */
 
-
 #pragma once
 
-#include "../api_core.h"
 #include <cmath>
 #include "vec3.h"
 #include "vec4.h"
@@ -182,7 +180,7 @@ public:
 	///
 	/// \param vector = Second vector used to calculate angle.
 	///
-	/// \return The angle between the two vectors 
+	/// \return The angle between the two vectors
 	Angle angle_normed(const Vec2<Type>& vector) const;
 
 	/// \brief Calculate the angle of the line joining this point and other point

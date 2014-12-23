@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -205,11 +205,11 @@ void ZipIODevice_FileEntry::init()
 
 	case zip_compress_deflate:
 		memset(&zs, 0, sizeof(mz_stream));
-		zs.next_in = 0;
+		zs.next_in = nullptr;
 		zs.avail_in = 0;
-		zs.zalloc = 0;
-		zs.zfree = 0;
-		zs.opaque = 0;
+		zs.zalloc = nullptr;
+		zs.zfree = nullptr;
+		zs.opaque = nullptr;
 		//result = inflateInit(&zs);
 		result = mz_inflateInit2(&zs, -15); // Undocumented: if wbits is negative, zlib skips header check
 		if (result != MZ_OK) throw Exception("Zlib inflateInit failed for zip index!");

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -69,11 +69,11 @@ NetGameConnection_Impl::~NetGameConnection_Impl()
 
 void NetGameConnection_Impl::set_data(const std::string &name, void *new_data)
 {
-	for (std::vector<AttachedData>::iterator it = data.begin(); it != data.end(); ++it)
+	for (auto & elem : data)
 	{
-		if (it->name == name)
+		if (elem.name == name)
 		{
-			it->data = new_data;
+			elem.data = new_data;
 			return;
 		}
 	}
@@ -85,12 +85,12 @@ void NetGameConnection_Impl::set_data(const std::string &name, void *new_data)
 
 void *NetGameConnection_Impl::get_data(const std::string &name) const
 {
-	for (std::vector<AttachedData>::const_iterator it = data.begin(); it != data.end(); ++it)
+	for (const auto & elem : data)
 	{
-		if (it->name == name)
-			return it->data;
+		if (elem.name == name)
+			return elem.data;
 	}
-	return 0;
+	return nullptr;
 }
 
 void NetGameConnection_Impl::send_event(const NetGameEvent &game_event)
@@ -234,17 +234,17 @@ bool NetGameConnection_Impl::write_data(DataBuffer &buffer)
 	std::vector<Message> new_send_queue;
 	send_queue.swap(new_send_queue);
 	mutex_lock.unlock();
-	for (unsigned int i = 0; i < new_send_queue.size(); i++)
+	for (auto & elem : new_send_queue)
 	{
-		if (new_send_queue[i].type == Message::type_message)
+		if (elem.type == Message::type_message)
 		{
-			DataBuffer packet = NetGameNetworkData::send_data(new_send_queue[i].event);
+			DataBuffer packet = NetGameNetworkData::send_data(elem.event);
 
 			int pos = buffer.get_size();
 			buffer.set_size(pos + packet.get_size());
 			memcpy(buffer.get_data() + pos, packet.get_data(), packet.get_size());
 		}
-		else if (new_send_queue[i].type == Message::type_disconnect)
+		else if (elem.type == Message::type_disconnect)
 		{
 			return true;
 		}

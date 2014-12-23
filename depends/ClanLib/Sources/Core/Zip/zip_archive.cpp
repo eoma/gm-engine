@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -53,12 +53,12 @@ namespace clan
 // ZipArchive construction:
 
 ZipArchive::ZipArchive()
-: impl(new ZipArchive_Impl)
+: impl(std::make_shared<ZipArchive_Impl>())
 {
 }
 	
 ZipArchive::ZipArchive(const std::string &filename)
-: impl(new ZipArchive_Impl)
+: impl(std::make_shared<ZipArchive_Impl>())
 {
 	IODevice input = File(filename);
 	impl->input = input;
@@ -66,7 +66,7 @@ ZipArchive::ZipArchive(const std::string &filename)
 }
 
 ZipArchive::ZipArchive(IODevice &input)
-: impl(new ZipArchive_Impl)
+: impl(std::make_shared<ZipArchive_Impl>())
 {
 	load(input);
 }
@@ -100,13 +100,13 @@ std::vector<ZipFileEntry> ZipArchive::get_file_list(const std::string &dirpath)
 	std::vector<ZipFileEntry> files;
 	std::vector<std::string> added_directories;
 
-	for (std::vector<ZipFileEntry>::size_type i=0; i<impl->files.size(); i++)
+	for (auto & elem : impl->files)
 	{
-		std::string filename = impl->files[i].get_archive_filename();
+		std::string filename = elem.get_archive_filename();
 		if (filename[0] != '/')
 		{
 			filename.insert(filename.begin(), '/');
-			impl->files[i].set_archive_filename(filename);
+			elem.set_archive_filename(filename);
 		}
 		
 		if (filename.substr(0, path.size()) == path)
@@ -118,9 +118,9 @@ std::vector<ZipFileEntry> ZipArchive::get_file_list(const std::string &dirpath)
 				bool dir_added = false;
 				std::string directory_name = filename.substr(path.size(), subdir_slash_pos-path.size());
 
-				for (std::vector<std::string>::size_type j = 0; j < added_directories.size(); j++)
+				for (auto & added_directory : added_directories)
 				{
-					if (added_directories[j] == directory_name)
+					if (added_directory == directory_name)
 						dir_added = true;
 				}
 
@@ -134,7 +134,7 @@ std::vector<ZipFileEntry> ZipArchive::get_file_list(const std::string &dirpath)
 					added_directories.push_back(directory_name);
 				}
 			}
-			else if (impl->files[i].get_archive_filename() != path)
+			else if (elem.get_archive_filename() != path)
 			{
 				std::string file_name = filename.substr(path.size(), std::string::npos);
 				ZipFileEntry file_entry;
@@ -408,7 +408,7 @@ void ZipArchive_Impl::calc_time_and_date(byte16 &out_date, byte16 &out_time)
 #else
 	static Mutex mutex;
 	MutexSection mutex_lock(&mutex);
-	time_t t = time(0);
+	time_t t = time(nullptr);
 	tm *tm_time = gmtime(&t);
 	day_of_month = tm_time->tm_mday;
 	month = tm_time->tm_mon + 1;

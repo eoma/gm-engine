@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -107,7 +107,7 @@ void IODeviceProvider_TCPConnection::connect(const SocketName &remote)
 	switch (wakeup_reason)
 	{
 	case 0: return;
-	case 1: receive(0, 0, false); throw Exception("Connection attempt failed");
+	case 1: receive(nullptr, 0, false); throw Exception("Connection attempt failed");
 	case -1: throw Exception("Connection attempt timed out");
 	}
 }
@@ -196,7 +196,7 @@ int IODeviceProvider_TCPConnection::peek(void *data, int len)
 IODeviceProvider *IODeviceProvider_TCPConnection::duplicate()
 {
 	throw Exception("IODeviceProvider_TCPConnection::duplicate() - duplicate not supported for TCP connections.");
-	return 0;
+	return nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////////

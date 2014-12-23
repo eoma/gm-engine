@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include "dom_string.h"
 #include <vector>
@@ -48,7 +47,7 @@ class DomDocument;
 ///
 ///    <p>The NodeList interface provides the abstraction of an ordered collection of nodes,
 ///    without defining or constraining how this collection is implemented.</p> 
-class CL_API_CORE DomNodeList
+class DomNodeList
 {
 /// \name Construction
 /// \{

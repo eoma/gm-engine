@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -145,6 +145,87 @@ Mat3<int> Mat3<int>::rotate(const Angle &angle, int x, int y, int z, bool normal
 	return rotate_matrix;
 }
 
+template<typename Type>
+Mat3<Type> Mat3<Type>::rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order)
+{
+	float cx = cos(angle_x.to_radians());
+	float sx = sin(angle_x.to_radians());
+	float cy = cos(angle_y.to_radians());
+	float sy = sin(angle_y.to_radians());
+	float cz = cos(angle_z.to_radians());
+	float sz = sin(angle_z.to_radians());
+
+	Mat3<Type> rotation_matrix_x(1.0f, 0.0f, 0.0f, 0.0f, cx, sx, 0.0f, -sx, cx);
+	Mat3<Type> rotation_matrix_y(cy, 0.0f, -sy, 0.0f, 1.0f, 0.0f, sy, 0.0f, cy);
+	Mat3<Type> rotation_matrix_z(cz, sz, 0.0f, -sz, cz, 0.0f, 0.0f, 0.0f, 1.0f);
+
+	switch (order)
+	{
+	case order_XYZ:
+		return rotation_matrix_z * rotation_matrix_y * rotation_matrix_x;
+	case order_XZY:
+		return rotation_matrix_y * rotation_matrix_z * rotation_matrix_x;
+	case order_YZX:
+		return rotation_matrix_x * rotation_matrix_z * rotation_matrix_y;
+	case order_YXZ:
+		return rotation_matrix_z * rotation_matrix_x * rotation_matrix_y;
+	case order_ZXY:
+		return rotation_matrix_y * rotation_matrix_x * rotation_matrix_z;
+	case order_ZYX:
+		return rotation_matrix_x * rotation_matrix_y * rotation_matrix_z;
+	default:
+		throw Exception("Unknown euler order");
+	}
+
+}
+
+template<>
+Mat3<int> Mat3<int>::rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order)
+{
+	throw Exception("Not supported");
+}
+
+template<typename Type>
+Mat3<Type> Mat3<Type>::rotate(const Angle &angle)
+{
+	Mat3<Type> rotate_matrix;
+	Type c = cos(angle.to_radians());
+	Type s = sin(angle.to_radians());
+
+	rotate_matrix.matrix[0 * 3 + 0] = c;
+	rotate_matrix.matrix[0 * 3 + 1] = s;
+	rotate_matrix.matrix[1 * 3 + 0] = -s;
+	rotate_matrix.matrix[1 * 3 + 1] = c;
+	rotate_matrix.matrix[2 * 3 + 2] = 1;
+
+	return rotate_matrix;
+}
+
+// For ints
+template<>
+Mat3<int> Mat3<int>::rotate(const Angle &angle)
+{
+	throw Exception("Not supported");
+}
+
+template<typename Type>
+Mat3<Type> Mat3<Type>::scale(Type x, Type y)
+{
+	Mat3<Type> scale_matrix = null();
+	scale_matrix.matrix[0 + 0 * 3] = x;
+	scale_matrix.matrix[1 + 1 * 3] = y;
+	scale_matrix.matrix[2 + 2 * 3] = 1;
+	return scale_matrix;
+}
+
+template<typename Type>
+Mat3<Type> Mat3<Type>::translate(Type x, Type y)
+{
+	Mat3<Type> translate_matrix = identity();
+	translate_matrix.matrix[0 + 2 * 3] = x;
+	translate_matrix.matrix[1 + 2 * 3] = y;
+	return translate_matrix;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // Mat3 attributes:
@@ -185,6 +266,14 @@ Mat3<Type> &Mat3<Type>::operator =(const Mat2<Type> &copy)
 
 /////////////////////////////////////////////////////////////////////////////
 // Mat3 operations:
+
+template<typename Type>
+Vec2<Type> Mat3<Type>::operator*(const Vec2<Type> &b) const
+{
+	Type x = matrix[0 * 3 + 0] * b.x + matrix[1 * 3 + 0] * b.y + matrix[2 * 3 + 0];
+	Type y = matrix[0 * 3 + 1] * b.x + matrix[1 * 3 + 1] * b.y + matrix[2 * 3 + 1];
+	return Vec2<Type>(x, y);
+}
 
 template<typename Type>
 Mat3<Type> Mat3<Type>::operator *(const Mat3<Type> &mult) const

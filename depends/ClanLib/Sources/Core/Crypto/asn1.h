@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -40,7 +40,7 @@ namespace clan
 /// \{
 
 /// \brief ASN1 class.
-class CL_API_CORE ASN1
+class ASN1
 {
 /// \name Construction
 /// \{

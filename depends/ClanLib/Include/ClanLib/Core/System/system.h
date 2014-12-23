@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "../System/cl_platform.h"
 #include <vector>
 
@@ -43,7 +42,7 @@ namespace clan
 class Mutex;
 
 /// \brief General system helper functions.
-class CL_API_CORE System
+class System
 {
 /// \name Attributes
 /// \{
@@ -77,7 +76,7 @@ public:
 	static void aligned_free(void *ptr);
 
 	/// \brief Captures a stack back trace by walking up the stack and recording the information for each frame
-	static int capture_stack_trace(int frames_to_skip, int max_frames, void **out_frames, unsigned int *out_hash = 0);
+	static int capture_stack_trace(int frames_to_skip, int max_frames, void **out_frames, unsigned int *out_hash = nullptr);
 
 	/// \brief Returns the function names and lines for the specified stack frame addresses
 	/** <p>On Linux, to obtain function names, remember to link with the -rdynamic flag </p>*/

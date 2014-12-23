@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 namespace clan
@@ -57,7 +56,7 @@ namespace clan
 ///    In XML, where an attribute value may contain entity references, an Attr object should
 ///    be retrieved to examine the possibly fairly complex sub-tree representing the attribute
 ///    value.</p> 
-class CL_API_CORE DomElement : public DomNode
+class DomElement : public DomNode
 {
 /// \name Construction
 /// \{

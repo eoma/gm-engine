@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -51,11 +51,11 @@ public:
 /// \{
 
 public:
-	EventType get_event_type(int index) { return type; }
+	EventType get_event_type(int index) override { return type; }
 
-	int get_event_handle(int index) { return handle; }
+	int get_event_handle(int index) override { return handle; }
 
-	int get_num_event_handles() { return 1; }
+	int get_num_event_handles() override { return 1; }
 
 
 /// \}

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -154,7 +154,7 @@ bool AES128_Decrypt_Impl::calculate()
 				else
 				{
 					pad_byte += 1;	// Include the pad length
-					if ((current_size - pad_byte) < 0)
+					if (current_size < pad_byte)
 					{
 						return_code = false;	// Not enough data available
 					}

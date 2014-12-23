@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,15 +34,11 @@
 #pragma once
 
 #define CLANLIB_VERSION(x,y,z)	( (x << 16) | (y << 8) | (z) )
-#define CLANLIB_CURRENT_VERSION	CLANLIB_VERSION(3,1,0)
-#define CLANLIB_VERSION_STRING "3.1.0"
+#define CLANLIB_CURRENT_VERSION	CLANLIB_VERSION(4,0,0)
+#define CLANLIB_VERSION_STRING "4.0.0"
 
 #ifdef _MSC_VER
 #pragma warning( disable : 4786)
-#endif
-
-#ifdef __BORLANDC__
-#define BORLAND
 #endif
 
 #ifdef __cplusplus_cli
@@ -177,6 +173,7 @@
 #include "Core/Math/intersection_test.h"
 #include "Core/Math/aabb.h"
 #include "Core/Math/obb.h"
+#include "Core/Math/easing.h"
 #include "Core/Crypto/random.h"
 #include "Core/Crypto/secret.h"
 #include "Core/Crypto/sha1.h"

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,7 +37,7 @@ CoreGlobal cl_core_global;
 #ifdef WIN32
 #elif !defined(HAVE_TLS)
 #else
-__thread ThreadLocalStorage_Impl *CoreGlobal::cl_tls_impl = 0;
+__thread ThreadLocalStorage_Impl *CoreGlobal::cl_tls_impl = nullptr;
 #endif
 
 // This class controls the destruction order of clanCore global variables
@@ -53,10 +53,10 @@ CoreGlobal::CoreGlobal()
 	cl_tls_index_created = false;
 	cl_tls_index = 0;
 #else
-	cl_tls_impl = NULL;
+	cl_tls_impl = nullptr;
 #endif
 
-	cl_tls = NULL;
+	cl_tls = nullptr;
 }
 
 CoreGlobal::~CoreGlobal()

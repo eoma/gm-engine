@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include <functional>
 
@@ -38,7 +37,7 @@ namespace clan
 class Timer_Impl;
 
 /// \brief Timer class that invokes a callback on a specified interval
-class CL_API_CORE Timer
+class Timer
 {
 /// \name Construction
 /// \{

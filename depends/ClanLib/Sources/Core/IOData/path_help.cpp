@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -72,7 +72,7 @@ std::string PathHelp::make_absolute(
 #else
 			char working_dir[1024];
 			memset(working_dir, 0, 1024);
-			if (getcwd(working_dir, 1024) == 0)
+			if (getcwd(working_dir, 1024) == nullptr)
 				throw Exception("Unable to get current working directory!");
 			base = add_trailing_slash(working_dir, path_type) + base;
 #endif
@@ -180,7 +180,7 @@ std::string PathHelp::make_relative(
 #else
 			char working_dir[1024];
 			memset(working_dir, 0, 1024);
-			if (getcwd(working_dir, 1024) == 0)
+			if (getcwd(working_dir, 1024) == nullptr)
 				throw Exception("Unable to get current working directory!");
 			base = add_trailing_slash(working_dir, path_type) + base;
 #endif
@@ -220,7 +220,7 @@ std::string PathHelp::make_relative(
 #else
 			char working_dir[1024];
 			memset(working_dir, 0, 1024);
-			if (getcwd(working_dir, 1024) == 0)
+			if (getcwd(working_dir, 1024) == nullptr)
 				throw Exception("Unable to get current working directory!");
 			absolute = add_trailing_slash(working_dir, path_type) + absolute;
 #endif
@@ -445,15 +445,15 @@ std::string PathHelp::normalize(
 #endif
 	}
 
-	for (std::string::size_type i = 0; i < elements.size(); i++)
+	for (auto & element : elements)
 	{
 #ifdef WIN32
 		if (path_type == path_type_file)
-			normalized_path += elements[i] + "\\";
+			normalized_path += element + "\\";
 		else
-			normalized_path += elements[i] + "/";
+			normalized_path += element + "/";
 #else
-		normalized_path += elements[i] + "/";
+		normalized_path += element + "/";
 #endif
 	}
 	if (!elements.empty() && !ends_in_slash)

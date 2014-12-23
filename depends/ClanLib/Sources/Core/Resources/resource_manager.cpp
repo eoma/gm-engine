@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,7 +35,7 @@ namespace clan
 {
 
 ResourceManager::ResourceManager()
-	: impl(new ResourceManager_Impl())
+	: impl(std::make_shared<ResourceManager_Impl>())
 {
 }
 
@@ -45,7 +45,7 @@ ResourceManager::~ResourceManager()
 
 UserDataOwner &ResourceManager::get_cache_owner(const std::string &name) const
 {
-	std::map<std::string, std::shared_ptr<UserDataOwner> >::iterator it = impl->caches.find(name);
+	auto it = impl->caches.find(name);
 	if (it == impl->caches.end())
 		throw Exception(string_format("ResourceManager has no cache named %1", name));
 	return *it->second.get();

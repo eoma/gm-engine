@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -43,7 +43,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // Random_Impl Construction:
 
-Random_Impl::Random_Impl(int cache_size) : random_pool_size(cache_size), random_pool_free(0), random_pool(NULL), random_bool_bits_free(0)
+Random_Impl::Random_Impl(int cache_size) : random_pool_size(cache_size), random_pool_free(0), random_pool(nullptr), random_bool_bits_free(0)
 #ifdef WIN32
 , hProvider(0)
 #endif

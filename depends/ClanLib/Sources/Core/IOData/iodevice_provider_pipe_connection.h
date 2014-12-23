@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -71,15 +71,15 @@ public:
 /// \{
 
 public:
-	int send(const void *data, int len, bool send_all);
+	int send(const void *data, int len, bool send_all) override;
 
-	int receive(void *data, int len, bool receive_all);
+	int receive(void *data, int len, bool receive_all) override;
 
-	int peek(void *data, int len);
+	int peek(void *data, int len) override;
 
 	void disconnect();
 
-	IODeviceProvider *duplicate();
+	IODeviceProvider *duplicate() override;
 
 
 /// \}

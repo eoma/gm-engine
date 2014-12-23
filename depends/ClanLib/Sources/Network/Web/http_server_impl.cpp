@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -216,7 +216,7 @@ void HTTPServer_Impl::connection_thread_main(TCPConnection connection)
 					write_line(connection, "");
 				}
 
-				std::shared_ptr<HTTPServerConnection_Impl> connection_impl(new HTTPServerConnection_Impl);
+				std::shared_ptr<HTTPServerConnection_Impl> connection_impl(std::make_shared<HTTPServerConnection_Impl>());
 				connection_impl->connection = connection;
 				connection_impl->request_type = command;
 				connection_impl->request_url = url;

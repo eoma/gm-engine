@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -95,7 +95,7 @@ void DelauneyTriangulator_Impl::create_ordered_vertex_list(std::vector<DelauneyT
 	std::sort(vertices.begin(), vertices.end(), CompareVertices());
 
 	// Remove duplicates:
-	std::vector<DelauneyTriangulator_Vertex *>::iterator it = vertices.begin();
+	auto it = vertices.begin();
 	if (it == vertices.end()) return;
 	float last_x = (*it)->x;
 	float last_y = (*it)->y;
@@ -152,15 +152,15 @@ void DelauneyTriangulator_Impl::calculate_supertriangle(std::vector<DelauneyTria
 
 	super_triangle.vertex_A->x = min_x-1;
 	super_triangle.vertex_A->y = min_y-1;
-	super_triangle.vertex_A->data = 0;
+	super_triangle.vertex_A->data = nullptr;
 
 	super_triangle.vertex_B->x = max_x+(max_x-min_x)+1;
 	super_triangle.vertex_B->y = min_y-1;
-	super_triangle.vertex_B->data = 0;
+	super_triangle.vertex_B->data = nullptr;
 
 	super_triangle.vertex_C->x = min_x-1;
 	super_triangle.vertex_C->y = max_y+(max_y-min_y)+1;
-	super_triangle.vertex_C->data = 0;
+	super_triangle.vertex_C->data = nullptr;
 }
 
 void DelauneyTriangulator_Impl::perform_delauney_triangulation(
@@ -344,7 +344,7 @@ DelauneyTriangulator_Vertex DelauneyTriangulator_Impl::find_circumcenter(
 	float p_1 = (A*F - C*E) / G;
 
 	DelauneyTriangulator_Vertex circumcenter;
-	circumcenter.data = 0;
+	circumcenter.data = nullptr;
 	circumcenter.x = p_0;
 	circumcenter.y = p_1;
 	return circumcenter;

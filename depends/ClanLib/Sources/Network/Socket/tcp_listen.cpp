@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -40,7 +40,7 @@ namespace clan
 // TCPListen Construction:
 
 TCPListen::TCPListen(const SocketName &name, int queue_size, bool force_bind)
-: impl(new TCPListen_Impl(name, queue_size, force_bind))
+: impl(std::make_shared<TCPListen_Impl>(name, queue_size, force_bind))
 {
 }
 

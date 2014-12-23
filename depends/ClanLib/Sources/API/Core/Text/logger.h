@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "string_format.h"
 #include "string_help.h"
 #include "../System/mutex.h"
@@ -40,7 +39,7 @@ namespace clan
 /// \{
 
 /// \brief Logger interface.
-class CL_API_CORE Logger
+class Logger
 {
 /// \name Construction
 /// \{
@@ -74,19 +73,21 @@ public:
 	void disable();
 
 	/// \brief Log text.
-	virtual void log(const std::string &type, const std::string &text);
+	virtual void log(const std::string &type, const std::string &text) = 0;
 
 /// \}
 /// \name Implementation
 /// \{
 
-private:
+protected:
+	static StringFormat get_log_string(const std::string &type, const std::string &text);
+
 /// \}
 };
 
 /// \brief Log text to logger.
 ///
-CL_API_CORE void log_event(const std::string &type, const std::string &text);
+void log_event(const std::string &type, const std::string &text);
 
 template <class Arg1>
 void log_event(const std::string &type, const std::string &format, Arg1 arg1)

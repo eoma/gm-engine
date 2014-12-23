@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -71,8 +71,8 @@ void ZipLocalFileHeader::load(IODevice &input)
 	uncompressed_size = input.read_int32();
 	file_name_length = input.read_int16();
 	extra_field_length = input.read_int16();
-	char *str1 = new char[file_name_length];
-	char *str2 = new char[extra_field_length];
+	auto str1 = new char[file_name_length];
+	auto str2 = new char[extra_field_length];
 	try
 	{
 		input.read(str1, file_name_length);

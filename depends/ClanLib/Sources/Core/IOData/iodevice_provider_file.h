@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -59,9 +59,9 @@ public:
 /// \{
 
 public:
-	int get_size() const;
+	int get_size() const override;
 
-	int get_position() const;
+	int get_position() const override;
 
 /// \}
 /// \name Operations
@@ -81,15 +81,15 @@ public:
 
 	int write(const void *buffer, int size, bool write_all);
 
-	int send(const void *data, int len, bool send_all);
+	int send(const void *data, int len, bool send_all) override;
 
-	int receive(void *data, int len, bool receive_all);
+	int receive(void *data, int len, bool receive_all) override;
 
-	int peek(void *data, int len);
+	int peek(void *data, int len) override;
 
-	bool seek(int position, IODevice::SeekMode mode);
+	bool seek(int position, IODevice::SeekMode mode) override;
 
-	IODeviceProvider *duplicate();
+	IODeviceProvider *duplicate() override;
 
 
 /// \}

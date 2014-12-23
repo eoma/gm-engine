@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 namespace clan
@@ -44,7 +43,7 @@ namespace clan
 ///    rather than on each object that uses these attributes and methods. No DOM objects
 ///    correspond directly to CharacterData, though Text and others do inherit the
 ///    interface from it.</p> 
-class CL_API_CORE DomCharacterData : public DomNode
+class DomCharacterData : public DomNode
 {
 /// \name Construction
 /// \{

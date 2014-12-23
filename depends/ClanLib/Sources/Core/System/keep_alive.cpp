@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -54,9 +54,9 @@ void KeepAlive::process(int timeout)
 	// Get the objects to wait for
 	std::vector<KeepAliveObject *> objects = get_objects();
 	std::vector<Event> events;
-	for (std::vector<KeepAliveObject *>::size_type i = 0; i < objects.size(); i++)
+	for (auto & object : objects)
 	{
-		events.push_back(objects[i]->impl->wakeup_event);
+		events.push_back(object->impl->wakeup_event);
 	}
 		
 	ubyte64 time_start = System::get_time();
@@ -125,7 +125,7 @@ std::vector<KeepAliveObject *> KeepAlive::get_objects()
 }
 
 KeepAliveObject::KeepAliveObject()
-: impl(new KeepAliveObject_Impl())
+: impl(std::make_shared<KeepAliveObject_Impl>())
 {
     if (KeepAlive::func_thread_id())
         impl->thread_id = KeepAlive::func_thread_id()();
@@ -146,7 +146,7 @@ KeepAliveObject::~KeepAliveObject()
 	if (tls_objects->empty())
 	{
 		delete tls_objects;
-		cl_set_keep_alive_vector(0);
+		cl_set_keep_alive_vector(nullptr);
 	}
 }
 
@@ -216,7 +216,7 @@ std::vector<KeepAliveObject *> *cl_get_keep_alive_vector()
 
 #else
 
-__thread std::vector<KeepAliveObject*> *cl_tls_keep_alive = 0;
+__thread std::vector<KeepAliveObject*> *cl_tls_keep_alive = nullptr;
 
 void cl_alloc_tls_keep_alive_slot()
 {

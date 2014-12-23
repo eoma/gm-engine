@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,15 +29,22 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <cmath>
 #include "../System/cl_platform.h"
 #include "vec4.h"
+#include <memory>
 
 namespace clan
 {
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
+
+template<typename T, typename ...Args>
+std::unique_ptr<T> make_unique(Args&& ...args)
+{
+	return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
+
 #undef pow2
 #undef min
 #undef max

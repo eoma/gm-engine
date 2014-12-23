@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -67,7 +67,7 @@ void OutlineTriangulator_Impl::triangulate()
 	{
 		vertices[index_vertices]->num_triangles = 0;
 		vertices[index_vertices]->extra = 0;
-		vertices[index_vertices]->triangles = 0;
+		vertices[index_vertices]->triangles = nullptr;
 
 		delauney.add_vertex(
 			vertices[index_vertices]->x,
@@ -92,7 +92,7 @@ void OutlineTriangulator_Impl::triangulate()
 		data_C->num_triangles++;
 	}
 
-	DelauneyTriangulator_Triangle const **links = new DelauneyTriangulator_Triangle const *[num_triangles];
+	auto links = new DelauneyTriangulator_Triangle const *[num_triangles];
 	int pos = 0;
 	for (index_vertices = 0; index_vertices < num_vertices; index_vertices++)
 	{
@@ -266,7 +266,7 @@ DelauneyTriangulator_Triangle const **OutlineTriangulator_Impl::add_triangles(
 		links_needed += v->num_triangles + v->extra;
 	}
 
-	DelauneyTriangulator_Triangle const **links = new DelauneyTriangulator_Triangle const *[links_needed];
+	auto links = new DelauneyTriangulator_Triangle const *[links_needed];
 	int pos = 0;
 	for (index_vertices = 0; index_vertices < num_vertices1; index_vertices++)
 	{
@@ -428,7 +428,7 @@ void OutlineTriangulator_Impl::remove_triangle(DelauneyTriangulator_Triangle con
 {
 	for (int vertex = 0; vertex < 3; vertex++)
 	{
-		OutlineTriangulator_Vertex *data = 0;
+		OutlineTriangulator_Vertex *data = nullptr;
 		switch (vertex)
 		{
 		case 0:
@@ -493,7 +493,7 @@ void OutlineTriangulator_Impl::create_ordered_vertex_list(std::vector<OutlineTri
 	std::sort(vertices.begin(), vertices.end(), CompareVertices());
 
 	// Remove duplicates:
-	std::vector<OutlineTriangulator_Vertex *>::iterator it = vertices.begin();
+	auto it = vertices.begin();
 	if (it == vertices.end()) return;
 	float last_x = (*it)->x;
 	float last_y = (*it)->y;

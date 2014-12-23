@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -51,18 +51,18 @@ namespace clan
 
 #ifdef WIN32
 Event::Event(bool manual_reset, bool initial_state)
-: impl(new Event_Impl(new EventProvider_Win32(manual_reset, initial_state)))
+: impl(std::make_shared<Event_Impl>(new EventProvider_Win32(manual_reset, initial_state)))
 {
 }
 #else
 Event::Event(bool manual_reset, bool initial_state)
-: impl(new Event_Impl(new EventProvider_Socketpair(manual_reset, initial_state)))
+: impl(std::make_shared<Event_Impl>(new EventProvider_Socketpair(manual_reset, initial_state)))
 {
 }
 #endif
 
 Event::Event(EventProvider *event_provider)
-: impl(new Event_Impl(event_provider))
+: impl(std::make_shared<Event_Impl>(event_provider))
 {
 }
 
@@ -167,7 +167,7 @@ int Event::wait(int count, Event const * const * events, int timeout)
 	for (index_events = 0; index_events < count; index_events++)
 	{
 		EventProvider *provider = events[index_events]->impl->provider;
-		if (provider == 0)
+		if (provider == nullptr)
 			throw Exception("Event's EventProvider is a null pointer!");
 		bool flagged = provider->check_before_wait();
 		if (flagged)
@@ -207,7 +207,7 @@ int Event::wait(int count, Event const * const * events, int timeout)
 		for (index_events = 0; index_events < count; index_events++)
 		{
 			EventProvider *provider = events[index_events]->impl->provider;
-			if (provider == 0)
+			if (provider == nullptr)
 				throw Exception("Event's EventProvider is a null pointer!");
 			int num_handles = provider->get_num_event_handles();
 			for (int i=0; i<num_handles; i++)
@@ -241,10 +241,10 @@ int Event::wait(int count, Event const * const * events, int timeout)
 		do
 		{
 			result = select(highest_fd+1,
-					reads ? &rfds : 0,
-					writes ? &wfds : 0,
-					exceptions ? &efds : 0,
-					(timeout == -1) ? 0 : &tv);
+					reads ? &rfds : nullptr,
+					writes ? &wfds : nullptr,
+					exceptions ? &efds : nullptr,
+					(timeout == -1) ? nullptr : &tv);
 		} while (result == -1 && errno == EINTR); // The syscall was interrupted.  Try again.
 		
 		if (result == -1) // Error occoured
@@ -261,7 +261,7 @@ int Event::wait(int count, Event const * const * events, int timeout)
 			for (index_events = 0; index_events < count; index_events++)
 			{
 				EventProvider *provider = events[index_events]->impl->provider;
-				if (provider == 0)
+				if (provider == nullptr)
 					throw Exception("Event's EventProvider is a null pointer!");
 				int num_handles = provider->get_num_event_handles();
 				for (int i=0; i<num_handles; i++)
@@ -304,7 +304,7 @@ int Event::wait(const std::vector<Event *> &events, int timeout)
 	if (events.size() > 0)
 		return wait((int) events.size(), &events[0], timeout);
 	else
-		return wait(0, 0, timeout);
+		return wait(0, nullptr, timeout);
 }
 
 int Event::wait(const std::vector<Event> &events, int timeout)

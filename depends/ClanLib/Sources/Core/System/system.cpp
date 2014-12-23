@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -242,7 +242,7 @@ std::vector<std::string> System::get_stack_frames_text(void **frames, int num_fr
 		}
 
 		int status;
-		char *new_function = abi::__cxa_demangle(function, 0, 0, &status);
+		char *new_function = abi::__cxa_demangle(function, nullptr, nullptr, &status);
 		if (new_function)	// Was correctly decoded
 		{
 			function = new_function;
@@ -271,7 +271,7 @@ void System::sleep(int msecs)
 	timeval tv;
 	tv.tv_sec = msecs / 1000;
 	tv.tv_usec = (msecs % 1000) * 1000;
-	select(0, 0, 0, 0, &tv);
+	select(0, nullptr, nullptr, nullptr, &tv);
 #endif
 }
 
@@ -297,7 +297,7 @@ void System::pause(int msecs)
 	timeval tv;
 	tv.tv_sec = msecs / 1000;
 	tv.tv_usec = (msecs % 1000) * 1000;
-	select(0, 0, 0, 0, &tv);
+	select(0, nullptr, nullptr, nullptr, &tv);
 #endif
 }
 

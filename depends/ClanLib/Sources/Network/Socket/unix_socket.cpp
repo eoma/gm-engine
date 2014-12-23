@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -98,7 +98,7 @@ void UnixSocket::disconnect_graceful(int timeout)
 	timeval tv;
 	tv.tv_sec = timeout/1000;
 	tv.tv_usec = (timeout%1000)*1000;
-	select(handle+1, &rfds, 0, 0, &tv);
+	select(handle+1, &rfds, nullptr, nullptr, &tv);
 
 	close_handle();
 }

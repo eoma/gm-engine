@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 
 #include "connection_site.h"	// TODO: Remove
 #include "../../Core/System/event.h"
@@ -45,7 +44,7 @@ class NetGameConnection;
 class NetGameClient_Impl;
 
 /// \brief NetGameClient
-class CL_API_NETWORK NetGameClient : NetGameConnectionSite
+class NetGameClient : NetGameConnectionSite
 {
 public:
 	NetGameClient();
@@ -84,7 +83,7 @@ private:
 	/// \brief Add network event
 	///
 	/// \param e = Net Game Network Event
-	void add_network_event(const NetGameNetworkEvent &e);
+	void add_network_event(const NetGameNetworkEvent &e) override;
 
 	std::shared_ptr<NetGameClient_Impl> impl;
 };

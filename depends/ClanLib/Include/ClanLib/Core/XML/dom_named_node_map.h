@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include "dom_string.h"
 
@@ -49,7 +48,7 @@ class DomNamedNodeMap_Impl;
 ///    implementing NamedNodeMap may also be accessed by an ordinal index, but this is simply to
 ///    allow convenient enumeration of the contents of a NamedNodeMap, and does not imply that the
 ///    DOM specifies an order to these Nodes.</p> 
-class CL_API_CORE DomNamedNodeMap
+class DomNamedNodeMap
 {
 /// \name Construction
 /// \{

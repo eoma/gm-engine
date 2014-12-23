@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -59,10 +59,6 @@
 #ifdef _MSC_VER
 #pragma comment(lib, "shell32.lib")
 #endif
-#endif
-
-#ifdef __BORLANDC__
-#include <dir.h>
 #endif
 
 #include <sys/stat.h>
@@ -191,7 +187,7 @@ std::string Directory::get_current()
 	return StringHelp::ucs2_to_utf8(&path[0]);
 #else
 	char cwd_buffer[MAX_PATH];
-	if (getcwd(cwd_buffer, MAX_PATH) == NULL)
+	if (getcwd(cwd_buffer, MAX_PATH) == nullptr)
 		throw Exception("Working dir is more than legal length !");
 	return cwd_buffer;
 #endif
@@ -210,7 +206,7 @@ std::string Directory::get_appdata(const std::string &company_name, const std::s
 	throw Exception("Congratulations, you got the task to implement Directory::get_appdata on this platform.");
 #else
 	struct passwd *pwd = getpwuid(getuid());
-	if (pwd == NULL || pwd->pw_dir == NULL)
+	if (pwd == nullptr || pwd->pw_dir == nullptr)
 		throw Exception("getpwuid failed!");
 	configuration_path = PathHelp::add_trailing_slash(pwd->pw_dir) + ".";
 #endif

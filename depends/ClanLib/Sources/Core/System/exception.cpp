@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -42,7 +42,7 @@ Exception::Exception(const std::string &message) : message(message)
 {
 	num_frames = System::capture_stack_trace(1, max_frames, frames);
 	for (int i = num_frames; i < max_frames; i++)
-		frames[i] = 0;
+		frames[i] = nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -67,12 +67,12 @@ std::string Exception::get_message_and_stack_trace() const
 {
 	std::vector<std::string> stack_trace = get_stack_trace();
 	std::string text = message;
-	for (size_t i = 0; i < stack_trace.size(); i++)
+	for (auto & elem : stack_trace)
 	{
 	#ifdef WIN32
-		text += string_format("\r\n    at %1", stack_trace[i]);
+		text += string_format("\r\n    at %1", elem);
 	#else
-		text += string_format("\n    at %1", stack_trace[i]);
+		text += string_format("\n    at %1", elem);
 	#endif
 	}
 

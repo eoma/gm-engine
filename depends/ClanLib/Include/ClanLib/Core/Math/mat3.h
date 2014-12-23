@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -31,11 +31,11 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "mat2.h"
 #include "mat4.h"
 #include "vec3.h"
 #include "../System/cl_platform.h"
+#include "angle.h"
 
 namespace clan
 {
@@ -63,8 +63,12 @@ class Mat3
 /// \{
 
 public:
-	/// \brief Constructs a 3x3 matrix (uninitialised)
-	Mat3() { }
+	/// \brief Constructs a 3x3 matrix (zero'ed)
+	Mat3()
+	{
+		for (auto & elem : matrix)
+			elem = 0;
+	}
 
 	/// \brief Constructs a 3x3 matrix (copied)
 	Mat3(const Mat3<Type> &copy)
@@ -133,7 +137,7 @@ public:
 
 	static Mat3<Type> identity();
 
-	/// \brief Create a rotation matrix
+	/// \brief Create a 3d rotation matrix
 	///
 	/// Matrix is created in the Column-Major matrix format (opengl native)
 	/// \param angle = Angle to rotate by
@@ -144,7 +148,7 @@ public:
 	/// \return The matrix (in column-major format)
 	static Mat3<Type> rotate(const Angle &angle, Type x, Type y, Type z, bool normalize = true);
 
-	/// \brief Create a rotation matrix
+	/// \brief Create a 3d rotation matrix
 	///
 	/// Matrix is created in the Column-Major matrix format (opengl native)
 	/// \param angle = Angle to rotate by
@@ -154,6 +158,54 @@ public:
 	static Mat3<Type> rotate(const Angle &angle, Vec3<Type> rotation, bool normalize = true)
 	{
 		return rotate(angle, rotation.x, rotation.y, rotation.z, normalize);
+	}
+
+	/// \brief Create a 3d rotation matrix using euler angles
+	///
+	/// Matrix is created in the Column-Major matrix format (opengl native)
+	///
+	/// \return The matrix (in column-major format)
+	static Mat3<Type> rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order);
+
+	/// \brief Create a 2d rotation matrix
+	///
+	/// Matrix is created in the Column-Major matrix format (opengl native)
+	/// \param angle = Angle to rotate by
+	/// \return The matrix (in column-major format)
+	static Mat3<Type> rotate(const Angle &angle);
+
+	/// \brief Create a 2d scale matrix
+	///
+	/// \param x = Scale X
+	/// \param y = Scale Y
+	/// \return The matrix
+	static Mat3<Type> scale(Type x, Type y);
+
+	/// \brief Create a 2d scale matrix
+	///
+	/// \param xy = Scale XY
+	/// \return The matrix
+	static Mat3<Type> scale(const Vec3<Type> &xy)
+	{
+		return scale(xy.x, xy.y);
+	}
+
+	/// \brief Create a 2d translation matrix
+	///
+	/// Matrix is created in the Column-Major matrix format (opengl native)
+	/// \param x = Translate X
+	/// \param y = Translate Y
+	/// \return The matrix (in column-major format)
+	static Mat3<Type> translate(Type x, Type y);
+
+	/// \brief Create a 2d translation matrix
+	///
+	/// Matrix is created in the Column-Major matrix format (opengl native)
+	/// \param xy = Translate XY
+	/// \return The matrix (in column-major format)
+	static Mat3<Type> translate(const Vec2<Type> &xy)
+	{
+		return translate(xy.x, xy.y);
 	}
 
 	/// \brief Multiply 2 matrices
@@ -295,6 +347,9 @@ public:
 	/// \brief Subtraction operator.
 	Mat3<Type> operator -(const Mat3<Type> &sub_matrix) const;
 
+	/// \brief Multiplication operator.
+	Vec2<Type> operator *(const Vec2<Type> &mult) const;
+
 	/// \brief Equality operator.
 	bool operator==(const Mat3<Type> &other) const
 	{
@@ -313,8 +368,6 @@ public:
 private:
 /// \}
 };
-
-
 
 template<typename Type>
 inline Mat3<Type> Mat3<Type>::multiply(const Mat3<Type> &matrix_1, const Mat3<Type> &matrix_2) { return matrix_1 * matrix_2; }

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -370,9 +370,9 @@ std::vector<DomNode> DomDocument::load(
 	}
 	catch (const Exception& e)
 	{
-		for (std::vector<DomNode>::size_type i = 0; i < result.size(); i++)
+		for (auto & elem : result)
 		{
-			insert_point.remove_child(result[i]);
+			insert_point.remove_child(elem);
 		}
 		throw;
 	}

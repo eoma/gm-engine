@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -54,9 +54,9 @@ public:
 /// \{
 
 public:
-	std::string get_path() const;
+	std::string get_path() const override;
 
-	std::string get_identifier() const;
+	std::string get_identifier() const override;
 
 /// \}
 /// \name Operations
@@ -74,11 +74,11 @@ public:
 		File::OpenMode mode = File::open_existing,
 		unsigned int access = File::access_read | File::access_write,
 		unsigned int share = File::share_all,
-		unsigned int flags = 0);
+		unsigned int flags = 0) override;
 
-	bool initialize_directory_listing(const std::string &path);
+	bool initialize_directory_listing(const std::string &path) override;
 
-	bool next_file(DirectoryListingEntry &entry);
+	bool next_file(DirectoryListingEntry &entry) override;
 
 
 /// \}

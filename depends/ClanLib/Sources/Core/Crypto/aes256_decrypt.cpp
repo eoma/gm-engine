@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -39,7 +39,7 @@ namespace clan
 // AES256_Decrypt Construction:
 
 AES256_Decrypt::AES256_Decrypt()
-: impl(new AES256_Decrypt_Impl())
+: impl(std::make_shared<AES256_Decrypt_Impl>())
 {
 }
 

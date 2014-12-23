@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -94,16 +94,12 @@ void ConsoleWindow_Impl::wait_for_key()
 #ifdef WIN32
 	// If your application crashes here, you are linking with a single threaded
 	// libc in your application! -- mbn 13. Jan 2001.
-	#ifdef __BORLANDC__
-		std::string foo;
-		cin >> foo;
+	#ifdef _CRT_INSECURE_DEPRECATE
+		while (!_kbhit()) Sleep(250);
 	#else
-		#ifdef _CRT_INSECURE_DEPRECATE
-			while (!_kbhit()) Sleep(250);
-		#else
-			while (!kbhit()) Sleep(250);
-		#endif
+		while (!kbhit()) Sleep(250);
 	#endif
+
 #endif
 }
 

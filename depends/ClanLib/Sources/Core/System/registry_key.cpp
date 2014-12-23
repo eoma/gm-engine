@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -112,7 +112,7 @@ RegistryKey::RegistryKey(PredefinedKey key, const std::string &subkey, unsigned 
 }
 
 RegistryKey::RegistryKey(HKEY key)
-: impl(new RegistryKey_Impl(key))
+: impl(std::make_shared<RegistryKey_Impl>(key))
 {
 }
 

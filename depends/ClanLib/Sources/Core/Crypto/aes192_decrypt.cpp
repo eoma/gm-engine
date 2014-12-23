@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -39,7 +39,7 @@ namespace clan
 // AES192_Decrypt Construction:
 
 AES192_Decrypt::AES192_Decrypt()
-: impl(new AES192_Decrypt_Impl())
+: impl(std::make_shared<AES192_Decrypt_Impl>())
 {
 }
 

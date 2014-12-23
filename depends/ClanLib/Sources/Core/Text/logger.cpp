@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -27,7 +27,9 @@
 */
 
 #include "Core/precomp.h"
+#include "API/Core/System/datetime.h"
 #include "API/Core/Text/logger.h"
+#include "API/Core/Text/string_format.h"
 #include <algorithm>
 
 namespace clan
@@ -66,14 +68,59 @@ void Logger::enable()
 void Logger::disable()
 {
 	MutexSection mutex_lock(&Logger::mutex);
-	std::vector<Logger*>::iterator il = std::find(instances.begin(), instances.end(), this);
+	auto il = std::find(instances.begin(), instances.end(), this);
 	if(il != instances.end())
 		instances.erase(il);
 }
 
-void Logger::log(const std::string &type, const std::string &text)
+StringFormat Logger::get_log_string(const std::string &type, const std::string &text)
 {
-	throw Exception("Implement me");
+	std::string months[] =
+	{
+		"Jan",
+		"Feb",
+		"Mar",
+		"Apr",
+		"May",
+		"Jun",
+		"Jul",
+		"Aug",
+		"Sep",
+		"Oct",
+		"Nov",
+		"Dec"
+	};
+
+	std::string days[] =
+	{
+		"Sun",
+		"Mon",
+		"Tue",
+		"Wed",
+		"Thu",
+		"Fri",
+		"Sat"
+	};
+
+	// Tue Nov 16 11:34:15 CET 2004
+	DateTime cur_time = DateTime::get_current_utc_time();
+
+#ifdef WIN32
+	StringFormat format("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\r\n");
+#else
+	StringFormat format("%1 %2 %3 %4:%5:%6 %7 UTC [%8] %9\n");
+#endif
+	format.set_arg(1, days[cur_time.get_day_of_week()]);
+	format.set_arg(2, months[cur_time.get_month() - 1]);
+	format.set_arg(3, cur_time.get_day());
+	format.set_arg(4, cur_time.get_hour(), 2);
+	format.set_arg(5, cur_time.get_minutes(), 2);
+	format.set_arg(6, cur_time.get_seconds(), 2);
+	format.set_arg(7, cur_time.get_year());
+	format.set_arg(8, type);
+	format.set_arg(9, text);
+
+	return format;
 }
 
 void log_event(const std::string &type, const std::string &text)
@@ -81,8 +128,8 @@ void log_event(const std::string &type, const std::string &text)
 	MutexSection mutex_lock(&Logger::mutex);
 	if (Logger::instances.empty())
 		return;
-	for(std::vector<Logger*>::iterator il = Logger::instances.begin(); il != Logger::instances.end(); il++)
-		(*il)->log(type, text);
+	for(auto & instance : Logger::instances)
+		(instance)->log(type, text);
 }
 
 /////////////////////////////////////////////////////////////////////////////

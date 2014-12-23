@@ -7,7 +7,7 @@ namespace clan
 {
 
 RingBuffer::RingBuffer()
-: data(0), size(0), pos(0), length(0)
+: data(nullptr), size(0), pos(0), length(0)
 {
 }
 
@@ -117,7 +117,7 @@ RingBuffer &RingBuffer::operator=(const RingBuffer &other)
 {
 	if (this != &other)
 	{
-		char *new_data = new char[other.size];
+		auto new_data = new char[other.size];
 		delete[] data;
 		data = new_data;
 		size = other.size;

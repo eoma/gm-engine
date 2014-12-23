@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -52,18 +52,18 @@ namespace clan
 // SocketName construction:
 
 SocketName::SocketName()
-: impl(new SocketName_Impl)
+: impl(std::make_shared<SocketName_Impl>())
 {
 }
 
 SocketName::SocketName(const std::string &port)
-: impl(new SocketName_Impl)
+: impl(std::make_shared<SocketName_Impl>())
 {
 	impl->port = port;
 }
 
 SocketName::SocketName(const std::string &address, const std::string &port)
-: impl(new SocketName_Impl)
+: impl(std::make_shared<SocketName_Impl>())
 {
 	impl->address = address;
 	impl->port = port;
@@ -132,7 +132,7 @@ std::string SocketName::lookup_ipv4() const
 	if (ipv4_address == INADDR_NONE)
 	{
 		hostent *host = gethostbyname(StringHelp::text_to_local8(impl->address).c_str());
-		if (host == 0)
+		if (host == nullptr)
 			throw Exception("Could not lookup DNS name");
 		
 		ipv4_address = *((in_addr_t *) host->h_addr_list[0]);
@@ -156,7 +156,7 @@ std::string SocketName::lookup_hostname() const
 		memset(&addr, 0, sizeof(in_addr));
 		addr.s_addr = ipv4_address;
 		hostent *host = gethostbyaddr((const char *) &addr, sizeof(in_addr), AF_INET);
-		if (host == 0)
+		if (host == nullptr)
 			throw Exception("Could not lookup DNS name");
 		
 		return StringHelp::local8_to_text(host->h_name);
@@ -197,7 +197,7 @@ void SocketName::to_sockaddr(int domain, struct sockaddr *out_addr, int len) con
 		if (addr.sin_addr.s_addr == INADDR_NONE)
 		{
 			hostent *host = gethostbyname(StringHelp::text_to_local8(impl->address).c_str());
-			if (host == 0)
+			if (host == nullptr)
 				throw Exception("Could not lookup DNS name");
 		
 			addr.sin_addr.s_addr = *((in_addr_t *) host->h_addr_list[0]);

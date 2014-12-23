@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -39,17 +39,17 @@ namespace clan
 // UDPSocket Construction:
 
 UDPSocket::UDPSocket()
-: impl(new UDPSocket_Impl)
+: impl(std::make_shared<UDPSocket_Impl>())
 {
 }
 
 UDPSocket::UDPSocket(const SocketName &local_name, bool force_bind)
-: impl(new UDPSocket_Impl(local_name, force_bind))
+: impl(std::make_shared<UDPSocket_Impl>(local_name, force_bind))
 {
 }
 
 UDPSocket::UDPSocket(int socket, bool close_socket)
-: impl(new UDPSocket_Impl(socket, close_socket))
+: impl(std::make_shared<UDPSocket_Impl>(socket, close_socket))
 {
 }
 

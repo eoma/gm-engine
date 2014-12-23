@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2014 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,14 +29,14 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include "event.h"
+#include <map>
 
 namespace clan
 {
 
 template<class... Params>
-class CL_API_NETWORK NetGameEventDispatcher
+class NetGameEventDispatcher
 {
 public:
 	typedef std::function< void (const NetGameEvent &, Params... ) > CallbackClass;
@@ -50,7 +50,7 @@ public:
 	bool dispatch(const NetGameEvent &game_event, Params... params)
 	{
 		auto it = event_handlers.find(game_event.get_name());
-		if (it != event_handlers.end() && !it->second.is_null())
+		if (it != event_handlers.end() && (bool)it->second)
 		{
 			it->second(game_event, params...);
 			return true;

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -39,20 +39,20 @@ namespace clan
 Service_Impl::Service_Impl(Service *service, const std::string &service_name)
 : service_name(service_name), service(service)
 {
-	if (instance != 0)
+	if (instance != nullptr)
 		throw Exception("More than one instance of Service not allowed");
 	instance = this;
 }
 
 Service_Impl::~Service_Impl()
 {
-	instance = 0;
+	instance = nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // Service_Impl Attributes:
 
-Service_Impl *Service_Impl::instance = 0;
+Service_Impl *Service_Impl::instance = nullptr;
 
 /////////////////////////////////////////////////////////////////////////////
 // Service_Impl Operations:

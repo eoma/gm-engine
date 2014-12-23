@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,7 +34,7 @@
 #include "API/Core/Math/quaternion.h"
 #include <limits>
 
-#ifndef DISABLE_SSE2
+#ifndef CL_DISABLE_SSE2
 //#include <mmintrin.h> /*Dont need it*/
 #include <emmintrin.h>/*it's included here*/
 #endif
@@ -52,7 +52,7 @@ namespace clan
 template<>
 Mat4<float> Mat4<float>::operator *(const Mat4<float> &mult) const
 {
-#if !defined DISABLE_SSE2 && !defined __MINGW32__ //MinGW's version is flawed.
+#if !defined CL_DISABLE_SSE2 && !defined __MINGW32__ //MinGW's version is flawed.
 	Mat4<float> result;
 	__m128 m1col0 = _mm_loadu_ps(matrix);
 	__m128 m1col1 = _mm_loadu_ps(matrix+4);
@@ -300,28 +300,7 @@ Mat4<Type> Mat4<Type>::rotate(const Angle &angle, Type x, Type y, Type z, bool n
 template<typename Type>
 Mat4<Type> Mat4<Type>::rotate(const Angle &angle_x, const Angle &angle_y, const Angle &angle_z, EulerOrder order)
 {
-	Mat4<Type> rotation_matrix_x = Mat4<Type>::rotate(angle_x, 1.0f, 0.0f, 0.0f, false);
-	Mat4<Type> rotation_matrix_y = Mat4<Type>::rotate(angle_y, 0.0f, 1.0f, 0.0f, false);
-	Mat4<Type> rotation_matrix_z = Mat4<Type>::rotate(angle_z, 0.0f, 0.0f, 1.0f, false);
-
-	switch (order)
-	{
-		case order_XYZ:
-			return rotation_matrix_x * rotation_matrix_y * rotation_matrix_z;
-		case order_XZY:
-			return rotation_matrix_x * rotation_matrix_z * rotation_matrix_y;
-		case order_YZX:
-			return rotation_matrix_y * rotation_matrix_z * rotation_matrix_x;
-		case order_YXZ:
-			return rotation_matrix_y * rotation_matrix_x * rotation_matrix_z;
-		case order_ZXY:
-			return rotation_matrix_z * rotation_matrix_x * rotation_matrix_y;
-		case order_ZYX:
-			return rotation_matrix_z * rotation_matrix_y * rotation_matrix_x;
-		default:
-			throw Exception("Unknown euler order");
-	}
-
+	return Mat4<Type>(Mat3<Type>::rotate(angle_x, angle_y, angle_z, order));
 }
 
 template<typename Type>
@@ -337,32 +316,33 @@ Vec3<Type> Mat4<Type>::get_euler(EulerOrder order) const
 	switch (order)
 	{
 		case order_XYZ:
-			pos_i = 0; pos_j = 1; pos_k = 2; break;
-		case order_XZY:
-			pos_i = 0; pos_j = 2; pos_k = 1; break;
-		case order_YZX:
-			pos_i = 2; pos_j = 0; pos_k = 1; break;
-		case order_YXZ:
-			pos_i = 1; pos_j = 0; pos_k = 2; break;
-		case order_ZXY:
-			pos_i = 1; pos_j = 2; pos_k = 0; break;
-		case order_ZYX:
 			pos_i = 2; pos_j = 1; pos_k = 0; break;
+		case order_XZY:
+			pos_i = 1; pos_j = 2; pos_k = 0; break;
+		case order_YZX:
+			pos_i = 0; pos_j = 2; pos_k = 1; break;
+		case order_YXZ:
+			pos_i = 2; pos_j = 0; pos_k = 1; break;
+		case order_ZXY:
+			pos_i = 1; pos_j = 0; pos_k = 2; break;
+		case order_ZYX:
+			pos_i = 0; pos_j = 1; pos_k = 2; break;
 		default:
 			throw Exception("Unknown euler order");
 	}
 
-	Type cy = sqrt(matrix[ (4*pos_i) + pos_i ]*matrix[ (4*pos_i) + pos_i ] + matrix[ (4*pos_j) + pos_i ]*matrix[ (4*pos_j) + pos_i ]);
+
+	Type cy = sqrt(matrix[(4 * pos_i) + pos_i] * matrix[(4 * pos_i) + pos_i] + matrix[(4 * pos_j) + pos_i] * matrix[(4 * pos_j) + pos_i]);
 	if (cy > (Type) 16.0*FLT_EPSILON)
 	{
-		angles.x = atan2(matrix[ (4*pos_k) + pos_j ], matrix[ (4*pos_k) + pos_k ]);
-		angles.y = atan2(-matrix[ (4*pos_k) + pos_i ], cy);
-		angles.z = atan2(matrix[ (4*pos_j) + pos_i ], matrix[ (4*pos_i) + pos_i ]);
+		angles.x = atan2(matrix[(4 * pos_k) + pos_j], matrix[(4 * pos_k) + pos_k]);
+		angles.y = atan2(-matrix[(4 * pos_k) + pos_i], cy);
+		angles.z = atan2(matrix[(4 * pos_j) + pos_i], matrix[(4 * pos_i) + pos_i]);
 	}
 	else
 	{
-		angles.x = atan2(-matrix[ (4*pos_j) + pos_k ], matrix[ (4*pos_j) + pos_j ]);
-		angles.y = atan2(-matrix[ (4*pos_k) + pos_i ], cy);
+		angles.x = atan2(-matrix[(4 * pos_j) + pos_k], matrix[(4 * pos_j) + pos_j]);
+		angles.y = atan2(-matrix[(4 * pos_k) + pos_i], cy);
 		angles.z = 0;
 	}
 
@@ -370,21 +350,22 @@ Vec3<Type> Mat4<Type>::get_euler(EulerOrder order) const
 	switch (order)
 	{
 		case order_XYZ:
+			angles = Vec3<Type>(angles.z, angles.y, angles.x);
 			break;
 		case order_XZY:
-			angles = Vec3<Type>(angles.x, angles.z, angles.y);
+			angles = Vec3<Type>(-angles.z, -angles.x, -angles.y);
 			break;
 		case order_YZX:
-			angles = Vec3<Type>(angles.y, angles.z, angles.x);
+			angles = Vec3<Type>(angles.x, angles.z, angles.y);
 			break;
 		case order_YXZ:
-			angles = Vec3<Type>(angles.y, angles.x, angles.z);
+			angles = Vec3<Type>(-angles.y, -angles.z, -angles.x);
 			break;
 		case order_ZXY:
-			angles = Vec3<Type>(angles.z, angles.x, angles.y);
+			angles = Vec3<Type>(angles.y, angles.x, angles.z);
 			break;
 		case order_ZYX:
-			angles = Vec3<Type>(angles.z, angles.y, angles.x);
+			angles = Vec3<Type>(-angles.x, -angles.y, -angles.z);
 			break;
 	}
 
@@ -665,24 +646,11 @@ Mat4<Type> &Mat4<Type>::scale_self(Type x, Type y, Type z)
 template<>
 Mat4<float> &Mat4<float>::scale_self(float x, float y, float z)
 {
-	/*
-	// FIXME
-	__m128 row0 = _mm_loadu_ps(matrix);
-	__m128 row1 = _mm_loadu_ps(matrix+4);
-	__m128 row2 = _mm_loadu_ps(matrix+8);
-	__m128 row3 = _mm_loadu_ps(matrix+12);
-	__m128 vec = _mm_set_ps(x, y, z, 1.0f);
-
-	row0 = _mm_mul_ps(row0, vec);
-	row1 = _mm_mul_ps(row1, vec);
-	row2 = _mm_mul_ps(row2, vec);
-	row3 = _mm_mul_ps(row3, vec);
-
-	_mm_storeu_ps(matrix, row0);
-	_mm_storeu_ps(matrix+4, row1);
-	_mm_storeu_ps(matrix+8, row2);
-	_mm_storeu_ps(matrix+12, row3);
-*/
+#if !defined CL_DISABLE_SSE2
+	_mm_storeu_ps(matrix, _mm_mul_ps(_mm_loadu_ps(matrix), _mm_set_ps1(x)));
+	_mm_storeu_ps(matrix+4, _mm_mul_ps(_mm_loadu_ps(matrix+4), _mm_set_ps1(y)));
+	_mm_storeu_ps(matrix+8, _mm_mul_ps(_mm_loadu_ps(matrix+8), _mm_set_ps1(z)));
+#else
 	matrix[0+4*0] *= x;
 	matrix[0+4*1] *= y;
 	matrix[0+4*2] *= z;
@@ -698,6 +666,7 @@ Mat4<float> &Mat4<float>::scale_self(float x, float y, float z)
 	matrix[3+4*0] *= x;
 	matrix[3+4*1] *= y;
 	matrix[3+4*2] *= z;
+#endif
 	return *this;
 }
 
@@ -719,9 +688,7 @@ Mat4<Type> &Mat4<Type>::translate_self(Type x, Type y, Type z)
 template<>
 Mat4<float> &Mat4<float>::translate_self(float x, float y, float z)
 {
-	/*
-	// FIXME
-
+#if !defined CL_DISABLE_SSE2
 	__m128 row0 = _mm_loadu_ps(matrix);
 	__m128 row1 = _mm_loadu_ps(matrix+4);
 	__m128 row2 = _mm_loadu_ps(matrix+8);
@@ -731,11 +698,9 @@ Mat4<float> &Mat4<float>::translate_self(float x, float y, float z)
 	row1 = _mm_mul_ps(row1, _mm_set1_ps(y));
 	row2 = _mm_mul_ps(row2, _mm_set1_ps(z));
 
-	_MM_TRANSPOSE4_PS(row0, row1, row2, row3);
-
 	__m128 result = _mm_add_ps(_mm_add_ps(_mm_add_ps(row0, row1), row2), row3);
 	_mm_storeu_ps(matrix+12, result);
-*/
+#else
 	float translate_value_1 = (matrix[0+4*0] * x) + (matrix[0+4*1] * y) + (matrix[0+4*2] * z) + matrix[0+4*3];
 	float translate_value_2 = (matrix[1+4*0] * x) + (matrix[1+4*1] * y) + (matrix[1+4*2] * z) + matrix[1+4*3];
 	float translate_value_3 = (matrix[2+4*0] * x) + (matrix[2+4*1] * y) + (matrix[2+4*2] * z) + matrix[2+4*3];
@@ -745,7 +710,7 @@ Mat4<float> &Mat4<float>::translate_self(float x, float y, float z)
 	matrix[1+4*3] = translate_value_2;
 	matrix[2+4*3] = translate_value_3;
 	matrix[3+4*3] = translate_value_4;
-
+#endif
 	return *this;
 }
 
@@ -990,8 +955,48 @@ Mat4<Type> &Mat4<Type>::transpose()
 	matrix[12] = original[3];
 	matrix[13] = original[7];
 	matrix[14] = original[11];
-	matrix[15] = original[13];
+	matrix[15] = original[15];
 
+	return *this;
+}
+
+template<>
+Mat4<float> &Mat4<float>::transpose()
+{
+#if !defined CL_DISABLE_SSE2
+	__m128 row0 = _mm_loadu_ps(matrix);
+	__m128 row1 = _mm_loadu_ps(matrix + 4);
+	__m128 row2 = _mm_loadu_ps(matrix + 8);
+	__m128 row3 = _mm_loadu_ps(matrix + 12);
+
+	_MM_TRANSPOSE4_PS(row0, row1, row2, row3);
+	
+	_mm_storeu_ps(matrix, row0);
+	_mm_storeu_ps(matrix + 4, row1);
+	_mm_storeu_ps(matrix + 8, row2);
+	_mm_storeu_ps(matrix + 12, row3);
+#else
+	float original[16];
+	for (int cnt = 0; cnt<16; cnt++)
+		original[cnt] = matrix[cnt];
+
+	matrix[0] = original[0];
+	matrix[1] = original[4];
+	matrix[2] = original[8];
+	matrix[3] = original[12];
+	matrix[4] = original[1];
+	matrix[5] = original[5];
+	matrix[6] = original[9];
+	matrix[7] = original[13];
+	matrix[8] = original[2];
+	matrix[9] = original[6];
+	matrix[10] = original[10];
+	matrix[11] = original[14];
+	matrix[12] = original[3];
+	matrix[13] = original[7];
+	matrix[14] = original[11];
+	matrix[15] = original[15];
+#endif
 	return *this;
 }
 

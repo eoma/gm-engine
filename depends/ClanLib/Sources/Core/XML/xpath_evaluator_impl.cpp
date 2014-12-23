@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -552,6 +552,8 @@ bool XPathEvaluator_Impl::compare(const std::string &value1, const std::string &
 {
 	switch(oper)
 	{
+    default:
+        break;
 	case XPathToken::operator_compare_equal:
 		if (value1.compare(value2) == 0)
 			return true;
@@ -585,6 +587,8 @@ bool XPathEvaluator_Impl::compare(const T &value1, const T &value2, Operator ope
 {
 	switch(oper)
 	{
+    default:
+        break;
 	case XPathToken::operator_compare_equal:
 		if (value1 == value2)
 			return true;
@@ -708,6 +712,8 @@ bool XPathEvaluator_Impl::compare_boolean(const Operand &a, const Operand &b, Op
 	{
 		switch (oper)
 		{
+            default:
+                break;
 			case XPathToken::operator_compare_equal:
 			case XPathToken::operator_compare_not_equal:
 				if (compare_node_set(b, a, oper))
@@ -757,6 +763,8 @@ bool XPathEvaluator_Impl::compare_number(const Operand &a, const Operand &b, Ope
 	{
 		switch (oper)
 		{
+        default:
+            break;
 		case XPathToken::operator_compare_equal:
 		case XPathToken::operator_compare_not_equal:
 			if (compare_node_set(b, a, oper))
@@ -813,6 +821,8 @@ bool XPathEvaluator_Impl::compare_string(const Operand &a, const Operand &b, Ope
 	{
 		switch (oper)
 		{
+        default:
+            break;
 		case XPathToken::operator_compare_equal:
 		case XPathToken::operator_compare_not_equal:
 			if (compare_node_set(b, a, oper))
@@ -1435,12 +1445,12 @@ bool XPathEvaluator_Impl::confirm_step_predicate(XPathNodeSet &context, XPathNod
 void XPathEvaluator_Impl::evaluate_location_step_predicates(const XPathNodeSet &context, const std::vector<XPathLocationStep> &steps, std::vector<XPathLocationStep>::size_type step_index, const std::string &expression, XPathNodeSet &nodes) const
 {
 	XPathNodeSet nodeset = context;
-	for (std::vector<XPathLocationStep::Predicate>::const_iterator pit = steps[step_index].predicates.begin(), pEnd = steps[step_index].predicates.end(); pit != pEnd; ++pit)
+	for (const auto & elem : steps[step_index].predicates)
 	{
 		XPathNodeSet filtered_nodes;
 		for (XPathNodeSet::size_type node_index = 0, num_nodes = nodeset.size(); node_index < num_nodes; node_index++)
 		{
-			if (confirm_step_predicate(nodeset, node_index, *pit, expression))
+			if (confirm_step_predicate(nodeset, node_index, elem, expression))
 				filtered_nodes.push_back(nodeset[node_index]);
 		}
 		nodeset = filtered_nodes;
@@ -1976,9 +1986,9 @@ XPathObject XPathEvaluator_Impl::function_concat(const XPathNodeSet& context, XP
 		throw XPathException("Function concat(string, string, string*) expects 2 or more string parameters");
 
 	std::string result;
-	for (std::vector<XPathObject>::const_iterator it = parameters.begin(), itEnd = parameters.end(); it != itEnd; ++it)
+	for (auto obj : parameters)
 	{
-		XPathObject obj = *it;
+		
 		if (obj.get_type() != XPathObject::type_string)
 			obj = string(obj);
 		result.append(obj.get_string());

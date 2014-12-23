@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -46,7 +46,7 @@ namespace clan
 // XMLResourceDocument Construction:
 
 XMLResourceDocument::XMLResourceDocument()
-: impl(new XMLResourceDocument_Impl)
+: impl(std::make_shared<XMLResourceDocument_Impl>())
 {
 	impl->ns_resources = "http://clanlib.org/xmlns/resources-1.0";
 	DomElement document_element = impl->document.create_element_ns(
@@ -60,19 +60,19 @@ XMLResourceDocument::XMLResourceDocument()
 }
 
 XMLResourceDocument::XMLResourceDocument(const std::string &filename)
-: impl(new XMLResourceDocument_Impl)
+: impl(std::make_shared<XMLResourceDocument_Impl>())
 {
 	load(filename);
 }
 
 XMLResourceDocument::XMLResourceDocument(const std::string &filename, FileSystem fs)
-: impl(new XMLResourceDocument_Impl)
+: impl(std::make_shared<XMLResourceDocument_Impl>())
 {
 	load(filename, fs);
 }
 
 XMLResourceDocument::XMLResourceDocument(IODevice file, const std::string &base_path, FileSystem fs)
-: impl(new XMLResourceDocument_Impl)
+: impl(std::make_shared<XMLResourceDocument_Impl>())
 {
 	load(file, base_path, fs);
 }
@@ -314,7 +314,7 @@ XMLResourceNode XMLResourceDocument::create_resource(const std::string &resource
 	// Walk tree as deep as we can get:
 	DomNode parent = impl->document.get_document_element();
 	DomNode cur = parent.get_first_child();
-	std::vector<std::string>::iterator path_it = path_elements.begin();
+	auto path_it = path_elements.begin();
 	while (!cur.is_null() && path_it != path_elements.end())
 	{
 		if (cur.is_element() &&

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,7 +35,7 @@ namespace clan
 {
 
 GameTime::GameTime(int ticks_per_second, int max_updates_per_second)
-	: impl(new GameTime_Impl(ticks_per_second, max_updates_per_second))
+	: impl(std::make_shared<GameTime_Impl>(ticks_per_second, max_updates_per_second))
 {
 	reset();
 }

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -32,7 +32,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "vec2.h"
 #include "size.h"
 #include "point.h"
@@ -49,7 +48,7 @@ namespace clan
 /// These line templates are defined for: int (Rect), float (Rectf), double (Rectd)
 ///
 template<typename Type>
-class CL_API_CORE Rectx
+class Rectx
 {
 /// \name Construction
 /// \{
@@ -110,6 +109,10 @@ public:
 	/// \brief Rect != Rect operator.
 	bool operator!=(const Rectx<Type> &r) const
 	{ return (left != r.left || top != r.top || right != r.right || bottom != r.bottom); }
+
+	static Rectx<Type> xywh(Type x, Type y, Type width, Type height) { return Rectx<Type>(x,y,x+width, y+height); }
+	static Rectx<Type> ltrb(Type left, Type top, Type right, Type bottom) { return Rectx<Type>(left, top, right, bottom); }
+
 
 /// \}
 /// \name Attributes

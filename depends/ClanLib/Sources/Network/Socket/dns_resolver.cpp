@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -46,7 +46,7 @@ namespace clan
 // DNSResolver Construction:
 
 DNSResolver::DNSResolver()
-: impl(new DNSResolver_Impl)
+: impl(std::make_shared<DNSResolver_Impl>())
 {
 #ifdef WIN32
 	DataBuffer buffer(16*1024);

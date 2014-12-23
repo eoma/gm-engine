@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,7 +30,8 @@
 #include "win32_socket.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Network/Socket/socket_name.h"
-#include <Mstcpip.h>
+#include <in6addr.h>
+#include <mstcpip.h>
 
 namespace clan
 {

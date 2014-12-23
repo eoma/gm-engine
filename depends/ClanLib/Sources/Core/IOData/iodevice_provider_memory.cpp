@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,6 +29,7 @@
 #include "Core/precomp.h"
 #include "API/Core/IOData/iodevice_memory.h"
 #include "iodevice_provider_memory.h"
+#include "API/Core/Math/cl_math.h"
 
 namespace clan
 {
@@ -78,7 +79,7 @@ int IODeviceProvider_Memory::send(const void *send_data, int len, bool send_all)
 	validate_position();
 	int size_needed = position + len;
 	if (size_needed > data.get_size())
-		data.set_size(size_needed);
+		data.set_size(clan::max(size_needed + clan::min(size_needed, 16*1024*1024), 16*1024));
 	memcpy(data.get_data() + position, send_data, len);
 	position += len;
 	return len;

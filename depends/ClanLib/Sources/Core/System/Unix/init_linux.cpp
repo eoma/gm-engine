@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -64,9 +64,9 @@ void init_system()
 	init_ref_count++;
 	if (init_ref_count > 1) return;
 
-	//#ifdef NDEBUG
-	//signal(SIGSEGV, deinit);
-	//#endif
+	#ifdef NDEBUG
+	signal(SIGSEGV, deinit);
+	#endif
 }
 
 void deinit_system()
@@ -74,9 +74,9 @@ void deinit_system()
 	init_ref_count--;
 	if (init_ref_count > 0) return;
 
-	//#ifdef NDEBUG
-	//signal(SIGSEGV,SIG_DFL); //restore default behavior
-	//#endif
+	#ifdef NDEBUG
+	signal(SIGSEGV,SIG_DFL); //restore default behavior
+	#endif
 }
 
 ubyte64 System::get_time()
@@ -87,7 +87,7 @@ ubyte64 System::get_time()
 ubyte64 System::get_microseconds()
 {
 	timeval tv;
-	gettimeofday(&tv, NULL);
+	gettimeofday(&tv, nullptr);
 	return (ubyte64) tv.tv_sec*(ubyte64) 1000000 + (ubyte64) tv.tv_usec;
 }
 
@@ -130,7 +130,7 @@ std::string System::get_exe_path()
 		struct stat sba;
 
 		exe_file[0] = '\0';
-		if ((pathenv = getenv("PATH")) != NULL)
+		if ((pathenv = getenv("PATH")) != nullptr)
 		{
 			for (name = pathenv; name; name = end)
 			{
@@ -149,7 +149,7 @@ std::string System::get_exe_path()
 		// try current directory as last resort
 		if (!exe_file[0])
 		{
-			if (getcwd(cwd, sizeof(cwd)) != NULL)
+			if (getcwd(cwd, sizeof(cwd)) != nullptr)
 			{
 				snprintf(fname, sizeof(fname),
 					"%s/%s", cwd, (char *)__progname);

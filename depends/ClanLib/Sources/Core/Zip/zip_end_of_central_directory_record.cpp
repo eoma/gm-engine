@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -72,7 +72,7 @@ void ZipEndOfCentralDirectoryRecord::load(IODevice &input)
 	offset_to_start_of_central_directory = input.read_int32();
 	file_comment_length = input.read_int16();
 
-	char *str = new char[file_comment_length];
+	auto str = new char[file_comment_length];
 	try
 	{
 		input.read(str, file_comment_length);

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include <memory>
 
 struct sockaddr;
@@ -42,7 +41,7 @@ namespace clan
 class SocketName_Impl;
 
 /// \brief Socket name; container class for an IP address and port.
-class CL_API_NETWORK SocketName
+class SocketName
 {
 /// \name Construction
 /// \{

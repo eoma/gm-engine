@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,7 +28,6 @@
 
 #pragma once
 
-
 #ifdef WIN32
 #ifdef _MSC_VER
 # pragma warning (disable:4786)
@@ -41,28 +40,9 @@
 
 #include "API/Core/System/exception.h"
 
-#ifdef __BORLANDC__
-#define BAD_MATH
-#endif
-
-#ifdef BAD_MATH
-#define sqrtf sqrt
-#define acosf acos
-#define sinf sin
-#define cosf cos
-#endif
-
 #if defined(_DEBUG) && !defined(DEBUG)
 #define DEBUG
 #endif
 
-#ifdef WIN32
-#define BREAKPOINT
-#else
-#define BREAKPOINT asm("int $03");
-#endif
-
-
 #include <cstring>
-
 

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -47,32 +47,33 @@
 
 #include "Core/precomp.h"
 #include "API/Core/Math/big_int.h"
+#include "API/Core/Math/cl_math.h"
 #include "big_int_impl.h"
 #include <cstdlib>
 
 namespace clan
 {
 
-BigInt::BigInt() : impl(new BigInt_Impl(BigInt_Impl::default_allocated_precision))
+BigInt::BigInt() : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 {
 }
 
-BigInt::BigInt(ubyte32 value) : impl(new BigInt_Impl(BigInt_Impl::default_allocated_precision))
-{
-	set(value);
-}
-
-BigInt::BigInt(byte32 value) : impl(new BigInt_Impl(BigInt_Impl::default_allocated_precision))
+BigInt::BigInt(ubyte32 value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 {
 	set(value);
 }
 
-BigInt::BigInt(ubyte64 value) : impl(new BigInt_Impl(BigInt_Impl::default_allocated_precision))
+BigInt::BigInt(byte32 value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 {
 	set(value);
 }
 
-BigInt::BigInt(byte64 value) : impl(new BigInt_Impl(BigInt_Impl::default_allocated_precision))
+BigInt::BigInt(ubyte64 value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
+{
+	set(value);
+}
+
+BigInt::BigInt(byte64 value) : impl(clan::make_unique<BigInt_Impl>(BigInt_Impl::default_allocated_precision))
 {
 	set(value);
 }
@@ -272,52 +273,52 @@ BigInt BigInt::operator *= (ubyte32 d)
 BigInt BigInt::operator / (const BigInt& b)
 {
 	BigInt c;
-	impl->div(b.impl.get(), c.impl.get(), NULL);
+	impl->div(b.impl.get(), c.impl.get(), nullptr);
 	return c;
 }
 BigInt BigInt::operator / (ubyte32 d)
 {
 	BigInt c;
-	impl->div_d(d, c.impl.get(), NULL);
+	impl->div_d(d, c.impl.get(), nullptr);
 	return c;
 }
 
 BigInt BigInt::operator /= (const BigInt& b)
 {
 	BigInt c;
-	impl->div(b.impl.get(), impl.get(), NULL);
+	impl->div(b.impl.get(), impl.get(), nullptr);
 	return *this;
 }
 
 BigInt BigInt::operator /= (ubyte32 d)
 {
 	BigInt c;
-	impl->div_d(d, impl.get(), NULL);
+	impl->div_d(d, impl.get(), nullptr);
 	return *this;
 }
 BigInt BigInt::operator % (const BigInt& b)
 {
 	BigInt c;
-	impl->div(b.impl.get(), NULL, c.impl.get());
+	impl->div(b.impl.get(), nullptr, c.impl.get());
 	return c;
 }
 BigInt BigInt::operator % (ubyte32 d)
 {
 	BigInt c;
-	impl->div_2d(d, NULL, c.impl.get());
+	impl->div_2d(d, nullptr, c.impl.get());
 	return c;
 }
 
 BigInt BigInt::operator %= (const BigInt& b)
 {
 	BigInt c;
-	impl->div(b.impl.get(), NULL, impl.get());
+	impl->div(b.impl.get(), nullptr, impl.get());
 	return *this;
 }
 BigInt BigInt::operator %= (ubyte32 d)
 {
 	BigInt c;
-	impl->div_2d(d, NULL, impl.get());
+	impl->div_2d(d, nullptr, impl.get());
 	return *this;
 }
 void BigInt::div(const BigInt &b, BigInt *q, BigInt *r) const

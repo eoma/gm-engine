@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -39,10 +39,7 @@
 #include <ctime>
 #include <algorithm>
 #include "x509.h"
-
-#ifdef min
-#undef min
-#endif
+#include "API/Core/Math/cl_math.h"
 
 namespace clan
 {
@@ -90,7 +87,7 @@ int TLSClient_Impl::encrypt(const void *data, int size)
 
 	int insert_pos = send_in_data.get_size();
 	int buffer_space_available = desired_buffer_size - insert_pos;
-	int bytes_consumed = std::min(size, buffer_space_available);
+	int bytes_consumed = clan::min(size, buffer_space_available);
 
 	send_in_data.set_size(insert_pos + bytes_consumed);
 	memcpy(send_in_data.get_data() + insert_pos, data, bytes_consumed);
@@ -107,7 +104,7 @@ int TLSClient_Impl::decrypt(const void *data, int size)
 
 	int insert_pos = recv_in_data.get_size();
 	int buffer_space_available = desired_buffer_size - insert_pos;
-	int bytes_consumed = std::min(size, buffer_space_available);
+	int bytes_consumed = clan::min(size, buffer_space_available);
 
 	recv_in_data.set_size(insert_pos + bytes_consumed);
 	memcpy(recv_in_data.get_data() + insert_pos, data, bytes_consumed);
@@ -221,7 +218,7 @@ bool TLSClient_Impl::send_application_data()
 	int size = send_in_data.get_size() - send_in_data_read_pos;
 
 	unsigned int max_record_length_gcc_fix = max_record_length;
-	unsigned int data_in_record = std::min((unsigned int)size, max_record_length_gcc_fix);
+	unsigned int data_in_record = clan::min((unsigned int)size, max_record_length_gcc_fix);
 
 	int offset = 0;
 	int offset_tls_record = offset;					offset += sizeof(TLS_Record);
@@ -750,7 +747,7 @@ void TLSClient_Impl::send_record(void *data_ptr, unsigned int data_size)
 		// "the encryption and MAC functions convert TLSCompressed.fragment structures to and from block TLSCiphertext.fragment structures."
 		const unsigned char *input_ptr = (const unsigned char *) data_ptr + sizeof(TLS_Record);
 		unsigned int input_size = data_size - sizeof(TLS_Record);
-		Secret mac = calculate_mac(data_ptr, data_size, NULL, 0, security_parameters.write_sequence_number, security_parameters.client_write_mac_secret);	// MAC includes the header and sequence number
+		Secret mac = calculate_mac(data_ptr, data_size, nullptr, 0, security_parameters.write_sequence_number, security_parameters.client_write_mac_secret);	// MAC includes the header and sequence number
 		DataBuffer encrypted = encrypt_data(input_ptr , input_size, mac.get_data(), mac.get_size());
 
 		// Update the length
@@ -836,7 +833,7 @@ void TLSClient_Impl::create_security_parameters_client_random()
 {
 	unsigned char *key_ptr = security_parameters.client_random.get_data();
 	m_Random.get_random_bytes(key_ptr + 4, 28);
-	time_t current_time = time(NULL);
+	time_t current_time = time(nullptr);
 	key_ptr[0] = current_time >> 24;
 	key_ptr[1] = current_time >> 16;
 	key_ptr[2] = current_time >> 8;

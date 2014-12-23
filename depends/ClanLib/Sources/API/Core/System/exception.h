@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <vector>
 #include <stdexcept>
 #include <string>
@@ -40,7 +39,7 @@ namespace clan
 /// \{
 
 /// \brief Top-level exception class.
-class CL_API_CORE Exception : public std::exception
+class Exception : public std::exception
 {
 /// \name Construction
 /// \{
@@ -59,7 +58,7 @@ public:
 	std::string message;
 
 	/// \brief Returns description of exception
-	virtual const char* what() const throw();
+	virtual const char* what() const throw() override;
 
 /// \}
 /// \name Operations

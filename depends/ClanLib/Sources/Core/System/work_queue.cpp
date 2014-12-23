@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,8 +35,7 @@
 #include "API/Core/System/system.h"
 #include "API/Core/System/interlocked_variable.h"
 #include <algorithm>
-
-#undef max
+#include "API/Core/Math/cl_math.h"
 
 namespace clan
 {
@@ -46,7 +45,7 @@ class WorkItemProcess : public WorkItem
 public:
 	WorkItemProcess(const std::function<void()> &func) : func(func) { }
 
-	void process_work() { func(); }
+	void process_work() override { func(); }
 
 private:
 	std::function<void()> func;
@@ -57,8 +56,8 @@ class WorkItemWorkCompleted : public WorkItem
 public:
 	WorkItemWorkCompleted(const std::function<void()> &func) : func(func) { }
 
-	void process_work() { }
-	void work_completed() { func(); }
+	void process_work() override { }
+	void work_completed() override { func(); }
 
 private:
 	std::function<void()> func;
@@ -76,7 +75,7 @@ public:
 	int get_items_queued() const { return items_queued.get(); }
 
 private:
-	void process();
+	void process() override;
 	void worker_main();
 
 	bool serial_queue;
@@ -89,7 +88,7 @@ private:
 };
 
 WorkQueue::WorkQueue(bool serial_queue)
-	: impl(new WorkQueue_Impl(serial_queue))
+	: impl(std::make_shared<WorkQueue_Impl>(serial_queue))
 {
 }
 
@@ -127,19 +126,19 @@ WorkQueue_Impl::WorkQueue_Impl(bool serial_queue)
 WorkQueue_Impl::~WorkQueue_Impl()
 {
 	stop_event.set();
-	for (size_t i = 0; i < threads.size(); i++)
-		threads[i].join();
-	for (size_t i = 0; i < queued_items.size(); i++)
-		delete queued_items[i];
-	for (size_t i = 0; i < finished_items.size(); i++)
-		delete finished_items[i];
+	for (auto & elem : threads)
+		elem.join();
+	for (auto & elem : queued_items)
+		delete elem;
+	for (auto & elem : finished_items)
+		delete elem;
 }
 
 void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership
 {
 	if (threads.empty())
 	{
-		int num_cores = serial_queue ? 1 : std::max(System::get_num_cores() - 1, 1);
+		int num_cores = serial_queue ? 1 : clan::max(System::get_num_cores() - 1, 1);
 		for (int i = 0; i < num_cores; i++)
 		{
 			Thread thread;

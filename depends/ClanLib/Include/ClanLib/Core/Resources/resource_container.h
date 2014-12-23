@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include "resource_object.h"
 #include <memory>
 #include <map>
@@ -48,14 +47,14 @@ public:
 class ResourceContainer
 {
 public:
-	ResourceContainer() : impl(new ResourceContainer_Impl())
+	ResourceContainer() : impl(std::make_shared<ResourceContainer_Impl>())
 	{
 	}
 
 	template<typename Type>
 	Resource<Type> get(const std::string &name)
 	{
-		std::map<std::string, ResourceObject>::iterator it = impl->resources.find(name);
+		auto it = impl->resources.find(name);
 		if (it != impl->resources.end())
 			return it->second.cast<Type>();
 

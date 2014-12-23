@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include <functional>
 
@@ -39,7 +38,7 @@ namespace clan
 /// \{
 
 /// \brief Interface for executing work on a worker thread
-class CL_API_CORE WorkItem
+class WorkItem
 {
 public:
 	virtual ~WorkItem() { }
@@ -54,7 +53,7 @@ public:
 class WorkQueue_Impl;
 
 /// \brief Thread pool for worker threads
-class CL_API_CORE WorkQueue
+class WorkQueue
 {
 public:
 	/// \brief Constructs a work queue

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -56,37 +56,37 @@ public:
 // XPathObject Constuction:
 
 XPathObject::XPathObject()
-: impl(new XPathObject_Impl)
+: impl(std::make_shared<XPathObject_Impl>())
 {
 	impl->type = XPathObject::type_null;
 }
 
 XPathObject::XPathObject(bool value)
-: impl(new XPathObject_Impl)
+: impl(std::make_shared<XPathObject_Impl>())
 {
 	set_boolean(value);
 }
 
 XPathObject::XPathObject(double value)
-: impl(new XPathObject_Impl)
+: impl(std::make_shared<XPathObject_Impl>())
 {
 	set_number(value);
 }
 
 XPathObject::XPathObject(size_t value)
-: impl(new XPathObject_Impl)
+: impl(std::make_shared<XPathObject_Impl>())
 {
 	set_number(value);
 }
 
 XPathObject::XPathObject(const std::string &value)
-: impl(new XPathObject_Impl)
+: impl(std::make_shared<XPathObject_Impl>())
 {
 	set_string(value);
 }
 
 XPathObject::XPathObject(const std::vector<DomNode> &value)
-: impl(new XPathObject_Impl)
+: impl(std::make_shared<XPathObject_Impl>())
 {
 	set_node_set(value);
 }

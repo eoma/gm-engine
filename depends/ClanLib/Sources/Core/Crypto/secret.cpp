@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -39,12 +39,12 @@ namespace clan
 // Secret Construction:
 
 Secret::Secret()
-: impl(new Secret_Impl())
+: impl(std::make_shared<Secret_Impl>())
 {
 }
 
 Secret::Secret(unsigned int new_key_length)
-: impl(new Secret_Impl())
+: impl(std::make_shared<Secret_Impl>())
 {
 	impl->create(new_key_length);
 }

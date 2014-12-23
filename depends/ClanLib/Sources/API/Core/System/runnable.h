@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <typeinfo>
 
 namespace clan
@@ -39,7 +38,7 @@ namespace clan
 /// \{
 
 /// \brief Thread runnable object.
-class CL_API_CORE Runnable
+class Runnable
 {
 /// \name Construction
 /// \{
@@ -98,7 +97,7 @@ public:
 /// \{
 
 public:
-	virtual void run()
+	virtual void run() override
 	{
 		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
@@ -140,7 +139,7 @@ public:
 /// \{
 
 public:
-	virtual void run()
+	virtual void run() override
 	{
 		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
@@ -185,7 +184,7 @@ public:
 /// \{
 
 public:
-	virtual void run()
+	virtual void run() override
 	{
 		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
@@ -233,7 +232,7 @@ public:
 /// \{
 
 public:
-	virtual void run()
+	virtual void run() override
 	{
 		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
@@ -284,7 +283,7 @@ public:
 /// \{
 
 public:
-	virtual void run()
+	virtual void run() override
 	{
 		set_thread_name(typeid(func).name());
 		C *local_instance = instance;
@@ -338,7 +337,7 @@ public:
 /// \{
 
 public:
-	virtual void run()
+	virtual void run() override
 	{
 		set_thread_name(typeid(func).name());
 		C *local_instance = instance;

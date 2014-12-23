@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -39,7 +39,7 @@ namespace clan
 class DataBuffer_Impl
 {
 public:
-	DataBuffer_Impl() : data(0), size(0), allocated_size(0)
+	DataBuffer_Impl() : data(nullptr), size(0), allocated_size(0)
 	{
 	}
 
@@ -58,25 +58,25 @@ public:
 // DataBuffer Construction:
 
 DataBuffer::DataBuffer()
-: impl(new DataBuffer_Impl())
+: impl(std::make_shared<DataBuffer_Impl>())
 {
 }
 
 DataBuffer::DataBuffer(unsigned int new_size)
-: impl(new DataBuffer_Impl())
+: impl(std::make_shared<DataBuffer_Impl>())
 {
 	set_size(new_size);
 }
 
 DataBuffer::DataBuffer(const void *new_data, unsigned int new_size)
-: impl(new DataBuffer_Impl())
+: impl(std::make_shared<DataBuffer_Impl>())
 {
 	set_size(new_size);
 	memcpy(impl->data, new_data, new_size);
 }
 
 DataBuffer::DataBuffer(const DataBuffer &new_data, unsigned int pos, unsigned int size)
-: impl(new DataBuffer_Impl())
+: impl(std::make_shared<DataBuffer_Impl>())
 {
 	set_size(size);
 	memcpy(impl->data, new_data.get_data() + pos, size);

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -33,10 +33,7 @@
 #include "API/Core/System/databuffer.h"
 #include "API/Core/IOData/file.h"
 #include <algorithm>
-
-#ifdef min
-#undef min
-#endif
+#include "API/Core/Math/cl_math.h"
 
 namespace clan
 {
@@ -94,7 +91,7 @@ int IODeviceProvider_TLSConnection::receive(void *data, int len, bool receive_al
 	{
 		update_io_buffers(receive_all);
 
-		int bytes_available = std::min(tls_client.get_decrypted_data_available(), len);
+		int bytes_available = clan::min(tls_client.get_decrypted_data_available(), len);
 		memcpy(static_cast<char*>(data) + pos, tls_client.get_decrypted_data(), bytes_available);
 
 		update_io_buffers(receive_all);

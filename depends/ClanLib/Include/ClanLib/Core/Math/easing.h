@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,16 +28,18 @@
 
 #pragma once
 
-#ifdef CL_API_DLL
-	#ifdef NETWORK_EXPORT
-		#define CL_API_NETWORK __declspec(dllexport)
-		#define CL_API_NETWORK_STATIC
-	#else
-		#define CL_API_NETWORK __declspec(dllimport)
-		#define CL_API_NETWORK_STATIC __declspec(dllimport)
-	#endif
-#else
-	#define CL_API_NETWORK
-	#define CL_API_NETWORK_STATIC
-#endif
-
+namespace clan
+{
+	class Easing
+	{
+	public:
+		static float linear(float t);
+		static float easeout(float t);
+		static float easein(float t);
+		static float easeinout(float t);
+		static float backin(float t);
+		static float backout(float t);
+		static float elastic(float t);
+		static float bounce(float t);
+	};
+}

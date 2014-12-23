@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -77,7 +77,7 @@ void DNSResolver_Impl::thread_main()
 				DNSPacket packet(buffer);
 				MutexSection mutex_lock(&mutex);
 				int query_id = packet.get_query_id();
-				std::map<int, DNSPacket>::iterator it = queries.find(query_id);
+				auto it = queries.find(query_id);
 				if (it != queries.end())
 					answers[query_id] = packet;
 			}

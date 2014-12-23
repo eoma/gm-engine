@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_network.h"
 #include <memory>
 
 namespace clan
@@ -42,7 +41,7 @@ class HTTPRequestHandlerProvider;
 class HTTPRequestHandler_Impl;
 
 /// \brief HTTP request handler class.
-class CL_API_NETWORK HTTPRequestHandler
+class HTTPRequestHandler
 {
 /// \name Construction
 /// \{

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -47,7 +47,7 @@ class FileSystem_Impl
 {
 //! Construction:
 public:
-	FileSystem_Impl() : provider(0)
+	FileSystem_Impl() : provider(nullptr)
 	{
 	}
 
@@ -67,7 +67,7 @@ public:
 // FileSystem Construction:
 
 FileSystem::FileSystem()
-: impl(new FileSystem_Impl)
+: impl(std::make_shared<FileSystem_Impl>())
 {
 }
 
@@ -76,13 +76,13 @@ FileSystem::FileSystem(FileSystem::NullVFS null_fs)
 }
 
 FileSystem::FileSystem(FileSystemProvider *provider)
-: impl(new FileSystem_Impl)
+: impl(std::make_shared<FileSystem_Impl>())
 {
 	impl->provider = provider;
 }
 
 FileSystem::FileSystem(const std::string &path, bool is_zip_file)
-: impl(new FileSystem_Impl)
+: impl(std::make_shared<FileSystem_Impl>())
 {
 	if (is_zip_file)
 		impl->provider = new FileSystemProvider_Zip(ZipArchive(path));

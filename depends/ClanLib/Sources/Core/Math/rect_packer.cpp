@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -41,7 +41,7 @@ RectPacker::RectPacker()
 }
 
 RectPacker::RectPacker(const Size &max_group_size, AllocationPolicy policy)
-: impl(new RectPacker_Impl(max_group_size))
+: impl(std::make_shared<RectPacker_Impl>(max_group_size))
 {
 	set_allocation_policy(policy);
 }

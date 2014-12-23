@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,7 +29,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 #include <memory>
 #include "dom_string.h"
 
@@ -68,7 +67,7 @@ class DomNode_Impl;
 ///    specific node_type (e.g., node_value for an Element or attributes for a Comment),
 ///    this returns null. Note that the specialized interfaces may contain additional
 ///    and more convenient mechanisms to get and set the relevant information.</p>
-class CL_API_CORE DomNode
+class DomNode
 {
 /// \name Construction
 /// \{

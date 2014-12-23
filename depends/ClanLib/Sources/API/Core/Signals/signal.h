@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -85,10 +85,12 @@ namespace clan
 			{
 				for (auto it = sig->slots.begin(); it != sig->slots.end(); ++it)
 				{
-					if (it->lock().get() == this)
+					// todo: investigate if "it->lock().get() == this" is required
+					if (it->expired() || it->lock().get() == this)
 					{
-						sig->slots.erase(it);
-						break;
+						it = sig->slots.erase(it);
+						if (it == sig->slots.end())
+							break;
 					}
 				}
 			}

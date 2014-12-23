@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "../api_core.h"
 
 #ifdef WIN32
 #include <windows.h>
@@ -47,7 +46,7 @@ namespace clan
 /// \{
 
 /// \brief Mutex class.
-class CL_API_CORE Mutex
+class Mutex
 {
 /// \name Construction
 /// \{
@@ -95,7 +94,7 @@ private:
 };
 
 /// \brief Mutex locking helper.
-class CL_API_CORE MutexSection
+class MutexSection
 {
 /// \name Construction
 /// \{
@@ -145,7 +144,7 @@ public:
 	/// \brief Attempt to lock mutex.
 	bool try_lock()
 	{
-		if (mutex == 0 || mutex->try_lock())
+		if (mutex == nullptr || mutex->try_lock())
 		{
 			lock_count++;
 			return true;

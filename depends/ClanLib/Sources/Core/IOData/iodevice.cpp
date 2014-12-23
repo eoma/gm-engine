@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2013 The ClanLib Team
+**  Copyright (c) 1997-2015 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -44,7 +44,7 @@ IODevice::IODevice()
 }
 
 IODevice::IODevice(IODeviceProvider *provider)
-: impl(new IODevice_Impl)
+: impl(std::make_shared<IODevice_Impl>())
 {
 	impl->provider = provider;
 }
@@ -418,7 +418,7 @@ std::string IODevice::read_string_a()
 {
 	int size = read_int32();
 
-	char *str = new char[size];
+	auto str = new char[size];
 	try
 	{
 		read(str, size);
@@ -437,7 +437,7 @@ std::string IODevice::read_string_a()
 
 std::string IODevice::read_string_nul()
 {
-	return (read_string_text(NULL, NULL, false));
+	return (read_string_text(nullptr, nullptr, false));
 }
 
 std::string IODevice::read_string_text(const char *skip_initial_chars, const char *read_until_chars, bool allow_eof)
@@ -542,7 +542,7 @@ std::string IODevice::read_string_text(const char *skip_initial_chars, const cha
 
 	// Read the string, now that we know its length
 
-	char *str = new char[size];
+	auto str = new char[size];
 	try
 	{
 		read(str, size);
