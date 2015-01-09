@@ -48,7 +48,7 @@ static char* getDisplayName(CGDirectDisplayID displayID)
     CFIndex size;
 
     // NOTE: This uses a deprecated function because Apple has
-    //       (as of September 2014) not provided any alternative
+    //       (as of January 2015) not provided any alternative
     info = IODisplayCreateInfoDictionary(CGDisplayIOServicePort(displayID),
                                          kIODisplayOnlyPreferredName);
     names = CFDictionaryGetValue(info, CFSTR(kDisplayProductName));
@@ -204,7 +204,6 @@ GLboolean _glfwSetVideoMode(_GLFWmonitor* monitor, const GLFWvidmode* desired)
             monitor->ns.previousMode = CGDisplayCopyDisplayMode(monitor->ns.displayID);
 
         CGDisplayFadeReservationToken token = beginFadeReservation();
-        CGDisplayCapture(monitor->ns.displayID);
         CGDisplaySetDisplayMode(monitor->ns.displayID, native, NULL);
         endFadeReservation(token);
     }
@@ -231,7 +230,6 @@ void _glfwRestoreVideoMode(_GLFWmonitor* monitor)
         CGDisplayFadeReservationToken token = beginFadeReservation();
         CGDisplaySetDisplayMode(monitor->ns.displayID,
                                 monitor->ns.previousMode, NULL);
-        CGDisplayRelease(monitor->ns.displayID);
         endFadeReservation(token);
 
         CGDisplayModeRelease(monitor->ns.previousMode);
@@ -326,7 +324,7 @@ void _glfwPlatformGetMonitorPos(_GLFWmonitor* monitor, int* xpos, int* ypos)
 GLFWvidmode* _glfwPlatformGetVideoModes(_GLFWmonitor* monitor, int* found)
 {
     CFArrayRef modes;
-    CFIndex count, i;
+    CFIndex count, i, j;
     GLFWvidmode* result;
     CVDisplayLinkRef link;
 
@@ -340,12 +338,26 @@ GLFWvidmode* _glfwPlatformGetVideoModes(_GLFWmonitor* monitor, int* found)
 
     for (i = 0;  i < count;  i++)
     {
-        CGDisplayModeRef mode = (CGDisplayModeRef) CFArrayGetValueAtIndex(modes, i);
-        if (modeIsGood(mode))
+        CGDisplayModeRef dm = (CGDisplayModeRef) CFArrayGetValueAtIndex(modes, i);
+        if (!modeIsGood(dm))
+            continue;
+
+        const GLFWvidmode mode = vidmodeFromCGDisplayMode(dm, link);
+
+        for (j = 0;  j < *found;  j++)
         {
-            result[*found] = vidmodeFromCGDisplayMode(mode, link);
-            (*found)++;
+            if (_glfwCompareVideoModes(result + j, &mode) == 0)
+                break;
         }
+
+        if (i < *found)
+        {
+            // This is a duplicate, so skip it
+            continue;
+        }
+
+        result[*found] = mode;
+        (*found)++;
     }
 
     CFRelease(modes);

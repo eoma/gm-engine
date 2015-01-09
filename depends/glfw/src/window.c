@@ -84,8 +84,6 @@ void _glfwInputWindowSize(_GLFWwindow* window, int width, int height)
 
 void _glfwInputWindowIconify(_GLFWwindow* window, int iconified)
 {
-    window->iconified = iconified;
-
     if (window->callbacks.iconify)
         window->callbacks.iconify((GLFWwindow*) window, iconified);
 }
@@ -94,11 +92,6 @@ void _glfwInputFramebufferSize(_GLFWwindow* window, int width, int height)
 {
     if (window->callbacks.fbsize)
         window->callbacks.fbsize((GLFWwindow*) window, width, height);
-}
-
-void _glfwInputWindowVisibility(_GLFWwindow* window, int visible)
-{
-    window->visible = visible;
 }
 
 void _glfwInputWindowDamage(_GLFWwindow* window)
@@ -151,7 +144,7 @@ GLFWAPI GLFWwindow* glfwCreateWindow(int width, int height,
     fbconfig.accumBlueBits  = _glfw.hints.accumBlueBits;
     fbconfig.accumAlphaBits = _glfw.hints.accumAlphaBits;
     fbconfig.auxBuffers     = _glfw.hints.auxBuffers;
-    fbconfig.stereo         = _glfw.hints.stereo;
+    fbconfig.stereo         = _glfw.hints.stereo ? GL_TRUE : GL_FALSE;
     fbconfig.samples        = _glfw.hints.samples;
     fbconfig.sRGB           = _glfw.hints.sRGB;
     fbconfig.doublebuffer   = _glfw.hints.doublebuffer ? GL_TRUE : GL_FALSE;
@@ -290,6 +283,9 @@ void glfwDefaultWindowHints(void)
     _glfw.hints.focused     = GL_TRUE;
     _glfw.hints.autoIconify = GL_TRUE;
 
+    // The default is to select the highest available refresh rate
+    _glfw.hints.refreshRate = GLFW_DONT_CARE;
+
     // The default is 24 bits of color, 24 bits of depth and 8 bits of stencil,
     // double buffered
     _glfw.hints.redBits      = 8;
@@ -422,7 +418,7 @@ GLFWAPI void glfwDestroyWindow(GLFWwindow* handle)
         _glfwPlatformMakeContextCurrent(NULL);
 
     // Clear the focused window pointer if this is the focused window
-    if (window == _glfw.focusedWindow)
+    if (_glfw.focusedWindow == window)
         _glfw.focusedWindow = NULL;
 
     _glfwPlatformDestroyWindow(window);
@@ -483,7 +479,7 @@ GLFWAPI void glfwSetWindowPos(GLFWwindow* handle, int xpos, int ypos)
     if (window->monitor)
     {
         _glfwInputError(GLFW_INVALID_VALUE,
-                        "Fullscreen windows cannot be positioned");
+                        "Full screen windows cannot be positioned");
         return;
     }
 
@@ -597,17 +593,17 @@ GLFWAPI int glfwGetWindowAttrib(GLFWwindow* handle, int attrib)
     switch (attrib)
     {
         case GLFW_FOCUSED:
-            return window == _glfw.focusedWindow;
+            return _glfwPlatformWindowFocused(window);
         case GLFW_ICONIFIED:
-            return window->iconified;
+            return _glfwPlatformWindowIconified(window);
+        case GLFW_VISIBLE:
+            return _glfwPlatformWindowVisible(window);
         case GLFW_RESIZABLE:
             return window->resizable;
         case GLFW_DECORATED:
             return window->decorated;
         case GLFW_FLOATING:
             return window->floating;
-        case GLFW_VISIBLE:
-            return window->visible;
         case GLFW_CLIENT_API:
             return window->context.api;
         case GLFW_CONTEXT_VERSION_MAJOR:
