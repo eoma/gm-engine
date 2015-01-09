@@ -16,13 +16,13 @@ static void close_libgl(void)
 	FreeLibrary(libgl);
 }
 
-static void *get_proc(const char *proc)
+static GL3WglProc get_proc(const char *proc)
 {
-	void *res;
+	GL3WglProc res;
 
-	res = wglGetProcAddress(proc);
+	res = (GL3WglProc) wglGetProcAddress(proc);
 	if (!res)
-		res = GetProcAddress(libgl, proc);
+		res = (GL3WglProc) GetProcAddress(libgl, proc);
 	return res;
 }
 #elif defined(__APPLE__) || defined(__APPLE_CC__)
@@ -47,13 +47,13 @@ static void close_libgl(void)
 	CFRelease(bundleURL);
 }
 
-static void *get_proc(const char *proc)
+static GL3WglProc get_proc(const char *proc)
 {
-	void *res;
+	GL3WglProc res;
 
 	CFStringRef procname = CFStringCreateWithCString(kCFAllocatorDefault, proc,
 		kCFStringEncodingASCII);
-	res = CFBundleGetFunctionPointerForName(bundle, procname);
+	res = (GL3WglProc) CFBundleGetFunctionPointerForName(bundle, procname);
 	CFRelease(procname);
 	return res;
 }
@@ -73,13 +73,13 @@ static void close_libgl(void)
 	dlclose(libgl);
 }
 
-static void *get_proc(const char *proc)
+static GL3WglProc get_proc(const char *proc)
 {
-	void *res;
+	GL3WglProc res;
 
-	res = glXGetProcAddress((const GLubyte *) proc);
+	res = (GL3WglProc) glXGetProcAddress((const GLubyte *) proc);
 	if (!res)
-		res = dlsym(libgl, proc);
+		res = (GL3WglProc) dlsym(libgl, proc);
 	return res;
 }
 #endif
@@ -120,7 +120,7 @@ int gl3wIsSupported(int major, int minor)
 	return version.major >= major;
 }
 
-void *gl3wGetProcAddress(const char *proc)
+GL3WglProc gl3wGetProcAddress(const char *proc)
 {
 	return get_proc(proc);
 }

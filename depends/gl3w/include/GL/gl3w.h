@@ -11,10 +11,12 @@
 extern "C" {
 #endif
 
+typedef void (*GL3WglProc)(void);
+
 /* gl3w api */
 int gl3wInit(void);
 int gl3wIsSupported(int major, int minor);
-void *gl3wGetProcAddress(const char *proc);
+GL3WglProc gl3wGetProcAddress(const char *proc);
 
 /* OpenGL functions */
 extern PFNGLCULLFACEPROC gl3wCullFace;
