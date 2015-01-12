@@ -173,7 +173,14 @@ TextureFormatPtr TextureFormat::create_texture2d_format(bool generate_mipmap, un
 {
 	TextureFormatPtr format(new TextureFormat(GL_TEXTURE_2D));
 
-	format->set_parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	if (generate_mipmap)
+	{
+		format->set_parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	} 
+	else
+	{
+		format->set_parameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	}
 	format->set_parameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	format->set_parameter(GL_TEXTURE_WRAP_S, wrap_mode);
 	format->set_parameter(GL_TEXTURE_WRAP_T, wrap_mode);
