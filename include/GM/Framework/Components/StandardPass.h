@@ -30,6 +30,7 @@ namespace GM {
 
 			void initialize() override;
 
+			void build() override;
 			void pass(RenderSystem * const render_system) override;
 
 			bool uses_render_texture_from_camera() const override { return false; }

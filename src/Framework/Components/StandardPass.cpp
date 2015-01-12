@@ -36,6 +36,8 @@ namespace GM
 			}
 		}
 
+		void StandardPass::build() {};
+
 		void StandardPass::pass(RenderSystem *render_system)
 		{
 			render_system->pass(camera, "standard", RenderLayers::MESH_OPAQUE);
