@@ -27,6 +27,12 @@ namespace GM {
 		public:
 			virtual ~IRenderPassComponent() {};
 
+			/**
+			 * Supposed to actually build or setup the render pass component.
+			 * This method will be triggered when all inputs and output are set.
+			 */
+			virtual void build() = 0;
+
 			// Render pass component may do whatever they want, please be kind.
 			// Render pass components will _always_ be used on a camera.
 			virtual void pass(RenderSystem * const render_system) = 0;
