@@ -11,14 +11,17 @@
 #include <memory>
 
 namespace GM {
+	namespace Core {
+		class FramebufferObject; typedef std::shared_ptr<FramebufferObject> FramebufferObjectPtr;
+	}
+
 	namespace Framework {
 
 		class Camera; typedef std::shared_ptr<Camera> CameraPtr;
 		class Entity; typedef std::shared_ptr<Entity> EntityPtr;
 
 		/**
-		 * Will make the camera a shadow camera, it will only make shadows.
-		 * You only need to make _one_ camera that is supposed work as a shadow camera
+		 * A simple pass that will draw to a texture.
 		 */
 		class StandardPass : public Component<StandardPass>, public IRenderPassComponent {
 		public:
@@ -33,12 +36,17 @@ namespace GM {
 			void build() override;
 			void pass(RenderSystem * const render_system) override;
 
-			bool uses_render_texture_from_camera() const override { return false; }
+			bool uses_render_texture_from_camera() const override { return true; }
+			void set_output_texture(const Core::TexturePtr &output_texture) override;
+
+			// NOT USED!
+			// The standard pass will only produce texture data
 			void set_input_texture(const Core::TexturePtr &) override {}
-			void set_output_texture(const Core::TexturePtr &) override {}
 
 		private:
 			Camera *camera;
+			Core::FramebufferObjectPtr framebuffer;
+			Core::TexturePtr output_texture;
 		};
 
 	} // namespace Framework
