@@ -157,8 +157,6 @@ void RenderSystem::pass(Camera * const camera, const std::string &render_pass_na
 	Core::VertexArrayObjectPtr active_vao = nullptr;
 	Core::ShaderPtr active_shader = nullptr;
 
-	camera->clear_buffer();
-
 	for (unsigned int layer : bit_index_maker(camera->get_render_layers() & accepted_layers))
 	{
 		const auto& bucket = buckets[layer];

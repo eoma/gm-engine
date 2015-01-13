@@ -23,6 +23,7 @@
 #define GM_PROPERTY_NEAR_CLIPPING		"NearClipping"		// float
 #define GM_PROPERTY_FAR_CLIPPING		"FarClipping"		// float
 #define GM_PROPERTY_MAX_VERTICAL_ANGLE	"MaxVerticalAngle"	// float
+#define GM_PROPERTY_RENDER_TO_SCREEN	"RenderToScreen"	// bool
 
 // Material
 #define GM_PROPERTY_MATERIAL_NAME		"MaterialName"		// std::string

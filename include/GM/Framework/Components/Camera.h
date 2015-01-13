@@ -13,7 +13,6 @@
 namespace GM {
 
 namespace Core {
-class FramebufferObject; typedef std::shared_ptr<FramebufferObject> FramebufferObjectPtr;
 class Texture; typedef std::shared_ptr<Texture> TexturePtr;
 class ReadWriteTexture; typedef std::shared_ptr<ReadWriteTexture> ReadWriteTexturePtr;
 }
@@ -25,6 +24,7 @@ class Entity; typedef std::shared_ptr<Entity> EntityPtr;
 class RenderSystem; typedef std::shared_ptr<RenderSystem> RenderSystemPtr;
 class TextureManager; typedef std::shared_ptr<TextureManager> TextureManagerPtr;
 class IRenderPassComponent;
+class FinalPass; typedef std::shared_ptr<FinalPass> FinalPassPtr;
 
 class Camera : public Component<Camera> {
 public:
@@ -46,10 +46,6 @@ public:
 	unsigned int get_render_layers() const { return render_layers; };
 	int get_depth() const { return depth; };
 
-	bool has_framebuffer() const { return framebuffer != nullptr; }
-	Core::FramebufferObjectPtr get_framebuffer() const { return framebuffer; }
-	void set_framebuffer(const Core::FramebufferObjectPtr &new_framebuffer) { framebuffer = new_framebuffer; }
-
 	bool is_view_matrix_dirty() const { return view_matrix_property.is_dirty(); };
 	const glm::mat4 &get_view_matrix() const { return view_matrix_property; };
 
@@ -63,9 +59,10 @@ public:
 
 	void clear_dirty();
 
-	void clear_buffer();
-
 	Core::TexturePtr get_render_texture() const;
+
+	void set_render_to_screen(bool status) { render_to_screen = status; }
+	bool get_render_to_screen() const { return render_to_screen; }
 
 private:
 	void recalculate_view_matrix(const glm::mat4 &old_world, const glm::mat4 &new_world);
@@ -81,7 +78,8 @@ private:
 	// Depth determines the order in the render layer, smallest deth gets rendered first, and so on.
 	int depth;
 
-	Core::FramebufferObjectPtr framebuffer;
+	unsigned int current_width;
+	unsigned int current_height;
 
 	Property<glm::mat4> projection_matrix_property;
 	Property<glm::mat4> view_matrix_property;
@@ -92,10 +90,15 @@ private:
 	Property<float> far_clipping_property;
 	Property<float> max_vertical_angle_property;
 
+	Property<bool> render_to_screen;
+
+	// Render pass relevant variables
 	std::vector<IRenderPassComponent*> pass_sequence;
 
 	// Render texture for use in texture passes
 	Core::ReadWriteTexturePtr render_texture;
+
+	FinalPassPtr final_pass;
 };
 
 } // namespace Framework

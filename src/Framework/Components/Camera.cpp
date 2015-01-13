@@ -1,6 +1,7 @@
 #include "GM/Framework/Components/Camera.h"
 #include "GM/Framework/Components/IRenderPassComponent.h"
 #include "GM/Framework/Components/StandardPass.h"
+#include "GM/Framework/Components/FinalPass.h"
 
 #include "GM/Framework/DefinitionsPropertyNames.h"
 #include "GM/Framework/Entity.h"
@@ -10,6 +11,7 @@
 #include "GM/Framework/Systems/RenderSystem.h"
 
 #include "GM/Core/GL/FramebufferObject.h"
+#include "GM/Core/GL/RenderbufferObject.h"
 #include "GM/Core/Utilities/TextureFactory.h"
 #include "GM/Core/Utilities/ReadWriteTexture.h"
 
@@ -25,8 +27,8 @@ Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, con
 , render_system(render_system)
 , render_layers(render_layers)
 , depth(depth)
-, framebuffer(nullptr)
 , render_texture(nullptr)
+, final_pass(nullptr)
 {
 	fov_property = owner->add<float>(GM_PROPERTY_FOV, 60.0f);
 	near_clipping_property = owner->add<float>(GM_PROPERTY_NEAR_CLIPPING, 0.1f);
@@ -36,6 +38,8 @@ Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, con
 	view_matrix_property = owner->add<glm::mat4>(GM_PROPERTY_VIEW_MATRIX, glm::mat4(1));
 	projection_matrix_property = owner->add<glm::mat4>(GM_PROPERTY_PROJECTION_MATRIX, glm::mat4(1));
 	world_matrix_property = owner->add<glm::mat4>(GM_PROPERTY_WORLD_MATRIX, glm::mat4(1));
+
+	render_to_screen = owner->add<bool>(GM_PROPERTY_RENDER_TO_SCREEN, true);
 	
 	// Calculate default view and projections
 	recalculate_view_matrix(world_matrix_property.get(), world_matrix_property.get());
@@ -47,6 +51,7 @@ Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, con
 
 	render_texture = std::make_shared<Core::ReadWriteTexture>(GL_TEXTURE_2D);
 	texture_manager->add(clan::string_format("%1_camera_rt", owner->get_name()), render_texture);
+
 }
 
 Camera::~Camera() {
@@ -67,16 +72,6 @@ void Camera::clear_dirty() {
 	projection_matrix_property.clear_dirty();
 }
 
-void Camera::clear_buffer() {
-
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
-	glActiveTexture(GL_TEXTURE0);
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
 void Camera::set_projection(float fov, float width, float height, float near_clipping, float far_clipping) {
 	fov_property = fov;
 	near_clipping_property = near_clipping;
@@ -90,26 +85,27 @@ void Camera::set_projection(const glm::uvec2 &resolution) {
 }
 
 void Camera::set_projection(float width, float height) {
+	current_width = width;
+	current_height = height;
+
 	projection_matrix_property = glm::perspectiveFov(fov_property.get(), width, height, near_clipping_property.get(), far_clipping_property.get());
 }
 
 void Camera::initialize() {
 	if (render_texture->get_readable() == nullptr && render_texture->get_writable() == nullptr) {
 		Core::TextureFactory::TextureData texture_data;
-		Core::TextureFormatPtr texture_format = Core::TextureFormat::create_texture2d_format(false);
+		Core::TextureFormatPtr texture_format = Core::TextureFormat::create_texture2d_format(false, GL_CLAMP_TO_EDGE);
 
-		// FIXME: Add proper screen resolutions!
-		texture_data.width = 1;
-		texture_data.height = 1;
-		texture_data.internal_format = GL_RGBA8;
+		texture_data.width = current_width;
+		texture_data.height = current_height;
+		texture_data.internal_format = GL_RGBA32F;
 		texture_data.texture_format = GL_RGBA;
-		texture_data.data_type = (GLenum)GL_UNSIGNED_BYTE;
+		texture_data.data_type = (GLenum)GL_FLOAT;
 		texture_data.data_ptr = nullptr;
 
 		render_texture->set_readable(Core::TextureFactory::create(*texture_format, texture_data));
 		render_texture->set_writable(Core::TextureFactory::create(*texture_format, texture_data));
 
-		// render_texture should be registered in texture_manager
 	}
 
 	// Hopefully all necessary pass components has been added
@@ -119,6 +115,17 @@ void Camera::initialize() {
 		// If not we add the standard pass and initialize ourselvs
 		owner->create_component<StandardPass>()->initialize();
 		make_render_pass_sequence();
+	}
+
+	if (render_to_screen) {
+		if (final_pass == nullptr) {
+			final_pass = std::make_shared<FinalPass>();
+		}
+
+		render_texture->flip();
+		final_pass->set_input_texture(render_texture->get_readable());
+		final_pass->build();
+		pass_sequence.push_back(final_pass.get());
 	}
 }
 
@@ -138,6 +145,8 @@ void Camera::make_render_pass_sequence() {
 				pass->set_input_texture(render_texture->get_readable());
 				pass->set_output_texture(render_texture->get_writable());
 			}
+
+			pass->build();
 		}
 	}
 }
