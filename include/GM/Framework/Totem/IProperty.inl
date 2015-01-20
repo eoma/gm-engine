@@ -12,9 +12,9 @@ bool IProperty::is_type(const IProperty &property)
 }
 
 template<typename PropertyType>
-unsigned int IProperty::get_runtime_type_id()
+size_t IProperty::get_runtime_type_id()
 {
-	static unsigned int type_id(typeid(PropertyType).hash_code());
+	static size_t type_id(typeid(PropertyType).hash_code());
 	return type_id;
 }
 

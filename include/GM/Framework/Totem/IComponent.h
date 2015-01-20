@@ -29,8 +29,8 @@ public:
 
 	template<typename ComponentType> static bool is_type(const std::shared_ptr<IComponent> &component);
 	template<typename ComponentType> static bool is_type(const IComponent &component);
-	virtual unsigned int get_runtime_type_id() const = 0;
-	template<typename ComponentType> static unsigned int get_runtime_type_id();
+	virtual size_t get_runtime_type_id() const = 0;
+	template<typename ComponentType> static size_t get_runtime_type_id();
 };
 
 #include "IComponent.inl"

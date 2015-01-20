@@ -11,7 +11,7 @@ Component<ComponentType, UserData>::~Component()
 }
 
 template<class ComponentType, class UserData>
-unsigned int Component<ComponentType, UserData>::get_runtime_type_id() const
+size_t Component<ComponentType, UserData>::get_runtime_type_id() const
 { 
 	return IComponent<UserData>::template get_runtime_type_id<ComponentType>(); 
 }

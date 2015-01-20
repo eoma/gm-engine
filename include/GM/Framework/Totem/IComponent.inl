@@ -15,9 +15,9 @@ bool IComponent<UserData>::is_type(const IComponent &component)
 
 template<typename UserData>
 template<typename ComponentType>
-unsigned int IComponent<UserData>::get_runtime_type_id()
+size_t IComponent<UserData>::get_runtime_type_id()
 {
-	static unsigned int type_id(typeid(ComponentType).hash_code());
+	static size_t type_id(typeid(ComponentType).hash_code());
 	return type_id;
 }
 

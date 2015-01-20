@@ -41,7 +41,7 @@ public:
 	bool is_null() const override;
 	bool is_dirty() const override;
 	void clear_dirty() override;
-	unsigned int get_runtime_type_id() const override;
+	size_t get_runtime_type_id() const override;
 
 	clan::Signal<void(const PropertyType &, const PropertyType &)> &value_changed();
 

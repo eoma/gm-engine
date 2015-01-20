@@ -17,8 +17,8 @@ public:
 
 	template<typename PropertyType> static bool is_type(const std::shared_ptr<IProperty> &property);
 	template<typename PropertyType> static bool is_type(const IProperty &property);
-	virtual unsigned int get_runtime_type_id() const = 0;
-	template<typename PropertyType> static unsigned int get_runtime_type_id();
+	virtual size_t get_runtime_type_id() const = 0;
+	template<typename PropertyType> static size_t get_runtime_type_id();
 };
 
 #include "IProperty.inl"

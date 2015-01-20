@@ -38,7 +38,7 @@ inline void Property<PropertyType>::set(const PropertyType& value, bool invoke_v
 }
 
 template<class PropertyType>
-inline unsigned int Property<PropertyType>::get_runtime_type_id() const { return IProperty::get_runtime_type_id<PropertyType>(); }
+inline size_t Property<PropertyType>::get_runtime_type_id() const { return IProperty::get_runtime_type_id<PropertyType>(); }
 
 template<class PropertyType>
 inline const PropertyType &Property<PropertyType>::get() const { return data->value; }
