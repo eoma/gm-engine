@@ -65,7 +65,7 @@ void init_system()
 	if (init_ref_count > 1) return;
 
 	#ifdef NDEBUG
-	signal(SIGSEGV, deinit);
+	//signal(SIGSEGV, deinit);
 	#endif
 }
 
