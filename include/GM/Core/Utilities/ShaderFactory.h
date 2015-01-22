@@ -19,7 +19,8 @@ private:
 
 	// These may be generalized using glGetProgramResource
 	static std::vector<ShaderVariableInfo> get_attribute_infos(const unsigned int program);
-	static std::vector<ShaderVariableInfo> get_uniform_infos(const unsigned int program);
+	static std::vector<ShaderVariableInfo> get_uniform_infos(const unsigned int program, const int uniform_block_index = -1);
+	static std::vector<UniformBlockInfo> get_uniform_block_infos(const unsigned int program);
 };
 
 } // namespace Core

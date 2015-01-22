@@ -9,6 +9,9 @@
 namespace GM {
 namespace Core {
 
+// FIXME: Switch to using methods defined in OpenGL 4.3 (extension ARB_program_interface_query)
+// when it is added to Mesa
+
 ShaderPtr ShaderFactory::make_program(const std::vector<ShaderSource> &shader_sources)
 {
 	ShaderPtr shader = std::make_shared<Shader>();
@@ -51,6 +54,7 @@ ShaderPtr ShaderFactory::make_program(const std::vector<ShaderSource> &shader_so
 	}
 
 	shader->set_uniform_infos(get_uniform_infos(shader->get_handle()));
+	shader->set_uniform_block_infos(get_uniform_block_infos(shader->get_handle()));
 	shader->set_attribute_infos(get_attribute_infos(shader->get_handle()));
 
 	return shader;
@@ -113,51 +117,108 @@ std::vector<ShaderVariableInfo> ShaderFactory::get_attribute_infos(const unsigne
 
 		std::string name(name_buffer.begin(), name_buffer.begin() + name_length);
 
-		//if (name.compare(0, 3, "gl_") != 0)
-		{
-			// We do not add uniform values that can not be modified by glUniform* og glProgramUniform*
+		// Get location
+		int location = glGetAttribLocation(program, name.c_str());
 
-			attribute_infos.emplace_back(name, type, size, glGetAttribLocation(program, name.c_str()));
-		}
+		attribute_infos.emplace_back(name, type, size, location);
 	}
 
 	return attribute_infos;
 }
 
-std::vector<ShaderVariableInfo> ShaderFactory::get_uniform_infos(const unsigned int program)
+std::vector<ShaderVariableInfo> ShaderFactory::get_uniform_infos(const unsigned int program, const int uniform_block_index)
 {
 	std::vector<ShaderVariableInfo> uniform_infos;
 	std::vector<char> name_buffer;
 
-	int active_uniforms = 0;
-	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &active_uniforms);
+	unsigned int active_uniforms = 0;
+	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, (int*)&active_uniforms);
 	uniform_infos.reserve(active_uniforms);
 	
-	int max_uniform_name_length = 0;
-	glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &max_uniform_name_length);
+	unsigned int max_uniform_name_length = 0;
+	glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, (int*)&max_uniform_name_length);
 	name_buffer.assign(max_uniform_name_length+1, '\0');
 
-	for (int i = 0; i < active_uniforms; ++i)
+	for (unsigned int i = 0; i < active_uniforms; ++i)
 	{
 		int name_length = 0;
 		int size = 0;
 		GLenum type = 0;
-		
-		glGetActiveUniform(program, i, name_buffer.size(), &name_length, &size, &type, name_buffer.data());
 
+		// We will not process the current uniform index if it is not 
+		// equal to the current uniform index (default is -1)
+		int current_uniform_block_index = 0;
+		glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_BLOCK_INDEX, &current_uniform_block_index);
+
+		if (current_uniform_block_index != uniform_block_index)
+		{
+			continue;
+		}
+
+		// Get uniform name	
+		glGetActiveUniformName(program, i, name_buffer.size(), &name_length, name_buffer.data());
 		std::string name(name_buffer.begin(), name_buffer.begin() + name_length);
 
-		//if (name.compare(0, 3, "gl_") != 0)
-		{
-			// We do not add uniform values that can not be modified by glUniform* og glProgramUniform*
+		// Get uniform type
+		glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_TYPE, (GLint*)&type);
 
-			uniform_infos.emplace_back(name, type, size, glGetUniformLocation(program, name.c_str()));
-		}
+		// Get uniform type
+		glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_SIZE, &size);
+
+		// Get uniform location;
+		int location = glGetUniformLocation(program, name.c_str());
+
+		// Get uniform offset
+		int offset = -1;
+		glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_OFFSET, &offset);
+
+		// Get array stride
+		int array_stride = -1;
+		glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_ARRAY_STRIDE, &array_stride);
+
+		// Get matrix stride
+		int matrix_stride = -1;
+		glGetActiveUniformsiv(program, 1, &i, GL_UNIFORM_MATRIX_STRIDE, &matrix_stride);
+
+		uniform_infos.emplace_back(name, type, size, location, offset, array_stride, matrix_stride);
 	}
 
 	return uniform_infos;
 }
 
+std::vector<UniformBlockInfo> ShaderFactory::get_uniform_block_infos(const unsigned int program)
+{
+	std::vector<UniformBlockInfo> uniform_block_infos;
+	std::vector<char> name_buffer;
+
+	int active_uniform_blocks = 0;
+	glGetProgramiv(program, GL_ACTIVE_UNIFORM_BLOCKS, &active_uniform_blocks);
+	
+	int max_uniform_block_name_length = 0;
+	glGetProgramiv(program, GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH, &max_uniform_block_name_length);
+	name_buffer.assign(max_uniform_block_name_length+1, '\0');
+
+	for (int i = 0; i < active_uniform_blocks; ++i)
+	{
+		int name_length = 0;
+		int size = 0;
+		int active_uniforms = 0;
+		
+		// Get name of block		
+		glGetActiveUniformBlockName(program, i, name_buffer.size(), &name_length, name_buffer.data());
+		std::string name(name_buffer.begin(), name_buffer.begin() + name_length);
+
+		// Get minimum total buffer size (implementation dependent)
+		glGetActiveUniformBlockiv(program, i, GL_UNIFORM_BLOCK_DATA_SIZE, &size);
+
+		// Get number of active uniforms in block
+		glGetActiveUniformBlockiv(program, i, GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &active_uniforms);
+
+		uniform_block_infos.emplace_back(name, i, size, get_uniform_infos(program, i));
+	}
+
+	return uniform_block_infos;
+}
 
 } // namespace Core
 } // namespace GM

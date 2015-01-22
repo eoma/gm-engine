@@ -66,5 +66,10 @@ ShaderVariableInfo Shader::get_uniform_info(const std::string &name) const
 	return info;
 }
 
+void Shader::set_uniform_block_infos(const std::vector<UniformBlockInfo> &new_uniform_blocks)
+{
+	uniform_block_infos = new_uniform_blocks;
+}
+
 } // namespace Core
 } // namespace GM
