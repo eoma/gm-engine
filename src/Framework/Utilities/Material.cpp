@@ -111,8 +111,6 @@ void Material::update_uniforms(Camera * camera, const std::vector<Light *> &ligh
 void Material::set_up_uniforms(const std::string &render_pass_name) {
 	PropertyToUniformConnector &settings = render_pass_configs[render_pass_name];
 
-	std::cout << "set up uniforms in material " << name << std::endl;
-
 	settings.connect_property_container(*this);
 }
 

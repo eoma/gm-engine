@@ -110,8 +110,6 @@ namespace GM {
 
 			Core::ShaderVariableInfo info = shader->get_uniform_info(name);
 
-			std::cout << "Will connect " << info.name << std::endl;
-
 			bool successfully_connected_property = determine_type_and_apply<CallConnectPropertyWithType>(info, *this, property, info.location);
 
 			if (!already_setup && successfully_connected_property) {
@@ -140,8 +138,6 @@ namespace GM {
 			{
 				return;
 			}
-
-			std::cout << "Add uniforms for property container!" << std::endl;
 
 			for (Core::ShaderVariableInfo info : shader->get_uniform_infos())
 			{
@@ -179,8 +175,6 @@ namespace GM {
 
 			int texture_unit = iter->second;
 			
-			std::cout << "Set up uniform texture " << property.get_name() << " with texture unit " << texture_unit << std::endl;
-
 			return [program, uniform_location, property, texture_unit]() {
 				if (property.get() == nullptr)
 				{
@@ -197,8 +191,6 @@ namespace GM {
 		template <class ValueType>
 		std::function<void()> PropertyToUniformConnector::create_uniform_update_function(const Property<ValueType> &property, const int uniform_location)
 		{
-			std::cout << "Set up uniform " << property.get_name() << std::endl;
-
 			unsigned int program = shader->get_handle();
 			return [program, uniform_location, property]() {
 				Core::update_uniform(program, uniform_location, property.get());

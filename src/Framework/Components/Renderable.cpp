@@ -79,7 +79,6 @@ Renderable::Renderable(const EntityPtr &owner, const RenderSystemPtr &render_sys
 		});
 
 	slots.connect(owner->property_added(), [this](std::shared_ptr<IProperty> property) {
-		std::cout << this->owner->get_name() << "." << get_type() << ": new property " << property->get_name() << std::endl;
 		for (auto &pair : uniforms_for_render_pass)
 		{
 			pair.second.connect(*property, std::string(), true);
@@ -96,11 +95,8 @@ void Renderable::set_up_uniform_listeners()
 {
 	uniforms_for_render_pass.clear();
 
-	std::cout << "set_up_uniform_listeners!" << std::endl;
-
 	for (const auto &pass_config_pair : material->get_render_pass_configs())
 	{
-		std::cout << "Set up pass " << pass_config_pair.first << std::endl;
 		PropertyToUniformConnector &uni_pass = uniforms_for_render_pass.emplace(std::make_pair(pass_config_pair.first, pass_config_pair.second.create_derivative())).first->second;
 
 		for (const auto &property_pair : owner->get_properties())
