@@ -66,7 +66,7 @@ namespace GM {
 
 		bool PropertyToUniformConnector::uniform_is_used(const std::string &name) const
 		{
-			return std::find(used_uniforms.begin(), used_uniforms.end(), name) == used_uniforms.end();
+			return std::find(used_uniforms.begin(), used_uniforms.end(), name) != used_uniforms.end();
 		}
 
 		// Helper class for connect_property, primarily used by determine_type_and_apply
