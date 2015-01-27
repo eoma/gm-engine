@@ -37,9 +37,11 @@ class MainComponentSerializer {
 public:
 	MainComponentSerializer(Main *app);
 	void create_and_add_component(const Framework::EntityPtr &owner, const std::string &type, const std::string &/*name*/);
+	void add_component_creator(const std::string &component_type_name, std::function<void(const Framework::EntityPtr &)> &&creator_function);
 private:
 	Main *app;
 	clan::SlotContainer slots;
+	std::unordered_map<std::string, std::function<void(const Framework::EntityPtr &owner)>> component_creators;
 };
 typedef std::shared_ptr<MainComponentSerializer> MainComponentSerializerPtr;
 
@@ -93,6 +95,8 @@ public:
 
 	static MainPtr create_with_no_context(const std::string &title, Main::Flags flags = Flags::GM_FRAMEWORK_ALL_DEFAULTS, Main::ErrorFlags error_flags = GM_ERROR_ALL_CHECKS);
 	static MainPtr create_with_gl_version(const std::string &title, unsigned int major, unsigned int minor, bool visible = true, bool construct_context = true, Main::Flags flags = Flags::GM_FRAMEWORK_ALL_DEFAULTS, Main::ErrorFlags error_flags = GM_ERROR_ALL_CHECKS);
+
+	const MainComponentSerializerPtr &get_component_serializer() const { return main_component_serializer; }
 
 	bool is_context_setup() const { return window != nullptr; };
 
