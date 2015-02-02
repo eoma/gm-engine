@@ -16,19 +16,19 @@ namespace GM {
 			 * A special method to determine glsl type and then call a class method with 
 			 * the appropriate type (usually one glm's) as a template parameter.
 			 *
-			 * The SomeClassType template type _must_ have a _templated_ method called void apply()
+			 * The SomeClassType template type _must_ have a _templated_ static method called void apply()
 			 * Your apply method can accept parameters, but they must be supplied on call of determine_type_and_apply.
 			 *
 			 * The following minimal class will accept the minimal requirement:
 			 * class SomeClassImplementation {
 			 * public:
-			 *     template<class T> void apply() {}
+			 *     template<class T> static void apply() {}
 			 * };
 			 *
 			 * The following will accept an argument:
 			 * class SomeImpl {
 			 * public:
-			 *     template<T> void apply(int a) { some_operations... }
+			 *     template<T> static void apply(int a) { some_operations... }
 			 * };
 			 *
 			 * and should be called as (eg.):
@@ -73,7 +73,7 @@ namespace GM {
 		class PropertyToUniformConnector::CallConnectPropertyWithType {
 		public:
 			template <class T>
-			void apply(PropertyToUniformConnector &inst, const IProperty &property, int uniform_location) {
+			static void apply(PropertyToUniformConnector &inst, const IProperty &property, int uniform_location) {
 				inst.connect_property_with_type<T>(property, uniform_location);
 			}
 
@@ -121,7 +121,7 @@ namespace GM {
 		class PropertyToUniformConnector::ConstructPropertyThenConnect {
 		public:
 			template<class T>
-			void apply(PropertyToUniformConnector &inst, PropertyContainer<> &property_container, const Core::ShaderVariableInfo &info) {
+			static void apply(PropertyToUniformConnector &inst, PropertyContainer<> &property_container, const Core::ShaderVariableInfo &info) {
 
 					if (property_container.has_property(info.name)) {
 						inst.connect(property_container.get<T>(info.name));
@@ -153,7 +153,11 @@ namespace GM {
 				throw clan::Exception(clan::string_format("Property is not of correct type, expected it to be %1!", typeid(ValueType).name()));
 			}
 
+#ifdef _DEBUG
+			const Property<ValueType>& property = dynamic_cast<const Property<ValueType>&>(base_property);
+#else
 			const Property<ValueType>& property = static_cast<const Property<ValueType>&>(base_property);
+#endif
 			uniform_slots.connect(update_uniforms_signal, create_uniform_update_function<ValueType>(property, uniform_location));
 		}
 
@@ -213,121 +217,121 @@ namespace GM {
 				{
 				case GL_BOOL:
 					{
-						SomeClassType().template apply<bool>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<bool>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 	
 				case GL_BYTE:
 					{
-						SomeClassType().template apply<char>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<char>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_UNSIGNED_BYTE:
 					{
-						SomeClassType().template apply<unsigned char>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<unsigned char>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_SHORT:
 					{
-						SomeClassType().template apply<short>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<short>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_UNSIGNED_SHORT:
 					{
-						SomeClassType().template apply<unsigned short>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<unsigned short>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_INT:
 					{
-						SomeClassType().template apply<int>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<int>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_UNSIGNED_INT:
 					{
-						SomeClassType().template apply<unsigned int>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<unsigned int>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_FLOAT:
 					{
-						SomeClassType().template apply<float>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<float>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_FLOAT_VEC2:
 					{
-						SomeClassType().template apply<glm::vec2>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<glm::vec2>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_INT_VEC2:
 					{
-						SomeClassType().template apply<glm::ivec2>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<glm::ivec2>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_UNSIGNED_INT_VEC2:
 					{
-						SomeClassType().template apply<glm::uvec2>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<glm::uvec2>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_FLOAT_VEC3:
 					{
-						SomeClassType().template apply<glm::vec3>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<glm::vec3>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_INT_VEC3:
 					{
-						SomeClassType().template apply<glm::ivec3>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<glm::ivec3>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_UNSIGNED_INT_VEC3:
 					{
-						SomeClassType().template apply<glm::uvec3>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<glm::uvec3>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_FLOAT_VEC4:
 					{
-						SomeClassType().template apply<glm::vec4>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<glm::vec4>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_INT_VEC4:
 					{
-						SomeClassType().template apply<glm::ivec4>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<glm::ivec4>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_UNSIGNED_INT_VEC4:
 					{
-						SomeClassType().template apply<glm::uvec4>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<glm::uvec4>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_FLOAT_MAT2:
 					{
-						SomeClassType().template apply<glm::mat2>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<glm::mat2>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_FLOAT_MAT3:
 					{
-						SomeClassType().template apply<glm::mat3>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<glm::mat3>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
 				case GL_FLOAT_MAT4:
 					{
-						SomeClassType().template apply<glm::mat4>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<glm::mat4>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
@@ -336,7 +340,7 @@ namespace GM {
 				case GL_SAMPLER_2D_SHADOW:
 				case GL_SAMPLER_CUBE_SHADOW:
 					{
-						SomeClassType().template apply<Core::TexturePtr>(std::forward<ApplyArgumentTypes>(arguments)...);
+						SomeClassType::template apply<Core::TexturePtr>(std::forward<ApplyArgumentTypes>(arguments)...);
 						break;
 					}
 		
