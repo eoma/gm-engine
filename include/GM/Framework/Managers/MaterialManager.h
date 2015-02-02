@@ -40,6 +40,12 @@ public:
 	 */
 	MaterialPtr get_or_create(const std::string& name, const std::string& shader_name);
 
+	/*
+	 * Gets or creates (if non-existing) a new material with a map of shader pass associations
+	 */
+	MaterialPtr get_or_create(const std::string& name, const std::map<std::string, 
+	                          std::string> &pass_shader_name_map);
+
 	/**
 	 * Read template definitions from the given file
 	 */

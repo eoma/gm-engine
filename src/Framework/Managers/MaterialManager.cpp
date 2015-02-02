@@ -62,7 +62,7 @@ MaterialPtr MaterialManager::get_or_create(const std::string &name)
 
 	//If not cached, let's see if there is a template description for this name.
 	template_manager->get(name, [this, name, &material](const MaterialTemplateManager::Template &t) {
-		material = get_or_create(name, t.shader);
+		material = get_or_create(name, t.shaders);
 		return material;
 	});
 
@@ -74,6 +74,11 @@ MaterialPtr MaterialManager::get_or_create(const std::string &name)
 
 MaterialPtr MaterialManager::get_or_create(const std::string& name, const std::string& shader_name)
 {
+	return get_or_create(name, std::map<std::string, std::string>{{"standard", shader_name}});
+}
+
+MaterialPtr MaterialManager::get_or_create(const std::string& name, const std::map<std::string, std::string> &pass_shaders)
+{
 	auto material = get(name);
 	if (material) {
 		//if (material->get_shader()->get_name() != shader_name) {
@@ -84,8 +89,13 @@ MaterialPtr MaterialManager::get_or_create(const std::string& name, const std::s
 		return material;
 	}
 
-	auto shader = shader_manager->get_or_create(shader_name);
-	material = MaterialPtr(new Material(texture_manager, shader, name));
+	std::map<std::string, Core::ShaderPtr> fetched_pass_shaders;
+	for (const auto &pass_iter : pass_shaders)
+	{
+		fetched_pass_shaders.emplace(pass_iter.first, shader_manager->get_or_create(pass_iter.second));
+	}
+
+	material = MaterialPtr(new Material(texture_manager, fetched_pass_shaders, name));
 	add(material);
 	return material;
 }

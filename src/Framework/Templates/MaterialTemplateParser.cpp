@@ -76,12 +76,36 @@ void MaterialTemplateParser::parse_templates(const std::string &data, std::funct
 			}
 		}
 
-		it = json_members.find("shader");
-		if (it == json_members.end())
-			throw Exception("shader is required");
-		if (!it->second.is_string())
-			throw Exception("shader must be a string");
-		t.shader = it->second.to_string();
+		bool has_pass_shader_map = false;
+
+		it = json_members.find("shaders");
+		if (it != json_members.end())
+		{
+			if (!it->second.is_object())
+				throw Exception("shaders must be an object!");
+
+			has_pass_shader_map = true;
+
+			for (const auto &member_it : it->second.get_members())
+			{
+				if (!member_it.second.is_string())
+					throw Exception("member values of shaders must be string!");
+
+				const std::string &pass_name = member_it.first;
+				const std::string shader_name = member_it.second.to_string();
+
+				t.shaders[pass_name] = shader_name;
+			}
+		}
+
+		if (!has_pass_shader_map) {
+			it = json_members.find("shader");
+			if (it == json_members.end())
+				throw Exception("shader is required");
+			if (!it->second.is_string())
+				throw Exception("shader must be a string");
+			t.shaders["standard"] = it->second.to_string();
+		}
 
 		it = json_members.find("uniforms");
 		if (it != json_members.end())

@@ -25,10 +25,10 @@ namespace GM {
 			struct Template {
 				std::string name;
 				std::vector<std::string> requires;
-				std::string shader;
+				std::map<std::string, std::string> shaders;
 				std::vector<Property> properties;
 
-				Template() : name(), requires(), shader(), properties() {}
+				Template() : name(), requires(), shaders(), properties() {}
 			};
 
 			void add_templates(const std::string &template_filename);

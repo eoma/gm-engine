@@ -51,7 +51,16 @@ void MaterialTemplateManager::apply_requirement(const std::string &template_name
 	{
 		if (StringHelp::compare(template_name, it_template.name, true) == 0)
 		{
-			if (t.shader.empty()) t.shader = it_template.shader;
+			for (const auto &pass_shader_iter : it_template.shaders)
+			{
+				const std::string &pass_name = pass_shader_iter.first;
+				const std::string &shader_name = pass_shader_iter.second;
+
+				bool pass_is_not_set = t.shaders.find(pass_name) == t.shaders.end();
+				if (pass_is_not_set) {
+					t.shaders.emplace(pass_name, shader_name);
+				}
+			}
 
 			return;
 		}

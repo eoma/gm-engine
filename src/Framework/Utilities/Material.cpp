@@ -1,6 +1,7 @@
 #include "GM/Framework/Utilities/Material.h"
 #include "GM/Framework/Managers/TextureManager.h"
 #include "GM/Framework/Components/Light.h"
+#include "GM/Framework/Components/Camera.h"
 #include "GM/Framework/DefinitionsPropertyNames.h"
 #include "GM/Core/GL/Shader.h"
 #include "GM/Core/GL/Texture.h"
@@ -12,12 +13,19 @@
 namespace GM {
 namespace Framework {
 
-	Material::Material(const TextureManagerPtr &texture_manager, const Core::ShaderPtr &standard_render_pass_shader, const std::string &name)
+Material::Material(const TextureManagerPtr &texture_manager, const Core::ShaderPtr &standard_render_pass_shader, const std::string &name)
+: Material(texture_manager, std::map<std::string, Core::ShaderPtr>{{"standard", standard_render_pass_shader}}, name)
+{
+}
+
+Material::Material(const TextureManagerPtr &texture_manager, const std::map<std::string, Core::ShaderPtr> &render_pass_shaders, const std::string &name)
 : name(name)
 , texture_manager(texture_manager)
 , used_uniforms()
 {
-	set_render_pass(standard_render_pass_shader);
+	for (const auto &iter : render_pass_shaders) {
+		set_render_pass(iter.second, iter.first);
+	}
 
 	property_added_slot = sign_PropertyAdded.connect([this](IPropertyPtr p) {
 		if (IProperty::is_type<std::string>(p)) {
@@ -46,9 +54,13 @@ const Core::ShaderPtr &Material::get_render_pass(const std::string &render_pass_
 }
 
 void Material::set_render_pass(const Core::ShaderPtr &shader, const std::string &render_pass_name) {
-	render_pass_configs[render_pass_name] = PropertyToUniformConnector(shader);
+	if (shader == nullptr)
+	{
+		return;
+	}
 
-	set_up_uniforms(render_pass_name);
+	render_pass_configs[render_pass_name] = PropertyToUniformConnector(shader);
+	render_pass_configs[render_pass_name].connect_property_container(*this);
 }
 
 //
@@ -98,20 +110,21 @@ void Material::update_uniforms(Camera * camera, const std::vector<Light *> &ligh
 			}
 		}
 	}
+
+	if (has_property(GM_PROPERTY_PROJECTION_MATRIX)) {
+		get<glm::mat4>(GM_PROPERTY_PROJECTION_MATRIX) = camera->get_projection_matrix();
+	}
+
+	if (has_property(GM_PROPERTY_VIEW_MATRIX)) {
+		get<glm::mat4>(GM_PROPERTY_VIEW_MATRIX) = camera->get_view_matrix();
+	}
+
 	render_pass_configs[render_pass_name].update_uniforms(); 
 
 	// If this material is using tesselation, this property must be set with the amount of patch vertices to generate.
 	if (patch_vertices_property > 0) {
 		glPatchParameteri(GL_PATCH_VERTICES, patch_vertices_property);
 	}
-}
-
-//
-
-void Material::set_up_uniforms(const std::string &render_pass_name) {
-	PropertyToUniformConnector &settings = render_pass_configs[render_pass_name];
-
-	settings.connect_property_container(*this);
 }
 
 } // namespace Framework

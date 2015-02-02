@@ -31,6 +31,7 @@ class Material : public PropertyContainer<>
 {
 public:
 	Material(const TextureManagerPtr &texture_manager, const Core::ShaderPtr &standard_render_pass_shader, const std::string &name);
+	Material(const TextureManagerPtr &texture_manager, const std::map<std::string, Core::ShaderPtr> &pass_shaders, const std::string &name);
 	virtual ~Material() {};
 
 	const std::string &get_name() const { return name; }
@@ -45,9 +46,6 @@ public:
 	// Specific render pass configurations, useful for renderable
 	const PropertyToUniformConnector &get_render_pass_config(const std::string &render_pass_name) const;
 	const std::map<std::string, PropertyToUniformConnector> &get_render_pass_configs() const;
-
-private:
-	void set_up_uniforms(const std::string &render_pass_name);
 
 private:
 	std::string name;
