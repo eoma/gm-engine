@@ -50,7 +50,7 @@ Camera::Camera(const EntityPtr &owner, const RenderSystemPtr &render_system, con
 	render_system->add_camera(this);
 
 	render_texture = std::make_shared<Core::ReadWriteTexture>(GL_TEXTURE_2D);
-	texture_manager->add(clan::string_format("%1_camera_rt", owner->get_name()), render_texture);
+	texture_manager->add(clan::string_format("%1.camera_rt", owner->get_name()), render_texture);
 
 }
 
@@ -100,12 +100,9 @@ void Camera::initialize() {
 		texture_data.height = current_height;
 		texture_data.internal_format = GL_RGBA32F;
 		texture_data.texture_format = GL_RGBA;
-		texture_data.data_type = (GLenum)GL_FLOAT;
-		texture_data.data_ptr = nullptr;
 
 		render_texture->set_readable(Core::TextureFactory::create(*texture_format, texture_data));
 		render_texture->set_writable(Core::TextureFactory::create(*texture_format, texture_data));
-
 	}
 
 	// Hopefully all necessary pass components has been added
