@@ -312,6 +312,11 @@ void Main::run(bool destruct_window_and_gl_on_exit)
 
 void Main::initialize()
 {
+	if (has_render_system())
+	{
+		render_system->resize(resolution.get().x, resolution.get().y);
+	}
+
 	if (initialize_entities) {
 		entity_manager->initialize();
 	}
