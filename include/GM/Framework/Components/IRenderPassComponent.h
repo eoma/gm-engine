@@ -28,6 +28,11 @@ namespace GM {
 			virtual ~IRenderPassComponent() {};
 
 			/**
+			 * Get type name of this component
+			 */
+			virtual std::string get_type() const = 0;
+
+			/**
 			 * Supposed to actually build or setup the render pass component.
 			 * This method will be triggered when all inputs and output are set.
 			 */
