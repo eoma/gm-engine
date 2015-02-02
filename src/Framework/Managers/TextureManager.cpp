@@ -287,5 +287,16 @@ void TextureManager::add(const std::string &texture_name, const Core::TexturePtr
 	texture_to_name[texture] = texture_name;
 }
 
+std::string TextureManager::get_texture_name(const Core::TexturePtr &texture) const
+{
+	const auto iter = texture_to_name.find(texture);
+	if (iter != texture_to_name.end())
+	{
+		return iter->second;
+	}
+
+	return std::string();
+}
+
 } // namespace Framework
 } // namespace GM

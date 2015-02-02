@@ -44,6 +44,8 @@ public:
 	Core::TexturePtr get_or_create(const std::string &texture_name, const RawImage &image, const Core::TextureFormat &format);
 	Core::TexturePtr get_or_create(const std::string &texture_name, const std::vector<RawImagePtr> &images, const Core::TextureFormat &format);
 
+	std::string get_texture_name(const Core::TexturePtr &texture) const;
+
 	Core::TextureFormatPtr get_format(const std::string &format_name);
 	Core::TextureFormatPtr get_or_create_format(const std::string &format_name, 
 		const std::string &type,
