@@ -19,15 +19,15 @@ TextureTemplateManager::TextureTemplateManager() {
 }
 
 void TextureTemplateManager::get(const std::string &template_name, std::function<void(const TextureTemplateManager::Template &)> func) {
-	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
+	for (auto &it_template : templates)
 	{
-		if (StringHelp::compare(template_name, it_template->name, true) == 0)
+		if (StringHelp::compare(template_name, it_template.name, true) == 0)
 		{
-			for (auto it_require = it_template->requires.begin(); it_require != it_template->requires.end(); ++it_require)
+			for (const auto &it_require : it_template.requires)
 			{
-				apply_requirement((*it_require), (*it_template));
+				apply_requirement(it_require, it_template);
 			}
-			if(func) func((*it_template));
+			if(func) func(it_template);
 
 			return;
 		}
@@ -35,16 +35,16 @@ void TextureTemplateManager::get(const std::string &template_name, std::function
 }
 
 void TextureTemplateManager::apply_requirement(const std::string &template_name, TextureTemplateManager::Template &t) {
-	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
+	for (const auto &it_template : templates)
 	{
-		if (StringHelp::compare(template_name, it_template->name, true) == 0)
+		if (StringHelp::compare(template_name, it_template.name, true) == 0)
 		{
 			if (t.images.empty()) { 
-				for (auto image_filename : it_template->images) {
+				for (auto image_filename : it_template.images) {
 					t.images.push_back(image_filename);
 				}
 			}
-			if (t.format.empty()) t.format = it_template->format;
+			if (t.format.empty()) t.format = it_template.format;
 			return;
 		}
 	}

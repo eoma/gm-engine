@@ -22,16 +22,16 @@ void MeshTemplateManager::get(const std::string &template_name, std::function<vo
 	if (func == nullptr)
 		return;
 
-	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
+	for (auto &it_template : templates)
 	{
-		if (StringHelp::compare(template_name, it_template->name, true) == 0)
+		if (StringHelp::compare(template_name, it_template.name, true) == 0)
 		{
-			for (auto it_require = it_template->requires.begin(); it_require != it_template->requires.end(); ++it_require)
+			for (const auto &it_require : it_template.requires)
 			{
-				apply_requirement((*it_require), (*it_template));
+				apply_requirement(it_require, it_template);
 			}
 
-			func((*it_template));
+			func(it_template);
 
 			return;
 		}
@@ -39,12 +39,12 @@ void MeshTemplateManager::get(const std::string &template_name, std::function<vo
 }
 
 void MeshTemplateManager::apply_requirement(const std::string &template_name, MeshTemplateManager::Template &t) {
-	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
+	for (const auto &it_template : templates)
 	{
-		if (StringHelp::compare(template_name, it_template->name, true) == 0)
+		if (StringHelp::compare(template_name, it_template.name, true) == 0)
 		{
-			if (t.filename.empty()) t.filename = it_template->filename;
-			if (t.mesh_index == 0) t.mesh_index = it_template->mesh_index;
+			if (t.filename.empty()) t.filename = it_template.filename;
+			if (t.mesh_index == 0) t.mesh_index = it_template.mesh_index;
 			return;
 		}
 	}

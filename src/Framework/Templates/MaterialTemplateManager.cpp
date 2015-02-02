@@ -22,23 +22,23 @@ void MaterialTemplateManager::get(const std::string &template_name, std::functio
 	if (func == nullptr)
 		return;
 
-	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
+	for (auto &it_template : templates)
 	{
-		if (StringHelp::compare(template_name, it_template->name, true) == 0)
+		if (StringHelp::compare(template_name, it_template.name, true) == 0)
 		{
-			for (auto it_require = it_template->requires.begin(); it_require != it_template->requires.end(); ++it_require)
+			for (const auto &it_require : it_template.requires)
 			{
-				apply_requirement((*it_require), (*it_template));
+				apply_requirement(it_require, it_template);
 			}
 
-			auto material = func((*it_template));
+			auto material = func(it_template);
 
-			for (auto it_require = it_template->requires.begin(); it_require != it_template->requires.end(); ++it_require)
+			for (const auto &it_require : it_template.requires)
 			{
-				apply_properties((*it_require), material);
+				apply_properties(it_require, material);
 			}
 
-			apply_properties(it_template->name, material);
+			apply_properties(it_template.name, material);
 			
 
 			return;
@@ -47,24 +47,26 @@ void MaterialTemplateManager::get(const std::string &template_name, std::functio
 }
 
 void MaterialTemplateManager::apply_requirement(const std::string &template_name, MaterialTemplateManager::Template &t) {
-	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
+	for (const auto &it_template : templates)
 	{
-		if (StringHelp::compare(template_name, it_template->name, true) == 0)
+		if (StringHelp::compare(template_name, it_template.name, true) == 0)
 		{
-			if (t.shader.empty()) t.shader = it_template->shader;
+			if (t.shader.empty()) t.shader = it_template.shader;
+
 			return;
 		}
 	}
 }
 
 void MaterialTemplateManager::apply_properties(const std::string &template_name, const MaterialPtr &material) {
-	for (auto it_template = templates.begin(); it_template != templates.end(); ++it_template)
+	for (const auto &it_template : templates)
 	{
-		if (StringHelp::compare(template_name, it_template->name, true) == 0)
+		if (StringHelp::compare(template_name, it_template.name, true) == 0)
 		{
-			for (auto it_property = it_template->properties.begin(); it_property != it_template->properties.end(); ++it_property)
+			for (const auto &it_property : it_template.properties)
 			{
-				PropertySerializer::create_and_add_property(*material, (*it_property).type_id, (*it_property).name, (*it_property).value);
+				PropertySerializer::create_and_add_property(*material, 
+					it_property.type_id, it_property.name, it_property.value);
 			}
 			return;
 		}
