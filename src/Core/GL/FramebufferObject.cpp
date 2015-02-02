@@ -118,15 +118,23 @@ glm::vec4 FramebufferObject::pick(int x, int y, GLenum attachment)
 void FramebufferObject::set_draw_buffer_as_map(const std::map<unsigned int, GLenum> &new_draw_buffer_assignment)
 {
 	draw_buffer_assignment = new_draw_buffer_assignment;
-	unsigned int biggest = draw_buffer_assignment.rbegin()->first;
-	std::vector<GLenum> draw_buffers(biggest + 1, GL_NONE);
 
-	for (auto iter : draw_buffer_assignment)
+	if (!draw_buffer_assignment.empty())
 	{
-		draw_buffers[iter.first] = iter.second;
-	}
+		unsigned int biggest = draw_buffer_assignment.rbegin()->first;
+		std::vector<GLenum> draw_buffers(biggest + 1, GL_NONE);
 
-	glDrawBuffers(draw_buffers.size(), draw_buffers.data());
+		for (auto iter : draw_buffer_assignment)
+		{
+			draw_buffers[iter.first] = iter.second;
+		}
+
+		glDrawBuffers(draw_buffers.size(), draw_buffers.data());
+	}
+	else
+	{
+		glDrawBuffer(GL_NONE);
+	}
 }
 
 const std::map<unsigned int, GLenum> &FramebufferObject::get_draw_buffer_as_map() const
