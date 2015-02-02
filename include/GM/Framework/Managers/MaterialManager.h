@@ -14,17 +14,35 @@ namespace Framework {
 
 class MaterialManager {
 public:
-	MaterialManager(const ShaderManagerPtr &shader_manager, const TextureManagerPtr &texture_manager);
+	MaterialManager(const ShaderManagerPtr &shader_manager,
+	                const TextureManagerPtr &texture_manager);
 	~MaterialManager();
 
 	bool contains(const std::string &name) const;
 
 	void add(const MaterialPtr &material);
 
+	/**
+	 * Gets and returns a shared pointer to an already defined material
+	 * or return a nullptr if the named material does not exist
+	 */
 	MaterialPtr get(const std::string& name) const;
+
+	/**
+	 * Creates a material based on a template. Will in essence call get_or_create() with a map
+	 * of shader pass associations and insert the properties defined in the template.
+	 */
 	MaterialPtr get_or_create(const std::string& name);
+
+	/**
+	 * Gets or creates (if non-existing) a new material with a single 
+	 * shader associated to the standard pass.
+	 */
 	MaterialPtr get_or_create(const std::string& name, const std::string& shader_name);
 
+	/**
+	 * Read template definitions from the given file
+	 */
 	void add_templates(const std::string &template_filename);
 public:
 
