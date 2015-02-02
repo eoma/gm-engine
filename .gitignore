@@ -26,7 +26,10 @@
 
 # Other
 .clang_complete
+.ycm_extra_conf.py
+.ycm_extra_conf.pyc
 .DS_Store
+compile_commands.json
 
 # Folders
 /build/*
