@@ -91,5 +91,9 @@ namespace GM {
 		{
 		}
 
+		std::string FinalPass::get_type() const {
+			return "FinalPass";
+		}
+
 	} // namespace Framework
 } // namespace GM

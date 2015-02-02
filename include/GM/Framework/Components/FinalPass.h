@@ -20,6 +20,8 @@ namespace GM {
 			FinalPass();
 			virtual ~FinalPass();
 
+			std::string get_type() const override;
+
 			void build() override;
 
 			void pass(RenderSystem * const render_system) override;
