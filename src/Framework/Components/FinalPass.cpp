@@ -11,6 +11,7 @@ namespace GM {
 	namespace Framework {
 
 		FinalPass::FinalPass()
+		: resolution(1,1)
 		{
 		}
 
@@ -53,6 +54,16 @@ namespace GM {
 				,
 				GL_FRAGMENT_SHADER
 			);
+			
+			int in_width = 0;
+			int in_height = 0;
+
+			input_texture->bind();
+			glGetTexLevelParameteriv(input_texture->get_type(), 0, GL_TEXTURE_WIDTH, &in_width);
+			glGetTexLevelParameteriv(input_texture->get_type(), 0, GL_TEXTURE_HEIGHT, &in_height);
+			input_texture->unbind();
+
+			resolution = glm::vec2(in_width, in_height);
 
 			// Move shader generation until where it is needed
 			shader = Core::ShaderFactory::make_program({vertex, fragment});
@@ -66,6 +77,7 @@ namespace GM {
 			vao->bind();
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glDrawBuffer(GL_BACK);
+			glViewportIndexedf(0, 0, 0, resolution.x, resolution.y);
 			glClearColor(0,0,0,0);
 			glClearDepth(1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

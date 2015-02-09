@@ -37,6 +37,8 @@ namespace GM {
 			Core::VertexArrayObjectPtr vao;
 
 			int tex_uniform;
+
+			glm::vec2 resolution;
 		};
 
 		typedef std::shared_ptr<FinalPass> FinalPassPtr;
