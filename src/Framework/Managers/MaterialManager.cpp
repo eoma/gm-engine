@@ -100,6 +100,11 @@ MaterialPtr MaterialManager::get_or_create(const std::string& name, const std::m
 	return material;
 }
 
+const std::map<std::string, MaterialPtr> &MaterialManager::get_materials() const
+{
+	return materials;
+}
+
 void MaterialManager::add_templates(const std::string &template_filename)
 {
 	template_manager->add_templates(template_filename);

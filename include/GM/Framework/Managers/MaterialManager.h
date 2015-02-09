@@ -47,6 +47,11 @@ public:
 	                          std::string> &pass_shader_name_map);
 
 	/**
+	 * Retrieve all registered and instantiated materials
+	 */
+	const std::map<std::string, MaterialPtr> &get_materials() const;
+
+	/**
 	 * Read template definitions from the given file
 	 */
 	void add_templates(const std::string &template_filename);
