@@ -14,8 +14,8 @@ public:
 	SceneSystem();
 	~SceneSystem();
 
-	// Prepare the transform
-	void prepare();
+	// Prepare the transforms
+	void prepare(bool force_update = false);
 
 	void add(Transform * const transform);
 	void add(Transform * const child, Transform * const parent);
@@ -32,7 +32,7 @@ public:
 
 private:
 	// Walk through the tree and update object and world matrices, if necessary
-	void prepare(Transform *transform, bool must_update_world = false);
+	void prepare(Transform *transform, bool must_update_world = false, bool force_update = false);
 
 private:
 	// SceneManager will not attempt to destruct these when it is itself destructed.

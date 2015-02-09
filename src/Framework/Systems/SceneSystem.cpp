@@ -94,26 +94,26 @@ const std::vector<Transform*> &SceneSystem::get_transforms() const {
 	return parentless_transforms;
 }
 
-void SceneSystem::prepare() {
+void SceneSystem::prepare(bool force_update_world) {
 	for (Transform *transform : parentless_transforms) {
-		prepare(transform);
+		prepare(transform, false, force_update_world);
 	}
 
 }
 
-void SceneSystem::prepare(Transform *transform, bool must_update_world) {
-	if (transform->is_dirty()) {
+void SceneSystem::prepare(Transform *transform, bool must_update_world, bool force_update) {
+	if (transform->is_dirty() || force_update) {
 		transform->update_object_matrix();
 		transform->clear_dirty();
 
 		must_update_world = true;
 	}
 
-	if (must_update_world) {
+	if (must_update_world || force_update) {
 		transform->update_world_matrix();
 	}
 
 	for (Transform *child : transform->get_children()) {
-		prepare(child, must_update_world);
+		prepare(child, must_update_world, force_update);
 	}
 }
