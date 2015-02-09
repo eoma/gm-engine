@@ -189,7 +189,7 @@ void RenderSystem::pass(Camera * const camera, const std::string &render_pass_na
 				// unbind previous?
 				active_material = renderable->get_material();
 
-				if (active_material == nullptr)
+				if (active_material == nullptr || !active_material->has_render_pass(render_pass_name))
 				{
 					continue; // Jump to next renderable
 				}
