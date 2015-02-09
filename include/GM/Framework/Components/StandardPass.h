@@ -47,6 +47,8 @@ namespace GM {
 			Camera *camera;
 			Core::FramebufferObjectPtr framebuffer;
 			Core::TexturePtr output_texture;
+
+			glm::vec2 resolution;
 		};
 
 	} // namespace Framework

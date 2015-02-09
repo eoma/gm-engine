@@ -20,6 +20,7 @@ namespace GM
 		: Component<StandardPass>(owner, name)
 		, camera(nullptr)
 		, framebuffer(nullptr)
+		, resolution(1,1)
 		{
 		}
 
@@ -61,6 +62,8 @@ namespace GM
 			glGetTexLevelParameteriv(output_texture->get_type(), 0, GL_TEXTURE_HEIGHT, &out_height);
 			output_texture->unbind();
 
+			resolution = glm::vec2(out_width, out_height);
+
 			framebuffer->bind();
 			framebuffer->add(GL_COLOR_ATTACHMENT0, output_texture);
 			framebuffer->add(GL_DEPTH_ATTACHMENT, std::make_shared<Core::RenderbufferObject>(GL_DEPTH_COMPONENT32F, out_width, out_height));
@@ -76,6 +79,7 @@ namespace GM
 		void StandardPass::pass(RenderSystem *render_system)
 		{
 			framebuffer->bind();
+			glViewportIndexedf(0, 0, 0, resolution.x, resolution.y);
 			glEnable(GL_CULL_FACE);
 			glEnable(GL_DEPTH_TEST);
 
