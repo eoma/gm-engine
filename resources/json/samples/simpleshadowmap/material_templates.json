@@ -1,0 +1,26 @@
+[
+	{
+		"material": "defaultShadowMaterial",
+		"shaders": {
+			"shadow": "default_shadow"
+		},
+		"uniforms": []
+	},
+	{
+		"material": "default_unspecified_diffuse",
+		"shader": "diffuse",
+		"uniforms": []
+	},
+	{
+		"material": "unspecified_diffuse",
+		"requires": ["defaultShadowMaterial"],
+		"shader": "diffuse_shadow",
+		"uniforms": [
+			{
+				"name": "ShadowTexture",
+				"value": "light_and_shadow.simple_shadow_map",
+				"type": "texture"
+			}
+		]
+	}
+]

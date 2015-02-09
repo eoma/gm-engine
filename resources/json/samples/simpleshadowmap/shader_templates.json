@@ -1,0 +1,19 @@
+[
+	{
+		"shader": "default_shadow",
+		"vertex_shader": "default_shadow.vs",
+		"fragment_shader": "default_shadow.fs"
+	},
+	{
+		"shader": "diffuse",
+		"requires": [ "default" ],
+		"vertex_shader": "diffuse.vs",
+		"fragment_shader": "diffuse.fs"
+	},
+	{
+		"shader": "diffuse_shadow",
+		"requires": [ "default" ],
+		"vertex_shader": "diffuse.vs",
+		"fragment_shader": "diffuse_with_shadow.fs"
+	}
+]

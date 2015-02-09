@@ -1,0 +1,204 @@
+[
+	{
+		"entity": "spaceship",
+		"components": [ "Renderable", "Transform", "IdleRotation" ],
+		"properties": [
+			{
+				"name": "MeshName",
+				"value": "spaceship"
+			},
+			{
+				"name": "MaterialName",
+				"value": "unspecified_diffuse"
+			},
+			{
+				"name": "diffuse",
+				"value": [0.1, 0.9, 0.1],
+				"type": "vec3"
+			},
+			{
+				"name": "Position",
+				"value": [0,-1,0],
+				"type": "vec3"
+			},
+			{
+				"name": "Scale",
+				"value": [0.0025, 0.0025, 0.0025],
+				"type": "vec3"
+			}
+		]
+	},
+	{
+		"entity": "rotator",
+		"components": ["Transform", "IdleRotation"],
+		"properties": [
+			{
+				"name": "Position",
+				"value": [0,0,0],
+				"type": "vec3"
+			},
+			{
+				"name": "RotationAxis",
+				"value": [0, 0, 1],
+				"type": "vec3"
+			},
+			{
+				"name": "RotationFrequency",
+				"value": 0.025
+			}
+		]
+	},
+	{
+		"entity": "light_and_shadow",
+		"components": [ "Light", "Transform", "Camera", "SimpleShadowMap" ],
+		"properties": [
+			{
+				"name": "RenderToScreen",
+				"value": false
+			},
+			{
+				"name": "FOV",
+				"value": 90
+			},
+			{
+				"name": "NearClipping",
+				"value": 0.1
+			},
+			{
+				"name": "FarClipping",
+				"value": 1000
+			},
+			{
+				"name": "Position",
+				"value": [0,3,0],
+				"type": "vec3"
+			},
+			{
+				"name": "Orientation",
+				"value": [-90, 0, 0],
+				"type": "quat_euler_angles_deg"
+			},
+			{
+				"name": "Radius",
+				"value": 100.0
+			},
+			{
+				"name": "MaterialColorDiffuse",
+				"value": [1,1,1],
+				"type": "vec3"
+			},
+			{
+				"name": "MaterialColorSpecular",
+				"value": [1,1,1],
+				"type": "vec3"
+			},
+			{
+				"name": "MaterialColorAmbient",
+				"value": [1,1,1],
+				"type": "vec3"
+			},
+			{
+				"name": "Activated",
+				"value": true,
+				"type": "bool"
+			}
+		]
+	},
+	{
+		"entity": "cube",
+		"components": [ "Renderable", "Transform" ],
+		"properties": [
+			{
+				"name": "MeshName",
+				"value": "cube"
+			},
+			{
+				"name": "MaterialName",
+				"value": "default_unspecified_diffuse"
+			},
+			{
+				"name": "diffuse",
+				"value": [0, 0, 1],
+				"type": "vec3"
+			}
+		]
+	},
+	{
+		"entity": "small_cube",
+		"requires": ["cube"],
+		"properties": [
+			{
+				"name": "diffuse",
+				"value": [1, 0, 0],
+				"type": "vec3"
+			},
+			{
+				"name": "Position",
+				"value": [0, 0, 0],
+				"type": "vec3"
+			},
+			{
+				"name": "Scale",
+				"value": [0.25, 0.25, 0.25],
+				"type": "vec3"
+			}
+		]
+	},
+	{
+		"entity": "surface",
+		"requires": ["cube"],
+		"properties": [
+			{
+				"name": "MaterialName",
+				"value": "unspecified_diffuse"
+			},
+			{
+				"name": "diffuse",
+				"value": [0.6, 0.6, 0.6],
+				"type": "vec3"
+			},
+			{
+				"name": "Position",
+				"value": [0,-2,0],
+				"type": "vec3"
+			},
+			{
+				"name": "Scale",
+				"value": [2, 0.1, 2],
+				"type": "vec3"
+			}
+		]
+	},
+	{
+		"entity": "camera",
+		"components": [ "FPSController", "Camera", "Transform" ],
+		"properties": [
+			{
+				"name": "RenderToScreen",
+				"value": true,
+				"type": "bool"
+			},
+			{
+				"name": "FOV",
+				"value": 45
+			},
+			{
+				"name": "NearClipping",
+				"value": 0.1
+			},
+			{
+				"name": "FarClipping",
+				"value": 1000
+			},
+			{
+				"name": "Position",
+				"value": [0,0,10],
+				"type": "vec3"
+			},
+			{
+				"name": "Speed",
+				"value": 0.5
+			}
+		]
+	}
+]
