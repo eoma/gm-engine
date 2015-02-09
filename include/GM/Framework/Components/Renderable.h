@@ -35,13 +35,26 @@ public:
 
 	virtual unsigned int get_render_layers() const override { return render_layers; }
 
+	/**
+	 * Set a material name. The relevant material will be fetched from the material
+	 * manager.
+	 *
+	 * @param material_name name of a material existing in the material manager
+	 */
 	void set_material(const std::string& material_name) { material_name_property = material_name; }
+
 	virtual const MaterialPtr &get_material() const override { return material; }
 
-	// Set mesh name, which triggers a fetching of the mesh
+	/**
+	 * Set mesh name, which triggers a fetching of the mesh from the mesh manager.
+	 *
+	 * @param material_name name of a mesh existing in the material manager
+	 */
 	void set_mesh(const std::string &mesh_name) { mesh_name_property = mesh_name; }
 
-	// Lets you set a custom mesh
+	/**
+	 * Set a custom instantiation of a mesh.
+	 */
 	void set_mesh(const MeshPtr &new_mesh) { mesh = new_mesh; }
 
 	virtual const MeshPtr &get_mesh() const override { return mesh; }
@@ -52,6 +65,9 @@ public:
 
 	virtual void update_uniforms(Camera *camera, const std::string &render_pass_name) override;
 
+	/**
+	 * If the mesh has normals, update the normal matrix based on the camera's view matrix.
+	 */
 	void update_normal_matrix(const glm::mat4 &view_matrix);
 
 public:

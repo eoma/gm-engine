@@ -21,7 +21,7 @@ namespace GM {
 		class Entity; typedef std::shared_ptr<Entity> EntityPtr;
 
 		/**
-		 * A simple pass that will draw to a texture.
+		 * A simple pass that will render meshes to a texture.
 		 */
 		class StandardPass : public Component<StandardPass>, public IRenderPassComponent {
 		public:

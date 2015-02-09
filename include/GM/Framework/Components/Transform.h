@@ -31,23 +31,61 @@ public:
 
 	std::string get_type() const override { return get_static_type(); }
 
+	/**
+	 * Scene tree relevant methods
+	 */
+
+	/**
+	 * Add a Transform as a direct child
+	 */
 	void add_child(const TransformPtr &child) { add_child( child.get() ); };
 	void add_child(Transform * const child);
 
+	/**
+	 * Remove a transform as a direct child
+	 */
 	void remove_child(const TransformPtr &child) { remove_child( child.get() ); };
 	void remove_child(Transform * const child);
 
-
-	// These signals are invoked when a child is added or removed from this transform.
-	// Ther order of parameters: parent, then child
+	/**
+	 * These signals are invoked when a child is added or removed from this transform.
+	 * Their order of parameters: parent, then child
+	 */
 	clan::Signal<void(const Transform* const, const Transform* const)> &get_child_added_signal() { return child_added_sig; };
 	clan::Signal<void(const Transform* const, const Transform* const)> &get_child_removed_signal() { return child_removed_sig; };
 
+	/**
+	 * Get current parent, if no parent exists it will return nullptr
+	 *
+	 * @return currrent parent or nullptr if not set.
+	 */
 	Transform* get_parent() const;
 	const std::vector<Transform*>& get_children() const;
 
+	/**
+	 * Check if this transform has a parent
+	 */
 	bool has_parent() const;
+
+	/**
+	 * Check if this transform has children
+	 */
 	bool has_children() const;
+
+	//
+	//
+	//
+
+
+	/**
+	 * Check whether position, orientation or scale is dirty.
+	 */
+	bool is_dirty() const;
+
+	/**
+	 * Clear dirty flag on the position, orientation and scale properties
+	 */
+	void clear_dirty();
 
 	// Position and orientation is always relative to this Transforms's (possible) parent
 	// Scale will only work on _this_ object. It will not be passed on to children.
@@ -63,29 +101,61 @@ public:
 	void scale(const glm::vec3 &scale) { scale_property += scale; }
 	void rotate(const glm::quat &orientation) { orientation_property *= orientation; }
 
-	// Being able to get position in world space is useful for systems (like moving a "disconnected" camera to a light's position)
-	// Currently computed everytime it is needed
+	/**
+	 * Being able to get position in world space is useful for systems 
+	 * (like moving a "disconnected" camera to a light's position)
+	 * Currently computed everytime it is needed.
+	 *
+	 * @return position in world space
+	 */
 	glm::vec3 get_position_in_worldspace() const;
 
-	// This is the orientation property converted to a 3x3 matrix. Read only
+	/**
+	 * Returns the orientation property converted to a 3x3 matrix. Read only
+	 *
+	 * @return the orientation matrix
+	 */
 	const glm::mat3 &get_orientation_matrix() const { return orientation_matrix_property; }
 
-	// Called by SceneSystem
-	bool is_dirty() const;
-	void clear_dirty();
-
+	/**
+	 * Get current world matrix. Will only be updated after update_world_matrix() has been called.
+	 */
 	const glm::mat4 &get_world_matrix() const { return world_matrix_property; };
+
+	/**
+	 * Get current world matrix without the scale property applied.
+	 * Used mostly by SceneSystem.
+	 *
+	 * @return world matrix without scale
+	 */
 	const glm::mat4 &get_world_matrix_no_scale() const { return world_matrix_no_scale_property; };
 
-	// Essentially goes world_matrix_property = make_world_matrix();
-	// You need only call this to update, world and object
+	/**
+	 * Updates world matrix and world matrix without scale.
+	 *
+	 * world matrix = parent world matrix without scale * object matrix.
+	 */
 	void update_world_matrix();
 
+	/**
+	 * Get current object matrix.
+	 *
+	 * @return object matrix
+	 */
 	const glm::mat4 &get_object_matrix() const { return object_matrix_property; };
+
+	/**
+	 * Get object matrix without scale.
+	 *
+	 * @return object matrix without scale
+	 */
 	const glm::mat4 &get_object_matrix_no_scale() const { return object_matrix_no_scale_property; };
 
-	// Essentially goes object_matrix_property = make_object_matrix() if
-	// dependent properties (position, orientation, scale) has changed.
+	/**
+	 * Updates object matrix and object matrix without scale.
+	 * Sets object_matrix_property = make_object_matrix() if dependent 
+	 * properties (position, orientation, scale) has changed.
+	 */
 	void update_object_matrix();
 
 public:

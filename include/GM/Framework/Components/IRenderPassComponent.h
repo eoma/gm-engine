@@ -48,7 +48,20 @@ namespace GM {
 			 * Post process passes should accept an input source and an output source.
 			 */
 			virtual bool uses_render_texture_from_camera() const = 0;
+
+			/**
+			 * Set input texture of this pass. Should only be read from.
+			 *
+			 * @param input_texture the texture to read from
+			 */
 			virtual void set_input_texture(const Core::TexturePtr &input_texture) = 0;
+
+			/**
+			 * Set output texture of this pass. The pass should write it's final values
+			 * in to this texture.
+			 *
+			 * @param output_texture the texture to write to
+			 */
 			virtual void set_output_texture(const Core::TexturePtr &output_texture) = 0;
 		};
 
