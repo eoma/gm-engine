@@ -24,6 +24,8 @@ namespace GM {
 
 		private:
 			Framework::Property<glm::quat> orientation_property;
+			Framework::Property<glm::vec3> rotation_axis_property;
+			Framework::Property<float> rotation_frequency_property;
 		};
 	}
 }
