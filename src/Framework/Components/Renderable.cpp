@@ -107,14 +107,6 @@ void Renderable::set_up_uniform_listeners()
 }
 
 void Renderable::update_uniforms(Camera *camera, const std::string &render_pass_name) { 
-	if (material->has_property(GM_PROPERTY_PROJECTION_MATRIX)) {
-		material->get<glm::mat4>(GM_PROPERTY_PROJECTION_MATRIX) = camera->get_projection_matrix();
-	}
-
-	if (material->has_property(GM_PROPERTY_VIEW_MATRIX)) {
-		material->get<glm::mat4>(GM_PROPERTY_VIEW_MATRIX) = camera->get_view_matrix();
-	}
-
 	// Let's only actually update the normal matrix value based on world and view matrix if the shader use it.
 	if (material->has_property(GM_PROPERTY_NORMAL_MATRIX)) {
 		update_normal_matrix(camera->get_view_matrix());
