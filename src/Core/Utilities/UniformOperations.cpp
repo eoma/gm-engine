@@ -112,19 +112,5 @@ void update_uniform(unsigned int program, int location, const glm::mat4 &data)
 	glProgramUniformMatrix4fv(program, location, 1, false, glm::value_ptr(data));
 }
 
-//
-// Textures
-//
-
-void update_uniform(unsigned int program, int location, const TexturePtr &data)
-{
-	//glProgramUniform1i(program, location, 0);
-}
-
-void update_uniform(unsigned int program, int location, const TexturePtr &data, int texture_unit)
-{
-	glProgramUniform1i(program, location, texture_unit);
-}
-
 } // namespace Core
 } // namespace GM

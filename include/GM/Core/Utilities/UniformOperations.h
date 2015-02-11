@@ -39,9 +39,5 @@ void update_uniform(unsigned int program, int location, const glm::mat2& data);
 void update_uniform(unsigned int program, int location, const glm::mat3& data);
 void update_uniform(unsigned int program, int location, const glm::mat4& data);
 
-// Textures
-void update_uniform(unsigned int program, int location, const TexturePtr &data);
-void update_uniform(unsigned int program, int location, const TexturePtr &data, int texture_unit);
-
 } // namespace Core
 } // namespace GM
