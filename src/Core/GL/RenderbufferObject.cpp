@@ -3,12 +3,12 @@
 namespace GM {
 namespace Core {
 
-RenderbufferObject::RenderbufferObject(unsigned int type, unsigned int w, unsigned int h)
-	: handle(0), type(type), w(w), h(h)
+RenderbufferObject::RenderbufferObject(unsigned int type, unsigned int width, unsigned int height)
+	: handle(0), type(type), width(width), height(height)
 {
 	glGenRenderbuffers(1, &handle);
 	bind();
-	glRenderbufferStorage(GL_RENDERBUFFER, type, w, h);
+	glRenderbufferStorage(GL_RENDERBUFFER, type, width, height);
 }
 
 RenderbufferObject::~RenderbufferObject()

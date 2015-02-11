@@ -13,7 +13,7 @@ namespace Core {
 	class RenderbufferObject
 	{
 	public:
-		RenderbufferObject(unsigned int type, unsigned int w, unsigned int h);
+		RenderbufferObject(unsigned int type, unsigned int width, unsigned int height);
 		~RenderbufferObject();
 
 		void bind();
@@ -22,15 +22,15 @@ namespace Core {
 		unsigned int get_handle() const { return handle; }
 		unsigned int get_type() const { return type; }
 
-		unsigned int get_width() const { return w; }
-		unsigned int get_height() const { return h; }
+		unsigned int get_width() const { return width; }
+		unsigned int get_height() const { return height; }
 
 	private:
 		unsigned int handle;
 		unsigned int type;
 
-		unsigned int w;
-		unsigned int h;
+		unsigned int width;
+		unsigned int height;
 	};
 }
 }
