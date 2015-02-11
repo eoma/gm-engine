@@ -12,12 +12,6 @@ class Render
 public:
 	static void render(const RenderCommand &command);
 
-	// For rendering without IBO
-	//static void render(const GLenum mode, void* indirect_buffer_offset);
-
-	// For rendering with IBO
-	//static void render(const GLenum mode, const GLenum index_type, void* indirect_buffer_offset);
-
 	// May be used for glMultiDraw{Arrays,Elements}Indirect
 	// The *RenderCommandCollection should contain the render mode, and if 
 	// ElementRenderCommandCollection, the index type (byte, short or int)
