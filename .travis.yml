@@ -16,11 +16,11 @@ install:
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
   - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq clang-3.4; fi
   - if [ "$CXX" == "clang++" ]; then export CXX="clang++-3.4"; fi
-  - if [ "$CC" == "clang++" ]; then export CC="clang-3.4"; fi
+  - if [ "$CC" == "clang" ]; then export CC="clang-3.4"; fi
 
 before_script:
   - mkdir build
   - cd build
-  - cmake -DBUILD_SHARED_LIBS=TRUE ..
+  - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=TRUE ..
 
 script: make
