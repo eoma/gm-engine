@@ -15,17 +15,20 @@ namespace GM
 		class Viewport
 		{
 		public:
-			Viewport(float x, float y, float width, float height, bool bind_on_construct = true, int index = 0);
-			Viewport(int x, int y, int width, int height, bool bind_on_construct = true, int index = 0);
+			Viewport(float x_offset, float y_offset, float width, float height, bool bind_on_construct = true, int index = 0);
+			Viewport(int x_offset, int y_offset, int width, int height, bool bind_on_construct = true, int index = 0);
 			~Viewport();
 
-			void reshape(float x, float y, float width, float height, int index = 0);
-			void reshape(int x, int y, int width, int height, int index = 0);
+			void reshape(float x_offset, float y_offset, float width, float height, int index = 0);
+			void reshape(int x_offset, int y_offset, int width, int height, int index = 0);
 			void bind();
 	
 		private:
+			float x_offset;
+			float y_offset;
+			float width;
+			float height;
 
-			float x, y, width, height;
 			int index;
 		};
 	}
