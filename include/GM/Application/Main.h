@@ -31,19 +31,8 @@ namespace Framework {
 
 namespace Application {
 
+class MainComponentSerializer; typedef std::shared_ptr<MainComponentSerializer> MainComponentSerializerPtr;
 class Main; typedef std::shared_ptr<Main> MainPtr;
-
-class MainComponentSerializer {
-public:
-	MainComponentSerializer(Main *app);
-	void create_and_add_component(const Framework::EntityPtr &owner, const std::string &type, const std::string &/*name*/);
-	void add_component_creator(const std::string &component_type_name, std::function<void(const Framework::EntityPtr &)> &&creator_function);
-private:
-	Main *app;
-	clan::SlotContainer slots;
-	std::unordered_map<std::string, std::function<void(const Framework::EntityPtr &owner)>> component_creators;
-};
-typedef std::shared_ptr<MainComponentSerializer> MainComponentSerializerPtr;
 
 class Main : public Framework::PropertyContainer<>
 {
