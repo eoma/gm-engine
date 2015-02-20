@@ -5,7 +5,9 @@ PROJECT(${NAME})
 
 option(BUILD_SHARED_LIBS "Build library as shared" OFF)
 
-set(extra_dependent_link_libs)
+find_package(OpenGL REQUIRED)
+
+set(extra_dependent_link_libs ${OPENGL_LIBRARIES})
 if (BUILD_SHARED_LIBS)
 	if (APPLE)
 		find_library(CORE_FOUNDATION_FRAMEWORK CoreFoundation)
