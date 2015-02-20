@@ -16,7 +16,9 @@ set(CLANLIB_SOURCE_PATH ${CLANLIB_HOME_PATH}/Sources)
 include_directories(${CMAKE_SOURCE_DIR}/depends/ClanLib/Sources/API)
 include_directories(${CMAKE_SOURCE_DIR}/depends/ClanLib/Sources/)
 
-set(extra_dependent_link_libs)
+find_package(Threads REQUIRED)
+
+set(extra_dependent_link_libs ${CMAKE_THREAD_LIBS_INIT})
 if (BUILD_SHARED_LIBS)
 	if (APPLE)
 		find_library(CORE_FOUNDATION_FRAMEWORK CoreFoundation)
@@ -119,6 +121,7 @@ endforeach()
 
 # Uncomment these and other similar to enable building of a mega library
 #add_library(clanAllMods STATIC ${CLANLIB_ALLMODS_HEADERS} ${CLANLIB_ALLMODS_SOURCES})
+#target_link_libraries(clanAllMods STATIC ${extra_dependent_link_libs})
 
 ###########################################
 
