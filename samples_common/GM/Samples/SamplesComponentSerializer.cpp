@@ -5,6 +5,9 @@
 #include "GM/Samples/IdleRotate.h"
 #include "GM/Samples/Starfield.h"
 
+#include "GM/Application/Main.h"
+#include "GM/Application/MainComponentSerializer.h"
+
 using namespace GM;
 using namespace Samples;
 

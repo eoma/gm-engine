@@ -1,9 +1,12 @@
 #pragma once
 
-#include "GM/Application/Main.h"
-#include "GM/Framework/Framework.h"
+#include <memory>
 
 namespace GM {
+	namespace Application {
+		class Main; typedef std::shared_ptr<Main> MainPtr;
+	}
+
 	namespace Samples {
 		class SamplesComponentSerializer {
 		public:
