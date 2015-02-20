@@ -1,4 +1,5 @@
 #include "GM/Application/Main.h"
+#include "GM/Application/MainComponentSerializer.h"
 #include "GM/Framework/Framework.h"
 #include "GM/Core/Utilities/ShaderFactory.h"
 #include "GM/Samples/SamplesComponentSerializer.h"
