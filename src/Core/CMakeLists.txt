@@ -39,7 +39,7 @@ add_library(${NAME} ${GM_LIBRARY_TYPE} ${Headers} ${Sources})
 target_link_libraries(${NAME}
 	clanCore
 	gl3w
-	${GLFW_LIBRARIES}
-	${CMAKE_DL_LIBS})
+	${CMAKE_DL_LIBS}
+)
 
 set_target_properties(${NAME} PROPERTIES FOLDER "GM")
