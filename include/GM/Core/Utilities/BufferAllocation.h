@@ -17,6 +17,8 @@ struct BufferAllocation
 	unsigned int allocated_size;
 	unsigned int offset;
 
+	void upload(const std::function<void(void *destination, size_t size)> &upload_function);
+
 	template <class... DataStructure>
 	void upload(const std::vector<DataStructure>&... data_structure_collections)
 	{
