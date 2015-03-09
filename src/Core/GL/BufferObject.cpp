@@ -40,5 +40,15 @@ void BufferObject::unbind()
 	}
 }
 
+void BufferObject::upload(unsigned int size, unsigned int offset, const std::function<void(void *destination, size_t size)> &upload_function)
+{
+	BufferOperations::upload_unsafe(current_type, upload_function, size, offset);
+}
+
+void BufferObject::upload(const std::function<void(void *destination, size_t size)> &upload_function)
+{
+	upload(size, 0, upload_function);
+}
+
 } // namespace Core
 } // namespace GM

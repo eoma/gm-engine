@@ -38,6 +38,22 @@ public:
 
 	unsigned int get_size() const { return size; }
 
+	/**
+	 * Will map the buffer and call upload_function with proper destination pointer and
+	 * allowed size to write.
+	 */
+	void upload(unsigned int length, unsigned int offset, const std::function<void(void *destination, size_t size)> &upload_function);
+
+	/**
+	 * Same as upload(size, 0, upload_function);
+	 */
+	void upload(const std::function<void(void *destination, size_t size)> &upload_function);
+
+	/**
+	 * Upload data_structure_collection to this buffer at offset offset and maximum size length.
+	 *
+	 * @param length size of the buffer to write
+	 */
 	template<class... DataStructure>
 	void upload(unsigned int length, unsigned int offset, const std::vector<DataStructure>&... data_structure_collections)
 	{
@@ -45,6 +61,9 @@ public:
 		BufferOperations::upload(current_type, length, offset, data_structure_collections...);
 	}
 
+	/**
+	 * Upload data_structure_collections to this buffer.
+	 */
 	template<class... DataStructure>
 	void upload(const std::vector<DataStructure>&... data_structure_collections)
 	{
