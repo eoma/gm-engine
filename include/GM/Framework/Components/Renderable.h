@@ -33,6 +33,11 @@ public:
 	virtual bool is_culled() const override { return culled_property; }
 	virtual bool is_invisible() const override { return !visible_property || is_culled(); }
 
+	/**
+	 * Set render layer.
+	 */
+	void set_render_layers(unsigned int new_render_layers);
+
 	virtual unsigned int get_render_layers() const override { return render_layers; }
 
 	/**
@@ -84,7 +89,7 @@ private:
 	MaterialManagerPtr material_manager;
 	MeshManagerPtr mesh_manager;
 
-	const unsigned int render_layers;
+	unsigned int render_layers;
 
 	Property<glm::mat4> world_matrix_property;
 	Property<glm::mat4> object_matrix_property;

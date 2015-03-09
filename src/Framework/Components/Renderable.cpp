@@ -123,5 +123,13 @@ glm::mat3 Renderable::make_normal_matrix(const glm::mat4 &view_matrix) const {
 	return glm::inverseTranspose(glm::mat3(view_matrix * world_matrix_property.get()));
 }
 
+void Renderable::set_render_layers(unsigned int new_render_layers) {
+	render_system->remove_renderable(this);
+
+	render_layers = new_render_layers;
+
+	render_system->add_renderable(this);
+}
+
 } // namespace Framework
 } // namespace GM
