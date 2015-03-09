@@ -22,6 +22,7 @@ public:
 
 	void add_camera(Camera *camera);
 	void remove_camera(Camera *camera);
+	void sort_cameras();
 
 	void add_light(Light *light);
 	void remove_light(Light *light);
