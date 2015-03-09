@@ -63,10 +63,20 @@ public:
 	unsigned int get_render_layers() const { return render_layers; };
 
 	/**
+	 * Will trigger reregistration of camera.
+	 */
+	void set_render_layers(unsigned int render_layers);
+
+	/**
 	 * At what order is this camera to be used in a render.
 	 * Lower number means earlier.
 	 */
 	int get_depth() const { return depth; };
+
+	/**
+	 * Will trigger reregistration of camera.
+	 */
+	void set_depth(int depth);
 
 	bool is_view_matrix_dirty() const { return view_matrix_property.is_dirty(); };
 	const glm::mat4 &get_view_matrix() const { return view_matrix_property; };

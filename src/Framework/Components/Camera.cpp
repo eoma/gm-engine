@@ -126,6 +126,19 @@ void Camera::initialize() {
 	}
 }
 
+void Camera::set_render_layers(unsigned int new_render_layers) {
+	render_system->remove_camera(this);
+
+	render_layers = new_render_layers;
+
+	render_system->add_camera(this);
+}
+
+void Camera::set_depth(int new_depth) {
+	depth = new_depth;
+	render_system->sort_cameras();
+}
+
 void Camera::make_render_pass_sequence() {
 	pass_sequence.clear();
 
