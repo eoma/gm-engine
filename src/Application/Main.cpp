@@ -12,6 +12,7 @@
 #include "GM/Framework/Managers/ShaderManager.h"
 #include "GM/Framework/Managers/TextureManager.h"
 #include "GM/Framework/Managers/VaoManager.h"
+#include "GM/Framework/Managers/UniformBufferBlockManager.h"
 
 #include "GM/Framework/IO/SoilImageIO.h"
 #include "GM/Framework/IO/AssimpMeshIO.h"
@@ -53,6 +54,7 @@ Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_f
 , shader_manager()
 , texture_manager()
 , vao_manager()
+, uniform_buffer_block_manager()
 
 , title(add<std::string>("title", title))
 , resolution(add<glm::uvec2>("width", glm::uvec2(width, height)))
@@ -121,6 +123,20 @@ Main::Main(const std::string &title, Main::Flags flags, Main::ErrorFlags error_f
 	if (flags & GM_FRAMEWORK_VAO_MANAGER)
 	{
 		vao_manager = std::make_shared<Framework::VaoManager>();
+	}
+
+	if (flags & GM_FRAMEWORK_UNIFORM_BUFFER_BLOCK_MANAGER)
+	{
+		uniform_buffer_block_manager = std::make_shared<Framework::UniformBufferBlockManager>(false);
+
+		if (shader_manager) {
+			// Set up an added-shader-listener and scan and bind shaders for uniform buffer blocks.
+			slots.connect(shader_manager->on_shader_added(),
+				[this](const std::string &/*name*/, const Core::ShaderPtr &shader) {
+					uniform_buffer_block_manager->bind_shader(shader);
+				}
+			);
+		}
 	}
 
 	if (flags & GM_FRAMEWORK_MESH_MANAGER)
@@ -429,6 +445,11 @@ void Main::construct_window_and_gl()
 	if (gl_version != context_gl_version) {
 		std::clog << "Requested GL version: " << gl_version.x << "." << gl_version.y << std::endl;
 		std::clog << "Got GL version: " << context_gl_version.x << "." << context_gl_version.y << std::endl;
+	}
+
+	if (has_uniform_buffer_block_manager())
+	{
+		uniform_buffer_block_manager->initialize();
 	}
 }
 

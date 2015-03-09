@@ -27,6 +27,7 @@ namespace Framework {
 	class ShaderManager; typedef std::shared_ptr<ShaderManager> ShaderManagerPtr;
 	class TextureManager; typedef std::shared_ptr<TextureManager> TextureManagerPtr;
 	class VaoManager; typedef std::shared_ptr<VaoManager> VaoManagerPtr;
+	class UniformBufferBlockManager; typedef std::shared_ptr<UniformBufferBlockManager> UniformBufferBlockManagerPtr;
 }
 
 namespace Application {
@@ -49,8 +50,9 @@ public:
 		GM_FRAMEWORK_SHADER_MANAGER = (1 << 6),
 		GM_FRAMEWORK_TEXTURE_MANAGER = (1 << 7),
 		GM_FRAMEWORK_VAO_MANAGER = (1 << 8),
-		GM_FRAMEWORK_PRIMITIVES = (1 << 9),
-		GM_FRAMEWORK_COMPONENT_SERIALIZER = (1 << 10),
+		GM_FRAMEWORK_UNIFORM_BUFFER_BLOCK_MANAGER = (1 << 9),
+		GM_FRAMEWORK_PRIMITIVES = (1 << 10),
+		GM_FRAMEWORK_COMPONENT_SERIALIZER = (1 << 11),
 
 		GM_FRAMEWORK_NO_DEFAULTS = 0,
 		GM_FRAMEWORK_ALL_DEFAULTS = ((1<<30) - 1)
@@ -140,6 +142,7 @@ public:
 	clan::Signal<void()> &on_render() { return render_sign; }
 	clan::Signal<void()> &on_clean_up() { return clean_up_sign; }
 
+public:
 	clan::Signal<void(int button, int action, int mods)> sign_mouse_button() const { return mouse_button_sign; }
 	clan::Signal<void(double screen_x, double screen_y)> sign_cursor_position_changed() const { return cursor_position_changed_sign; }
 	clan::Signal<void(bool entered)> sign_cursor_entered_window() const { return cursor_entered_window_sign; }
@@ -188,6 +191,9 @@ public:
 	const Framework::VaoManagerPtr &get_vao_manager() const { return vao_manager; }
 	void set_vao_manager(const Framework::VaoManagerPtr &vao_manager) { this->vao_manager = vao_manager; }
 
+	bool has_uniform_buffer_block_manager() const { return uniform_buffer_block_manager != nullptr; }
+	const Framework::UniformBufferBlockManagerPtr &get_uniform_buffer_block_manager() { return uniform_buffer_block_manager; }
+	void set_uniform_buffer_block_manager(const Framework::UniformBufferBlockManagerPtr &uniform_buffer_block_manager) { this->uniform_buffer_block_manager = uniform_buffer_block_manager; }
 
 	void add_extra_resource_paths(const std::string &resource_path_file = "external_resource_paths.json");
 
@@ -229,6 +235,7 @@ protected:
 	GLFWwindow *window;
 	std::vector<bool> keyboard_state;
 	std::vector<bool> button_state;
+
 	glm::vec2 mouse_position;
 
 	Main::ErrorFlags error_flags;
@@ -243,6 +250,7 @@ protected:
 	Framework::ShaderManagerPtr shader_manager;
 	Framework::TextureManagerPtr texture_manager;
 	Framework::VaoManagerPtr vao_manager;
+	Framework::UniformBufferBlockManagerPtr uniform_buffer_block_manager;
 
 	Framework::Property<std::string> title;
 	Framework::Property<glm::uvec2> resolution;
