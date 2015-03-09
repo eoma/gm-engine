@@ -4,7 +4,7 @@ namespace GM {
 namespace Core {
 
 void BufferOperations::upload_unsafe(const GLenum target,
-	std::function<void(void *destination, size_t size)> upload_function,
+	const std::function<void(void *destination, size_t size)> &upload_function,
 	GLsizeiptr length, GLintptr offset)
 {
 	// Assume the buffer is bound

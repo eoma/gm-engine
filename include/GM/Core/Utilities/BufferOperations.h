@@ -16,7 +16,7 @@ class BufferOperations
 {
 public:
 	static void upload_unsafe(const GLenum target,
-		std::function<void(void *destination, size_t size)> upload_function,
+		const std::function<void(void *destination, size_t size)> &upload_function,
 		GLsizeiptr length, GLintptr offset = 0);
 
 	template<class... DataStructures>
