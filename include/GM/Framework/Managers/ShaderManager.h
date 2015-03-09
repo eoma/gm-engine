@@ -2,6 +2,8 @@
 
 #include "../../Core/Utilities/ShaderSource.h"
 
+#include "ClanLib/core.h"
+
 #include <memory>
 #include <set>
 #include <string>
@@ -41,6 +43,16 @@ public:
 		const std::string &tess_ctrl_file, const std::string &tess_eval_file, const std::string &compute_file, bool rasterizer_discard);
 
 	void add_templates(const std::string &template_filename);
+
+	/**
+	 * The on_shader_added() method returns a signal that you can register to for
+	 * when you want to listen when shaders have been added to this manager.
+	 *
+	 * This is useful for objects that rely on newly added shaders,
+	 * eg. the uniform buffer block manager that scan the shader for uniform buffer blocks.
+	 */
+	clan::Signal<void(const std::string &name, const Core::ShaderPtr &shader)> &on_shader_added();
+
 private:
 
 	// Determine if file is cached, if it is return the cached content,
@@ -48,6 +60,8 @@ private:
 	const std::string &load_contents(const std::string &file_name);
 
 private:
+	clan::Signal<void(const std::string &name, const Core::ShaderPtr &shader)> shader_added;
+
 	std::unordered_map<std::string, std::string> file_content_cache;
 
 	// Useful to map what files a specific shader is using.

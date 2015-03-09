@@ -25,6 +25,11 @@ ShaderManager::~ShaderManager()
 {
 }
 
+clan::Signal<void(const std::string &, const Core::ShaderPtr &)> &ShaderManager::on_shader_added()
+{
+	return shader_added;
+}
+
 bool ShaderManager::contains(const std::string &name) const
 {
 	return (name_to_shader.end() != name_to_shader.find(name));
@@ -58,7 +63,8 @@ Core::ShaderPtr ShaderManager::get_or_create(const std::string &name)
 {
 	// First, test if the name has been cached.
 	auto shader = get(name);
-	if (shader) {
+	if (shader)
+	{
 		return shader;
 	}
 
@@ -75,7 +81,9 @@ Core::ShaderPtr ShaderManager::get_or_create(const std::string &name)
 	});
 
 	if (!shader)
+	{
 		throw clan::Exception(clan::string_format("Failed to get or create the shader %1.", name));
+	}
 
 	return shader;
 }
@@ -175,11 +183,14 @@ Core::ShaderPtr ShaderManager::get_or_create(
 
 		name_to_shader[name] = shader;
 		shader_to_name[shader] = name;
+
 		for (const Core::ShaderSource &res : shader_sources) {
 			shader_to_file_deps[shader].insert(res.name);
 			file_to_shader_deps[res.name].insert(shader);
-			
 		}
+
+		// Send out a signal that we've added a shader
+		shader_added(name, shader);
 	}
 	else
 	{
