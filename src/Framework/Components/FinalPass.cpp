@@ -72,7 +72,7 @@ namespace GM {
 			vao = std::make_shared<Core::VertexArrayObject>();
 		}
 
-		void FinalPass::pass(RenderSystem * const /*render_system*/)
+		void FinalPass::pass(RenderSystem & /*render_system*/)
 		{
 			vao->bind();
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);

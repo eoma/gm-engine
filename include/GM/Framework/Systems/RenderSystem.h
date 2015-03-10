@@ -39,7 +39,7 @@ public:
 	 * @param render_pass_name the wanted render pass
 	 * @param accepted_layers will be &ed with cameras layers
 	 */
-	void pass(Camera * const camera, const std::string &render_pass_name, unsigned int accepted_layers);
+	void pass(Camera &camera, const std::string &render_pass_name, unsigned int accepted_layers);
 
 	/**
 	 * Set current render area

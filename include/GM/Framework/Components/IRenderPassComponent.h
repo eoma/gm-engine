@@ -42,7 +42,7 @@ namespace GM {
 			 *  Render pass component may do whatever they want, please be kind.
 			 *  Render pass components will _always_ be used on a camera.
 			 */
-			virtual void pass(RenderSystem * const render_system) = 0;
+			virtual void pass(RenderSystem &render_system) = 0;
 
 			/**
 			 * Post process passes should accept an input source and an output source.

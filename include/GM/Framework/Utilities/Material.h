@@ -36,7 +36,7 @@ public:
 
 	const std::string &get_name() const { return name; }
 
-	void update_uniforms(Camera * camera, const std::vector<Light *> &lights, const std::string &render_pass_name = "standard");
+	void update_uniforms(const Camera &camera, const std::vector<Light *> &lights, const std::string &render_pass_name = "standard");
 
 	// Methods for testing, fetching and setting render pass shaders
 	bool has_render_pass(const std::string &render_pass_name = "standard") const;

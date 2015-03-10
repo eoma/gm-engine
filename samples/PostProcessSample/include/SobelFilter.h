@@ -22,7 +22,7 @@ public:
 
 	void build() override;
 
-	void pass(GM::Framework::RenderSystem * const render_system) override;
+	void pass(GM::Framework::RenderSystem &render_system) override;
 
 	bool uses_render_texture_from_camera() const override { return true; }
 	void set_input_texture(const GM::Core::TexturePtr &input_texture) override;

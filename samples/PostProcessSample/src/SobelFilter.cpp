@@ -20,7 +20,7 @@ SobelFilter::~SobelFilter ()
 {
 }
 
-void SobelFilter::pass(Framework::RenderSystem * const /*render_system*/)
+void SobelFilter::pass(Framework::RenderSystem &/*render_system*/)
 {
 	if (!satisfied_and_ready)
 	{

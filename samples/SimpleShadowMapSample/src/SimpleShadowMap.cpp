@@ -54,7 +54,7 @@ void SimpleShadowMap::build()
 	camera = owner->get_component<GM::Framework::Camera>();
 }
 
-void SimpleShadowMap::pass(Framework::RenderSystem *render_system)
+void SimpleShadowMap::pass(Framework::RenderSystem &render_system)
 {
 	framebuffer->bind();
 	glViewportIndexedf(0, 0, 0, 2048, 2048);
@@ -63,7 +63,7 @@ void SimpleShadowMap::pass(Framework::RenderSystem *render_system)
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 
-	render_system->pass(camera.get(), "shadow", (1<<10)-1);
+	render_system.pass(*camera, "shadow", (1<<10)-1);
 
 	glCullFace(GL_BACK);
 	framebuffer->unbind();

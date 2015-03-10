@@ -28,7 +28,7 @@ public:
 
 	virtual bool has_custom_render() const override { return false; };
 
-	virtual void custom_render(Camera * /*camera*/) override {}
+	virtual void custom_render(Camera & /*camera*/) override {}
 
 	virtual unsigned int get_render_layers() const override { return render_layers; }
 
@@ -36,7 +36,7 @@ public:
 
 	virtual const MeshPtr &get_mesh() const override { return mesh; };
 
-	virtual void update_uniforms(Camera * /*camera*/, const std::string &shader_type) override {}
+	virtual void update_uniforms(Camera &/*camera*/, const std::string &/*shader_type*/) override {}
 
 private:
 	RenderSystemPtr render_system;

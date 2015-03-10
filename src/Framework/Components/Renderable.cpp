@@ -106,10 +106,10 @@ void Renderable::set_up_uniform_listeners()
 	}
 }
 
-void Renderable::update_uniforms(Camera *camera, const std::string &render_pass_name) { 
+void Renderable::update_uniforms(Camera &camera, const std::string &render_pass_name) { 
 	// Let's only actually update the normal matrix value based on world and view matrix if the shader use it.
 	if (material->has_property(GM_PROPERTY_NORMAL_MATRIX)) {
-		update_normal_matrix(camera->get_view_matrix());
+		update_normal_matrix(camera.get_view_matrix());
 	}
 
 	uniforms_for_render_pass[render_pass_name].update_uniforms(); 

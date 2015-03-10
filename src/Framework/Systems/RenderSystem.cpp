@@ -149,14 +149,14 @@ void RenderSystem::render() {
 	{
 		for (IRenderPassComponent *render_pass : cam->get_render_pass_sequence())
 		{
-			render_pass->pass(this);
+			render_pass->pass(*this);
 		}
 	}
 
 }
 
 // Called by render passes
-void RenderSystem::pass(Camera * const camera, const std::string &render_pass_name, unsigned int accepted_layers)
+void RenderSystem::pass(Camera &camera, const std::string &render_pass_name, unsigned int accepted_layers)
 {
 
 	MaterialPtr active_material = nullptr;
@@ -165,7 +165,7 @@ void RenderSystem::pass(Camera * const camera, const std::string &render_pass_na
 	Core::VertexArrayObjectPtr active_vao = nullptr;
 	Core::ShaderPtr active_shader = nullptr;
 
-	for (unsigned int layer : bit_index_maker(camera->get_render_layers() & accepted_layers))
+	for (unsigned int layer : bit_index_maker(camera.get_render_layers() & accepted_layers))
 	{
 		const auto& bucket = buckets[layer];
 

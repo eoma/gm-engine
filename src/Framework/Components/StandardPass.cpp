@@ -76,7 +76,7 @@ namespace GM
 			framebuffer->unbind();
 		};
 
-		void StandardPass::pass(RenderSystem *render_system)
+		void StandardPass::pass(RenderSystem &render_system)
 		{
 			framebuffer->bind();
 			glViewportIndexedf(0, 0, 0, resolution.x, resolution.y);
@@ -85,7 +85,7 @@ namespace GM
 
 			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-			render_system->pass(camera, "standard", RenderLayers::MESH_OPAQUE);
+			render_system.pass(*camera, "standard", RenderLayers::MESH_OPAQUE);
 
 			framebuffer->unbind();
 		}

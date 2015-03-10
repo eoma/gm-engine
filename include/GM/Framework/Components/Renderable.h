@@ -66,9 +66,9 @@ public:
 
 	virtual bool has_custom_render() const override { return false; }
 
-	virtual void custom_render(Camera * /*camera*/) override {}
+	virtual void custom_render(Camera & /*camera*/) override {}
 
-	virtual void update_uniforms(Camera *camera, const std::string &render_pass_name) override;
+	virtual void update_uniforms(Camera &camera, const std::string &render_pass_name) override;
 
 	/**
 	 * If the mesh has normals, update the normal matrix based on the camera's view matrix.

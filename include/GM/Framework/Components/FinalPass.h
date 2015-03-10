@@ -24,7 +24,7 @@ namespace GM {
 
 			void build() override;
 
-			void pass(RenderSystem * const render_system) override;
+			void pass(RenderSystem &render_system) override;
 
 			bool uses_render_texture_from_camera() const override { return true; };
 			void set_input_texture(const Core::TexturePtr &input_texture) override;

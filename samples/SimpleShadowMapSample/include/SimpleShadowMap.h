@@ -30,7 +30,7 @@ public:
 	static std::string get_static_type() { return "SimpleShadowMap"; }
 
 	void build() override;
-	void pass(GM::Framework::RenderSystem *render_system) override;
+	void pass(GM::Framework::RenderSystem &render_system) override;
 
 	bool uses_render_texture_from_camera() const override { return false; }
 	void set_input_texture(const GM::Core::TexturePtr &) override {}

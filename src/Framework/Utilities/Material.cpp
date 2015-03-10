@@ -75,7 +75,7 @@ const std::map<std::string, PropertyToUniformConnector> &Material::get_render_pa
 
 //
 
-void Material::update_uniforms(Camera * camera, const std::vector<Light *> &lights, const std::string &render_pass_name) {
+void Material::update_uniforms(const Camera &camera, const std::vector<Light *> &lights, const std::string &render_pass_name) {
 	if (has_property("light_count")) {
 		get<int>("light_count") = (int)lights.size();
 
@@ -112,11 +112,11 @@ void Material::update_uniforms(Camera * camera, const std::vector<Light *> &ligh
 	}
 
 	if (has_property(GM_PROPERTY_PROJECTION_MATRIX)) {
-		get<glm::mat4>(GM_PROPERTY_PROJECTION_MATRIX) = camera->get_projection_matrix();
+		get<glm::mat4>(GM_PROPERTY_PROJECTION_MATRIX) = camera.get_projection_matrix();
 	}
 
 	if (has_property(GM_PROPERTY_VIEW_MATRIX)) {
-		get<glm::mat4>(GM_PROPERTY_VIEW_MATRIX) = camera->get_view_matrix();
+		get<glm::mat4>(GM_PROPERTY_VIEW_MATRIX) = camera.get_view_matrix();
 	}
 
 	render_pass_configs[render_pass_name].update_uniforms(); 

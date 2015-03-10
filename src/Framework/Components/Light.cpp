@@ -33,6 +33,6 @@ glm::vec3 Light::get_position_in_worldspace() const {
 	return glm::vec3(world_matrix_property.get()[3]);
 }
 
-glm::vec3 Light::get_position_in_viewspace(Camera *camera) const {
-	return glm::vec3(camera->get_view_matrix() * glm::vec4(get_position_in_worldspace(), 1.0f));
+glm::vec3 Light::get_position_in_viewspace(const Camera &camera) const {
+	return glm::vec3(camera.get_view_matrix() * glm::vec4(get_position_in_worldspace(), 1.0f));
 }

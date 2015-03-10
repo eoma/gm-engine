@@ -67,7 +67,7 @@ public:
 	 *
 	 * @param camera is currently active camera.
 	 */
-	virtual void custom_render(Camera *camera) = 0;
+	virtual void custom_render(Camera &camera) = 0;
 
 	// The following are relevant in sorting and subsequently in constructing
 	// a draw command buffer
@@ -89,7 +89,7 @@ public:
 	/**
 	 * Update the uniforms associated with this renderable
 	 */
-	virtual void update_uniforms(Camera *camera, const std::string &render_pass_name = "standard") = 0;
+	virtual void update_uniforms(Camera &camera, const std::string &render_pass_name = "standard") = 0;
 };
 
 } // namespace Framework

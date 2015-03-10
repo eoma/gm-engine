@@ -40,7 +40,7 @@ public:
 	 * @param camera the relevant camera.
 	 * @return position in the camera's view space.
 	 */
-	glm::vec3 get_position_in_viewspace(Camera *camera) const;
+	glm::vec3 get_position_in_viewspace(const Camera &camera) const;
 
 	/**
 	 * Set the radius of the light. Determines the attenuation of the light.
@@ -80,6 +80,11 @@ public:
 	 * Check if this light is a shadow caster
 	 */
 	bool is_shadow_caster() const { return shadow_caster_property; }
+
+	/**
+	 * Check if this light is supposed to be active
+	 */
+	bool is_active() const { return activated_property; }
 
 public:
 	static std::string get_static_type() { return GM_COMPONENT_LIGHT; };
