@@ -12,6 +12,9 @@ class Camera;
 class Light;
 class IRenderable; typedef std::shared_ptr<IRenderable> IRenderablePtr;
 
+class CameraMatricesUbo; typedef std::shared_ptr<CameraMatricesUbo> CameraMatricesUboPtr;
+class LightListUbo; typedef std::shared_ptr<LightListUbo> LightListUboPtr;
+
 class RenderSystem {
 public:
 	RenderSystem();
@@ -68,6 +71,10 @@ public:
 	 */
 	const std::vector<Light *> &get_lights() const { return lights; }
 
+	void set_camera_matrices_ubo(const CameraMatricesUboPtr &new_camera_matrices_ubo) { camera_matrices_ubo = new_camera_matrices_ubo; }
+
+	void set_light_list_ubo(const LightListUboPtr &new_light_list_ubo) { light_list_ubo = new_light_list_ubo; }
+
 public:
 
 	/**
@@ -75,6 +82,12 @@ public:
 	 * in to a list of exponents of base 2 (n is converted to [a, b, ...])
 	 */
 	static std::vector<unsigned int> bit_index_maker(const unsigned int bits);
+
+private:
+	/**
+	 * Update camera and light uniform buffer objects
+	 */
+	void prepare_ubos(const Camera &active_camera);
 
 private:
 	/**
@@ -100,6 +113,17 @@ private:
 	 * lights affect all geometry in scene.
 	 */
 	std::vector<Light*> lights;
+
+	/**
+	 * An object that manages updating of a uniform buffer block containing lights
+	 */
+	LightListUboPtr light_list_ubo;
+
+	/**
+	 * An object responsible for updating a uniform buffer block containing common camera matrices
+	 */
+	CameraMatricesUboPtr camera_matrices_ubo;
+
 };
 
 typedef std::shared_ptr<RenderSystem> RenderSystemPtr;

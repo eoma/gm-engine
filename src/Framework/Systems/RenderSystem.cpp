@@ -1,9 +1,12 @@
 #include "GM/Framework/Systems/RenderSystem.h"
 #include "GM/Framework/Components/Camera.h"
+#include "GM/Framework/Components/Light.h"
 #include "GM/Framework/Components/IRenderable.h"
 #include "GM/Framework/Components/IRenderPassComponent.h"
 #include "GM/Framework/Utilities/Material.h"
 #include "GM/Framework/Utilities/Mesh.h"
+#include "GM/Framework/Utilities/CameraMatricesUbo.h"
+#include "GM/Framework/Utilities/LightListUbo.h"
 
 #include "GM/Core/GL/FramebufferObject.h"
 #include "GM/Core/GL/Render.h"
@@ -147,6 +150,7 @@ void RenderSystem::render() {
 	// Remember that cameras are depth sorted, start at minimal depth and go upwards
 	for (Camera *cam : cameras)
 	{
+		prepare_ubos(*cam);
 		for (IRenderPassComponent *render_pass : cam->get_render_pass_sequence())
 		{
 			render_pass->pass(*this);
@@ -257,5 +261,18 @@ void RenderSystem::resize(int width, int height)
 	for (Camera *cam : cameras)
 	{
 		cam->set_projection(width, height);
+	}
+}
+
+void RenderSystem::prepare_ubos(const Camera &active_camera)
+{
+	if (camera_matrices_ubo != nullptr)
+	{
+		camera_matrices_ubo->update(active_camera);
+	}
+
+	if (light_list_ubo != nullptr)
+	{
+		light_list_ubo->update(active_camera, lights);
 	}
 }
