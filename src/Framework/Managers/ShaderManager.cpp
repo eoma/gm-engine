@@ -41,6 +41,10 @@ void ShaderManager::add(const std::string &name, const Core::ShaderPtr &shader)
 	{
 		// maybe check that shader is not a nullptr?
 		name_to_shader.insert(std::make_pair(name, shader));
+		shader_to_name.insert(std::make_pair(shader, name));
+
+		// Send out a signal that we've added a shader
+		shader_added(name, shader);
 	}
 	else
 	{
@@ -181,16 +185,14 @@ Core::ShaderPtr ShaderManager::get_or_create(
 		// TODO: Actual implementation of ShaderFactory
 		shader = Core::ShaderFactory::make_program(shader_sources);
 
-		name_to_shader[name] = shader;
-		shader_to_name[shader] = name;
+		add(name, shader);
 
 		for (const Core::ShaderSource &res : shader_sources) {
 			shader_to_file_deps[shader].insert(res.name);
 			file_to_shader_deps[res.name].insert(shader);
 		}
 
-		// Send out a signal that we've added a shader
-		shader_added(name, shader);
+
 	}
 	else
 	{
