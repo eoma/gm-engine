@@ -143,13 +143,13 @@ public:
 	clan::Signal<void()> &on_clean_up() { return clean_up_sign; }
 
 public:
-	clan::Signal<void(int button, int action, int mods)> sign_mouse_button() const { return mouse_button_sign; }
-	clan::Signal<void(double screen_x, double screen_y)> sign_cursor_position_changed() const { return cursor_position_changed_sign; }
-	clan::Signal<void(bool entered)> sign_cursor_entered_window() const { return cursor_entered_window_sign; }
-	clan::Signal<void(double scroll_offset_x, double scroll_offset_y)> sign_scroll_wheel_changed() const { return scroll_wheel_changed_sign; }
-	clan::Signal<void(int key, int scancode, int action, int mods)> sign_keyboard() const { return keyboard_sign; }
-	clan::Signal<void(unsigned int code_point)> sign_keyboard_unicode() const { return keyboard_unicode_sign; }
-	clan::Signal<void(int width, int height)> sign_window_size() const { return window_size_sign; }
+	clan::Signal<void(int button, int action, int mods)> &sign_mouse_button() { return mouse_button_sign; }
+	clan::Signal<void(double screen_x, double screen_y)> &sign_cursor_position_changed() { return cursor_position_changed_sign; }
+	clan::Signal<void(bool entered)> &sign_cursor_entered_window() { return cursor_entered_window_sign; }
+	clan::Signal<void(double scroll_offset_x, double scroll_offset_y)> &sign_scroll_wheel_changed() { return scroll_wheel_changed_sign; }
+	clan::Signal<void(int key, int scancode, int action, int mods)> &sign_keyboard() { return keyboard_sign; }
+	clan::Signal<void(unsigned int code_point)> &sign_keyboard_unicode() { return keyboard_unicode_sign; }
+	clan::Signal<void(int width, int height)> &sign_window_size() { return window_size_sign; }
 
 public:
 	// FIXME: All setters should probably ensure that the this-> version is nullptr and not already set...?
