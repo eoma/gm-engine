@@ -7,13 +7,18 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <algorithm>
+#include <memory>
+#include <iostream>
 
 namespace GM {
 	namespace Core {
-		
+		class Shader; typedef std::shared_ptr<Shader> ShaderPtr;
+
 		//
 		// End user function declarations
 		//
+
+		void print_shader_info(const ShaderPtr &shader, std::ostream &out = std::cout);
 
 		// Lexicographical less than operator for glm::tvec4, for tvec{1,3} just copy and replace 4
 		template <typename T, glm::precision P>
