@@ -12,8 +12,10 @@ in vec2 control_texcoord[];
 out vec3 evaluation_normal[];
 out vec2 evaluation_texcoord[];
 
-uniform mat4 ViewMatrix;		// world_to_view
-uniform mat4 ProjectionMatrix;	// view_to_clip
+layout(std140) uniform CameraMatrices {
+	mat4 ViewMatrix;		// world_to_view
+	mat4 ProjectionMatrix;	// view_to_clip
+};
 
 // The distance from camera_position to the control_point determines the number of triangles to generate
 uniform vec3 camera_position;

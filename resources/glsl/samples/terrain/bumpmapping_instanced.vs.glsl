@@ -26,11 +26,14 @@ out VS_OUT
     vec3 normal;
 } vs_out;
 
+layout(std140) uniform CameraMatrices {
+	mat4 ViewMatrix;		// world_to_view
+	mat4 ProjectionMatrix;	// view_to_clip
+};
+
 uniform mat4 ObjectMatrix;
 //uniform mat4 WorldMatrix;		// object_to_world, WorldMatrix = ParentWorldMatrix * ObjectMatrix
 uniform mat4 ParentWorldMatrixNoScale;		// 
-uniform mat4 ViewMatrix;		// world_to_view
-uniform mat4 ProjectionMatrix;	// view_to_clip
 
 //uniform mat4 mv_matrix;
 //uniform mat4 proj_matrix;

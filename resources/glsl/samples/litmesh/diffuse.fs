@@ -5,15 +5,21 @@ in vec3 normal_in_viewspace;
 out vec3 color;
 
 uniform vec3 diffuse = vec3(0,0,0);
-uniform struct SLight {
-        vec3 position_in_viewspace;
-        float radius;
-        vec3 material_color_diffuse;
-        vec3 material_color_specular;
-        vec3 material_color_ambient;
-        bool activated;
-} light[64];
-uniform int light_count;
+
+#define MAX_LIGHTS 256
+
+struct LightSource {
+	float radius;
+	vec3 position_in_viewspace;
+	vec3 material_color_diffuse;
+	vec3 material_color_specular;
+	vec3 material_color_ambient;
+};
+
+layout(std140) uniform LightList {
+	int light_count;
+	LightSource light[MAX_LIGHTS];
+};
 
 float compute_blinn_term(in vec3 N, in vec3 L, in vec3 V, in float NdotL, in float shininess)
 {
@@ -54,10 +60,7 @@ void main() {
 	color = vec3(0,0,0);
     for(int i = 0; i < light_count; i++)
     {
-        if (light[i].activated)
-        {
-            color += color_from_light(i, N, V, diffuse);
-        }
+        color += color_from_light(i, N, V, diffuse);
     }
     if(color == vec3(0,0,0)) {
         color = diffuse;

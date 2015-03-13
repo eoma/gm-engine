@@ -13,9 +13,12 @@ layout(location = TEXCOORD) in vec2 texcoord;
 out vec4 position_in_viewspace;
 out vec3 normal_in_viewspace;
 
+layout(std140) uniform CameraMatrices {
+	mat4 ViewMatrix;		// world_to_view
+	mat4 ProjectionMatrix;	// view_to_clip
+};
+
 uniform mat4 WorldMatrix;		// object_to_world
-uniform mat4 ViewMatrix;		// world_to_view
-uniform mat4 ProjectionMatrix;	// view_to_clip
 uniform mat3 NormalMatrix;		// normal_to_view
 
 void main() {
