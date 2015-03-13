@@ -14,7 +14,7 @@ BufferManager::~BufferManager()
 {
 }
 
-Core::BufferAllocation BufferManager::allocate(const unsigned int size, const unsigned int alignment, const GLenum usage, const BufferAllocationType allocation_type)
+Core::BufferAllocation BufferManager::allocate(const unsigned int size, const unsigned int alignment, const GLenum usage, const BufferAllocationType allocation_type, const GLenum buffer_type)
 {
 	Core::BufferAllocation allocation;
 	std::vector<PoolData>::iterator iter;
@@ -23,7 +23,11 @@ Core::BufferAllocation BufferManager::allocate(const unsigned int size, const un
 	{
 		// Locate a a pool with enough vacant size
 		iter = std::find_if(pools.begin(), pools.end(), 
-			[usage, size, alignment](const PoolData &pool) { return pool.get_usage() == usage && pool.has_space_for(size + alignment); }
+			[usage, size, alignment, buffer_type](const PoolData &pool) {
+				return pool.get_usage() == usage &&
+				       pool.get_type() == buffer_type &&
+				       pool.has_space_for(size + alignment);
+			}
 		);
 
 		if (iter == pools.end()) // Must allocate new pool
@@ -31,7 +35,7 @@ Core::BufferAllocation BufferManager::allocate(const unsigned int size, const un
 			unsigned int pool_size = default_pool_size;
 			if (size > default_pool_size) pool_size = size;
 
-			PoolData pool = create_pool(pool_size, GL_ARRAY_BUFFER, usage);
+			PoolData pool = create_pool(pool_size, buffer_type, usage);
 
 			pools.push_back(pool);
 			iter = --(pools.end());
@@ -39,7 +43,7 @@ Core::BufferAllocation BufferManager::allocate(const unsigned int size, const un
 	}
 	else // Unique buffer
 	{
-		PoolData pool = create_pool(size, GL_ARRAY_BUFFER, usage);
+		PoolData pool = create_pool(size, buffer_type, usage);
 
 		pools.push_back(pool);
 		iter = --(pools.end());

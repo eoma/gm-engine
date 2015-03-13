@@ -28,14 +28,14 @@ public:
 	/**
 	 * Will create a BufferAllocation with size size and offset fitted to the alignment parameter.
 	 */
-	Core::BufferAllocation allocate(const unsigned int size, const unsigned int alignment, const GLenum usage = GL_DYNAMIC_DRAW, const BufferAllocationType allocation_type = SHARED_BUFFER);
+	Core::BufferAllocation allocate(const unsigned int size, const unsigned int alignment, const GLenum usage = GL_DYNAMIC_DRAW, const BufferAllocationType allocation_type = SHARED_BUFFER, const GLenum buffer_type = GL_ARRAY_BUFFER);
 
 	/**
 	 * Allocates a buffer with size at least count*sizeof(DataStructure) and aligns the buffer offset
 	 * to size of the DataStructure
 	 */
 	template <class DataStructure>
-	Core::BufferAllocation allocate(const unsigned int count, const GLenum usage = GL_DYNAMIC_DRAW, const BufferAllocationType allocation_type = SHARED_BUFFER);
+	Core::BufferAllocation allocate(const unsigned int count, const GLenum usage = GL_DYNAMIC_DRAW, const BufferAllocationType allocation_type = SHARED_BUFFER, const GLenum buffer_type = GL_ARRAY_BUFFER);
 
 	/**
 	 * Aligns and uploads a vector of DataStructure to a buffer.
@@ -75,6 +75,7 @@ private:
 		unsigned int get_unused_size() const { return buffer->get_size() - allocated; };
 
 		GLenum get_usage() const { return buffer->get_usage(); }
+		GLenum get_type() const { return buffer->get_primary_type(); }
 		bool has_space_for(const unsigned int size) const { return size <= get_unused_size(); };
 
 		// Increases allocated by size and returns previous allocated as offset
@@ -150,9 +151,9 @@ private:
 //
 
 template <class DataStructure>
-Core::BufferAllocation BufferManager::allocate(const unsigned int count, const GLenum usage, const BufferAllocationType allocation_type)
+Core::BufferAllocation BufferManager::allocate(const unsigned int count, const GLenum usage, const BufferAllocationType allocation_type, const GLenum buffer_type)
 {
-	return allocate(sizeof(DataStructure)*count, sizeof(DataStructure), usage, allocation_type);
+	return allocate(sizeof(DataStructure)*count, sizeof(DataStructure), usage, allocation_type, buffer_type);
 }
 
 } // namespace Framework
