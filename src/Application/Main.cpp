@@ -33,6 +33,8 @@
 #include "GM/Framework/Primitives/IcosahedronPrimitive.h"
 
 #include "GM/Framework/Utilities/Tools.h"
+#include "GM/Framework/Utilities/CameraMatricesUbo.h"
+#include "GM/Framework/Utilities/LightListUbo.h"
 
 #include "GM/Framework/Entity.h"
 
@@ -450,6 +452,12 @@ void Main::construct_window_and_gl()
 	if (has_uniform_buffer_block_manager())
 	{
 		uniform_buffer_block_manager->initialize();
+	}
+
+	if (has_render_system())
+	{
+		render_system->set_camera_matrices_ubo(std::make_shared<Framework::CameraMatricesUbo>(buffer_manager, uniform_buffer_block_manager));
+		render_system->set_light_list_ubo(std::make_shared<Framework::LightListUbo>(buffer_manager, uniform_buffer_block_manager));
 	}
 }
 
