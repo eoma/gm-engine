@@ -1,6 +1,8 @@
 #include "GM/Core/Utilities/ShaderFactory.h"
 #include "GM/Application/Main.h"
 
+#include "GM/Core/Utilities/Tools.h"
+
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
@@ -21,6 +23,7 @@ bool mainTest() {
 	shader = Core::ShaderFactory::make_program({
 		Core::ShaderSource("vertex",
 			s("#version 330\n") +
+			s("#extension GL_ARB_shading_language_420pack : require\n") +
 			s("in vec4 position_ws;\n") +
 			s("uniform int non_active_uniform = 0;\n") +
 			s("uniform int active_uniform = 1;\n") +
@@ -32,14 +35,14 @@ bool mainTest() {
 			s("    float std140_some_scalar2;\n") +
 			s("    mat3 std140_some_other_matrix;\n") +
 			s("}\n;") +
-			s("layout(shared) uniform SharedUniformBlock {\n") + 
+			s("layout(shared, binding = 10) uniform SharedUniformBlock {\n") + 
 			s("    mat4 shared_some_matrix;\n") +
 			s("    float shared_some_scalar;\n") +
 			s("    vec4 shared_some_vector;\n") +
 			s("    vec3 shared_some_vector_array[4];\n") +
 			s("    float shared_some_scalar2;\n") +
 			s("    mat3 shared_some_other_matrix;\n") +
-			s("}\n;") +
+			s("} instance[3]\n;") +
 			s("layout(packed) uniform PackedUniformBlock {\n") + 
 			s("    mat4 packed_some_matrix;\n") +
 			s("    float packed_some_scalar;\n") +
@@ -54,7 +57,7 @@ bool mainTest() {
 			s("};\n") +
 			s("uniform MyType my_type_collection[3];") +
 			s("void main() {\n") +
-			s("    gl_Position = position_ws + vec4(active_uniform, 0.0, 0.0, 0.0) + std140_some_vector + shared_some_vector + packed_some_vector;\n") +
+			s("    gl_Position = position_ws + vec4(active_uniform, 0.0, 0.0, 0.0) + std140_some_vector + instance[1].shared_some_vector + packed_some_vector;\n") +
 			s("    gl_Position.x = my_type_collection[1].some_float;\n") +
 			s("    for (int i = 0; i < 3; ++i) gl_Position.xyz += my_type_collection[i].something_array[0];\n") +
 			s("}\n")
@@ -73,55 +76,7 @@ bool mainTest() {
 			GL_FRAGMENT_SHADER),
 	});
 
-	for (const auto &info : shader->get_attribute_infos())
-	{
-		std::cout << "Attribute: " << info.name << std::endl;
-		std::cout << "Type: " << std::hex << std::showbase << info.type << std::dec << std::endl;
-		std::cout << "Size: " << info.size << std::endl;
-		std::cout << "Location: " << info.location << std::endl;
-
-		std::cout << std::endl;
-	}
-
-	std::cout << "-----" << std::endl << std::endl;
-
-	for (const auto &info : shader->get_uniform_infos())
-	{
-		std::cout << "Uniform: " << info.name << std::endl;
-		std::cout << "Type: " << std::hex << std::showbase << info.type << std::dec << std::endl;
-		std::cout << "Size: " << info.size << std::endl;
-		std::cout << "Location: " << info.location << std::endl;
-
-		std::cout << std::endl;
-	}
-
-	std::cout << "-----" << std::endl << std::endl;
-
-	for (const auto &info : shader->get_uniform_block_infos())
-	{
-		std::cout << "Uniform Block: " << info.name << std::endl;
-		std::cout << "Size: " << info.size << std::endl;
-		std::cout << "Index: " << info.index << std::endl;
-		std::cout << "Active uniforms[" << info.active_uniforms.size() << "] = {" << std::endl;
-		std::cout << std::endl;
-
-		for (const auto &active_uniform : info.active_uniforms)
-		{
-			std::cout << "\tUniform: " << active_uniform.name << std::endl;
-			std::cout << "\tType: " << std::hex << std::showbase << active_uniform.type << std::dec << std::endl;
-			std::cout << "\tSize: " << active_uniform.size << std::endl;
-			std::cout << "\tOffset: " << active_uniform.offset << std::endl;
-			std::cout << "\tArray stride: " << active_uniform.array_stride << std::endl;
-			std::cout << "\tMatrix stride: " << active_uniform.matrix_stride << std::endl;
-
-			std::cout << std::endl;
-		}
-
-
-		std::cout << "}" << std::endl;
-
-		std::cout << std::endl;
-	}
+	Core::print_shader_info(shader);
 
 	auto update_slot = app->on_update().connect([&](float /*value*/) mutable {
 		app->stop_running();
